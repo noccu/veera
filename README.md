@@ -1,6 +1,6 @@
-# Orcheed
+# Orchees
 
-A Granblue Fantasy companion Chrome extension, a reborn continuation of [Ancheera](https://github.com/Thessiah/Ancheera).
+A Granblue Fantasy companion Chrome extension, a different persona of [Orcheed](https://chrome.google.com/webstore/detail/orcheed/hgbfbpokmdladdjflkdhggogloedlllg), a reborn continuation of [Ancheera](https://github.com/Thessiah/Ancheera).
 
 # TODO
 
