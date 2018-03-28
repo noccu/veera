@@ -1,0 +1,919 @@
+@import "../../lib/bootstrap-sass-3.3.7/assets/stylesheets/bootstrap";
+
+$anchira-danger-color: #47d974;;
+$anchira-background-white: #2a2a2a;
+$anchira-background-grey: #e1e1e1;
+$anchira-sky-color: #1e1c1f;
+$anchira-sun-color: #705d7f;
+
+$base-text-color: #f5f5f5;
+$highlight-text-color: #f5f5f5;
+
+@import "default.scss";
+// $base-font-size: 16px;
+// $base-font-family: source-sans-pro, "Helvetica Neue", Helvetica, Arial, sans-serif;
+// $base-font-weight: 400;
+
+
+// .progress-bar-custom {background: $night-danger-color;}
+// #message {
+//   white-space: pre;
+// }
+// #contents {
+//   display: none;
+// }
+// #wait {
+//   display: flex;
+//     align-items: center;
+//   justify-content: center;
+//   text-align: center;
+//   margin-top: 200px;
+// }
+// .sky-panel {
+//   @extend .panel;
+//   max-height: 50%;
+//   color: white;
+//   padding: 20px;
+//   background-color: $night-sky-color;
+// }
+
+
+// body {
+//   color: $base-text-color;
+//   font-size: $base-font-size;
+//   font-family: $base-font-family;
+//   font-weight: $base-font-weight;
+//   line-height: 1.6;
+  
+//   //background-color: $night-sky-color;
+//   background-color: $night-background-white;
+//   height: 100%;
+//      -moz-user-select: -moz-none;
+//    -khtml-user-select: none;
+//    -webkit-user-select: none;
+
+//    /*
+//      Introduced in IE 10.
+//      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+//    */
+//    -ms-user-select: none;
+//    user-select: none;
+//    cursor: default;
+// }
+
+// #icons {
+//   display: inline-block;
+// }
+
+// .icon{
+//   color: white;
+//   margin-top: 8px;
+//   padding-left: 10px;
+//   //background-color: black;
+//   width: 30px;
+//   height: 25px;
+//   margin-bottom: -10px;
+//   font-size: 18px;
+  
+//   //display: inline-block;
+// }
+
+// .open-url {
+//   cursor: pointer !important;
+// }
+// #time-zone {
+//   cursor: pointer !important;
+// }
+
+// #contents {
+//   @extend .img-rounded;
+//   position: absolute;
+//   width: 400px;
+//   bottom: 3px;
+//   top: 3px;
+//   left: 3px;
+//   right: 3px;
+//   //background-color: $night-background-white;
+//   background-color: $night-sky-color;
+// }
+// @mixin circle-icon($color) {
+//   @extend .img-circle;
+//   position: relative;
+//   margin-left: 5px;
+//   height: 20px;
+//   width: 20px;
+//   display: inline-block;
+//   background-color: $color;
+// }
+
+// .vertical-table {
+//   list-style-type: none;
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   width: 100%;
+//   height: 94px;
+//   padding: 1px;
+// }
+// .vertical-table-small {
+//   @extend .vertical-table;
+//   height: 47px;
+// }
+
+// .table {
+//   list-style-type: none;
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: wrap;
+//   width: 100%;
+//   padding: 1px;
+// }
+
+// //.vertical-table-4 { @include vertical-table(4); }
+// //.vertical-table-3 { @include vertical-table(3); }
+// // .active-circle-icon {
+// //   @include circle-icon($night-danger-color);
+// //   z-index: 2;
+// // }
+// // .inactive-circle-icon {
+// //   @include circle-icon($night-background-grey);
+// //   z-index: 1;
+// // }
+
+// .white-panel {
+//   @extend .panel;
+//   margin: 3px 1px;
+//   vertical-align: top;
+//   display: inline-block;
+//   background-color: $night-background-white;
+// }
+// .container {
+//   @extend .img-rounded;
+//   // bottom: 0;
+//   // top: 200px;
+//   // position: absolute;
+//   position: absolute;
+//   overflow: hidden;
+//   //height: 100%;
+//   top: 202px;
+//   bottom: 0;
+//   margin: 5px;
+//   width: 390px;
+//   background-color: $night-background-white;
+// }
+// .scroll-pane {
+//   @extend .tab-pane;
+//   position: absolute;
+//   top: 50px;
+//   bottom: 10px;
+//   right: 10px;
+//   left: 10px;
+//   overflow-y: hidden;
+//   overflow-x: hidden;
+
+//   >.tab-tab-pane {
+//     top: 75px;
+//     bottom: 0px;
+//     right: 0px;
+//     left: 0px;
+//   }
+// }
+// .scroll-pane-2 {
+//   @extend .tab-pane;
+//   position: absolute;
+//   top: 50px;
+//   bottom: 10px;
+//   right: 10px;
+//   left: 10px;
+//   padding-left : -40px !important;
+//   overflow-y: hidden;
+//   overflow-x: hidden;
+// }
+
+// .tab-tab-pane {
+//   @extend .tab-pane;
+//   position: absolute;
+//   top: 50px;
+//   bottom: 10px;
+//   right: 10px;
+//   left: 10px;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
+// #ap-bp-panel {
+//   width: 400px;
+//   clear: both;
+//   display: block;
+//   >#ap {
+//     //float: left;
+//     display: inline-block;
+//   }
+//   >#bp {
+//     float: right;
+//     margin-right: 6px;
+//     //display: inline-block;
+//   }
+//   >#special {
+//         @extend .img-rounded;
+//     background-color: $night-background-white;
+//     display: inline-block;
+//     width: 52px;
+//     height: 52px;
+//     margin-top: 5px;
+//     margin-bottom: -30px !important;
+//     padding-top: 1px;
+//     margin-left: 2px;
+//     >.item-img {
+//       @extend .img-rounded;
+//       margin-bottom: 0px;
+//       //display: inline-block;
+//     height: 25px;
+//     width: 25px;
+//     }
+//     >.left {
+//       float: left;
+//       margin-left: 1px;
+//     }
+//     >.right {
+//       float: right;
+//       margin-right: 1px;
+//     }
+//   }
+
+//   > .panel {
+//     margin-left: 7px; //20px;
+//     margin-right: 1px;
+//     margin-top: 6px;
+//     margin-bottom: 4px;
+//     vertical-align: top;
+//     display: inline-block;
+//     width: 172px;
+//     height: 50px;
+//     //background-color: $night-sky-color;
+//     background-color: $night-background-white;
+//     >#ap-bar-container {
+//       background-color: $night-background-grey;
+//       margin: 25px 11px;
+//     }
+//     >#bp-bar{
+//       margin: 20px 19px;
+//       >#active-circle-icons {
+//         z-index: 2;
+//         //display: none;
+//       }
+//       >.circle-icons {
+//         position: absolute;
+//       }
+//     }
+//     >.bar{
+//       width: 148px;
+//       position: absolute;
+//     }
+//     >.ap-bp-info {
+//       position: relative;
+//       >.ap-bp-number {
+//         left: 5px;
+//         top: 0px;
+//         position: absolute;
+//         display: inline-block;
+//       }
+//       >.ap-bp-time {
+//         right: 5px;
+//         top: 0px;
+//         position: absolute;
+//         display: inline-block;
+
+//       }
+//     }
+//   }
+// }
+// // #curr-raids-collapse {
+// //   li:not(:first-child) {
+// //     display: none;
+// // }
+// // }
+// .collapse-default {
+//   background-color: $night-background-white;
+//   margin-top: 0px !important;
+//   margin-bottom: 10px !important;
+// }
+// .quest-panel {
+//   margin: 2px;
+//   .quest-img {
+//     @extend .img-rounded;
+//     width: 63px;
+//     height: 40px;
+//   }
+//   .quest-name {
+//     display: inline-flex;
+//     // justify-content: center;
+//     // flex-direction: column;
+//     vertical-align: middle;
+//     //height: 30px;
+//     width: 250px;
+//     //word-wrap: break-word;
+//   }
+// }
+// .buff-item {
+//   //display: none;
+// }
+// .daily-quest-panel {
+//   @extend .quest-panel;
+//   .quest-name {
+//     width: 110px;
+//   }
+//   .quest-count {
+//     margin: 3px;
+//     margin-right: 8px;
+//     display: inline-flex;
+//     vertical-align: middle;
+//   }
+//   >.quest-item {
+//     display: inline-block;
+//   }
+//    .quest-items {
+//     //display: inline-block;
+//     >.quest-item {
+//       width: 90px;
+//     }
+//     float: right;
+//     margin-top: -20px;
+    
+//   }
+//   .item-img {
+//     margin: 3px;
+//     @extend .img-rounded;
+//     display: inline-block;
+//     width: 40px;
+//     height: 40px;
+//   }
+//   .item-count {
+//     display: inline-flex;
+
+//     vertical-align: middle;
+//   }
+//   .quest-body-tall {
+//     position: relative;
+//     top: 50%;
+//     -webkit-transform: translateY(-50%);
+//     -ms-transform: translateY(-50%);
+//     transform: translateY(-50%);
+//   }
+// }
+// .quest-tall {
+//   height: 80px;
+//   width: 310px;
+// }
+
+// .casino-div {
+//   margin: 2px;
+//   //width: 72px;
+//   //max-width: 110px;
+//   height: 42px;
+//   >.item-img {
+//     @extend .img-rounded;
+//     width: 40px;
+//     height: 40px;
+//   }
+//   >.casino-item {
+//     display: inline-block;
+//   }
+// }
+// .misc-div {
+//   margin: 2px;
+//   //width: 72px;
+//   width: 300px;
+//   //border-style: solid;
+//   display: inline-flex;
+// }
+// .coop-div {
+//   margin: 2px;
+//   //width: 72px;
+
+//   //border-style: solid;
+//   display: inline-flex;
+//   >.coop-quest {
+
+//     width: 280px;
+//     max-height: 60px;
+//     float: left;
+//     margin-right: 10px;
+//   }
+//   >.coop-progress {
+//     width: 30px;
+//     margin: auto 0;
+//   }
+// }
+
+// .footer {
+//   padding-bottom: 0;
+//   padding-top: 0;
+// }
+// .col {
+//   padding-right:7px;
+//   padding-left:7px;
+// }
+// .panel {
+//   //max-width: 330px;
+//   //max-height: 140px;
+// }
+
+// .panel-heading-new {
+//   @extend .panel-heading;
+// }
+
+// .panel-body-new {
+//   @extend .panel-body;
+//   margin: 3px;
+// }
+// .panel > .panel-heading {
+//   background-image: none;
+//   background-color: $night-sun-color;
+//   //color: dimgrey;
+//   //color: white;
+// }
+
+// .buttonPanel {
+//   @extend .panel;
+//   background-image: none;
+//   background-color: $night-sun-color;
+// }
+
+// .sky .active a, .sky .active a:hover {
+//   background-color: $night-sky-color !important;
+  
+// }
+// .nav-pills >li > a {
+//   padding: 4px 0px;
+//   text-align: center;
+//   color: $base-text-color;
+// }
+// .nav-tabs >li > a {
+//   color: $base-text-color;
+// }
+// .nav-pills-supply >li:nth-child(2) {
+//   margin-left: 0 !important;
+
+// }
+
+// .nav-pills-supply >li {
+//   margin-top: 2px !important;
+//   width: 60px;
+// }
+
+// .form-group {
+//   margin-bottom: 0px !important;
+//   margin-left: 0px !important;
+
+//   float: right;
+//   width: 310px;
+// }
+
+// .nav-pills-daily >li {
+//   width: 80px;
+//   margin-bottom: 10px !important;
+// }
+
+// .nav-pills > li.active > a, .nav-pills > li.active > a:hover {
+//   background-color: $night-sky-color !important;
+// }
+// .nav-pills > li > a:hover {
+//   background-color: $night-sky-color !important;
+// }
+
+// .link-heading {
+//   color: $base-text-color !important;
+// }
+// .nav-tabs > li > a {
+//   padding: 8px 0px;
+//   text-align: center;
+// }
+// .nav-tabs > li {
+//   width: 120px;
+// }
+
+// .supply-item {
+//   margin: 1px;
+//   >.item-img {
+//     @extend .img-rounded;
+//     width: 40px;
+//     height: 40px;
+//   }
+//   >.item-count {
+//     text-align: center;
+//   }
+// }
+
+
+
+// .link-heading {
+//   display: block;
+//   text-decoration: none !important
+// }
+// .collapse-wrapper {
+//   margin-top: 10px;
+// }
+
+
+//   .profile-item {
+//     @extend .supply-item;
+//     display: inline-block;
+//   }
+
+// #profile {
+//   .profile-bar {
+//     margin-left: 5px;
+//       width: 180px;
+//     >.number {
+//       float: left;
+//     }
+//     >.remaining {
+//       float: right;
+//     }
+
+//     >.bar {
+//       background-color: $night-background-grey;
+//       width: 180px;
+//       margin-bottom: 5px;
+//     }
+//   }
+
+//   #inventory-list {
+//     >.inventory-category {
+//       margin-right: -8px;
+//       //border-style: solid;
+//       width: 64px;
+//       display: inline-block;
+//       >.inventory-img {
+//         @extend .img-rounded;
+//         display: block;
+//         margin: 0 auto;
+//         height: 40px;
+//         width: 40px;
+//         //display: inline-block;
+//       }
+//       >.inventory-count {
+//         text-align: center;
+//       }
+//     }
+//   }
+
+//   #left-profile {
+//     width: 190px;
+//     float: left;
+  
+//   }
+//   #right-profile {
+//     margin-top: -3px;
+//     margin-left: 10px;
+//     margin-bottom: 20px;
+//     width: 150px;
+//     display: inline-block;
+//   }
+// }
+
+// .profile-currency {
+//   >.currency-amount {
+ 
+//         display: inline-flex;
+//     vertical-align: middle;
+//   }
+//   >.currency-img {
+//     display: inline-block; 
+//     height: 20px;
+//     width: 20px;
+//   }
+// }
+
+// #time-buffs {
+//     width: 400px;
+//   clear: both;
+//   display: block;
+//   #time-zone {
+//     margin-left: 5px;
+//     padding-left: 8px;
+//     padding-right: 8px;
+//     width: 27px;
+//     line-height: 100%;
+//     height: 53px;
+//   }
+//   #time {
+//     @extend .white-panel;
+//     text-align: center;
+//     width: 100px;
+//     float: left;
+//     height: 52px;
+//   }
+//   #buffs {
+//     @extend .white-panel;
+//     width: 250px;
+//     height: 52px;
+//     margin-right: 10px;
+//     float: right;
+//     .buff-item {
+//       vertical-align: top;
+//       display: inline-block;
+//       //display: none;
+//       width: 75px;
+//       height: 52px;
+//       margin: 1px;
+//               padding-top: 5px;
+//       >.item-img {
+//         @extend .img-rounded;
+
+//         width: 40px;
+//         height: 40px;
+//         padding-bottom: -5px;
+//       }
+//       >.item-count {
+//         width: 35px;
+//         text-align: center;
+//         line-height: 120%;
+//         float: right;
+//         word-wrap: break-word;
+//       }
+//     }
+//   }
+// }
+// .time-container {
+//   margin-left: 5px;
+// }
+//   .assault-time {
+//     display: inline-block;
+//   }
+
+// // .time-panel {
+// //   width: 125px;
+// //   padding-left: 1px;
+// //   >.top {
+// //     padding-left: 2px;
+// //   }
+// //   >.bottom {
+// //     padding-left: 2px;
+// //   }
+// // }
+// .time-panel {
+//   width: 92px;
+//   text-align: center;
+// }
+// .horizontal-text {
+//   @extend .img-rounded;
+//   //padding-top: 4px;
+//   // padding-right: 3px;
+//   //padding-left: 1px;
+//   //word-wrap: break-word;
+//   //width: 90px;
+//   text-align: center;
+//   margin-top: 2px;
+//   margin-left: 2px;
+//   margin-right: 2px;
+//   //height: 46px;
+//   //line-height: 120%;
+//   //display:flex;
+//   //align-items: center;
+//   //justify-content: center;
+//   //margin: auto;
+//   //background-color: #ffd4e3;
+//   background-color: $night-sun-color;//#f5f5f5;
+// }
+// // .long-panel {
+// //   width: 256px;
+// //   padding-left: 1px;
+// //   //padding-top: 1px;
+// //   >.horizontal-text {
+// //     float: left;
+// //   }
+// //   >.top {
+// //     margin-top: 2px;
+// //     padding-left: 2px;
+// //     display: inline-block;
+// //   }
+// //   >.bottom {
+// //     width: 100px;
+// //     margin-top: 2px;
+// //     float: right;
+// //     margin-right: 2px;
+// //     >.assault-time {
+// //       margin-right: 2px;
+// //     }
+// //   }
+// // }
+// .vertical-text {
+//   @extend .img-rounded;
+//   //color: grey;
+//   // transform: rotate(90 deg);
+//   // transform-origin: left top 0;
+//   // float: left;
+//   //writing-mode: tb-rl;
+//   padding-top: 4px;
+//   padding-right: 3px;
+//   padding-left: 1px;
+//   word-wrap: break-word;
+//   width: 24px;
+//   height: 46px;
+//   line-height: 120%;
+//   //display:flex;
+//   //align-items: center;
+//   //justify-content: center;
+//   float: left;
+//   margin: 2px;
+//   text-align: center;
+//   vertical-align: middle;
+//   //background-color: #ffd4e3;
+//   background-color: $night-background-white;
+// }
+// // .horizontal-text {
+// //   @extend .img-rounded;
+// //   //padding-top: 4px;
+// //   padding-right: 3px;
+// //   padding-left: 1px;
+// //   //word-wrap: break-word;
+// //   width: 24px;
+// //   //height: 46px;
+// //   //line-height: 120%;
+// //   //display:flex;
+// //   //align-items: center;
+// //   //justify-content: center;
+// //   float: left;
+// //   margin: 2px;
+// //   //background-color: #ffd4e3;
+// //   background-color: #f5f5f5;
+// // }
+// // #time {
+// //   @extend .panel;
+// //   background-color: $night-background-white;
+// //   margin: 5px;
+// //     clear: both;
+// //   display: block;
+// //   //vertical-align: top;
+// //   >#jst-zone {
+// //     display: inline-block;
+// //   }
+// // }
+
+// #daily-raid-list {
+//   margin-bottom: 10px;
+  
+// }
+// .daily-quest-panel {
+//   margin-bottom: 3px !important;
+//   margin-top: 0px !important;
+//   .item-img {
+//     margin-bottom: 0px !important;
+//     margin-top: 0px !important;
+//   }
+// }
+// .quest-image {
+//   width: 40px;
+//   height: 40px;
+//   margin: -4px;
+// }
+// .event-image {
+//   width: 48px;
+//   height: 48px;
+//   margin: -4px;
+// }
+// .event-raids {
+//   display: inline-block;
+//   margin-left: 4px;
+//   margin-top: 1px;
+// }
+// #event-item {
+//   float: left;
+// }
+// .quest-top {
+//   .quest-summons {
+//     float: left;
+//     .quest-summon {
+//       display: inline-block;
+//       margin-right: -4px;
+//       .quest-summon-image {
+//         //background: rgba(255, 255, 255, 0.5);
+//         opacity: 0.6;
+//       }
+//       .quest-summon-text {
+//         position: absolute;
+//         font-weight: 600;
+//         -webkit-text-fill-color: black;
+//         //-webkit-text-stroke: 1px black;
+//         margin-top: -28px;
+//         width: 26px;
+//         opacity: 0.9999999;
+//         text-align: center;
+//       }
+//     }
+//   }
+//   .quest-panel {
+//     float: right;
+//     .quest-curr {
+//       display: inline-block;
+//     }
+//     .quest-raids {
+//       margin-left: 8px;
+//       display: inline-block;
+//     }
+//   }
+// }
+// .quest-bottom {
+//   margin-top: 42px;
+// }
+// .quest-character {
+//   display: inline-block;
+//   width: 87px;
+//   .quest-skills {
+//     height: 16px;
+//     .quest-skill {
+//       display: inline-block;
+//       margin-right: -4px;
+//       .quest-skill-image {
+//         height: 20px;
+//         width: 20px;
+//         //background: rgba(255, 255, 255, 0.5);
+//         opacity: 0.4;
+//       }
+//       .quest-skill-text {
+//         position: absolute;
+//         font-weight: 600;
+//         -webkit-text-fill-color: black;
+//         //-webkit-text-stroke: 1px black;
+//         margin-top: -23px;
+//         width: 20px;
+//         opacity: 0.9999999;
+//         text-align: center;
+//       }
+//     }
+//   }
+// }
+// .quest-buffs-panel {
+// }
+// .quest-buff {
+//   display: inline-block;
+//   margin-right: -4px;
+//   .quest-buff-icon {
+//     width: 15px;
+//     height: 15px;
+//     position: absolute;
+//     //margin-top: 10px;
+//     margin-top: 15px;
+//     margin-left: 15px;
+//     z-index: 5;
+//   }
+// }
+
+// .thumbnail {
+//   position: relative;
+//   width: 80px;
+//   height: 40px;
+//   margin-bottom: -5px;
+//   overflow: hidden;
+// }
+
+// .thumbnail-small {
+//   position: relative;
+//   margin-bottom: -5px;
+//   overflow: hidden;
+//   width: 29px;
+//   height: 29px;
+// }
+// .thumbnail-small img.landscape {
+//   position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   height: auto;
+//   width:  100%;
+//   transform: translate(-50%,-50%);
+// }
+
+// .thumbnail img.landscape {
+//   position: absolute;
+//   left: 50%;
+//   top: 80%;
+//   transform: translate(-50%,-50%);
+// }
+// .thumbnail img.portrait {
+//   position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   height: 100%;
+//   //height: 200%;
+//   // height: 200%;
+//   // width: auto;
+//   //width: 200%;
+//   transform: translate(-50%,-50%);
+// }
+// .thumbnail-square {
+//   //@extend .img-rounded;
+//   margin-top: 1px;
+//   position: relative;
+//   width: 26px;
+//   height: 34px;
+//   overflow: hidden;
+// }
+// .thumbnail-square img.square {
+//    position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   height: 100%;
+//   width: auto;
+//   transform: translate(-50%,-50%);
+// }

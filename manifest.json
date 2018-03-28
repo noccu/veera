@@ -1,0 +1,30 @@
+{
+   "background": {
+      "scripts": [ "src/background/message.js", "src/background/storage.js", "src/background/options.js", "src/background/supplies.js", "src/background/apbp.js", "src/background/buffs.js", "src/background/quest.js", "src/background/casino.js", "src/background/profile.js", "src/background/dailies.js", "src/background/time.js", "src/background/background.js" ]
+   },
+   "browser_action": {
+      "default_icon": "src/assets/images/icon128.png"
+   },
+   "content_scripts": [ {
+      "js": [ "lib/jquery-3.0.0.min.js", "src/content/script.js" ],
+      "matches": [ "http://gbf.game.mbga.jp/*", "http://game.granbluefantasy.jp/*" ],
+      "run_at": "document_end"
+   } ],
+   "description": "The GBF Companion Extension that's absolutely dollable.",
+   "devtools_page": "src/pages/devtools/devtools.html",
+   "icons": {
+      "128": "src/assets/images/icon128.png",
+      "16": "src/assets/images/icon16.png",
+      "48": "src/assets/images/icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAptw1ByKzAAmhZT3Ipm344H37PqU56nnftlSiVjG2qj5SGHM7Jz1xpihquJS+T6IIFHQ7jicke7WVabwHfDUbTqNjKD0rVI7V0R4ISl1a4eWKcBjZox0F3sB6kyGC/gM0m5IAHSnWEc5ORFWRENH8zn9bY8LR+tjDRaSHOBKtSgKbSalKIzmrNZ85dlFwh41UcE5Tbv5osFntcQzNS3hUOa0PoJWd9G1ywPK3Lw2VrWDw+eQreC0LZafU497Vd25ZZgYeFiJTllP8IE+CFtzYWbXE2M79ejP1mX6D/DsFYL7D2cEDiKLR5DFba3O3/3A8DVZNIuFj+tw8DHx4rwysdQIDAQAB",
+   "manifest_version": 2,
+   "name": "Orcheed",
+   "options_ui": {
+      "chrome_style": true,
+      "page": "src/pages/options/options.html"
+   },
+   "permissions": [ "http://gbf.game.mbga.jp/*", "http://game.granbluefantasy.jp/*", "storage", "notifications", "tabs", "clipboardWrite", "activeTab" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.0.2"
+}

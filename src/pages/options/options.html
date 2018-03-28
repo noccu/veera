@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--<link href="../../stylesheets/default.css" rel="stylesheet">-->
+  <style>
+    .in-line {
+      display: inline;
+      margin-right: 10px;
+      margin-left: 4px;
+    }
+
+    body {
+      min-width: 600px;
+    }
+
+    td {
+      padding-right: 10px;
+    }
+    /*h3 {margin-bottom: 2px; margin-top: 6px;}*/
+
+    .bottom-padding {
+      padding-bottom: 8px;
+    }
+
+    .bottom-padding-small {
+      padding-bottom: 4px;
+    }
+
+    .right-padding {
+      padding-right: 4px;
+    }
+
+    .neg-padding {
+      margin-top: -8px;
+      margin-bottom: -8px;
+    }
+
+    #is-magfest {
+      margin-left: 3px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h3> Themes </h3>
+  <div class="main-wrapper">
+    <table id="themes" class="neg-padding">
+      <tr id="enable-row" class="wrapper neg-padding">
+        <td class="quest">
+          <label class="right-padding">Window Theme</label>
+          <select id="windowTheme">
+            <option>Anchira Day</option>
+            <option>Tiamat Night</option>
+          </select>
+        </td>
+        <td class="quest">
+          <label class="right-padding ">Notification Theme</label>
+          <select id="notificationTheme">
+            <option>Sheep</option>
+            <option>Monkey</option>
+            <option>Rooster</option>
+            <option>Random</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <h3> Quests/Misc </h3>
+  <div class="main-wrapper">
+    <table id="notifications">
+      <tr id="enable-row" class="wrapper">
+        <td class="quest">
+          <input type="checkbox" id="ougiRefresh">
+          <label>Ougi Refresh</label>
+        </td>
+        <td class="quest">
+          <input type="checkbox" id="skip">
+          <label>Skip Quest End</label>
+        </td>
+        <td class="quest">
+          <input type="checkbox" id="skipNext">
+          <label>Skip Quest Next</label>
+        </td>
+      </tr>
+    </table>
+    <table id="misc">
+      <tr id="enable-row" class="wrapper">
+        <td class="quest">
+          <input type="checkbox" id="primarchDaily">
+          <label>Primarch daily</label>
+        </td>
+        <td class="quest">
+          <input type="checkbox" id="sortRaidsDifficulty">
+          <label>Sort Raids by Difficulty</label>
+        </td>
+        <td class="quest">
+          <input type="checkbox" id="copyJapaneseName">
+          <label>Copy JP Name to Clipboard When Tweeting</label>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <h3> Notifications </h3>
+  <div class="main-wrapper">
+    <table id="notifications">
+      <tr id="enable-row" class="wrapper">
+        <td class="notification bottom-padding">
+          <input type="checkbox" id="enableNotifications">
+          <label>Enable Notifications</label>
+        </td>
+        <td class="notification bottom-padding">
+          <input type="checkbox" id="muteNotifications" class="check">
+          <label class="name">Mute Notifications</label>
+        </td>
+      </tr>
+      <tr class="wrapper">
+        <td class="notification">
+          <input type="checkbox" id="apNotifications" class="check">
+          <label class="name">AP Notifications</label>
+        </td>
+        <td class="notification">
+          <input type="checkbox" id="epNotifications" class="check">
+          <label class="name">EP Notifications</label>
+        </td>
+
+      </tr>
+      <tr class="wrapper">
+        <td class="notification">
+          <input type="checkbox" id="strikeTimeNotifications" class="check">
+          <label class="name">Strike Time Notifications</label>
+        </td>
+        <td class="notification">
+          <input type="checkbox" id="dailyResetNotifications" class="check">
+          <label class="name">Daily Reset Notifications</label>
+        </td>
+        <!--<td  class="notification">
+          <input type="checkbox" id="angelHaloNotifications" class="check">
+          <label class="name">Angel Halo Notifications</label>      
+        </td>-->
+        <!--<td  class="notification">
+          <input type="checkbox" id="defenseOrderNotifications" class="check">
+          <label class="name">Defense Order Notifications</label>      
+        </td>-->
+      </tr>
+    </table>
+  </div>
+  <h3> Magfest </h3>
+  <div class="main-wrapper">
+    <table id="notifications">
+      <tr id="enable-row" class="wrapper">
+        <td class="notification">
+          <input type="checkbox" id="isMagFest"> Increased Raid Limit
+        </td>
+        <td class="notification">
+          <input type="checkbox" id="increasedRenownLimit"> Increased Pendant Limit
+        </td>
+        <td class="notification">
+          <input type="checkbox" id="freeSingleRoll"> Free Gacha Roll
+        </td>
+      </tr>
+    </table>
+  </div>
+  <h3> Daily Raids </h3>
+  <div class="main-wrapper">
+    <table id="raids" class="bottom-padding-small">
+      <tr id="0" class="wrapper">
+        <td class="raid">
+          <input type="checkbox" class="check">
+          <label class="name">Tiamat (N)</label>
+        </td>
+      </tr>
+      <tr id="1" class="wrapper"></tr>
+      <tr id="2" class="wrapper"></tr>
+      <tr id="3" class="wrapper"></tr>
+      <tr id="4" class="wrapper"></tr>
+      <tr id="5" class="wrapper"></tr>
+      <tr id="6" class="wrapper"></tr>
+      <tr id="7" class="wrapper"></tr>
+      <tr id="8" class="wrapper"></tr>
+
+    </table>
+    <table>
+      <tr id="9" class="wrapper"></tr>
+    </table>
+  </div>
+  <!--<h3> Distinctions </h3>
+    <table id="notifications">
+      <tr id="d1" class="wrapper"></tr>
+      <tr id="d2" class="wrapper"></tr>
+      <tr id="d3" class="wrapper"></tr>
+    </table>-->
+  <!--
+  <div id="status"></div>
+  <button id="save">Save</button>-->
+  <script src="../../../lib/jquery-3.0.0.min.js"></script>
+  <script src="options.js"></script>
+</body>
+
+</html>
