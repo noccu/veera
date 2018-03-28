@@ -1,6 +1,6 @@
 (function () {
   var initialized = false;
-  var url = "";
+  var url            = '';
   var jQueryCache = {};
   var isJST = true;
   var times = {};
@@ -8,7 +8,7 @@
   var filter = 'all';
   var search = '';
   var sortedSupplies = [];
-  var imageURL = "../../assets/images/";
+  var imageURL       = '../../assets/images/';
   var themeName = '';
 
   var $supplyList = $('#supply-list');
@@ -75,9 +75,7 @@
   $('#contents').find('.open-url').each(function () {
     $(this).click(function () {
       if ($(this).data('url') !== undefined && $(this).data('url') !== '') {
-        Message.Post({
-          'openURL': url + $(this).data('url')
-        });
+        Message.Post({'openURL': url + $(this).data('url')});
       }
     });
   });
@@ -132,14 +130,14 @@
       'start': ['Silver Forge', 'Silver 4*', 'Gold Forge', 'Character 5*'],
       'end': ['Silver Forge', 'Silver 4*', 'Gold Forge', 'Character 5*']
     }
-  }
+  };
   var dropdownLocater = {
     'planner': $weaponPlanner,
     'type': $weaponType,
     'element': $weaponElement,
     'start': $weaponStart,
     'end': $weaponEnd
-  }
+  };
 
   var weaponBuild = {};
   var weaponType = '';
@@ -154,7 +152,7 @@
     $weaponElement.hide();
     $weaponStart.hide();
     $weaponEnd.hide();
-  }
+  };
   var initializeDropdowns = function (type) {
     Object.keys(dropdownHash[type]).forEach(function (key) {
       var values = dropdownHash[type][key];
@@ -168,7 +166,7 @@
         }
       });
     });
-  }
+  };
   $('#weapon-planner-dropdown').find('a').each(function () {
     var $this = $(this);
     $this.click(function () {
@@ -180,9 +178,7 @@
       Object.keys(dropdownHash[weaponType]).forEach(function (key) {
         weaponBuild[key] = null;
       });
-      Message.Post({
-        'getPlanner': $this.text()
-      });
+      Message.Post({'getPlanner': $this.text()});
     });
   });
 
@@ -198,7 +194,7 @@
           } else {
             weaponBuild[$this.data('weapon')] = $this.text();
           }
-          var keys = Object.keys(weaponBuild)
+          var keys = Object.keys(weaponBuild);
           for (var i = 0; i < keys.length; i++) {
             if (weaponBuild[keys[i]] === null) {
               return;
@@ -226,7 +222,29 @@
   resetDropdowns();
 
   var messages = [
-    'I guess I was supposed to update and maintain this.'
+    'Click every panel!',
+    'Don\'t give up, skeleton!',
+    'Bugs, questions, comments, or\nrecommendations? Email them to\nancheeraextension@gmail.com',
+    'Desire sensor is real',
+    'You have a 100% chance to get\nanything in the gacha if you\nthrow enough $$$$$ at it',
+    'goodwork.png',
+    ':thinking:',
+    'Something\'s not quite right...',
+    'RIP in peace HRT',
+    'buying gf',
+    'plz fame me',
+    'Don\'t let your memes be dreams',
+    '(´･ω･`)',
+    'Thank you for your support!',
+    'The pleasure is mine',
+    'Roll the bones',
+    'Drop rate buffs are a placebo',
+    'Get bond',
+    'Ravioli ravioli give\nme the formuoli',
+    'Nothing personnel, kid',
+    'm\'lady',
+    'Wake me up inside\n(I can\'t wake up)',
+    'My name is Shackleford.\nRusty Shackleford.'
   ];
 
   var message = messages[Math.floor(Math.random() * messages.length)];
@@ -234,11 +252,11 @@
 
   var setMessage = function (msg) {
     $message.text(msg);
-  }
+  };
   setMessage(message);
 
   var backgroundPageConnection = chrome.runtime.connect({
-    name: "panel"
+    name: 'panel'
   });
   backgroundPageConnection.postMessage({
     connect: chrome.devtools.inspectedWindow.tabId
@@ -252,16 +270,14 @@
     input.select();
     document.execCommand('Copy');
     input.remove();
-  }
+  };
 
   backgroundPageConnection.onMessage.addListener(function (message, sender) {
     if (message.pageLoad) {
       if (!initialized && message.pageLoad.indexOf('#mypage') !== -1) {
         initialized = true;
         url = message.pageLoad.substring(0, message.pageLoad.indexOf('#mypage'));
-        Message.Post({
-          initialize: true
-        });
+        Message.Post({initialize: true});
       }
     }
     if (message.initialize) {
@@ -310,11 +326,11 @@
           } else if (msg.generatePlanner) {
             generatePlanner(msg.generatePlanner);
           } else if (msg.setPlannerItemAmount) {
-            setPlannerItemAmount(msg.setPlannerItemAmount.id, msg.setPlannerItemAmount.sequence, msg.setPlannerItemAmount.current)
+            setPlannerItemAmount(msg.setPlannerItemAmount.id, msg.setPlannerItemAmount.sequence, msg.setPlannerItemAmount.current);
           } else if (msg.setPlannerDropdowns) {
             setPlannerDropdowns(msg.setPlannerDropdowns.type, msg.setPlannerDropdowns.build);
           } else if (msg.setTooltip) {
-            setTooltip(msg.setTooltip.id, msg.setTooltip.text)
+            setTooltip(msg.setTooltip.id, msg.setTooltip.text);
           }
         }
       }
@@ -383,9 +399,7 @@
       setClick(message.setClick.id, message.setClick.value);
     }
     if (message.openURL) {
-      Message.Post({
-        'openURL': url + message.openURL
-      });
+      Message.Post({'openURL': url + message.openURL});
     }
     if (message.setTheme) {
       setTheme(message.setTheme);
@@ -420,25 +434,25 @@
     //   });
     // }
     //Message.Post({'consoleLog': 'new text of ' + id + ': ' + jQueryCache[id].text()});
-  }
+  };
   var setImage = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
     }
     jQueryCache[id].attr('src', value);
-  }
+  };
   var setHeight = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
     }
     jQueryCache[id].height(value);
-  }
+  };
   var setOpacity = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
     }
     jQueryCache[id].fadeTo('fast', value);
-  }
+  };
   var hideObject = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -448,7 +462,7 @@
     } else {
       jQueryCache[id].show();
     }
-  }
+  };
   var setBar = function (id, value) {
     // if(id !== '#bp-bar') {
     if (jQueryCache[id] === undefined) {
@@ -467,13 +481,13 @@
     //     }
     //   });
     // }
-  }
+  };
   var setColor = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
     }
     jQueryCache[id].css('background-color', value);
-  }
+  };
   var setTime = function (id, jstTime, normalTime) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -481,13 +495,13 @@
     times[id] = {
       'jst': jstTime,
       'normal': normalTime
-    }
+    };
     if (isJST) {
       jQueryCache[id].text(jstTime);
     } else {
       jQueryCache[id].text(normalTime);
     }
-  }
+  };
   var collapsePanel = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -498,7 +512,7 @@
     } else if (!value && !jQueryCache[id].hasClass('collapse in')) {
       jQueryCache[id].collapse('show');
     }
-  }
+  };
   var appendObject = function (id, targetID) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -508,7 +522,7 @@
     }
     //alert(id + ' ' + targetID);
     jQueryCache[targetID].append(jQueryCache[id]);
-  }
+  };
   var setClick = function (id, value) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -519,19 +533,18 @@
     } else {
       jQueryCache[id].removeClass('open-url');
     }
-  }
+  };
   var setTooltip = function (id, text) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
     }
-    jQueryCache[id].attr('title', text)
-      .tooltip('fixTitle')
-    if ($('.tooltip').length > 0 && $('.tooltip').prev().prop("id") == id.substring(1)) {
+    jQueryCache[id].attr('title', text).tooltip('fixTitle');
+    if ($('.tooltip').length > 0 && $('.tooltip').prev().prop('id') == id.substring(1)) {
       jQueryCache[id].tooltip('show');
     }
     //.tooltip('show');
     //jQueryCache[id].prop('title', text);
-  }
+  };
   var beforeObject = function (id, targetID) {
     if (jQueryCache[id] === undefined) {
       jQueryCache[id] = $(id);
@@ -540,7 +553,7 @@
       jQueryCache[targetID] = $(targetID);
     }
     jQueryCache[targetID].before(jQueryCache[id]);
-  }
+  };
   var addItem = function (id, category, number, name, sequence, tooltip) {
     var newItem = $supplyItem.clone();
     newItem.attr('id', 'supply-' + sequence + '-' + id);
@@ -580,7 +593,7 @@
     newItem.tooltip();
     //alert(3);
     //if(sortedSupplies.length > 0) {
-    var low = 0
+    var low = 0;
     var high = sortedSupplies.length;
     while (low < high) {
       var mid = low + high >>> 1;
@@ -605,7 +618,7 @@
         'id': parseInt(id)
       });
     }
-  }
+  };
 
   var $plannerItem = $('.weapon-item').first().clone();
   $('.weapon-item').remove();
@@ -647,7 +660,7 @@
         $list = $plannerIncompleteList;
         $items = $incompleteItems;
         count = incompleteCount;
-        incompleteCount++
+        incompleteCount++;
       } else {
         $list = $plannerCompleteList;
         $items = $completeItems;
@@ -666,29 +679,30 @@
       } else {
         return false;
       }
-    })
+    });
     $($completeItems.get().reverse()).each(function (i) {
       if ($completeItems.length - 1 - i >= completeCount) {
         $(this).hide();
       } else {
         return false;
       }
-    })
+    });
     // for(var i = completePlannersList.length - 1; i >= completeCount; i--) {
     //   var key = completePlannersList[i];
     //   key.hide();
     //   completePlannersList.pop();
     // }
-  }
+  };
   var addPlannerItem = function ($list, id, category, current, total, sequence, tooltip) {
     var newItem = $plannerItem.clone();
     setPlannerItem(newItem, id, category, current, total, sequence, tooltip);
     $list.append(newItem);
-  }
+  };
+
   var updatePlannerItem = function ($item, id, category, current, total, sequence, tooltip) {
     $item.show();
     setPlannerItem($item, id, category, current, total, sequence, tooltip);
-  }
+  };
 
   var setPlannerItem = function ($item, id, category, current, total, sequence, tooltip) {
     $item.attr('id', 'planner-' + sequence + '-' + id);
@@ -707,7 +721,7 @@
     imgURL += id + '.jpg';
     if (category === 'currency') {
       if (id === 'crystal') {
-        imgURL = '../../assets/images/icons/crystal.png'
+        imgURL = '../../assets/images/icons/crystal.png';
       }
     }
     $item.children('.item-img').first().attr('src', imgURL);
@@ -721,8 +735,8 @@
     $total.attr('id', 'planner-' + sequence + '-' + id + '-total');
     $item.tooltip('hide')
       .attr('data-original-title', tooltip)
-      .tooltip('fixTitle')
-  }
+      .tooltip('fixTitle');
+  };
 
   var setPlannerItemAmount = function (id, sequence, current) {
     var $item = $('#planner-' + sequence + '-' + id);
@@ -734,7 +748,7 @@
       var total = parseInt($item.find('#planner-' + sequence + '-' + id + '-total').data('value'));
       if (!incomplete && current < total) {
         $plannerIncompleteList.append($item);
-        $plannerIncompleteList.children('.weapon-item').sort(sortPlanner).appendTo($plannerIncompleteList)
+        $plannerIncompleteList.children('.weapon-item').sort(sortPlanner).appendTo($plannerIncompleteList);
       } else if (incomplete && current >= total) {
         $plannerCompleteList.append($item);
         $plannerCompleteList.children('.weapon-item').sort(sortPlanner).appendTo($plannerCompleteList);
@@ -744,7 +758,7 @@
       // }
       //$list.sort(sortPlanner);
     }
-  }
+  };
   var setPlannerDropdowns = function (type, build) {
     dropdownLocater['planner'].find('.dropdown-text').text(type);
     initializeDropdowns(type);
@@ -758,11 +772,13 @@
         dropdownLocater[key].find('.dropdown-text').text(build[key]);
       }
     });
-  }
+  };
+
   var clearPlanner = function () {
     $plannerIncompleteList.children('.weapon-item').hide();
     $plannerCompleteList.children('.weapon-item').hide();
-  }
+  };
+
   var truncateNumber = function (value) {
     if (value >= 1000000) {
       return Math.round(value / 100000) + 'M';
@@ -770,7 +786,8 @@
       return Math.round(value / 1000) + 'k';
     }
     return value;
-  }
+  };
+
   var sortPlanner = function (a, b) {
     var $a = $(a);
     var $b = $(b);
@@ -789,31 +806,28 @@
         draw: 8,
         other: 9,
         currency: 10
-      }
+      };
       return categoryHash[$a.data('category')] - categoryHash[$b.data('category')];
     }
-  }
+  };
+
   var addQuest = function (id, imgUrl, name, amount, max, animeIDs, animeAmounts) {
     var newRaid;
     if (animeIDs !== null && animeIDs.length > 1) {
       newRaid = $dailyRaidBig.clone();
       newRaid.find('.open-url').each(function (i) {
         $(this).click(function () {
-          Message.Post({
-            'openURL': url + '#quest/supporter/' + id + '/1/0/' + animeIDs[i]
-          });
+          Message.Post({'openURL': url + '#quest/supporter/' + id + '/1/0/' + animeIDs[i]});
         });
       });
     } else {
       newRaid = $dailyRaid.clone();
-      var raidUrl = url + '#quest/supporter/' + id + '/1'
+      var raidUrl = url + '#quest/supporter/' + id + '/1';
       if (animeIDs !== null) {
         raidUrl += '/0/' + animeIDs[0];
       }
       newRaid.click(function () {
-        Message.Post({
-          'openURL': raidUrl
-        });
+        Message.Post({'openURL': raidUrl});
       });
     }
     newRaid.data('id', id);
@@ -840,7 +854,7 @@
       // });
     }
     $dailyRaidList.append(newRaid);
-  }
+  };
   var addDistinction = function (id, amount, max, isEnabled) {
     var newDistinction = $dailyDistinction.clone();
     newDistinction.data('id', id);
@@ -854,7 +868,7 @@
       newDistinction.hide();
     }
     //Message.Post({'consoleLog': 'added distinction text with id ' + newDistinction.find('.item-count').first().attr('id')});
-  }
+  };
 
   var addQuestCharacter = function (index) {
     var newCharacter = $questCharacter.clone();
@@ -867,7 +881,7 @@
     });
     newCharacter.find('.quest-character-buffs').attr('id', 'quest-character-buffs-' + index);
     $questCharactersPanel.append(newCharacter);
-  }
+  };
 
   var addQuestEnemy = function (index) {
     var newEnemy = $questEnemy.clone();
@@ -875,7 +889,7 @@
     newEnemy.find('.quest-enemy-image').attr('id', 'quest-enemy-image-' + index);
     newEnemy.find('.quest-enemy-buffs').attr('id', 'quest-enemy-buffs-' + index);
     $questEnemiesPanel.append(newEnemy);
-  }
+  };
 
   var filterSupplies = function (category) {
     filter = category;
@@ -886,7 +900,8 @@
         $(this).hide();
       }
     });
-  }
+  };
+
   var searchSupplies = function (query) {
     search = query.toLowerCase();
     $supplyList.children().each(function (index) {
@@ -896,12 +911,14 @@
         $(this).hide();
       }
     });
-  }
+  };
+
   var hideAllSupplies = function () {
     $supplyList.children().each(function (index) {
       $(this).hide();
     });
-  }
+  };
+
   var toggleTimes = function () {
     Object.keys(times).forEach(function (key) {
       if (isJST) {
@@ -910,7 +927,8 @@
         jQueryCache[key].text(times[key].normal);
       }
     });
-  }
+  };
+
   var setTheme = function (theme) {
     //../../stylesheets/default.css
     Message.Post({
@@ -923,17 +941,20 @@
       if ($bars.hasClass('progress-bar-danger')) {
         $bars.removeClass('progress-bar-danger').addClass('progress-bar-custom');
       }
-      $("rect[id='mask-fill']").css("fill", "#2a2a2a");
-    } else if (theme === 'Vira') {
+      $('rect[id=\'mask-fill\']').css('fill', '#2a2a2a');
+    }
+    else if (theme === 'Vira') {
       sheetURL += 'garbage1';
-    } else if (theme === 'Narumaya') {
+    }
+    else if (theme === 'Narumaya') {
       sheetURL += 'garbage2';
-    } else {
+    }
+    else {
       sheetURL += 'default';
       if ($bars.hasClass('progress-bar-custom')) {
         $bars.removeClass('progress-bar-custom').addClass('progress-bar-danger');
       }
-      $("rect[id='mask-fill']").css("fill", "#f5f5f5");
+      $('rect[id=\'mask-fill\']').css('fill', '#f5f5f5');
     }
     if (theme === 'Vira' || theme === 'Narumaya') {
       $('#contents').hide();
@@ -952,8 +973,7 @@
     sheetURL += '.css';
     document.getElementById('pagestyle').setAttribute('href', sheetURL);
     themeName = theme;
-  }
-
+  };
 
   window.Message = {
     Post: function (message) {
@@ -963,10 +983,7 @@
     Copy: function (str) {
       copy(str);
     }
-  }
+  };
 
-  Message.Post({
-    'devAwake': true
-  });
-
+  Message.Post({'devAwake': true});
 })();

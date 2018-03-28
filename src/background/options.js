@@ -126,10 +126,10 @@
             Storage.Set('options', options);
           } else {
             options = response.options;
-            if (options.windowTheme === 'Narumaya' || options.windowTheme === 'Vira') {
-              options.windowTheme = 'Tiamat Night';
-              Storage.Set('options', options);
-            }
+            // if (options.windowTheme === 'Narumaya' || options.windowTheme === 'Vira') {
+              // options.windowTheme = 'Tiamat Night';
+              // Storage.Set('options', options);
+            // }
           }
         } else {
           Storage.Set('options', options);

@@ -9,7 +9,7 @@
     '30031': 1,
     '30032': 1,
     '30033': 1
-  }
+  };
   var coopNum = 3;
 
   //var defenseRank = 1;
@@ -33,21 +33,21 @@
     '3': 0,
     '4': 0,
     '7': 0
-  }
+  };
   var renownMax = {
     '1': 2000,
     '2': 500,
     '3': 500,
-    '4': 500,
+    '4': 1000,
     '7': 200,
-  }
+  };
   var renownIncreasedMax = {
     '1': 4000,
     '2': 1000,
     '3': 1000,
-    '4': 1000,
+    '4': 2000,
     '7': 400,
-  }
+  };
   var dailiesData = {
     'renown': {
       '1': 2000,
@@ -67,7 +67,7 @@
       '30032': 1,
       '30033': 1
     }
-  }
+  };
 
   var dailies = {
     'draw-rupie': 101,
@@ -131,7 +131,7 @@
       '20751': 1,
       '20761': 1
     },
-  }
+  };
   var enabledDistinctionList = [];
 
   var primarchHash = {
@@ -223,27 +223,23 @@
           'hideObject': {
             'id': '#dailies-freeSingleRoll-Panel',
             'value': !value
-          }
-        });
-        setDailies([
-          ['freeSingleRoll'], dailies['freeSingleRoll']
-        ], true);
+        }});
+        setDailies([['freeSingleRoll'], dailies['freeSingleRoll']], true);
       });
       Options.Get('primarchDaily', function (id, value) {
         Message.PostAll({
           'hideObject': {
             'id': '#dailies-primarchs-Panel',
             'value': !value
-          }
-        });
-        setDailies([
-          ['primarchs'], dailies['primarchs']
-        ], true);
+        }});
+        setDailies([['primarchs'], dailies['primarchs']], true);
       });
       Object.keys(dailies.distinctions).forEach(function (key) {
         Options.Get(key, function (id, value) {
           id = id[0];
-          var index = enabledDistinctionList.indexOf(id)
+          var index = enabledDistinctionList.indexOf(id);
+          console.log(id);
+          console.log(enabledDistinctionList);
           if (value && index === -1) {
             if (enabledDistinctionList.length === 0) {
               Message.PostAll({
@@ -396,9 +392,8 @@
       return response;
     },
     Reset: function () {
-      var array = [
-        ['draw-rupie'], 101, ['tweet'], true, ['freeSingleRoll'], true, ['freeTenRoll'], true, ['primarchs'], 2
-      ];
+      var array = [['draw-rupie'], 101, ['tweet'], true, ['freeSingleRoll'], true, ['freeTenRoll'], true, ['primarchs'], 2];
+
       Object.keys(dailies.coop).forEach(function (key) {
         array.push(['coop', key, 'raw'], '');
         array.push(['coop', key, 'quest'], '???');
@@ -437,20 +432,14 @@
     },
     SetDraws: function (json) {
       if (json.user_info.is_free) {
-        setDailies([
-          ['draw-rupie'], 101
-        ]);
+        setDailies([['draw-rupie'], 101]);
       } else {
-        setDailies([
-          ['draw-rupie'], json.user_info.free_count
-        ]);
+        setDailies([['draw-rupie'], json.user_info.free_count]);
       }
     },
     DecDraws: function (json) {
       if (json.gacha[0].name === 'Rupie Draw') {
-        setDailies([
-          ['draw-rupie'], dailies['draw-rupie'] - json.count
-        ]);
+        setDailies([['draw-rupie'], dailies['draw-rupie'] - json.count]);
       }
     },
     SetCoop: function (json) {
@@ -526,22 +515,16 @@
     CheckTweet: function (json) {
       if (json.twitter.campaign_info.is_avail_twitter !== undefined) {
         if (json.twitter.campaign_info.is_avail_twitter === true) {
-          setDailies([
-            ['tweet'], true
-          ]);
+          setDailies([['tweet'], true]);
         } else {
-          setDailies([
-            ['tweet'], false
-          ]);
+          setDailies([['tweet'], false]);
         }
       }
     },
     UseTweet: function (json) {
       if (json.reward_status === true) {
         APBP.SetMax();
-        setDailies([
-          ['tweet'], false
-        ]);
+        setDailies([['tweet'], false]);
       }
     },
     PurchaseMoon: function (json) {
@@ -564,9 +547,7 @@
         }
       }
       Object.keys(amounts).forEach(function (key) {
-        setDailies([
-          ['moons', key], amounts[key]
-        ]);
+        setDailies([['moons', key], amounts[key]]);
       });
     },
     CheckGacha: function (json) {
@@ -576,21 +557,15 @@
       } else if (json.enable_term_free_legend_10 !== undefined && json.enable_term_free_legend_10 !== false) {
         canRoll = true;
       }
-      setDailies([
-        ['freeSingleRoll'], canRoll
-      ]);
+      setDailies([['freeSingleRoll'], canRoll]);
     },
     RollCampaign: function (json, header) {
-      setDailies([
-        ['freeSingleRoll'], false
-      ]);
+      setDailies([['freeSingleRoll'], false]);
     },
     PurchaseDistinction: function (json) {
       var id = json.article.item_ids[0];
       if (dailies.distinctions[id] !== undefined) {
-        setDailies([
-          ['distinctions', id], 0
-        ]);
+        setDailies([['distinctions', id], 0]);
       }
     },
     SetDistinctions: function (json) {
@@ -639,50 +614,14 @@
     },
     SetPrimarchs: function (json) {
       var primarchJson = json.option.quest.extra_normal_quest.quest_list.host_group['3000'];
-      setDailies([
-        ['primarchs'], primarchJson.group_limited_count
-      ]);
+      setDailies([['primarchs'], primarchJson.group_limited_count]);
     },
     DecPrimarchs: function (payload) {
       if (primarchHash['' + payload.quest_id]) {
-        setDailies([
-          ['primarchs'], dailies['primarchs'] - 1
-        ]);
+        setDailies([['primarchs'], dailies['primarchs'] - 1]);
       }
-    }
-    // PurchaseDefense: function(json) {
-    //   // var id = json.article.item_ids[0];
-    //   // if(id === '30031' || id === '30032' || id === '30033') {
-    //   //   if(setMoon(id, 0)) {
-    //   //     saveMoons();
-    //   //   }
-    //   // }
-    // },
-    // CheckDefense: function(json, url) {
-    //   var id;
-    //   var amounts;
-    //   switch(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'))) {
-    //     case '1':
-    //       amounts = {'1356': 0, '1357': 0};
-    //       break;
-    //     case '2':
-    //       amounts = {'1368': 0};
-    //       break;
-    //     case '3':
-    //       amounts = {'1381': 0};
-    //       break;
-    //   }
-    //   for(var i = 0; i < json.list.length; i++) {
-    //     id = json.list[i].id;
-    //     if(amounts[id] !== undefined) {
-    //       amounts[id] = json.list[i].remain_number;
-    //     }
-    //   }
-    //   Object.keys(amounts).forEach(function(key) {
-    //     setDailies([['defense', key], amounts[key]]);
-    //   });
-    // },
   }
+  };
   var setDailies = function (array, override) { //category, value) {
     var category;
     var value;
@@ -709,7 +648,7 @@
     if (updated) {
       Storage.Set('dailies', dailies);
     }
-  }
+  };
 
   var checkCollapse = function (category) {
     var collapse = true;
@@ -772,7 +711,7 @@
     };
   }
   var getJquery = function (category) {
-    var id = '#dailies'
+    var id    = '#dailies';
     var value = dailies;
     var str = '';
     if (category[0] === 'draw-rupie') {
@@ -807,7 +746,7 @@
       } else if (category[0] === 'coop' && value !== '' && category[2] === 'progress') {
         str += '/' + dailies[category[0]][category[1]]['max'];
       } else if (category[0] === 'distinctions') {
-        str += '/1'
+        str += '/1';
       }
     }
     //console.log('setting text: ' + id + ' ' + str);
@@ -826,13 +765,13 @@
       var response = [];
       Object.keys(category).forEach(function (key) {
         response = response.concat(recursiveSearch(category[key], array.concat(key)));
-      })
+      });
       return response;
     }
-  }
+  };
 
   var parseDescription = function (description) {
-    newDescription = "";
+    var newDescription = "";
     if (description.indexOf('stage') !== -1) {
       newDescription = "Clear " + description.substring(description.indexOf('stage') + 8, description.lastIndexOf(' ', description.lastIndexOf('time') - 2));
       if (newDescription.indexOf('(Hard)') !== -1) {
@@ -846,7 +785,7 @@
       newDescription = description;
     }
     return newDescription;
-  }
+  };
 
   var increaseRenown = function (isIncreased) {
     for (var key in renownMax) {
@@ -858,5 +797,5 @@
         }
       }
     }
-  }
+  };
 })();

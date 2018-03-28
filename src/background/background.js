@@ -3,7 +3,7 @@
   var currURL = '';
   var pageLoaded = true;
 
-  var CURRENT_VERSION = '2.0.1';
+  var CURRENT_VERSION = '2.0.5';
   var BASE_VERSION = '1.0.1';
   var patchNotes = {
     '2.0.1': {
@@ -16,11 +16,25 @@
         'Fixed treasure detection (?)',
         'pls report bugs to lis#9322 on discord, public github some day.'
       ]
+    },
+    '2.0.3': {
+      'index': 1,
+      'notes': ['Fixed some treasure/item number detection.',
+                'Fixed loot drop detection from chests.']
+    },
+    '2.0.4': {
+      'index': 2,
+      'notes': ['Updated weekly prestige cap.']
+    },
+    '2.0.5': {
+      'index': 3,
+      'notes': ['Fix Damascus Crystals in planner.']
     }
-  }
+  };
   var patchNoteList = [
-    '2.0.1'
-  ]
+    '2.0.1',
+    '2.0.3'
+  ];
   var currentVersion = undefined;
 
   chrome.browserAction.onClicked.addListener(function () {
@@ -43,7 +57,7 @@
       }
       return note;
     }
-  }
+  };
 
   Options.Initialize(function () {
     Dailies.Initialize(function () {
@@ -106,15 +120,13 @@
 
 
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (tab.url.indexOf('gbf.game.mbga.jp') !== -1) {
+    if (tab.url.indexOf('game.granbluefantasy.jp') !== -1) {
       if (currURL !== tab.url) {
         pageLoaded = false;
         currURL = tab.url;
       }
       if (currURL === tab.url && pageLoaded) {
-        chrome.tabs.sendMessage(tabId, {
-          pageUpdate: tab.url
-        });
+        chrome.tabs.sendMessage(tabId, {pageUpdate: tab.url});
       }
 
     }
@@ -142,41 +154,29 @@
         response = response.concat(Supplies.InitializeDev());
         response = response.concat(Buffs.InitializeDev());
         response = response.concat(Quest.InitializeDev());
-        connections[message.id].postMessage({
-          initialize: response
-        });
+        connections[message.id].postMessage({initialize: response});
         return;
       }
       if (message.pageLoad) {
         pageLoaded = true;
-        chrome.tabs.query({
-          active: true,
-          currentWindow: true
-        }, function (tabs) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
           if (tabs.length > 0) {
-            chrome.tabs.sendMessage(tabs[0].id, {
-              pageLoad: tabs[0].url
-            });
-            connections[message.id].postMessage({
-              pageLoad: tabs[0].url
-            });
+            chrome.tabs.sendMessage(tabs[0].id, {pageLoad: tabs[0].url});
+            connections[message.id].postMessage({pageLoad: tabs[0].url});
             var index = tabs[0].url.indexOf('#quest/supporter/');
             if (index !== -1) {
-              Message.PostAll({
-                'setClick': {
+              Message.PostAll({'setClick': {
                   'id': '#quest-repeat',
                   'value': tabs[0].url.slice(index)
-                }
-              });
+              }});
             } else {
               index = tabs[0].url.indexOf('#event/');
-              if (index !== -1 && tabs[0].url.indexOf('/supporter/') !== -1) {
-                Message.PostAll({
-                  'setClick': {
+              if (index !== -1 && tabs[0].url.indexOf('/supporter/') !== -1)
+              {
+                Message.PostAll({'setClick': {
                     'id': '#quest-repeat',
                     'value': tabs[0].url.slice(index)
-                  }
-                });
+                }});
               }
             }
           }
@@ -184,9 +184,7 @@
         return;
       }
       if (message.openURL) {
-        chrome.tabs.update(message.id, {
-          'url': message.openURL
-        });
+        chrome.tabs.update(message.id, {'url': message.openURL});
         return;
       }
       if (message.getPlanner) {
@@ -208,20 +206,16 @@
             currentVersion = patchNoteList[i];
             note += generateNote(currentVersion);
           }
-          Message.Post(message.id, {
-            'setMessage': note
-          })
+          Message.Post(message.id, {'setMessage': note});
           currentVersion = CURRENT_VERSION;
           Storage.Set('version', CURRENT_VERSION);
         }
-        Message.Post(message.id, {
-          'setTheme': Options.Get('windowTheme', function (id, value) {
+        Message.Post(message.id, {'setTheme': Options.Get('windowTheme', function(id, value) {
             Message.PostAll({
               'setTheme': value
             });
             Time.UpdateAlertColor();
-          })
-        });
+        })});
       }
       if (message.debug) {
         Message.Notify('hey', 'its me ur brother', 'apNotifications');
@@ -467,7 +461,7 @@
           Dailies.SetPrimarchs(message.request.response);
         }
       }
-    }
+    };
     port.onMessage.addListener(extensionListener);
 
     port.onDisconnect.addListener(function (port) {
@@ -476,7 +470,7 @@
       var tabs = Object.keys(connections);
       for (var i = 0, len = tabs.length; i < len; i++) {
         if (connections[tabs[i]] == port) {
-          delete connections[tabs[i]]
+          delete connections[tabs[i]];
           break;
         }
       }
@@ -533,28 +527,22 @@
       }
     },
     OpenURL: function (url, devID) {
-      chrome.runtime.sendMessage({
-        openURL: {
+      chrome.runtime.sendMessage({openURL: {
           url: url
-        }
-      });
+        }});
 
     },
     MessageBackground: function (message, sendResponse) {},
     MessageTabs: function (message, sendResponse) {
-      chrome.runtime.sendMessage({
-        tabs: message
-      }, function (response) {
+      chrome.runtime.sendMessage({tabs: message}, function(response) {
         sendResponse(response);
       });
     },
     ConsoleLog: function (sender, message) {
-      chrome.runtime.sendMessage({
-        consoleLog: {
+      chrome.runtime.sendMessage({consoleLog: {
           sender: sender,
           message: message
-        }
-      });
+      }});
     }
   };
 

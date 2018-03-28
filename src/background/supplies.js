@@ -11,11 +11,12 @@
     misc: {},
     draw: {},
     other: {}
-  }
-  var responseList = {}
+  };
+
+  var responseList = {};
   var planners = {
     current: null,
-  }
+  };
 
   var updatedSupplies = [];
   var sortedSupplies = [];
@@ -32,7 +33,7 @@
         for (var i = 0; i < categories.length; i++) {
           category = categories[i].replace('supply', '');
           if (response[categories[i]] !== undefined) {
-            var hash = response[categories[i]].supplies
+            var hash = response[categories[i]].supplies;
             for (var key in hash) {
               if (hash.hasOwnProperty(key)) {
                 newSupply(key, category, hash[key].count, hash[key].name, hash[key].sequence);
@@ -46,7 +47,7 @@
       });
       Storage.GetMultiple(['planners'], function (response) {
         if (response['planners'] !== undefined) {
-          planners = response['planners'].planners
+          planners = response['planners'].planners;
         }
       });
     },
@@ -72,15 +73,8 @@
       });
       var type = planners.current;
       if (type && planners[type]) {
-        response.push({
-          'setPlannerDropdowns': {
-            type: type,
-            build: planners[type]
-          }
-        });
-        response.push({
-          'generatePlanner': buildWeapon(type, planners[type])
-        })
+        response.push({'setPlannerDropdowns': {type: type, build: planners[type]}});
+        response.push({'generatePlanner': buildWeapon(type, planners[type])});
       }
       return response;
     },
@@ -100,14 +94,16 @@
         }
       }
 
-      if (supplies[category][id] !== undefined) {
-
-        // if(response !== undefined) {
-        //   supplies[category][id].responseList.push(response);
-        // }
+      if (supplies[category] && supplies[category][id]) {
         return supplies[category][id].count;
       }
       return 0;
+    },
+    GetItem: function (id, category) {
+      if (supplies[category] && supplies[category][id]) {
+        return supplies[category][id];
+      }
+      return {};
     },
     Set: function (id, item_kind, amount) {
       var category = getCategory(id, item_kind);
@@ -132,7 +128,7 @@
               updated = true;
             }
           } else {
-            updated = newSupply(id, 'recovery', json[i].number, json[i].name, id);
+            updated = newSupply(id, 'recovery', json[i].number, json[i].name, parseInt(id));
           }
         }
         if (updated) {
@@ -144,21 +140,24 @@
       if (json !== undefined) {
         var updated = false;
         var id;
-        for (var i = 0; i < json.items.length; i++) {
-          id = json.items[i].item_id;
-          if (supplies.powerUp[id] !== undefined) {
-            if (updateSupply(id, 'powerUp', json.items[i].number)) {
-              updated = true;
+        for (var i = 0; i < json.length; i++) {
+            for (let item of json[i]) {
+              id = item.item_id;
+              if (supplies.powerUp[id] !== undefined) {
+                if (updateSupply(id, 'powerUp', item.number)) {
+                  updated = true;
+                }
+              } else {
+                updated = newSupply(id, 'powerUp', item.number, item.name, '' + (100000 + parseInt(id)));
+              }
             }
-          } else {
-            updated = newSupply(id, 'powerUp', json.items[i].number, json.items[i].name, '' + (100000 + parseInt(id)));
-          }
         }
         if (updated) {
           saveSupply('powerUp');
         }
       }
     },
+    
     SetTreasure: function (json) {
       console.log(json);
       if (json !== undefined) {
@@ -229,14 +228,14 @@
       var item;
       var updated = [];
       var list = json.rewards.reward_list;
-      console.log(list);
+      var category;
+
       for (var property in list) {
         if (list.hasOwnProperty(property)) {
-          for (var i = 0; i < list[property].length; i++) {
-            console.log(item);
-            item = list[property][i];
+          for (var p in list[property]) {
+            item = list[property][p];
             category = getCategory(item.id, item.item_kind);
-            if (category !== undefined && incrementSupply(item.id, category, 1)) {
+            if (category !== undefined && incrementSupply(item.id, category, item.count)) {
               if (updated.indexOf(category) === -1) {
                 updated.push(category);
               }
@@ -245,11 +244,10 @@
         }
       }
       list = json.rewards.article_list;
-      console.log(list);
+
       for (var property in list) {
         if (list.hasOwnProperty(property)) {
           item = list[property];
-          console.log(item);
           category = getCategory(item.id, '' + item.kind);
           if (category !== undefined && incrementSupply(item.id, category, item.count)) {
             if (updated.indexOf(category) === -1) {
@@ -325,9 +323,9 @@
     },
     SellCoop: function (json, payload) {
       if (json.success) {
-        var id = payload.item_id
+        var id = payload.item_id;
         var amt = parseInt(payload.number);
-        incrementSupply(id, 'coop', -amt)
+        incrementSupply(id, 'coop', - amt);
         saveSupply('coop');
         var lupi;
         switch (id) {
@@ -394,8 +392,8 @@
     },
     SetUncapItem: function (json) {
       nextUncap = json.item_id;
-
     },
+
     SetUncap: function (json) {
       nextUncap = null;
     },
@@ -446,25 +444,16 @@
       planners[weaponBuild.type] = weaponBuild.build;
       planners.current = weaponBuild.type;
       savePlanner();
-      Message.Post(devID, {
-        'generatePlanner': buildWeapon(weaponBuild.type, weaponBuild.build)
-      });
+      Message.Post(devID, {'generatePlanner': buildWeapon(weaponBuild.type, weaponBuild.build)});
     },
 
     GetPlanner: function (devID, type) {
       if (type && planners[type]) {
-        Message.Post(devID, {
-          'setPlannerDropdowns': {
-            type: type,
-            build: planners[type]
-          }
-        });
-        Message.Post(devID, {
-          'generatePlanner': buildWeapon(type, planners[type])
-        });
-      }
+        Message.Post(devID, {'setPlannerDropdowns': {type: type, build: planners[type]}});
+        Message.Post(devID, {'generatePlanner': buildWeapon(type, planners[type])});
     }
   }
+  };
 
   var getCategory = function (id, item_kind) {
     if (item_kind === '4') {
@@ -478,25 +467,21 @@
     } else {
       return undefined;
     }
-  }
+  };
 
   var saveSupply = function (category) {
-    Storage.Set('supply' + category, {
-      'supplies': supplies[category]
-    });
-  }
+    Storage.Set('supply' + category, {'supplies': supplies[category]});
+  };
 
   var savePlanner = function () {
-    Storage.Set('planners', {
-      'planners': planners
-    });
-  }
+    Storage.Set('planners', {'planners': planners});
+  };
 
   var saveUpdateSupply = function (id, category, number) {
     if (updateSupply(id, category, number)) {
       saveSupply(category);
     }
-  }
+  };
 
   var updateSupply = function (id, category, number) {
     var ret = false;
@@ -536,13 +521,13 @@
       ret = true;
     }
     return ret;
-  }
+  };
 
   var incrementSupply = function (id, category, number) {
     if (supplies[category][id] !== undefined) {
       return updateSupply(id, category, supplies[category][id].count + parseInt(number));
     }
-  }
+  };
 
   var newSupply = function (id, category, number, name, sequence) {
     supplies[category][id] = {
@@ -582,7 +567,7 @@
       }
     }
     return true;
-  }
+  };
 
   var buildWeapon = function (type, build) {
     var response = [];
@@ -633,13 +618,16 @@
                 sequence = 0;
               }
             } else {
-              current = Supplies.Get(id, category);
-              var itemDatum = weaponSupplyInfo[category][id];
-              if (!itemDatum) {
-                debugger;
-              }
-              tooltip = createTooltip(itemDatum.name);
-              sequence = itemDatum.sequence;
+              var itemLookup =  Supplies.GetItem(id, category)
+              current = itemLookup.count;
+              // var itemDatum = weaponSupplyInfo[category][id];
+              // if (!itemDatum) {
+                // debugger;
+              // }
+              // tooltip = createTooltip(itemDatum.name);
+              // sequence = itemDatum.sequence;
+              tooltip = createTooltip(itemLookup.name);
+              sequence = itemLookup.sequence;
             }
             response.push({
               'id': id,
@@ -668,7 +656,7 @@
             draw: 8,
             other: 9,
             currency: 10
-          }
+          };
           return categoryHash[a.category] - categoryHash[b.category];
         }
       });
@@ -726,8 +714,8 @@
       'type': 'currency',
       'category': category,
       'count': count
-    }
-  }
+    };
+  };
 
   var createPlannerElement = function (materialType, materialTier, count) {
     return {
@@ -735,39 +723,39 @@
       'materialType': materialType,
       'materialTier': materialTier,
       'count': count
-    }
-  }
+    };
+  };
 
   var createPlannerClass = function (materialType, count) {
     return {
       'type': 'class',
       'materialType': materialType,
       'count': count
-    }
-  }
+    };
+  };
 
   var createPlannerBahamut = function (materialType, count) {
     return {
       'type': 'bahamut',
       'materialType': materialType,
       'count': count
-    }
-  }
+    };
+  };
   var createPlannerSeraph = function (materialType, count) {
     return {
       'type': 'seraph',
       'materialType': materialType,
       'count': count
-    }
-  }
+    };
+  };
 
   var createPlannerRevenantFiveStar = function (materialType, count) {
     return {
       'type': 'revenantFiveStar',
       'materialType': materialType,
       'count': count
-    }
-  }
+    };
+  };
 
   var createPlannerSupply = function (category, id, count) {
     return {
@@ -775,15 +763,15 @@
       'category': category,
       'id': id,
       'count': count
-    }
-  }
+    };
+  };
 
   var createSupplyInfo = function (category, id) {
     return {
       'category': category,
       'id': id
-    }
-  }
+    };
+  };
 
   var plannersData = {
     'Revenant': [{
@@ -1080,7 +1068,7 @@
           createPlannerSupply('material', '1202', 1500),
 
           createPlannerSupply('powerUp', '20004', 1),
-          createPlannerSupply('raid', '203', 10),
+          createPlannerSupply('misc', '203', 10),
           createPlannerSupply('raid', '107', 10),
           createPlannerSupply('material', '2003', 5),
           createPlannerRevenantFiveStar('fragment', 100),
@@ -1099,7 +1087,7 @@
         ]
       },
     ]
-  }
+  };
   var createClass = function (type, avenger, skofnung, nirvana, keraunos, oliver, hellion, ipetam, rosenbogen, langeleik, romulus, faust, murakumo, muramasa, ascalon, nebuchad, kapilavastu, misericorde) {
     return {
       'Avenger': createPlannerSupply(type, avenger),
@@ -1119,8 +1107,8 @@
       'Nebuchad': createPlannerSupply(type, nebuchad),
       'Kapilavastu': createPlannerSupply(type, kapilavastu),
       'Misericorde': createPlannerSupply(type, misericorde)
-    }
-  }
+    };
+  };
 
   var createRevenantFiveStar = function (type, uno, song, sarasa, quatre, funf, six, siete, octo, nio, esser) {
     return {
@@ -1134,8 +1122,8 @@
       'Octo': createPlannerSupply(type, octo),
       'Nio': createPlannerSupply(type, nio),
       'Esser': createPlannerSupply(type, esser),
-    }
-  }
+    };
+  };
 
   var revenantFiveStars = {
     'shard': createRevenantFiveStar('material',
@@ -1237,7 +1225,7 @@
       '20741',
       '20711'
     ),
-  }
+  };
 
   var classes = {
     'creed': createClass('coop',
@@ -1430,7 +1418,7 @@
       '5021',
       '5041'
     ),
-  }
+  };
   var elements = {
     'orb': {
       '0': {
@@ -1644,10 +1632,10 @@
         'Wind': createSupplyInfo('treasure', '91'),
       },
     },
-  }
+  };
   var seraphs = {
 
-  }
+  };
   var bahamuts = {
     'Sabre': createSupplyInfo('raid', '47'),
     'Dagger': createSupplyInfo('raid', '51'),
@@ -1659,7 +1647,7 @@
     'Melee': createSupplyInfo('raid', '49'),
     'Harp': createSupplyInfo('raid', '48'),
     'Katana': createSupplyInfo('raid', '48'),
-  }
+  };
 
   var tooltips = {
     'Satin Feather': ['1: Scattered Cargo'],
