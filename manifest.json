@@ -3,7 +3,7 @@
    
    "name": "Orchees",
    "description": "The GBF Companion Extension that's absolutely dollable.",
-   "version": "2.0.3",
+   "version": "2.0.6",
    
    "icons": {
       "128": "src/assets/images/icon128.png",

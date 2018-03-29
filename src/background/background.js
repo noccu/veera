@@ -29,11 +29,18 @@
     '2.0.5': {
       'index': 3,
       'notes': ['Fix Damascus Crystals in planner.']
+    },
+    '2.0.6': {
+      'index': 4,
+      'notes': ['Add HL buncle raids.']
     }
   };
   var patchNoteList = [
     '2.0.1',
-    '2.0.3'
+    '2.0.3',
+    '2.0.4',
+    '2.0.5',
+    '2.0.6'
   ];
   var currentVersion = undefined;
 

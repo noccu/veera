@@ -85,11 +85,19 @@
     '300551': null,
     '300581': null,
     '300591': null,
+    
+    //buncles
+    '302751': null,
+    '303041': null, 
+    '302711': null,
+    '303051': null,
+    '303061': null,
+    '303071': null,
 
     '300291': null,
     '301051': null,
     '300471': null,
-    '301061': null,
+    '301061': null
   };
 
   var createRaid = function (sequence, sequence2, name, max, magDelta, url, animeIDs, animeCounts, animeTypes, isHL) {
@@ -115,7 +123,7 @@
     '300171', '300181', '300191', '300261', '300391', '301371', '300531', '300541',
     '300201', '300211', '300221', '300271', '300431', '300461', '300561', '300571',
     '300231', '300241', '300251', '300281', '300401', '300551', '300581', '300591',
-    '300291', '301051', '300471', '301061'
+    '300291', '301051', '302751', '303071', '303041', '302711', '303051', '303061', '300471', '301061'
   ];
 
   var currRaidList = [];
@@ -179,11 +187,19 @@
     '300551': createRaid(49, 39, 'Lich (EX)', 2, 0, '2040012000_ex.jpg', ['1363', '1161'], [50, 6], ['material', 'material'], false),
     '300581': createRaid(50, 47, 'Celeste (HL)', 2, 0, '2040046000_high.jpg', ['51'], [3], ['raid'], true),
     '300591': createRaid(51, 54, 'Olivia (HL)', 1, 0, '2040005000_high.jpg', ['46'], [1], ['raid'], true),
+    
+    //buncles
+    '302751': createRaid(56, 50, 'Prometheus', 1, 0, 'unknown.jpg', ['41'], [1], ['raid'], true),
+    '303041': createRaid(61, 50, 'Ca Ong', 1, 0, 'unknown.jpg', ['42'], [1], ['raid'], true),
+    '302711': createRaid(60, 50, 'Gilgamesh', 1, 0, 'unknown.jpg', ['43'], [1], ['raid'], true),
+    '303051': createRaid(58, 50, 'Morrigna', 1, 0, 'unknown.jpg', ['44'], [1], ['raid'], true),
+    '303061': createRaid(59, 50, 'Hector', 1, 0, 'unknown.jpg', ['45'], [1], ['raid'], true),
+    '303071': createRaid(57, 50, 'Anubis', 1, 0, 'unknown.jpg', ['46'], [1], ['raid'], true),
 
     '300291': createRaid(52, 40, 'Bahamut (EX)', 3, 0, '2030002000_hell.jpg', ['58'], [1], ['raid'], false),
     '301051': createRaid(53, 41, 'Grand (EX)', 2, 0, '2040065000_hell.jpg', ['82'], [1], ['raid'], false),
     '300471': createRaid(54, 48, 'Rose (HL)', 1, 0, '2040105000_high.jpg', ['1204'], [10], ['material'], true),
-    '301061': createRaid(55, 55, 'Bahamut (HL)', 1, 0, '2040128000_hell.jpg', ['59'], [1], ['raid'], true),
+    '301061': createRaid(55, 55, 'Bahamut (HL)', 1, 0, '2040128000_hell.jpg', ['59'], [1], ['raid'], true)
   };
 
   var tweetHash = {
@@ -424,15 +440,15 @@
         raidList.sort(sortByDifficulty);
       }
 
-      // for (var i = 0; i < raidList.length; i++) {
-        // currRaidList.push(raidList[i]);
-      // }
-      currRaidList = Array.from(raidList);
+      for (var i = 0; i < raidList.length; i++) {
+        currRaidList.push(raidList[i]);
+      }
+      // currRaidList = Array.from(raidList);
 
       Storage.GetMultiple(['quests'], function (response) {
         if (response['quests'] !== undefined) {
           var modified = false;
-          if (response['quests']['301061'] == undefined) {
+          if (response['quests'].length != raidList.length) {
             for (var key in remainingQuests) {
               if (response['quests'][key] == undefined) {
                 if (!Options.Get('isMagFest')) {
@@ -444,7 +460,7 @@
             }
             modified = true;
           }
-
+          
           for (var i = 0; i < raidList.length; i++) {
             setRemainingRaids(raidList[i], response['quests'][raidList[i]]);
           }
