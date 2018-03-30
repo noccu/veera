@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="../stylesheets/panel.css" rel="stylesheet">
+        <script type="text/javascript" src="message.js"></script>
+        <script type="text/javascript" src="network.js"></script>
+        <script type="text/javascript" src="panel.js"></script>
+        <script type="text/javascript" src="test.js" defer></script>
+    </head>
+    <body>
+        <div id="top-display">
+            <div id="profile" class="top-div">
+                <div id="ap-bp-display" class="display">
+                    <div id="ap-display">AP: <span id="ap-current" class="current-value">100</span>/<span id="ap-max" class="max-value">106</span></div>
+                    <div id="bp-display">BP: <span id="bp-current" class="current-value">10</span>/<span id="bp-max" class="max-value">10</span></div>
+                </div>
+                <div id="status" class="display">
+                    <div class="value-display">
+                        Rank: <span id="rank">100</span>
+                    </div>
+                    <div class="value-display">
+                        RP: <span id="rank-pts">100</span>
+                    </div>
+                    <div class="value-display">
+                        Class lvl: <span id="class-lvl">20</span>
+                    </div>
+                </div>
+                <div id="currency" class="display">
+                    <div class="display-div-hor">
+                        <div class="value-display">Crystals: <span id="num-crystal">60625</span></div>
+                        <div class="value-display">Rupies: <span id="num-rupies">86525</span></div>
+                        <div class="value-display">Chips: <span id="num-chips">6,099,625</span></div>
+                    </div>
+                    <div class="display-div-hor">
+                        <div class="value-display">CP: <span id="num-cp">5000</span></div>
+                        <div class="value-display">EMP: <span id="num-emp">500</span></div>
+                        <div class="value-display">JD: <span id="num-jd">6625</span></div>
+                    </div>
+                    <div class="display-div">
+                        <div class="display-div-hor">
+                            <div class="value-display">Renown: <div><span id="display-renown-total" class="current-value">12320</span>/<span id= "max-renown" class="max-value">20000</span></div></div>
+                            <div class="value-display">Prestige: <div><span id="display-prestige-total" class="current-value">1355</span>/<span id= "max-prestige" class="max-value">5000</span></div></div>
+                        </div>
+                        <div class="display-div-hor">
+                            <div class="value-display">Arcarum tck: <div><span id="num-arc-tck" class="current-value">9</span>/<span id= "max-arc-tck" class="max-value">9</span></div></div>
+                            <div class="value-display">Arcarum pts: <span id="num-arc-pts">18650</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="time" class="top-div">
+                <div class="display">
+                    <span class="display-title">JST</span>
+                    <span id="jst-time" class="timer-display">5:00</span>
+                </div>
+                <div class="display">
+                    <span class="display-title">Strike Time</span>
+                    <span id="timer-st" class="timer-display">2h</span>
+                </div>
+                <div class="display">
+                    <span class="display-title">Daily</span>
+                    <span id="timer-daily" class="timer-display">2h</span>
+                </div>
+                <div class="display">
+                    <span class="display-title">Weekly</span>
+                    <span id="timer-weekly" class="timer-display">2h</span>
+                </div>
+                <div class="display">
+                    <span class="display-title">Monthly</span>
+                    <span id="timer-monthly" class="timer-display">2h</span>
+                </div>
+                
+            </div>
+        </div>
+        <ul id="nav" class="tablist">
+            <li class="nav-tab">Dailies</li>
+            <li class="nav-tab">Raids</li>
+            <li class="nav-tab">Supplies</li>
+            <li class="nav-tab">Battle</li>
+        </ul>
+        <div id="content">
+            <div id="dailies" class="tab">
+<!--                <span class="tab-header">Profile</span>-->
+                <div id="pendants-panel" class="panel">
+                    <span class="panel-header do-collapse" onclick="var c = this.nextElementSibling.classList; c.contains('hidden')?c.remove('hidden') : c.add('hidden')">Pendants</span>
+                    <ul class="panel-content">
+                        <div id="renown" class="panel-div">
+                            <span class="panel-div-title">Renown</span>
+                            <li>Total: <span id="panel-renown-total">500</span></li>
+                            <li>Daily: <span id="panel-renown-daily">500</span></li>
+                            <li>Weekly: <span id="panel-renown-weekly">500</span></li>
+                        </div>
+                        <div id="prestige" class="panel-div">
+                            <span class="panel-div-title">Prestige</span>
+                            <li>Total: <span id="panel-prestige-total">500</span></li>
+                            <li>Crew: <span id="panel-prestige-crew">500</span></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div id="raids" class="tab">
+<!--                <span class="tab-header">Raids</span>-->
+            </div>
+        </div>
+    </body>
+</html>

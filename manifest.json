@@ -1,9 +1,9 @@
 {
    "manifest_version": 2,
    
-   "name": "Orchees",
-   "description": "The GBF Companion Extension that's absolutely dollable.",
-   "version": "2.0.6",
+   "name": "Veera",
+   "description": "The GBF Companion Extension that's absolutely yandere.",
+   "version": "1.0.0",
    
    "icons": {
       "128": "src/assets/images/icon128.png",
@@ -12,6 +12,7 @@
    },
    "browser_action": {
       "default_icon": "src/assets/images/icon128.png"
+      //"default_popup": "src/pages/popup/popup.html"
    },
    
    "options_ui": {
@@ -20,27 +21,12 @@
    },
    
    "background": {
-     "scripts": [ 
-     "src/background/message.js",
-     "src/background/storage.js",
-     "src/background/options.js",
-     "src/background/supplies.js",
-     "src/background/apbp.js",
-     "src/background/buffs.js",
-     "src/background/quest.js",
-     "src/background/casino.js",
-     "src/background/profile.js",
-     "src/background/dailies.js",
-     "src/background/time.js",
-     "src/background/background.js" ]
+     "scripts": [ "src/background/message.js",
+                  "src/background/profile.js",
+                  "src/background/background.js",
+                  "src/background/raids.js"]
    },
-   
-   "content_scripts": [ {
-      "js": [ "lib/jquery-3.0.0.min.js", "src/content/script.js" ],
-      "matches": [ "http://gbf.game.mbga.jp/*", "http://game.granbluefantasy.jp/*" ],
-      "run_at": "document_end"
-   } ],
-   
+      
    "permissions": [ 
      "http://gbf.game.mbga.jp/*", 
      "http://game.granbluefantasy.jp/*",

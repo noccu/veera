@@ -1,30 +1,31 @@
-(function () {
-  chrome.devtools.network.onRequestFinished.addListener(function (request) {
-    if (request.request.url.indexOf('.css') !== -1 && request.request.url.indexOf('/css/common/index.css') === -1) {
-      Message.Post({
-        pageLoad: true
-      });
-    }
-    if (request.request.url.indexOf('http://gbf.game.mbga.jp/') !== -1 || request.request.url.indexOf('http://game.granbluefantasy.jp/') !== -1) {
-      request.getContent(function (responseBody) {
-        if (request.request.postData !== undefined) {
-          Message.Post({
-            'request': {
-              url: request.request.url,
-              response: JSON.parse(responseBody),
-              payload: JSON.parse(request.request.postData.text)
-            }
-          });
-        } else {
-          Message.Post({
-            'request': {
-              url: request.request.url,
-              response: JSON.parse(responseBody),
-              payload: undefined
-            }
+window.Network = {
+    logging: false,
+    listen: function() {
+        chrome.devtools.network.onRequestFinished.addListener(this.logRequest);
+        this.logging = true;
+        console.log("Request listener set.");
+    },
+    deafen: function() {
+        chrome.devtools.network.onRequestFinished.removeListener(this.logRequest);
+        this.logging = false;
+        console.log("Request listener removed.");
+    },
+    logRequest: function(entry) {
+        if (window.DEBUG) console.log(entry);
+        //Ignore anything that isn't JSON from gbf site.
+        if (entry.response.content.mimeType == "application/json" && entry.request.url.includes("game.granbluefantasy.jp")) {
+            entry.getContent(data => {
+              BackgroundPage.send({
+                'request': {
+                  url: entry.request.url,
+                  json: JSON.parse(data),
+                  postData: entry.request.postData ? JSON.parse(entry.request.postData.text) : null
+                }
+              });
           });
         }
-      });
+    },
+    toggle: function(){
+        Network.logging ? Network.deafen() : Network.listen();
     }
-  });
-})();
+}
