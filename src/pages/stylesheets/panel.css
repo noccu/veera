@@ -1,17 +1,4 @@
-@charset "UTF-8";
-
-:root {
-    --bg-color: #2c2c30;
-    --text-color: antiquewhite;
-    --diff-color-a: #645374;
-    --diff-color-b: #562025;
-    --line-color: grey;
-    
-    --selection-color: #26415c;
-    --highlight-color: red;
-    
-    --main-font: sans-serif;
-}
+/* Core stylesheet for DevTools UI. */
 
 html {
     font-family: var(--main-font);
@@ -20,18 +7,18 @@ html {
 }
 
 .tab {
-
+    display: none;
     position: relative;
-/*    top: 1.9em;*/
     padding: 0;
-/*    margin-top: 1em;*/
+}
+
+.tab.active {
+    display: initial;
 }
 
 .tab-header {
     display: inline-block;
     margin-bottom: 1em;
-/*    position: absolute;*/
-/*    top: -1.5em;*/
 }
 
 .panel {
@@ -41,14 +28,10 @@ html {
 
 .panel-header {
     background-color: var(--diff-color-a);
-/*    width:100%;*/
     display: block;
     text-align: center;
     font-variant: small-caps;
     font-size: 1.2em;
-/*    margin-top: 0;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
 }
 
 .panel-div:not(:first-child) {
@@ -67,8 +50,6 @@ html {
     margin-top: 0.5em;
     margin-bottom: 1em;
     padding: 0;
-/*    word-spacing: 0;*/
-/*    white-space: 0;*/
 }
 
 .nav-tab {
@@ -78,8 +59,6 @@ html {
     background-color: var(--diff-color-a);
     font-size: 1.2em;
     font-weight: bold;
-/*    list-style-type: none;*/
-/*    line-height: 2;*/
 }
 
 
@@ -97,14 +76,15 @@ html {
 }
 
 #top-display {
-    margin-bottom: 2em;
+/*    margin-bottom: 2em;*/
 }
 
-.top-div {
+.div {
+/*
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
     border-bottom: 1px solid var(--line-color);
-/*    display: flex;*/
+*/
 }
 
 .timer-display {
@@ -112,24 +92,15 @@ html {
     font-size: 2em;
 }
 
-.display-div {
-/*    margin-bottom: 0.5em;*/
-/*    padding-bottom: 0.5em;*/
-/*    border-bottom: 1px solid grey;*/
-    margin-top: 1.25em;
-}
-
-.display-div-hor {
+.div-hor {
     display: inline-block;
 }
 
-.display-div-hor:not(:first-child) {
+.div-hor:not(:first-child) {
     margin-left: 0.5em;
 }
 
 #profile {
-/*    display: flex;*/
-/*    position: static;*/
 }
 
 .value-display {
@@ -166,14 +137,90 @@ html {
 }
 
 ul {
-  padding: 0 1em;  
+    padding: 0;
+    margin: 0;
 }
 
 li {
     list-style: none;
-    padding-left: 1em;
+/*    padding-left: 1em;*/
 }
 
 .hidden {
     display: none;
 }
+
+.highlight {
+    background-color: var(--highlight-color);
+}
+.tab-view-list {
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.tab-view {
+    display: inline-block;
+    margin-right: 0.1em;
+    padding: 0.2em;
+    vertical-align: baseline;
+    line-height: 1;
+/*    background-color: var(--diff-color-b)*/
+}
+
+.active {
+    background-color: var(--selection-color)
+}
+
+.collection-item {
+    display: inline-block;
+    text-align: center;
+    margin: 0.1em;
+}
+
+.collection-icon {
+    height: 3.5em;
+    width: 3.5em;
+    display: inline-block;
+}
+
+.spacer {
+    margin-bottom: 1em;
+}
+
+
+
+.sep {
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--line-color);
+}
+
+.panel-content {
+    margin: 0.5em;
+}
+
+.panel-filter {
+    margin: 0.5em;
+    margin-bottom: 1em;
+}
+
+.panel-filter li {
+    display: inline-block;
+    opacity: 0.5;
+    margin-right: 0.2em;
+}
+
+.panel-filter li.active{
+    opacity: 1;
+    background-color: initial;
+}
+
+
+
+#treasure-filter {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+

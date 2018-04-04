@@ -11,15 +11,15 @@ window.Network = {
         console.log("Request listener removed.");
     },
     logRequest: function(entry) {
-        if (window.DEBUG) console.log(entry);
         //Ignore anything that isn't JSON from gbf site.
         if (entry.response.content.mimeType == "application/json" && entry.request.url.includes("game.granbluefantasy.jp")) {
             entry.getContent(data => {
-              BackgroundPage.send({
-                'request': {
-                  url: entry.request.url,
-                  json: JSON.parse(data),
-                  postData: entry.request.postData ? JSON.parse(entry.request.postData.text) : null
+                if (window.DEBUG) console.log(entry.request.url.slice(30), JSON.parse(data));
+                BackgroundPage.send({
+                    'request': {
+                      url: entry.request.url,
+                      json: JSON.parse(data),
+                      postData: entry.request.postData ? JSON.parse(entry.request.postData.text) : null
                 }
               });
           });

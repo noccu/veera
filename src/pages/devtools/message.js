@@ -4,7 +4,7 @@ window.BackgroundPage = {
         this.connection = chrome.runtime.connect({
             name: "devtools-page"
         });
-        this.connection.onMessage.addListener(this.listen);
+        this.connection.onMessage.addListener(this.hear);
     },
     send: function(data) {
         if (!this.connection) {
@@ -13,17 +13,31 @@ window.BackgroundPage = {
         }
         this.connection.postMessage(data);
     },
-    listen: function(data){
+    hear: function(data){
+        console.log("[devtools] Heard:", data);
         switch (data.action){
             case "sayHi":
                 console.log("Onee-sama!");
-            break;
+                break;
             case "sayBye":
                 console.log("Onee-sama?");
-            break;
-            case "updatePendants":
-                updatePendants(data);
-            break;
+                break;
+            case "updPendants":
+                updatePendants(data.value);
+                break;
+            case "updStatus":
+                updateStatus(data.value);
+                break;
+            case "queryResult":
+                switch (data.query) {
+                    case "theme":
+                        UI.setTheme(data.value.fname);
+                        break;
+                }
+                break;
+            case "setTreasure":
+                updateTreasure(data.value);
+                break;
         }
     }
 };

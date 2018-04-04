@@ -1,19 +1,13 @@
+/*globals DevTools: true, State: true*/
 console.log("Onee-sama?");
+var UPDATED = false;
 
 DevTools.init(); //Listen for devtools conn
+State.options.theme.current = 0; //TODO: Replace with proper options parsing and defaults setting
 
-//Helper function
-function matchURL(url, match) {
-    return url.indexOf(match) != -1;
-}
-
-function hearMessageDT (data) {
-    //console.log("Processing:", data);
-    if (data.request) {
-        url = data.request.url;
-        if (matchURL(url, "user/content/index"))
-        {
-            Profile.setPendants(data.request.json);
-        }
-    }
+function updateUI (type, value) {
+    DevTools.send({
+            action: type, 
+            value: value
+        });
 }

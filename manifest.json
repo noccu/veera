@@ -21,10 +21,12 @@
    },
    
    "background": {
-     "scripts": [ "src/background/message.js",
-                  "src/background/profile.js",
-                  "src/background/background.js",
-                  "src/background/raids.js"]
+     "scripts": ["src/background/message.js",
+                 "src/background/profile.js",
+                 "src/background/state.js",
+                 "src/background/supplies.js",
+                 "src/background/background.js",
+                 "src/background/raids.js"]
    },
       
    "permissions": [ 
