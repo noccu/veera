@@ -9,6 +9,7 @@ window.DevTools = {
             port.onMessage.addListener(DevTools.listen);
             port.onDisconnect.addListener(this.deafen);
         });
+        chrome.runtime.onMessage.addListener(hearQuery);
     },
     listen: function(data) {
         console.log("[background] Heard:", data);
@@ -61,14 +62,12 @@ function hear (data) {
                 Supplies.consumable.set(data.request.json);
         }
     }
-    else if (data.query) {
-        switch (data.query) {
-            case "theme":
-                DevTools.send({
-                    action: "queryResult", 
-                    query: data.query, 
-                    value: State.options.theme.current
-                });
-        }
+}
+
+function hearQuery (data, sender, respond) {
+    switch (data.query) {
+        case "theme":
+            respond({query: data.query, 
+                     value: State.options.theme.current});
     }
 }

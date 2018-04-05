@@ -1,4 +1,11 @@
 window.BackgroundPage = {
+    query: function(key, response){
+      chrome.runtime.sendMessage({
+                                    source: "devtools",
+                                    query: key
+                                 },
+                                 response) ; 
+    },
     connection: null,
     connect: function() {
         this.connection = chrome.runtime.connect({
@@ -27,13 +34,6 @@ window.BackgroundPage = {
                 break;
             case "updStatus":
                 updateStatus(data.value);
-                break;
-            case "queryResult":
-                switch (data.query) {
-                    case "theme":
-                        UI.setTheme(data.value.fname);
-                        break;
-                }
                 break;
             case "setTreasure":
                 updateTreasure(data.value);

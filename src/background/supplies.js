@@ -10,7 +10,7 @@ window.Supplies = {
             for (let item of json) {
                 this.index[item.item_id] = {
                     name: item.name, 
-                    //desc: item.comment, 
+//                    desc: item.comment, 
                     category: item.category_type, 
                     count: parseInt(item.number)
                     };
@@ -28,16 +28,6 @@ window.Supplies = {
                 return this.index[id];
             }
         },
-/*        getType: function() {
-            return "article";
-        },
-        getCategory: function (item) {
-            if (item.category_type.length == 1) {
-                return item.category_type[0];
-            } else {
-                return item.category_type;
-            }
-        }*/
     },
     consumable: {
         index: {},
@@ -54,7 +44,7 @@ window.Supplies = {
             function parse(list, idx) {
                 for (let item of list) {
                     idx[item.item_id] = {name: item.name, 
-//                                         desc: item.comment, 
+//                                         desc: item.comment,
                                          count: parseInt(item.number)};
                 }
             }
