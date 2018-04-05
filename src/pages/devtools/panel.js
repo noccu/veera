@@ -8,7 +8,7 @@ window.UI = {
     setTheme: function (fname) {
         var sheet = document.getElementById("theme");
         if (!fname) {console.log("No theme file given, using default."); fname = "night";}
-        sheet.href = "../stylesheets/" + fname + ".css";
+        sheet.href = `../stylesheets/${fname}.css`;
     },
 
     //Input: {id, value} optionally in Array
@@ -23,15 +23,16 @@ window.UI = {
             var ele = document.getElementById(upd.id);
             ele.textContent = upd.value;
         }
-    },
-    createSupplyItem: function (name, num, src) {
-        var t = document.getElementById("template-treasure-item");
+    }
+};
+
+function createSupplyItem (name, num, thumb) {
+        var t = document.getElementById("template-supply-item");
         t.content.querySelector("li").title = name;
-        t.content.querySelector("img").src = src;
+        t.content.querySelector("img").src = thumb;
         t.content.querySelector("div").textContent = num;
         return document.importNode(t.content, true);
     }
-};
 
 function updatePendants (data) {
     UI.setValue([{
@@ -119,22 +120,51 @@ function updateStatus (data) {
 
 function updateTreasure (data) {
     var tlist = document.getElementById("treasure-list");
+    var temp = document.createElement("template");
     for (let id in data) {
-        if (!data.hasOwnProperty(id)) {return;}
-        var li = UI.createSupplyItem(data[id].name, data[id].count, createSupplyURL(id, "treasure"));
-        tlist.appendChild(li);
+        if (data.hasOwnProperty(id)) {
+            var li = createSupplyItem(data[id].name, data[id].count, createSupplyURL(id, "article"));
+            tlist.appendChild(li);
+        }
     }
+    tlist.appendChild(temp.content);
+}
+
+function updateConsumables (data) {
+    var tlist = document.getElementById("consumable-list");
+    var temp = document.createElement("template");
+    for (let idx in data) {
+        if (data.hasOwnProperty(idx)) {
+            for (let id in data[idx]) {
+                if (data[idx].hasOwnProperty(id)) {
+                    var li = createSupplyItem(data[idx][id].name, 
+                                                 data[idx][id].count, 
+                                                 createSupplyURL(id, idx));
+                    temp.content.appendChild(li);
+//                    console.log("id:", id, "name:", data[idx][id].name, "data:", data,"idx:", idx);
+                }
+            }
+        }
+    }
+    tlist.appendChild(temp.content);
+}
+
+function updateSupply (data, list) {
+
 }
 
 function createSupplyURL (id, type) {
-    switch (type) {
-        case "recovery":
+    return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
+/*    switch (type) {
+        case "recovery": //AP/EP
             return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/normal/s/${id}.jpg`;
+        case "evolution": //Bars, etc
+            return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/evolution/s/${id}.jpg`;
         case "skillplus": //Atma keys
             return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/skillplus/s/${id}.jpg`;
-        case "augment":
+        case "augment": //Rings
             return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/npcaugment/s/${id}.jpg`;
-        case "treasure":
+        case "treasure": //Loot drops
             return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/article/s/${id}.jpg`;
-    }
+    }*/
 }

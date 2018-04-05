@@ -224,3 +224,15 @@ li {
 }
 
 
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: initial;
+}
+
+.supply-list {
+    text-align: justify;
+}

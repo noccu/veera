@@ -77,11 +77,11 @@
             <div class="sep"></div>
         </div>
         <div id="tabs">
-            <ul id="nav" class="tablist">
-                <li class="nav-tab">Dailies</li>
-                <li class="nav-tab">Raids</li>
-                <li class="nav-tab active">Supplies</li>
-                <li class="nav-tab">Battle</li>
+            <ul id="nav" class="tablist navlist">
+                <li class="nav-tab" data-navpage="dailies">Dailies</li>
+                <li class="nav-tab" data-navpage="raids">Raids</li>
+                <li class="nav-tab active" data-navpage="supplies">Supplies</li>
+                <li class="nav-tab" data-navpage="battle">Battle</li>
             </ul>
             <div id="dailies" class="tab">
 <!--                <span class="tab-header">Profile</span>-->
@@ -105,35 +105,46 @@
                 </div>
             </div>
             <div id="supplies" class="tab active">
-                <ul id="tab-view-supplies" class="tab-view-list">
-                    <li class="tab-view active">Treasure</li>
-                    <li class="tab-view">Consumables</li>
-                    <li class="tab-view">Planner</li>
+                <ul id="nav-supplies" class="tab-view-list navlist">
+                    <li class="tab-view active" data-navpage="treasure-view">Treasure</li>
+                    <li class="tab-view" data-navpage="consumables-view">Consumables</li>
+                    <li class="tab-view" data-navpage="treasure-view">Planner</li>
                 </ul>
                 <div class="spacer"></div>
-                <div id="treasure-panel" class="panel">
-                    <span class="panel-header do-collapse">Treasure</span>
-                    <div class="panel-filter">
-                        <ul id="treasure-filter">
-                            <li>All</li>
-                            <li class="active">Primal</li>
-                            <li>Raid</li>
-                            <li class="active">Coop</li>
-                        </ul>
-                        <input id="treasure-search" class="panel-search"/>
-<!--                        <div class="sep"></div>-->
+                <div id="treasure-view" class="view active">
+                    <div id="treasure-panel" class="panel">
+                        <span class="panel-header do-collapse">Treasure</span>
+                        <div class="panel-filter">
+                            <ul id="treasure-filter">
+                                <li>All</li>
+                                <li class="active">Primal</li>
+                                <li>Raid</li>
+                                <li class="active">Coop</li>
+                            </ul>
+                            <input id="treasure-search" class="panel-search"/>
+    <!--                        <div class="sep"></div>-->
+                        </div>
+                        <div class="panel-content">
+                            <ul id="treasure-list" class="supply-list">
+                                <template id="template-supply-item">
+                                    <li id="" class="collection-item" title="Item name" data-cat="">
+                                        <img class="collection-icon" src="../../assets/images/anchiraicon.png"/>
+                                        <div class="collection-data">
+                                            0
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="panel-content">
-                        <ul id="treasure-list">
-                            <template id="template-treasure-item">
-                                <li id="" class="collection-item" title="Item name" data-cat="">
-                                    <img class="collection-icon" src="../../assets/images/anchiraicon.png"/>
-                                    <div class="collection-data">
-                                        0
-                                    </div>
-                                </li>
-                            </template>
-                        </ul>
+                </div>
+                <div id="consumables-view" class="view">
+                    <div id="consumables-panel" class="panel">
+                        <div class="panel-content">
+                            <ul id="consumable-list" class="supply-list">
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

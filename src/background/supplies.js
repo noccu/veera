@@ -1,4 +1,5 @@
-const category = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
+const supplyCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
+const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
 
 window.Supplies = {
     treasure: {
@@ -9,7 +10,7 @@ window.Supplies = {
             for (let item of json) {
                 this.index[item.item_id] = {
                     name: item.name, 
-                    desc: item.comment, 
+                    //desc: item.comment, 
                     category: item.category_type, 
                     count: parseInt(item.number)
                     };
@@ -27,55 +28,51 @@ window.Supplies = {
                 return this.index[id];
             }
         },
+/*        getType: function() {
+            return "article";
+        },
         getCategory: function (item) {
             if (item.category_type.length == 1) {
                 return item.category_type[0];
             } else {
                 return item.category_type;
             }
-        }
+        }*/
     },
     consumable: {
-        index: {
-            idx_recovery: {},
-            idx_evolution: {},
-            idx_augment: {}
-        },
+        index: {},
         
         set: function (json) {
-            var evo = {
-                pwrup: json[1], 
-                atma: json[2], 
-                rings: json[3]
+            var index = {
+                normal: json[0], //AP/EP
+                evolution: json[1], //Bars, etc
+                skillplus: json[2], //Atma keys
+                npcaugment: json[3] //Rings
             };
-            //types should be order-matched with this.index (help)
-            var types = [
-                json[0], //recovery
-                evo.pwrup[0].concat(evo.pwrup[1], evo.pwrup[2], evo.pwrup[3], evo.atma, evo.rings), //powerups
-                evo.pwrup[4].concat(evo.pwrup[5], evo.pwrup[5]) //exp items
-            ];
                 
-            var i = 0;
-            for ( let key of Object.keys(this.index) ) {
-                var idx = {};
-                for (var item of types[i]) {
-                    idx[item.item_id] = {name: item.name, desc: item.comment, count: parseInt(item.number)};
+            //Parses list into index
+            function parse(list, idx) {
+                for (let item of list) {
+                    idx[item.item_id] = {name: item.name, 
+//                                         desc: item.comment, 
+                                         count: parseInt(item.number)};
                 }
-                this.index[key] = idx;
+            }
+            
+            var i = 0;
+            for ( let type of Object.keys(index) ) {
+                let idx = {};
+                if (type == "evolution") { //because ??? thanks cygames
+                    for (let arr of index[type]) {
+                        parse(arr, idx);
+                    }
+                } else {
+                    parse(index[type], idx);
+                }
+                this.index[type] = idx;
                 i++;
             }
-            // for (item of recovery) {
-                // idx_recovery[item.item_id] = {name: item.name, desc: item.comment, count: parseInt(item.number)}
-            // }
-            // for (item of evolution) {
-                // idx_evolution[item.item_id] = {name: item.name, desc: item.comment, count: parseInt(item.number)}
-            // }
-            // for (item of atma) {
-                // idx_atma[item.item_id] = {name: item.name, desc: item.comment, count: parseInt(item.number)}
-            // }
-            // for (item of rings) {
-                // idx_rings[item.item_id] = {name: item.name, desc: item.comment, count: parseInt(item.number)}
-            // }
+            updateUI("setConsumables", this.index);
         }
     }
 };

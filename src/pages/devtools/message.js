@@ -38,6 +38,9 @@ window.BackgroundPage = {
             case "setTreasure":
                 updateTreasure(data.value);
                 break;
+            case "setConsumables":
+                updateConsumables(data.value);
+                break;
         }
     }
 };
