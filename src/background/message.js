@@ -2,9 +2,9 @@
 window.DevTools = {
     devToolsConnection: null,
     init: function() {
-        console.log("Waiting on DevTools connection.");
+        console.log("Onee-sama?");
         chrome.runtime.onConnect.addListener(function(port) {
-            console.log("Devtools connnected.", port);
+            console.log("Onee-sama!", port);
             DevTools.devToolsConnection = port;
             port.onMessage.addListener(DevTools.listen);
             port.onDisconnect.addListener(this.deafen);

@@ -16,10 +16,7 @@ html {
     display: initial;
 }
 
-.tab-header {
-    display: inline-block;
-    margin-bottom: 1em;
-}
+
 
 .panel {
     border: 1px solid var(--line-color);
@@ -168,7 +165,8 @@ li {
 /*    background-color: var(--diff-color-b)*/
 }
 
-.active {
+.nav-tab.active,
+.tab-view.active {
     background-color: var(--selection-color)
 }
 
@@ -235,4 +233,9 @@ li {
 
 .supply-list {
     text-align: justify;
+}
+
+.time-s {
+    opacity: 0.6;
+    font-size: 0.5em;
 }

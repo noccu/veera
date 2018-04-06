@@ -1,13 +1,17 @@
 /*globals UI, BackgroundPage, Network*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
 
-//Start logging network requests.
-BackgroundPage.connect();
-Network.listen();
+if (chrome.runtime) {
+    //Start logging network requests.
+    BackgroundPage.connect();
+    Network.listen();
+    //TODO: Query options and adjust UI.
+    BackgroundPage.query("theme", resp => UI.setTheme(resp.value));
+}
 
-//TODO: Query options and adjust UI.
-BackgroundPage.query("theme", resp => UI.setTheme(resp.value));
 UI.initButtons();
+UI.time.initJST();
+UI.time.initResets();
 
 function updatePendants (data) {
     UI.setValue([{

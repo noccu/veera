@@ -1,5 +1,4 @@
 /*globals DevTools: true, State: true*/
-console.log("Onee-sama?");
 var UPDATED = false;
 
 DevTools.init(); //Listen for devtools conn

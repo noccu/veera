@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Veera</title>
         <link href="../stylesheets/panel.css" rel="stylesheet">
         <link id="theme" href="../stylesheets/night.css" rel="stylesheet">
         <script type="text/javascript" src="message.js"></script>
         <script type="text/javascript" src="network.js"></script>
-        <script type="text/javascript" src="panel.js"></script>
+        <script type="text/javascript" src="ui.js" defer></script>
         <script type="text/javascript" src="main.js" defer></script>
     </head>
     <body>
@@ -54,23 +55,23 @@
             <div id="time">
                 <div class="display">
                     <span class="display-title">JST</span>
-                    <span id="jst-time" class="timer-display">5:00</span>
+                    <span id="jst-time" class="timer-display"><span id="jst-h">05</span>:<span id="jst-m">00</span><span id="jst-s" class="time-s">00</span></span>
                 </div>
                 <div class="display">
                     <span class="display-title">Strike Time</span>
-                    <span id="timer-st" class="timer-display">2h</span>
+                    <span id="timer-st" class="timer-display"><span id="strike-h">05</span>:<span id="strike-m">00</span></span>
                 </div>
                 <div class="display">
                     <span class="display-title">Daily</span>
-                    <span id="timer-daily" class="timer-display">2h</span>
+                    <span id="timer-daily" class="timer-display"><span id="daily-h">05</span>:<span id="daily-m">00</span><span id="daily-s" class="time-s">00</span></span>
                 </div>
                 <div class="display">
                     <span class="display-title">Weekly</span>
-                    <span id="timer-weekly" class="timer-display">2h</span>
+                    <span id="timer-weekly" class="timer-display"><span id="weekly-d">5</span>d <span id="weekly-h">05</span>:<span id="weekly-m">00</span><span id="weekly-s" class="time-s">00</span></span>
                 </div>
                 <div class="display">
                     <span class="display-title">Monthly</span>
-                    <span id="timer-monthly" class="timer-display">2h</span>
+                    <span id="timer-monthly" class="timer-display"><span id="monthly-d">15</span>d <span id="monthly-h">05</span>:<span id="monthly-m">00</span><span id="monthly-s" class="time-s">00</span></span>
                 </div>
                 
             </div>
@@ -84,7 +85,6 @@
                 <li class="nav-tab" data-navpage="battle">Battle</li>
             </ul>
             <div id="dailies" class="tab">
-<!--                <span class="tab-header">Profile</span>-->
                 <div id="pendants-panel" class="panel">
                     <span class="panel-header do-collapse" onclick="var c = this.nextElementSibling.classList; c.contains('hidden')?c.remove('hidden') : c.add('hidden')">Pendants</span>
                     <ul class="panel-content">
@@ -149,7 +149,10 @@
                 </div>
             </div>
             <div id="raids" class="tab">
-<!--                <span class="tab-header">Raids</span>-->
+                <div>Placeholder</div>
+            </div>
+            <div id="battle" class="tab">
+                Placeholder
             </div>
         </div>
     </body>
