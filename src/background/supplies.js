@@ -1,5 +1,6 @@
-const supplyCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
-const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
+const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment"};
+//const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
+//const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
 
 window.Supplies = {
     treasure: {
@@ -63,6 +64,25 @@ window.Supplies = {
                 i++;
             }
             updateUI("setConsumables", this.index);
+        },
+        get: function (type, id) {
+            if (Array.isArray(id)) {
+                var ret = [];
+                for (let entry of id) {
+                    ret.push( this.get(entry) );
+                }
+                return ret;
+            } else {
+                return this.index[type][id];
+            }
+        }
+    },
+    getData: function (type, id) {
+        if (type == SUPPLYTYPE.treasure) {
+                return this.treasure.get(id); 
+        }
+        else {
+            return this.consumable.get(type, id);
         }
     }
 };

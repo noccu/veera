@@ -13,6 +13,10 @@ UI.initButtons();
 UI.time.initJST();
 UI.time.initResets();
 
+BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
+
+
+
 function updatePendants (data) {
     UI.setValue([{
         id: "display-renown-total", 
@@ -100,7 +104,7 @@ function updateTreasure (data) {
             var li = createSupplyItem(data[id].name, 
                                       data[id].count, 
                                       createSupplyURL(id, "article"));
-            tlist.appendChild(li);
+            temp.content.appendChild(li);
         }
     }
     tlist.appendChild(temp.content);
@@ -134,4 +138,33 @@ function createSupplyItem (name, num, thumb) {
 }
 function createSupplyURL (id, type) {
     return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
+}
+//TODO: Can probably merge with above? And clean it up, Just lazy rn
+function createPlannerItem (name, current, needed, thumb) {
+        var t = document.getElementById("template-supply-item");
+        t.content.querySelector("li").title = name;
+        t.content.querySelector("img").src = thumb;
+        t.content.querySelector("div").innerHTML = `<span class="planner-current">${current}</span> /<span class="planner-needed">${needed}</span>`;
+        return document.importNode(t.content, true);
+}
+
+//Plannerfunctions
+function changeSeries(ev) { //Event handler, updates type and element list when series changes
+    BackgroundPage.send("plannerSeriesChange", {newValue: ev.target.value});
+}
+
+function updateSeriesOptions (data) { //receives list of each option type.
+    UI.planner.populateSelection("type", data.types);
+    UI.planner.populateSelection("element", data.elements);
+    UI.planner.populateSelection("start", data.steps);
+    UI.planner.populateSelection("end", data.steps);
+}
+
+function updatePlan () {  //Event handler       
+    var plan = {series: UI.planner.display.series.value, 
+                type: UI.planner.display.type.value, 
+                element: UI.planner.display.element.value, 
+                start: UI.planner.display.start.selectedIndex, 
+                end: UI.planner.display.end.selectedIndex};
+    BackgroundPage.send("newPlanRequest", plan);
 }

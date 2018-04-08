@@ -239,3 +239,30 @@ li {
     opacity: 0.6;
     font-size: 0.5em;
 }
+
+select, option {
+    background-color: var(--bg-color);
+    color: inherit;
+    border-color: var(--diff-color-a)
+}
+
+.plannerItem-done {
+    opacity: 0.25;
+}
+
+.planner-current {
+    font-size: 1.4em
+}
+
+.planner-needed {
+    opacity: 0.5;
+}
+
+.collection-item[data-done] {
+    opacity: 0.3;
+/*    background-color: var(--diff-color-b)*/
+}
+
+.collection-item[data-low] {
+    background-color: var(--diff-color-b)
+}

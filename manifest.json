@@ -25,6 +25,7 @@
                  "src/background/profile.js",
                  "src/background/state.js",
                  "src/background/supplies.js",
+                 "src/background/planner.js",
                  "src/background/background.js",
                  "src/background/raids.js"]
    },

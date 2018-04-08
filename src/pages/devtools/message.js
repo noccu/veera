@@ -13,16 +13,16 @@ window.BackgroundPage = {
         });
         this.connection.onMessage.addListener(this.hear);
     },
-    send: function(data) {
+    send: function(action, data) {
         if (!this.connection) {
             console.error("No connection to extension established.");
             return;
         }
-        this.connection.postMessage(data);
+        this.connection.postMessage({action, data});
     },
-    hear: function(data){
-        console.log("[devtools] Heard:", data);
-        switch (data.action){
+    hear: function(msg){
+        console.log("[devtools] Heard:", msg);
+        switch (msg.action){
             case "sayHi":
                 console.log("Onee-sama!");
                 break;
@@ -30,17 +30,22 @@ window.BackgroundPage = {
                 console.log("Onee-sama?");
                 break;
             case "updPendants":
-                updatePendants(data.value);
+                updatePendants(msg.data);
                 break;
             case "updStatus":
-                updateStatus(data.value);
+                updateStatus(msg.data);
                 break;
             case "setTreasure":
-                updateTreasure(data.value);
+                updateTreasure(msg.data);
                 break;
             case "setConsumables":
-                updateConsumables(data.value);
+                updateConsumables(msg.data);
                 break;
+            case "newPlannerSeriesOptions":
+                updateSeriesOptions(msg.data);
+                break;
+            case "newPlanCreated":
+                UI.planner.displayPlan(msg.data);
         }
     }
 };

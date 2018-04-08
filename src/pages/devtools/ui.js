@@ -1,10 +1,5 @@
 /*globals BackgroundPage: true, UI*/
 window.UI = {
-    getTheme: function() {
-        BackgroundPage.send({
-            query: "theme"
-        });
-    },
     setTheme: function (theme) {
         var sheet = document.getElementById("theme");
         if (!theme.fname) {console.log("No theme file given, using default."); theme.fname = "night";}
@@ -89,7 +84,12 @@ window.UI = {
                                            s: document.getElementById(`${timer}-s`)};
                 }
             }
-            
+            this.setResets();
+            this.updateResets();
+            setInterval(this.updateResets, 1000);
+        },
+        setResets: function () {
+            //TODO actuall just store them as diffs and decrement them, reset when one is 0. Much eaiser
             var current = new Date();
             current.setHours(current.getUTCHours() + 9);
             this.current = current;
@@ -124,9 +124,6 @@ window.UI = {
                     this.timers[timer] = timers[timer];
                 }
             }
-            
-            this.updateResets();
-            setInterval(this.updateResets, 1000);
         },
         updateResets: function() {
 /*            var current = new Date();
@@ -145,5 +142,64 @@ window.UI = {
                 }
             }
         }
+    },
+    planner: {
+        display: {},
+        init: function(seriesList) {
+            this.display.series = document.getElementById("planner-craftSeries");
+            this.display.type = document.getElementById("planner-craftType");
+            this.display.element = document.getElementById("planner-craftElement");
+            this.display.start = document.getElementById("planner-craftStart");
+            this.display.end = document.getElementById("planner-craftEnd");
+            
+            this.populateSelection("series", seriesList);//Msg
+
+            var dummy = document.createElement("option");
+            dummy.value = "";//empty value !important
+            dummy.textContent = "Select...";
+            this.display.series.options.add(dummy, 0);
+            dummy.selected = true;
+            
+            this.display.series.onchange = changeSeries;
+            
+            this.display.type.onchange = updatePlan;
+            this.display.element.onchange = updatePlan;
+            this.display.start.onchange = updatePlan;
+            this.display.end.onchange = updatePlan;
+        },
+        //String, Array
+        populateSelection: function(name, list) {
+            var display = this.display[name];
+            clearDropdown(display);
+            if (!list) {return;}
+            for (let option of list) {
+                var el = document.createElement("option");
+                el.value = el.textContent = option;
+//                console.log(option);
+                display.options.add(el);
+            }
+        },
+        displayPlan: function(plan) {
+            var list = document.getElementById("planner-list");
+            list.innerHTML = "";
+            
+            var entry;
+            for (let item of plan) {
+//                console.log(item);
+                
+                entry = createPlannerItem(item.name, item.current, item.needed, createSupplyURL(item.id, item.type));
+                entry.firstElementChild.classList.toggle("plannerItem-done", item.current >= item.needed);
+
+//                entry = createPlannerItem(item.name, item.current, item.needed, "../../assets/images/anchiraicon.png");
+                list.appendChild(entry);
+            }
+        }
     }
 };
+
+function clearDropdown(el) {
+    for (let i = el.options.length -1; i >= 0; i--) {
+        el.options.remove(i);
+    }
+}
+

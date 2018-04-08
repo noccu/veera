@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Veera</title>
-        <link href="../stylesheets/panel.css" rel="stylesheet">
+        <link href="../stylesheets/ui.css" rel="stylesheet">
         <link id="theme" href="../stylesheets/night.css" rel="stylesheet">
         <script type="text/javascript" src="message.js"></script>
         <script type="text/javascript" src="network.js"></script>
@@ -108,7 +108,7 @@
                 <ul id="nav-supplies" class="tab-view-list navlist">
                     <li class="tab-view active" data-navpage="treasure-view">Treasure</li>
                     <li class="tab-view" data-navpage="consumables-view">Consumables</li>
-                    <li class="tab-view" data-navpage="treasure-view">Planner</li>
+                    <li class="tab-view" data-navpage="planner-view">Planner</li>
                 </ul>
                 <div class="spacer"></div>
                 <div id="treasure-view" class="view active">
@@ -143,6 +143,32 @@
                         <div class="panel-content">
                             <ul id="consumable-list" class="supply-list">
 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="planner-view" class="view">
+                    <div id="planner-options">
+                                <template>
+
+                                </template>
+                        <select id="planner-craftSeries">
+                        </select>
+                        <select id="planner-craftType" class="hiidden">
+                        </select>
+                        <select id="planner-craftElement" class="hiidden">
+                        </select>
+                        <select id="planner-craftStart" class="hiidden">
+                        </select>
+                       <select id="planner-craftEnd" class="hiidden">
+                        </select>
+                    </div>
+                    <div class="spacer"></div>
+                    <div id="planner-panel" class="panel">
+                        <span class="panel-header do-collapse">Step 1</span>
+                        <div class="panel-content">
+                            <div class="spacer"></div>
+                            <ul id="planner-list" class="supply-list">
                             </ul>
                         </div>
                     </div>
