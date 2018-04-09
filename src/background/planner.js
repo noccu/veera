@@ -1,48 +1,5 @@
 /*globals PlannerData:true, SUPPLYTYPE, Supplies*/
 
-window.PlannerData = {
-    Bahamut: {
-        core: [ //Items needed for every craft
-                createItem(1, SUPPLYTYPE.treasure, 59, 1),
-
-                //Nova
-                createItem(2, SUPPLYTYPE.treasure, 59, 3),
-                createItem(2, SUPPLYTYPE.treasure, 1, 7),
-                createItem(2, SUPPLYTYPE.treasure, 1111, 30),
-                createItem(2, SUPPLYTYPE.treasure, 1121, 30),
-                createItem(2, SUPPLYTYPE.treasure, 1131, 30),
-                createItem(2, SUPPLYTYPE.treasure, 1141, 30),
-                createItem(2, SUPPLYTYPE.treasure, 1151, 30),
-                createItem(2, SUPPLYTYPE.treasure, 1161, 30),
-
-                //Coda
-                createItem(3, SUPPLYTYPE.treasure, 79, 5),
-                createItem(3, SUPPLYTYPE.treasure, 2003, 3)
-                ],
-        wtype: { //Weapon type specific items
-                Sword: [createItem(2, SUPPLYTYPE.treasure, 47, 20)],
-                Dagger: [createItem(2, SUPPLYTYPE.treasure, 51, 20)],
-                Spear: [createItem(2, SUPPLYTYPE.treasure, 32, 20)],
-                Axe: [createItem(2, SUPPLYTYPE.treasure, 49, 20)],
-                Staff: [createItem(2, SUPPLYTYPE.treasure, 50, 20)],
-                Gun: [createItem(2, SUPPLYTYPE.treasure, 47, 20)],
-                Fist: [createItem(2, SUPPLYTYPE.treasure, 49, 20)],
-                Bow: [createItem(2, SUPPLYTYPE.treasure, 32, 20)],
-                Harp: [createItem(2, SUPPLYTYPE.treasure, 48, 20)],
-                Katana: [createItem(2, SUPPLYTYPE.treasure, 48, 20)]
-               },
-        element: {
-            Dark: null //no special items, but name needed for option parsing (well not really, but it's nice)
-        },
-        stepNames: ["Rusted", "Base", "Nova", "Coda"] //In order starting from 0, which is the true starting (not part of the craft) step
-        }
-};
-
-function createItem(step, type, id, needed) {
-    return {step, type, id, needed};
-}
-
-
 window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
         var plan = [];
@@ -127,13 +84,13 @@ window.Planner = {
 
 //Find by name, use with Supply
 //TODO: change temp1 to global supply
-/*function fi(s){
+function fi(s){
     var ret = []; 
-    for (let item in temp1) {
-        if(temp1.hasOwnProperty(item)&&temp1[item].name.toLowerCase().indexOf(s)!=-1){
-            ret.push(temp1[item].name);
+    for (let item of Object.keys(Supplies.treasure.index)) {
+        if(Supplies.treasure.index[item].name.toLowerCase().indexOf(s.toLowerCase())!=-1){
+            ret.push(Supplies.treasure.index[item].name);
             ret.push(item);
         }
     } 
     return ret;
-}*/
+}
