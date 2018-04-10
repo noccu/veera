@@ -96,16 +96,15 @@ function updateStatus (data) {
     d.classList.toggle("highlight", data.ap > data.apMax || data.bp > 10);
 }
 
-function updateTreasure (data) {
+function updateTreasure (idx) {
     var tlist = document.getElementById("treasure-list");
+    tlist.innerHTML = "";
     var temp = document.createElement("template");
-    for (let id in data) {
-        if (data.hasOwnProperty(id)) {
-            var li = createSupplyItem(data[id].name, 
-                                      data[id].count, 
-                                      createSupplyURL(id, "article"));
-            temp.content.appendChild(li);
-        }
+    for (let id of Object.keys(idx)) {
+        var li = createSupplyItem(idx[id].name, 
+                                  idx[id].count, 
+                                  createSupplyURL(id, "article"));
+        temp.content.appendChild(li);
     }
     tlist.appendChild(temp.content);
 }

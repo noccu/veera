@@ -56,11 +56,15 @@ function hear (msg) {
                     //TODO: supplies/treasure!
                     Profile.pendants.add(msg.data.json);
                     break;
-                case url.ismatch("item/article_list"):
+                case url.ismatch("item/article_list")://Treasure list
                     Supplies.treasure.set(msg.data.json);
                     break;
-                case url.ismatch("item/recovery_and_evolution_list"):
+                case url.ismatch("item/recovery_and_evolution_list")://Consumables list
                     Supplies.consumable.set(msg.data.json);
+                    break;
+                case url.ismatch("resultmulti/data"):
+                case url.ismatch("result/data"): //Quest end
+                    gotQuestLoot(msg.data.json.rewards);
             }
             break;
         case "plannerSeriesChange":

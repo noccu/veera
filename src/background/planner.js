@@ -83,7 +83,6 @@ window.Planner = {
 
 
 //Find by name, use with Supply
-//TODO: change temp1 to global supply
 function fi(s){
     var ret = []; 
     for (let item of Object.keys(Supplies.treasure.index)) {

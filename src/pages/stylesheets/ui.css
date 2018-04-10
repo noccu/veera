@@ -259,7 +259,7 @@ select, option {
 }
 
 .collection-item[data-done] {
-    opacity: 0.3;
+    opacity: 0.25;
 /*    background-color: var(--diff-color-b)*/
 }
 

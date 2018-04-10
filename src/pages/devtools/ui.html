@@ -113,6 +113,14 @@
                 <div class="spacer"></div>
                 <div id="treasure-view" class="view active">
                     <div id="treasure-panel" class="panel">
+                        <template id="template-supply-item">
+                            <li id="" class="collection-item" title="Item name" data-cat="">
+                                <img class="collection-icon" src="../../assets/images/anchiraicon.png"/>
+                                <div class="collection-data">
+                                    0
+                                </div>
+                            </li>
+                        </template>
                         <span class="panel-header do-collapse">Treasure</span>
                         <div class="panel-filter">
                             <ul id="treasure-filter">
@@ -126,14 +134,6 @@
                         </div>
                         <div class="panel-content">
                             <ul id="treasure-list" class="supply-list">
-                                <template id="template-supply-item">
-                                    <li id="" class="collection-item" title="Item name" data-cat="">
-                                        <img class="collection-icon" src="../../assets/images/anchiraicon.png"/>
-                                        <div class="collection-data">
-                                            0
-                                        </div>
-                                    </li>
-                                </template>
                             </ul>
                         </div>
                     </div>

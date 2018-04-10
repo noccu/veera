@@ -37,9 +37,11 @@ window.BackgroundPage = {
                 break;
             case "setTreasure":
                 updateTreasure(msg.data);
+                syncPlanner(msg.data, "treasure");
                 break;
             case "setConsumables":
                 updateConsumables(msg.data);
+//                syncPlanner(msg.data, "consumable");
                 break;
             case "newPlannerSeriesOptions":
                 updateSeriesOptions(msg.data);

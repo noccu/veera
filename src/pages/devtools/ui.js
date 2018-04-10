@@ -188,7 +188,10 @@ window.UI = {
 //                console.log(item);
                 
                 entry = createPlannerItem(item.name, item.current, item.needed, createSupplyURL(item.id, item.type));
-                entry.firstElementChild.classList.toggle("plannerItem-done", item.current >= item.needed);
+                entry.firstElementChild.dataset.id = item.id;
+                entry.firstElementChild.dataset.needed = item.needed;
+                entry.firstElementChild.dataset.type = item.type;
+                stylePlanItem(entry, item.current, item.needed);
 
 //                entry = createPlannerItem(item.name, item.current, item.needed, "../../assets/images/anchiraicon.png");
                 list.appendChild(entry);
@@ -203,3 +206,31 @@ function clearDropdown(el) {
     }
 }
 
+function stylePlanItem(el, current, needed) {
+    if(el.nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
+        el = el.firstElementChild;
+    }
+    
+    if (current >= needed) {
+        el.dataset.done = "";
+    }
+    else if(current < Math.floor(needed/10)) {
+        el.dataset.low = "";
+    }
+}
+
+function syncPlanner(index, type) { //TODO: make it work with consumables
+    var list = document.querySelectorAll("#planner-list li");
+//    var isTreasure = type == "treasure";
+    if (type != "treasure") { return; }
+    var cur;
+    for (let item of list) {
+        if (item.dataset.type == "article") {
+            cur = item.getElementsByClassName("planner-current")[0];
+            cur.textContent = index[item.dataset.id].count;
+    //        cur.textContent = isTreasure ? index[item.dataset.id].count : index[type][item.dataset.id].count;
+            stylePlanItem(item, item.dataset.count, item.dataset.needed);
+        }
+    }
+    
+}

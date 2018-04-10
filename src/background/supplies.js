@@ -31,8 +31,7 @@ window.Supplies = {
         },
     },
     consumable: {
-        index: {},
-        
+        index: {},       
         set: function (json) {
             var index = {
                 normal: json[0], //AP/EP
@@ -84,5 +83,43 @@ window.Supplies = {
         else {
             return this.consumable.get(type, id);
         }
+    },
+    update: function(type, id, delta) {
+        var isTreasure = type == SUPPLYTYPE.treasure;
+        var idx = isTreasure ? this.treasure.index : this.consumable.index[type];
+        idx[id].count += delta;
+        
+        if (isTreasure) { updateUI("setTreasure", this.treasure.index); }
+        else { updateUI("setConsumables", this.consumable.index); }
     }
 };
+
+function gotQuestLoot(data) {
+    //Non-box, side-scrolling
+    for (let key of Object.keys(data.article_list)) {
+        let item = data.article_list[key];
+        Supplies.update(SUPPLYTYPE.treasure, item.id, parseInt(item.count));
+    }
+    
+    //Box drops
+    for (let key of Object.keys(data.reward_list)) {
+        let boxType = data.reward_list[key];
+        for (let key of Object.keys(boxType)) {
+            let item = boxType[key];
+            Supplies.update(translateItemKind(item.item_kind), item.id, parseInt(item.count));
+        }
+    }
+}
+
+function translateItemKind(kind) {
+    switch (parseInt(kind)) {
+        case 10:
+            return SUPPLYTYPE.treasure;
+        case 4:
+            return SUPPLYTYPE.recovery;
+        case 17:
+            return SUPPLYTYPE.evolution; //TODO: check?
+        default:
+            return SUPPLYTYPE.treasure;
+    }
+}
