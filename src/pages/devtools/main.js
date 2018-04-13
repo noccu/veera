@@ -97,8 +97,8 @@ function updateStatus (data) {
 }
 
 function updateTreasure (idx) {
-    var tlist = document.getElementById("treasure-list");
-    tlist.innerHTML = "";
+    var list = document.getElementById("treasure-list");
+    list.innerHTML = "";
     var temp = document.createElement("template");
     for (let id of Object.keys(idx)) {
         var li = createSupplyItem(idx[id].name, 
@@ -106,11 +106,12 @@ function updateTreasure (idx) {
                                   createSupplyURL(id, "article"));
         temp.content.appendChild(li);
     }
-    tlist.appendChild(temp.content);
+    list.appendChild(temp.content);
 }
 
 function updateConsumables (data) {
-    var tlist = document.getElementById("consumable-list");
+    var list = document.getElementById("consumable-list");
+    list.innerHTML = "";
     var temp = document.createElement("template");
     for (let idx in data) {
         if (data.hasOwnProperty(idx)) {
@@ -125,7 +126,7 @@ function updateConsumables (data) {
             }
         }
     }
-    tlist.appendChild(temp.content);
+    list.appendChild(temp.content);
 }
 
 function createSupplyItem (name, num, thumb) {

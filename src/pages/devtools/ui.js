@@ -76,13 +76,11 @@ window.UI = {
             
         },
         initResets: function() {
-            for (let timer in this.timers) {
-                if (this.timers.hasOwnProperty(timer)) {
-                    this.display[timer] = {d: document.getElementById(`${timer}-d`),
-                                           h: document.getElementById(`${timer}-h`),
-                                           m: document.getElementById(`${timer}-m`),
-                                           s: document.getElementById(`${timer}-s`)};
-                }
+            for (let timer of Object.keys(this.timers)) {
+                this.display[timer] = {d: document.getElementById(`${timer}-d`),
+                                       h: document.getElementById(`${timer}-h`),
+                                       m: document.getElementById(`${timer}-m`),
+                                       s: document.getElementById(`${timer}-s`)};
             }
             this.setResets();
             this.updateResets();
@@ -131,15 +129,13 @@ window.UI = {
             UI.time.current = current;*/
             UI.time.current.setSeconds(UI.time.current.getSeconds() + 1);
             
-            for (let timer in UI.time.timers) {
-                if (UI.time.timers.hasOwnProperty(timer)) {
-                    var diff = new Date(UI.time.timers[timer] - UI.time.current);
-                    
-                    if (UI.time.display[timer].d) {UI.time.display[timer].d.textContent = diff.getUTCDate() - 1;}
-                    UI.time.display[timer].h.textContent = diff.getUTCHours();
-                    UI.time.display[timer].m.textContent = ('0' + diff.getUTCMinutes()).slice(-2);
-                    UI.time.display[timer].s.textContent = ('0' + diff.getUTCSeconds()).slice(-2);
-                }
+            for (let timer of Object.keys(UI.time.timers)) {
+                var diff = new Date(UI.time.timers[timer] - UI.time.current);
+
+                if (UI.time.display[timer].d) {UI.time.display[timer].d.textContent = diff.getUTCDate() - 1;}
+                UI.time.display[timer].h.textContent = diff.getUTCHours();
+                UI.time.display[timer].m.textContent = ('0' + diff.getUTCMinutes()).slice(-2);
+                UI.time.display[timer].s.textContent = ('0' + diff.getUTCSeconds()).slice(-2);
             }
         }
     },

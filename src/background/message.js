@@ -7,7 +7,8 @@ window.DevTools = {
             console.log("Onee-sama!", port);
             DevTools.devToolsConnection = port;
             port.onMessage.addListener(DevTools.listen);
-            port.onDisconnect.addListener(this.deafen);
+            port.onDisconnect.addListener(DevTools.deafen);
+            window.dispatchEvent(EVENTS.connected);
         });
         chrome.runtime.onMessage.addListener(hearQuery);
     },
@@ -19,8 +20,8 @@ window.DevTools = {
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
-        this.devToolsConnection.onMessage.removeListener(this.listen);
-        this.devToolsConnection = null;
+        DevTools.devToolsConnection.onMessage.removeListener(this.listen);
+        DevTools.devToolsConnection = null;
     },
     send: function(action, data) {
         if (!this.devToolsConnection) {
@@ -65,6 +66,12 @@ function hear (msg) {
                 case url.ismatch("resultmulti/data"):
                 case url.ismatch("result/data"): //Quest end
                     gotQuestLoot(msg.data.json.rewards);
+                    break;
+                case url.ismatch("weapon/evolution_materials"):
+                    weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao
+                    break;
+                case url.ismatch("evolution_weapon/item_evolution"):
+                    weaponUncapEnd(msg.data.json);
             }
             break;
         case "plannerSeriesChange":

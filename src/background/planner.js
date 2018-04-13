@@ -38,12 +38,14 @@ window.Planner = {
                             }
                             else {
                                 var supplydata = Supplies.getData(item.type, item.id);
-                                plan.push({type: item.type,
-                                           id: item.id,
-                                           name: supplydata.name,
-                                           needed: item.needed,
-                                           current: supplydata.count
-                                          });
+                                if (supplydata) {
+                                    plan.push({type: item.type,
+                                               id: item.id,
+                                               name: supplydata.name,
+                                               needed: item.needed,
+                                               current: supplydata.count
+                                              });
+                                }
                             }
                         }
                         else {  //early term when not finished build

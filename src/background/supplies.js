@@ -5,7 +5,7 @@ const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evoluti
 window.Supplies = {
     treasure: {
         index: {},
-        set: function (json) {
+        set: function (json) {//TODO: should rename to parse or something prob cause that's what it really does
             //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
             this.index = {};
             for (let item of json) {
@@ -16,6 +16,8 @@ window.Supplies = {
                     count: parseInt(item.number)
                     };
             }
+            
+            Supplies.save("t");
             updateUI("setTreasure", this.index);
         },
         get: function (id) {
@@ -32,7 +34,7 @@ window.Supplies = {
     },
     consumable: {
         index: {},       
-        set: function (json) {
+        set: function (json) {//TODO: should rename to parse or something prob cause that's what it really does
             var index = {
                 normal: json[0], //AP/EP
                 evolution: json[1], //Bars, etc
@@ -62,6 +64,8 @@ window.Supplies = {
                 this.index[type] = idx;
                 i++;
             }
+            
+            Supplies.save("c");
             updateUI("setConsumables", this.index);
         },
         get: function (type, id) {
@@ -72,7 +76,9 @@ window.Supplies = {
                 }
                 return ret;
             } else {
-                return this.index[type][id];
+                if (this.index[type]) {
+                    return this.index[type][id];
+                }
             }
         }
     },
@@ -84,13 +90,49 @@ window.Supplies = {
             return this.consumable.get(type, id);
         }
     },
-    update: function(type, id, delta) {
-        var isTreasure = type == SUPPLYTYPE.treasure;
-        var idx = isTreasure ? this.treasure.index : this.consumable.index[type];
-        idx[id].count += delta;
+    update: function(type, id, delta) { //TODO: fuck me I'm too lazy lel
         
+        function _upd (type, id, delta) {
+            var isTreasure = (type == SUPPLYTYPE.treasure);
+            var idx = isTreasure ? this.treasure.index : this.consumable.index[type];
+            idx[id].count += delta;
+        }
+        
+        if (Array.isArray(type)) {
+            for (let item of type) {
+                _upd(item.type, item.id, item.delta);
+            }
+        }
+        else {
+             _upd(type, id, delta);
+        }
+                
         if (isTreasure) { updateUI("setTreasure", this.treasure.index); }
         else { updateUI("setConsumables", this.consumable.index); }
+    },
+    save: function(mode) {
+        //TODO: Just xhr it from game on startup.
+        var o = {};
+        if (!mode || mode == "t") { o.sup_idx_treasure = this.treasure.index; }
+        if (!mode || mode == "c") { o.sup_idx_consumable = this.consumable.index; }
+        
+        Storage.set(o);
+    },
+    load: function() {
+        function _load(data) {
+            Supplies.treasure.index = data.sup_idx_treasure;
+            Supplies.consumable.index = data.sup_idx_consumable;
+            
+            console.log("Supply indices loaded");
+            updateUI("setTreasure", Supplies.treasure.index);
+            updateUI("setConsumables", Supplies.consumable.index);
+        }
+        
+        Storage.get(["sup_idx_treasure", "sup_idx_consumable"], _load);
+    },
+    clear: function() {
+        this.treasure.index = {};
+        this.consumable.index= {};
     }
 };
 
@@ -121,5 +163,28 @@ function translateItemKind(kind) {
             return SUPPLYTYPE.evolution; //TODO: check?
         default:
             return SUPPLYTYPE.treasure;
+    }
+}
+
+function weaponUncapStart(data) {
+    var update = { items: [] };
+    
+    update.id = data.url.match(/materials\/(\d+)\?/)[1];
+    
+    for (let key of Object.keys(data.json)) {
+        if (key == "options") { continue; }
+        
+        let item = data.json[key];
+        update.items.push({type: translateItemKind(item.item_kind),
+                        id: item.item_id, 
+                        delta: item.item_number});
+    }
+    
+    Supplies.queuedUncap = update.items;
+}
+
+function weaponUncapEnd(json) {
+    if (Supplies.queuedUncap.id == json.new.id) {
+        Supplies.update(Supplies.queuedUncap.items);
     }
 }
