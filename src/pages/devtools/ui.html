@@ -6,6 +6,8 @@
         <link id="theme" href="../stylesheets/night.css" rel="stylesheet">
         <script type="text/javascript" src="message.js"></script>
         <script type="text/javascript" src="network.js"></script>
+        <script type="text/javascript" src="../../lib/Chart.min.js"></script>
+        <script  type="text/javascript" src="unf.js"></script>
         <script type="text/javascript" src="ui.js" defer></script>
         <script type="text/javascript" src="main.js" defer></script>
     </head>
@@ -53,27 +55,30 @@
             </div>
             <div class="sep"></div>
             <div id="time">
-                <div class="display">
+                <div class="display" id="jst-time">
                     <span class="display-title">JST</span>
-                    <span id="jst-time" class="timer-display"><span id="jst-h">05</span>:<span id="jst-m">00</span><span id="jst-s" class="time-s">00</span></span>
+                    <span class="timer-display"><span id="jst-h">05</span>:<span id="jst-m">00</span><span id="jst-s" class="time-s">00</span></span>
                 </div>
-                <div class="display">
+                <div class="display" id="timer-st-time">
                     <span class="display-title">Strike Time</span>
-                    <span id="timer-st" class="timer-display"><span id="strike-h">05</span>:<span id="strike-m">00</span></span>
+                    <span class="timer-display"><span id="strike-h">05</span>:<span id="strike-m">00</span><span id="strike-s" class="time-s">00</span></span>
                 </div>
-                <div class="display">
+                <div class="display" id="timer-daily">
                     <span class="display-title">Daily</span>
-                    <span id="timer-daily" class="timer-display"><span id="daily-h">05</span>:<span id="daily-m">00</span><span id="daily-s" class="time-s">00</span></span>
+                    <span class="timer-display"><span id="daily-h">05</span>:<span id="daily-m">00</span><span id="daily-s" class="time-s">00</span></span>
                 </div>
-                <div class="display">
+                <div class="display" id="timer-weekly">
                     <span class="display-title">Weekly</span>
-                    <span id="timer-weekly" class="timer-display"><span id="weekly-d">5</span>d <span id="weekly-h">05</span>:<span id="weekly-m">00</span><span id="weekly-s" class="time-s">00</span></span>
+                    <span class="timer-display"><span id="weekly-d">5</span>d <span id="weekly-h">05</span>:<span id="weekly-m">00</span><span id="weekly-s" class="time-s">00</span></span>
                 </div>
-                <div class="display">
+                <div class="display" id="timer-monthly">
                     <span class="display-title">Monthly</span>
-                    <span id="timer-monthly" class="timer-display"><span id="monthly-d">15</span>d <span id="monthly-h">05</span>:<span id="monthly-m">00</span><span id="monthly-s" class="time-s">00</span></span>
+                    <span class="timer-display"><span id="monthly-d">15</span>d <span id="monthly-h">05</span>:<span id="monthly-m">00</span><span id="monthly-s" class="time-s">00</span></span>
                 </div>
-                
+                <div id= "timer-maint" class="display maint hidden">
+                    <span class="display-title">Maintenance</span>
+                    <span class="timer-display"><span id="maint-h">05</span>:<span id="maint-m">00</span><span id="maint-s" class="time-s">00</span></span>
+                </div>
             </div>
             <div class="sep"></div>
         </div>
@@ -83,10 +88,11 @@
                 <li class="nav-tab" data-navpage="raids">Raids</li>
                 <li class="nav-tab active" data-navpage="supplies">Supplies</li>
                 <li class="nav-tab" data-navpage="battle">Battle</li>
+                <li class="nav-tab" data-navpage="unf">UNF</li>
             </ul>
             <div id="dailies" class="tab">
                 <div id="pendants-panel" class="panel">
-                    <span class="panel-header do-collapse" onclick="var c = this.nextElementSibling.classList; c.contains('hidden')?c.remove('hidden') : c.add('hidden')">Pendants</span>
+                    <span class="panel-header do-collapse">Pendants</span>
                     <ul class="panel-content">
                         <div id="renown">
                             <span class="panel-div-title">Renown</span>
@@ -175,10 +181,81 @@
                 </div>
             </div>
             <div id="raids" class="tab">
-                <div>Placeholder</div>
+                <div id="raids-panel" class="panel">
+                    <template id="template-raid-item">
+                        <li class="raid-item" data-url="" data-id="">
+                                <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg"/>
+                                <div class="raid-data">
+                                    <span class="raid-name">Ultimate Bahamut HL</span>
+                                    <div class="raid-treasure">
+<!--                                        Template goes here-->
+                                    </div>
+                                    <div class="raid-hosts">
+                                        <span class="raid-current">0</span> /<span class="raid-max">3</span>
+                                    </div>
+                                </div>
+                            </li>
+                    </template>
+                    <template id="template-raid-material">
+                        <div class="raid-mat">
+                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                            <span class="raid-mat-cur">2500</span>
+                            <span class="raid-mat-req">45</span>
+                        </div>
+                    </template>
+                    <span class="panel-header do-collapse">Raids</span>
+                    <div class="panel-content">
+                        <div class="panel-filter">
+                            <ul id="raids-filter">
+                                <li>All</li>
+                                <li class="active">HL</li>
+                                <li class="active">Fire</li>
+                                <li class="active">Water</li>
+                                <li class="">Earth</li>
+                                <li>Wind</li>
+                            </ul>
+                        </div>
+                        <ul id="raids-list" class="raid-list">
+                           <li id="" class="raid-item" data-cat="" data-url="">
+                                <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg"/>
+                                <div class="raid-data">
+                                    <span class="raid-name">Ultimate Bahamut HL</span>
+                                    <div class="raid-treasure">
+                                        <div class="raid-mat">
+                                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                                            <span class="raid-mat-req">45</span>
+                                        </div>
+                                        <div class="raid-mat">
+                                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                                            <span class="raid-mat-req">6</span>
+                                        </div>
+                                    </div>
+                                    <div class="raid-hosts">
+                                        <span class="raid-current">0</span> /<span class="raid-max">3</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div id="battle" class="tab">
                 Placeholder
+            </div>
+            <div id="unf" class="tab">
+                <div id="unf-pn-area" class="panel">
+                    <span class="panel-header do-collapse">Area Graph</span>
+                    <div class="panel-content">
+                        <button id="unf-graph-start">Start</button>
+                        <button id="unf-graph-stop">Stop</button>
+                        <button id="unf-graph-upd">Update</button>
+                        <button id="unf-graph-save">Save</button>
+                        <button id="unf-graph-load">Load</button>
+                        <div class="chart-container">
+                            <canvas id="unf-area-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

@@ -16,7 +16,9 @@ html {
     display: initial;
 }
 
-
+.maint {
+    background-color: var(--diff-color-b);
+}
 
 .panel {
     border: 1px solid var(--line-color);
@@ -265,4 +267,86 @@ select, option {
 
 .collection-item[data-low] {
     background-color: var(--diff-color-b)
+}
+
+
+
+.raid-data {
+    display: inline-block;
+}
+
+.raid-icon {
+    height: 3em;
+/*    width: calc(20% - 2em);*/
+}
+
+.raid-current {
+    font-size: 1.5em;
+}
+
+.raid-max {
+    opacity: 0.5;
+}
+
+.raid-treasure {
+    display: inline-block;
+}
+
+
+
+
+.raid-item * {
+    vertical-align: middle;
+/*    margin-right: 2em;*/
+}
+
+div.raid-hosts {
+    display: inline-block;
+    margin-right: 0;
+}
+
+.raid-mat-icon {
+    height: 1.5em;
+}
+
+.raid-data > *, .raid-icon {
+    margin-right: 1em;
+}
+
+
+
+.raid-mat:hover {
+    background-color: var(--highlight-color)
+}
+
+.raid-item {
+    margin-bottom: 0.5em;
+}
+
+.raid-name {
+/*    display: inline-block;*/
+/*    width: 60%;*/
+}
+
+#raids-list {
+/*    text-align: center;*/
+}
+
+.raid-mat {
+    margin: 2px;
+}
+
+.chart-container {
+    width: 100%;
+    position: relative;
+}
+
+button {
+/*    background-color: var(--diff-color-a);*/
+/*    background-color: inherit;*/
+    background-color: rgba(128, 128, 128,0.4);
+    color: inherit;
+    border: none;
+/*    border: 2px solid var(--diff-color-a);*/
+    padding: 0.3em;
 }

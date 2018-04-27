@@ -1,7 +1,14 @@
+/*globals State, Storage*/
 window.State = {
-    DEBUG: true,
+    debug: true,
+    devlog: function() {
+        if (this.debug) { console.log(... arguments); }
+    },
+    deverror: function() {
+        if (this.debug) { console.error(... arguments); }
+    },
     
-    options: {
+    settings: {
         theme: {
             list: [
                 {name: "Tiamat Night", fname: "night"},
@@ -18,8 +25,33 @@ window.State = {
         raids: {
             sortByDiff: true
         }
-    },
-    
-    freeRollEvent: false,
+    }
+};
 
+function setVeeraDefaults() {
+    State.settings.theme.current = 0;
+}
+
+function loadSettings() { //TODO: proper update handling, versions etc
+    function load(loadedSettings) {
+        if (loadedSettings.theme) {
+            State.settings = loadedSettings;
+        }
+        else {
+            setVeeraDefaults();
+            saveSettings();
+        }
+        Stats.devlog("Settings loaded", loadedSettings);
+    }
+    
+    Storage.get("settings", load);
+}
+
+function saveSettings() {
+    Storage.set({settings: State.settings});
+    Stats.devlog("Settings saved.");
+}
+
+function toggleDebug() {
+    State.debug = !State.debug;
 }

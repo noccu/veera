@@ -28,8 +28,10 @@
                  "src/background/supplies.js",
                  "src/background/data/plannerdata.js",
                  "src/background/planner.js",
-                 "src/background/background.js",
-                 "src/background/raids.js"]
+                 "src/background/data/raiddata.js",
+                 "src/background/raids.js",
+                 "src/background/battle.js",
+                 "src/background/background.js"]
    },
       
    "permissions": [ 

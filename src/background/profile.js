@@ -1,3 +1,4 @@
+/*globals updateUI, Profile*/
 window.Profile = {
     pendants: {
         count: {
@@ -16,28 +17,15 @@ window.Profile = {
             }
         },
         
-        add: function(json) {
-            //TODO: uhh might need more cases?
-            var added = json.mbp_info.add_result;
-            switch (json.mbp_info.item_id) {
-                case "92001": //renown
-                    //It only gives a total number, taking into account daily and weekly, but we still have to add them.
-                    this.count.renown.daily.current += added['10100'].add_point;
-                    this.count.renown.weekly.current += added['10100'].add_point;
-                    this.count.renown.sr.current += added['20200'].add_point;
-                    this.count.renown.r.current += added['20100'].add_point;
-                    this.count.renown.total.current += parseInt(json.mbp_info.article_remain['92001'].number) + json.mbp_info.number; //Using given number to deal with multibox
-                    break;
-                case "92002": //prestige
-                    this.count.prestige.weekly.current += added['10100'].add_point;
-                    this.count.prestige.crew.current += added['20300'].add_point;
-                    this.count.prestige.total.current = parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number; //Using given number to deal with multibox
-                    break;
+        update: function (updArr) { //[ { pendantType, limitType, delta }]
+            for (let item of updArr) {
+                this.count[item.pendantType][item.limitType].current += item.delta;
+//                this.count[item.pendantType][item.limitType].max += item.max;
             }
             updateUI("updPendants", this.count);
         },
         set: function (json) {
-            if (!json.option) {console.log("Error finding pendant info."); return;}
+            if (!json.option) {State.deverror("Error finding pendant info."); return;}
             var pendants = json.option.mbp_limit_info;
             var renown = pendants['92001'];
             var prestige = pendants['92002'];
@@ -79,3 +67,27 @@ window.Profile = {
         }
     }
 };
+
+function getPendantsRaid (json) {
+    //TODO: uhh might need more cases?
+    if (json.mbp_info && json.mbp_info.add_result) {
+        var added = json.mbp_info.add_result;
+        switch (json.mbp_info.item_id) {
+            case "92001": //renown
+                //It only gives a total number, taking into account daily and weekly, but we still have to add them.
+                Profile.pendants.update([{pendantType: "renown", limitType: "daily", delta: added['10100'].add_point},
+                                         {pendantType: "renown", limitType: "weekly", delta: added['10100'].add_point},
+                                         {pendantType: "renown", limitType: "sr", delta: added['20200'].add_point},
+                                         {pendantType: "renown", limitType: "r", delta: added['20100'].add_point},
+                                         {pendantType: "renown", limitType: "total", delta: parseInt(json.mbp_info.article_remain['92001'].number) + json.mbp_info.number} //Using given number to deal with multibox
+                                         ]);
+                break;
+            case "92002": //prestige
+                Profile.pendants.update([ {pendantType: "prestige", limitType: "weekly", delta: added['10100'].add_point},
+                                          {pendantType: "prestige", limitType: "crew", delta: added['20300'].add_point},
+                                          {pendantType: "prestige", limitType: "total", delta: parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number} //Using given number to deal with multibox
+                                        ]);
+                break;
+        }
+    }
+}

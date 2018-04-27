@@ -1,26 +1,27 @@
 /*globals chrome:false, Profile: true, Supplies: true, State: true*/
 window.DevTools = {
     devToolsConnection: null,
-    init: function() {
+    wait: function() {
         console.log("Onee-sama?");
-        chrome.runtime.onConnect.addListener(function(port) {
-            console.log("Onee-sama!", port);
-            DevTools.devToolsConnection = port;
-            port.onMessage.addListener(DevTools.listen);
-            port.onDisconnect.addListener(DevTools.deafen);
-            window.dispatchEvent(EVENTS.connected);
-        });
+        chrome.runtime.onConnect.addListener(this.connected);
         chrome.runtime.onMessage.addListener(hearQuery);
     },
+    connected: function(port) {
+        console.log("Onee-sama!", port);
+        DevTools.devToolsConnection = port;
+        port.onMessage.addListener(DevTools.listen);
+        port.onDisconnect.addListener(DevTools.deafen);
+        window.dispatchEvent(EVENTS.connected);
+    },
     listen: function(data) {
-        console.log("[background] Heard:", data);
+        State.devlog("[background] Heard:", data);
         hear(data);
     },
     deafen: function() {
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
-        DevTools.devToolsConnection.onMessage.removeListener(this.listen);
+        DevTools.devToolsConnection.onMessage.removeListener(DevTools.listen);
         DevTools.devToolsConnection = null;
     },
     send: function(action, data) {
@@ -37,7 +38,7 @@ String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
 // function ismatch (s) { return this.indexOf(s) != -1};
 
 function hear (msg) {
-    //console.log("Processing:", data);
+//    console.log("Processing:", data);
     switch (msg.action) {
         case "request":
             var url = msg.data.url;
@@ -53,25 +54,35 @@ function hear (msg) {
                 case url.ismatch("profile/content/index"):
                     Profile.pendants.set(msg.data.json);
                     break;
-                case url.ismatch("resultmulti/data"): //Raid loot screen
-                    //TODO: supplies/treasure!
-                    Profile.pendants.add(msg.data.json);
-                    break;
                 case url.ismatch("item/article_list")://Treasure list
                     Supplies.treasure.set(msg.data.json);
                     break;
                 case url.ismatch("item/recovery_and_evolution_list")://Consumables list
                     Supplies.consumable.set(msg.data.json);
                     break;
-                case url.ismatch("resultmulti/data"):
-                case url.ismatch("result/data"): //Quest end
+                case url.ismatch("resultmulti/data")://Raid loot screen
+                case url.ismatch("result/data"): //Quest loot screen
                     gotQuestLoot(msg.data.json.rewards);
+                    getPendantsRaid(msg.data.json);
                     break;
                 case url.ismatch("weapon/evolution_materials"):
                     weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao
                     break;
+                case url.ismatch("npc/evolution_materials"):
+                    npcUncapStart(msg.data);//TBH Just xhr the supplies lmao
+                    break;
                 case url.ismatch("evolution_weapon/item_evolution"):
-                    weaponUncapEnd(msg.data.json);
+                case url.ismatch("evolution_npc/item_evolution"):
+                    uncapEnd(msg.data.json);
+                    break;
+                case url.ismatch("teamraid037/bookmaker/content/top"):
+                    DevTools.send("updUnfAreas", msg.data.json);
+                    break;
+                case url.ismatch("rest/multiraid/ability_result.json"):
+                    battleUseAbility(msg.data.json);
+                    break;
+                case url.ismatch("rest/multiraid/normal_attack_result.json"):
+                    battleAttack(msg.data.json);
             }
             break;
         case "plannerSeriesChange":
@@ -83,6 +94,10 @@ function hear (msg) {
                                                                msg.data.element,
                                                                msg.data.start,
                                                                msg.data.end));
+            break;
+        case "saveData":
+            Storage.set(msg.data);
+            break;
     }
 }
 
@@ -91,10 +106,13 @@ function hearQuery (data, sender, respond) {
     
     switch (data.query) {
         case "theme":
-            retValue =  State.options.theme.current;
+            retValue = State.settings.theme.current;
             break;
         case "plannerSeriesList":
             retValue = Planner.listSeries();
+        case "loadData":
+            Storage.get(data, respond);
+            break;
     }
     
     respond({query: data.query, 

@@ -21,13 +21,13 @@ window.BackgroundPage = {
         this.connection.postMessage({action, data});
     },
     hear: function(msg){
-        console.log("[devtools] Heard:", msg);
+        State.devlog("[devtools] Heard:", msg);
         switch (msg.action){
             case "sayHi":
-                console.log("Onee-sama!");
+                console.log("Onee-sama gokigenyou! 	(´ ∀ ` *)");
                 break;
             case "sayBye":
-                console.log("Onee-sama?");
+                console.log("Iya da onee-sama!! ＼(º □ º l|l)");
                 break;
             case "updPendants":
                 updatePendants(msg.data);
@@ -48,6 +48,10 @@ window.BackgroundPage = {
                 break;
             case "newPlanCreated":
                 UI.planner.displayPlan(msg.data);
+                break;
+            case "updUnfAreas":
+                updUnfAreas(msg.data);
+                break;
         }
     }
 };

@@ -1,4 +1,6 @@
 /*globals BackgroundPage: true, UI*/
+var UNF_CHART;
+
 window.UI = {
     setTheme: function (theme) {
         var sheet = document.getElementById("theme");
@@ -35,62 +37,50 @@ window.UI = {
         for (let nav of nl) {
             nav.addEventListener("click", this.switchNav);
         }
+        document.getElementById("tabs").addEventListener("click", evhCollapsiblePanels);
     },
     
     time: {
-        display: {jst: {},
-                  strike: {},
-                  daily: {},
-                  weekly: {},
-                  monthly: {}},
-        timers: {
-            daily: {},
-            weekly: {},
-            monthly: {}
-        },
-        current: {},
+        display: {},
+        timers: {},
+        jst: {}, //Current time
+        int: {},
         
-        format: function(t) {
-            var options = {hour: 'numeric', 
-                          minute: 'numeric',
-                          second: 'numeric', 
-                          timeZone: 'Asia/Tokyo'};
-            return Intl.DateTimeFormat('jp-JP', options).formatToParts(t);
-            },
-        initJST: function () {
+        keep: function() {            
+            function tick() {
+                updateTimer(UI.time.jst, 1);
+                updateTimerDisplay("jst", UI.time.jst);
+            }
+            
             this.display.jst = {
                 h: document.getElementById("jst-h"),
                 m: document.getElementById("jst-m"),
                 s: document.getElementById("jst-s")
             };
-            this.updateJST();
-            setInterval(this.updateJST, 1000);
-        },
-        updateJST: function() {
-            var time = UI.time.format(Date.now());
-            UI.time.display.jst.h.textContent = time[0].value;
-            UI.time.display.jst.m.textContent = time[2].value;
-            UI.time.display.jst.s.textContent = time[4].value;
-        },
-        setStrike: function() {
             
+            this.jst = new Date();
+            translateDate(this.jst, "toJST");
+            updateTimerDisplay("jst", this.jst);
+            this.int.jst = setInterval(tick, 1000);
         },
-        initResets: function() {
+        initTimers: function () {
+            if (this.int.resets) { clearInterval(this.int.resets); }
+            this.setTimers();
             for (let timer of Object.keys(this.timers)) {
                 this.display[timer] = {d: document.getElementById(`${timer}-d`),
                                        h: document.getElementById(`${timer}-h`),
                                        m: document.getElementById(`${timer}-m`),
                                        s: document.getElementById(`${timer}-s`)};
+                updateTimerDisplay(timer, UI.time.timers[timer]);
             }
-            this.setResets();
-            this.updateResets();
-            setInterval(this.updateResets, 1000);
+            this.int.resets = setInterval(this.updateTimers, 1000);
         },
-        setResets: function () {
-            //TODO actuall just store them as diffs and decrement them, reset when one is 0. Much eaiser
-            var current = new Date();
-            current.setHours(current.getUTCHours() + 9);
-            this.current = current;
+        setStrike: function() {
+            
+        },
+        setTimers: function () {
+            var current = this.jst;
+//            translateDate(current, "toJST");
             
             var daily = new Date(current);
             daily.setHours(5);
@@ -98,7 +88,6 @@ window.UI = {
             daily.setSeconds(0);
             var weekly = new Date(daily);
             var monthly = new Date(daily);
-            var timers = {daily, weekly, monthly};
             
             //Daily
             if (current.getHours() >= 5) {
@@ -117,25 +106,23 @@ window.UI = {
                 monthly.setMonth(current.getMonth() + 1);
             }
             
-            for (let timer in timers) {
-                if (timers.hasOwnProperty(timer)) {
-                    this.timers[timer] = timers[timer];
-                }
-            }
+            this.timers.daily = new Date(daily - current);
+            this.timers.weekly = new Date(weekly - current);
+            this.timers.monthly = new Date(monthly - current);
+//            this.timers.strike = new Date(daily - current);
         },
-        updateResets: function() {
-/*            var current = new Date();
-            current.setHours(current.getUTCHours() + 9);
-            UI.time.current = current;*/
-            UI.time.current.setSeconds(UI.time.current.getSeconds() + 1);
-            
+        updateTimers: function() {
             for (let timer of Object.keys(UI.time.timers)) {
-                var diff = new Date(UI.time.timers[timer] - UI.time.current);
-
-                if (UI.time.display[timer].d) {UI.time.display[timer].d.textContent = diff.getUTCDate() - 1;}
-                UI.time.display[timer].h.textContent = diff.getUTCHours();
-                UI.time.display[timer].m.textContent = ('0' + diff.getUTCMinutes()).slice(-2);
-                UI.time.display[timer].s.textContent = ('0' + diff.getUTCSeconds()).slice(-2);
+                if (UI.time.timers[timer].getTime() <= 0) {
+                    if (timer == "maint") {
+                        endMaintTimer();
+                        continue;
+                    }
+                    UI.time.setTimers();
+                }
+                
+                updateTimer(UI.time.timers[timer], -1);
+                updateTimerDisplay(timer, UI.time.timers[timer]);
             }
         }
     },
@@ -193,6 +180,11 @@ window.UI = {
                 list.appendChild(entry);
             }
         }
+    },
+    raids: {
+        add: function() {
+            var t = document.getElementById("template-raid-item");
+        }
     }
 };
 
@@ -202,6 +194,16 @@ function clearDropdown(el) {
     }
 }
 
+
+//UI funcitonality
+function evhCollapsiblePanels (e) {
+    if (e.target.classList.contains("do-collapse")) {
+        e.target.nextElementSibling.classList.toggle('hidden');
+    }
+}
+
+
+//Planner
 function stylePlanItem(el, current, needed) {
     if(el.nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
         el = el.firstElementChild;
@@ -230,3 +232,47 @@ function syncPlanner(index, type) { //TODO: make it work with consumables
     }
     
 }
+
+//Timing functions
+function updateTimer (timer, delta) {
+    timer.setSeconds(timer.getSeconds() + delta);
+}
+function updateTimerDisplay (name, timer) {
+    if (UI.time.display[name].d) {UI.time.display[name].d.textContent = timer.getDate() - 1;}
+    UI.time.display[name].h.textContent = ('0' + timer.getHours()).slice(-2);
+    UI.time.display[name].m.textContent = ('0' + timer.getMinutes()).slice(-2);
+    UI.time.display[name].s.textContent = ('0' + timer.getSeconds()).slice(-2);
+}
+    //Maintenance
+function startMaintTimer(html) {
+    document.getElementById("timer-maint").classList.toggle("hidden");
+    UI.time.timers.maint = new Date(getMaintEnd(html) - UI.time.jst);
+    UI.time.initTimers();
+}
+
+function getMaintEnd(html) {
+    var doc = document.implementation.createHTMLDocument("");
+    doc.documentElement.innerHTML = html;
+    var info = doc.querySelector(".prt-maintenance-infomation");
+    var date = info.firstElementChild.textContent.match(/(?:\d+\/?)+ (?:\d+:?)+$/m)[0];
+    return new Date(date);
+}
+function endMaintTimer() {
+    document.getElementById("timer-maint").classList.toggle("hidden");
+    delete UI.time.timers.maint;
+    UI.time.initTimers();
+}
+
+    //Helpers
+function translateDate(date, tz) { //lucky JST doesn't observe DST
+    switch (tz) {
+        case "toJST":
+            date.setHours(date.getUTCHours() + 9);
+            break;
+        case "fromJST":
+            date.setUTCHours(date.getHours() - 9);
+            break;
+    }
+    return date;
+}
+

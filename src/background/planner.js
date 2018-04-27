@@ -24,7 +24,7 @@ window.Planner = {
                  case "stepNames":
                      continue;
                 default:
-                    console.error("Internal data error (Planner). Given: ", key);
+                    State.deverror("Internal data error (Planner). Given: ", key);
                     return;
             }
 

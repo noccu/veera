@@ -1,5 +1,8 @@
 /*globals UI, BackgroundPage, Network*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
+const CONSTANTS = {
+    baseGameUrl: "http://game.granbluefantasy.jp/"
+};
 
 if (chrome.runtime) {
     //Start logging network requests.
@@ -10,11 +13,10 @@ if (chrome.runtime) {
 }
 
 UI.initButtons();
-UI.time.initJST();
-UI.time.initResets();
-
+UI.time.keep();
+UI.time.initTimers();
 BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
-
+Unf.areaInfo.init();
 
 
 function updatePendants (data) {
@@ -130,11 +132,11 @@ function updateConsumables (data) {
 }
 
 function createSupplyItem (name, num, thumb) {
-        var t = document.getElementById("template-supply-item");
-        t.content.querySelector("li").title = name;
-        t.content.querySelector("img").src = thumb;
-        t.content.querySelector("div").textContent = num;
-        return document.importNode(t.content, true);
+    var t = document.getElementById("template-supply-item");
+    t.content.querySelector("li").title = name;
+    t.content.querySelector("img").src = thumb;
+    t.content.querySelector("div").textContent = num;
+    return document.importNode(t.content, true);
 }
 function createSupplyURL (id, type) {
     return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
@@ -167,4 +169,13 @@ function updatePlan () {  //Event handler
                 start: UI.planner.display.start.selectedIndex, 
                 end: UI.planner.display.end.selectedIndex};
     BackgroundPage.send("newPlanRequest", plan);
+}
+
+function createRaid(name, mat, url, thumb) {
+    var newRaid = document.getElementById("template-raid-item");
+    var newRaidMat = document.getElementById("template-raid-material");
+    newRaid.content.querySelector(".raid-name").title = name;
+    newRaid.content.querySelector(".raid-icon").src = thumb;
+    t.content.querySelector("div").textContent = num;
+    return document.importNode(t.content, true);
 }

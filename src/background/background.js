@@ -1,13 +1,12 @@
-/*globals DevTools: true, State: true*/
-var UPDATED = false;
+/*globals DevTools: true, State: true, Supplies*/
+const UPDATED = false;
 const EVENTS = {
     connected: new Event("veeraConnected")
 };
 
 window.addEventListener("veeraConnected", MainInit);
-DevTools.init(); //Listen for devtools conn
-
-State.options.theme.current = 0; //TODO: Replace with proper options parsing and defaults setting
+DevTools.wait(); //Listen for devtools conn
+loadSettings();
 
 function MainInit() {
     Supplies.load();

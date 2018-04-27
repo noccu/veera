@@ -1,4 +1,4 @@
-/*globals chrome*/
+/*globals chrome, State*/
 window.Storage = {
     set: function (value, cb) {
         chrome.storage.local.set(value, res => this.response(res, cb, value));       
@@ -13,12 +13,12 @@ window.Storage = {
         }
         
         if (result) {
-            console.log("Data loaded: %s", ... Object.keys(result));
-            if (cb) cb(result);
+            State.devlog("Data loaded: ", ...Object.keys(result));
+            if (cb) { cb(result); }
         }
         else {
-            console.log("Data saved: %s", ... Object.keys(v));
-            if (cb) cb();
+            State.devlog("Data saved: ", ...Object.keys(v));
+            if (cb) { cb(); }
         }
     }
 };

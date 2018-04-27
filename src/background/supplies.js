@@ -1,3 +1,4 @@
+/*globals Supplies, Storage, updateUI*/
 const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment"};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
@@ -5,7 +6,7 @@ const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evoluti
 window.Supplies = {
     treasure: {
         index: {},
-        set: function (json) {//TODO: should rename to parse or something prob cause that's what it really does
+        set: function (json) {//Set the full index, for use with game's supply page.
             //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
             this.index = {};
             for (let item of json) {
@@ -51,28 +52,27 @@ window.Supplies = {
                 }
             }
             
-            var i = 0;
             for ( let type of Object.keys(index) ) {
                 let idx = {};
-                if (type == "evolution") { //because ??? thanks cygames
+                if (type == SUPPLYTYPE.evolution) { //because ??? thanks cygames
                     for (let arr of index[type]) {
                         parse(arr, idx);
                     }
-                } else {
+                } 
+                else {
                     parse(index[type], idx);
                 }
                 this.index[type] = idx;
-                i++;
             }
             
             Supplies.save("c");
             updateUI("setConsumables", this.index);
         },
         get: function (type, id) {
-            if (Array.isArray(id)) {
+            if (Array.isArray(type)) {
                 var ret = [];
-                for (let entry of id) {
-                    ret.push( this.get(entry) );
+                for (let entry of type) {
+                    ret.push( this.get(entry.type, entry.id) );
                 }
                 return ret;
             } else {
@@ -90,25 +90,32 @@ window.Supplies = {
             return this.consumable.get(type, id);
         }
     },
-    update: function(type, id, delta) { //TODO: fuck me I'm too lazy lel
+    update: function(updArr) { //[ {type, id, delta} ]
+        var treasureUpdated = false,
+            consumabledUpdated = false;
         
-        function _upd (type, id, delta) {
+        function _upd (type, id, delta, name, category) {
             var isTreasure = (type == SUPPLYTYPE.treasure);
-            var idx = isTreasure ? this.treasure.index : this.consumable.index[type];
-            idx[id].count += delta;
+            var idx = isTreasure ? Supplies.treasure.index : Supplies.consumable.index[type]; //TODO: this doesn't work here, figure out why just for learning
+            if (idx[id]) { //Update
+                idx[id].count += delta;
+            }
+            else { //Add new
+                idx[id] = {name,
+                           category,
+                           count: delta};
+            }
+            
+            treasureUpdated = treasureUpdated || isTreasure;
+            consumabledUpdated = consumabledUpdated || !isTreasure;
         }
         
-        if (Array.isArray(type)) {
-            for (let item of type) {
-                _upd(item.type, item.id, item.delta);
-            }
+        for (let item of updArr) {
+            _upd(item.type, item.id, item.delta, item.name, item.category);
         }
-        else {
-             _upd(type, id, delta);
-        }
-                
-        if (isTreasure) { updateUI("setTreasure", this.treasure.index); }
-        else { updateUI("setConsumables", this.consumable.index); }
+
+        if (treasureUpdated) { updateUI("setTreasure", this.treasure.index); }
+        if (consumabledUpdated) { updateUI("setConsumables", this.consumable.index); }
     },
     save: function(mode) {
         //TODO: Just xhr it from game on startup.
@@ -117,13 +124,14 @@ window.Supplies = {
         if (!mode || mode == "c") { o.sup_idx_consumable = this.consumable.index; }
         
         Storage.set(o);
+        State.devlog("Supply indices saved.");
     },
     load: function() {
         function _load(data) {
             Supplies.treasure.index = data.sup_idx_treasure;
             Supplies.consumable.index = data.sup_idx_consumable;
             
-            console.log("Supply indices loaded");
+            State.devlog("Supply indices loaded.");
             updateUI("setTreasure", Supplies.treasure.index);
             updateUI("setConsumables", Supplies.consumable.index);
         }
@@ -137,20 +145,35 @@ window.Supplies = {
 };
 
 function gotQuestLoot(data) {
+    var upd = [];
+    function makeUpd(item) {
+        return {type: translateItemKind(item.item_kind), 
+                id: item.id, 
+                delta: parseInt(item.count),
+                //In case of new mats
+                name: item.name,
+                category: item.category_type};
+    }
+    
     //Non-box, side-scrolling
-    for (let key of Object.keys(data.article_list)) {
-        let item = data.article_list[key];
-        Supplies.update(SUPPLYTYPE.treasure, item.id, parseInt(item.count));
+    if (data.article_list) {
+        for (let key of Object.keys(data.article_list)) {
+            let item = data.article_list[key];
+            upd.push(makeUpd(item));
+        }
     }
     
     //Box drops
-    for (let key of Object.keys(data.reward_list)) {
-        let boxType = data.reward_list[key];
-        for (let key of Object.keys(boxType)) {
-            let item = boxType[key];
-            Supplies.update(translateItemKind(item.item_kind), item.id, parseInt(item.count));
+    if (data.reward_list) {
+        for (let key of Object.keys(data.reward_list)) {
+            let boxType = data.reward_list[key];
+            for (let key of Object.keys(boxType)) {
+                let item = boxType[key];
+                upd.push(makeUpd(item));
+            }
         }
     }
+    Supplies.update(upd);
 }
 
 function translateItemKind(kind) {
@@ -167,24 +190,38 @@ function translateItemKind(kind) {
 }
 
 function weaponUncapStart(data) {
-    var update = { items: [] };
+    var update = { id: data.url.match(/materials\/(\d+)\?/)[1],
+                   items: [] };
     
-    update.id = data.url.match(/materials\/(\d+)\?/)[1];
-    
+//    update.id = data.url.match(/materials\/(\d+)\?/)[1]; 
     for (let key of Object.keys(data.json)) {
         if (key == "options") { continue; }
         
         let item = data.json[key];
         update.items.push({type: translateItemKind(item.item_kind),
-                        id: item.item_id, 
-                        delta: item.item_number});
+                           id: item.item_id, 
+                           delta: (- parseInt(item.item_number)) });
     }
     
-    Supplies.queuedUncap = update.items;
+    Supplies.pendingUncap = update;
 }
 
-function weaponUncapEnd(json) {
-    if (Supplies.queuedUncap.id == json.new.id) {
-        Supplies.update(Supplies.queuedUncap.items);
+function npcUncapStart(data) {
+    var update = { id: data.url.match(/materials\/(\d+)\?/)[1],
+                   items: [] };
+    
+//    update.id = data.url.match(/materials\/(\d+)\?/)[1];
+    for (let item of data.json.requirements) {        
+        update.items.push({type: translateItemKind(item.item_kind.id),
+                           id: item.item_id, 
+                           delta: (- parseInt(item.item_number)) });
+    }
+    
+    Supplies.pendingUncap = update;
+}
+
+function uncapEnd(json) {
+    if (Supplies.pendingUncap.id == json.new.id) {
+        Supplies.update(Supplies.pendingUncap.items);
     }
 }
