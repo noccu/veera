@@ -21,7 +21,7 @@ window.BackgroundPage = {
         this.connection.postMessage({action, data});
     },
     hear: function(msg){
-        State.devlog("[devtools] Heard:", msg);
+        if (DEBUG) { console.log("[devtools] Heard:", msg); }
         switch (msg.action){
             case "sayHi":
                 console.log("Onee-sama gokigenyou! 	(´ ∀ ` *)");
@@ -52,6 +52,8 @@ window.BackgroundPage = {
             case "updUnfAreas":
                 updUnfAreas(msg.data);
                 break;
+            case "updBattleData":
+                UI.battle.update(msg.data);
         }
     }
 };

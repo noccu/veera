@@ -276,3 +276,13 @@ function translateDate(date, tz) { //lucky JST doesn't observe DST
     return date;
 }
 
+
+//Charts, Graphs
+function clearGraph(graph) {
+    graph.config.data.labels = [];
+    for (let set of graph.config.data.datasets) {
+        set.data = [];
+    }
+    graph.update();
+}
+

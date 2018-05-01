@@ -1,8 +1,12 @@
-/*globals UI, BackgroundPage, Network*/
+/*globals UI, BackgroundPage, Network, Unf*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
 const CONSTANTS = {
     baseGameUrl: "http://game.granbluefantasy.jp/"
 };
+//Adding a last item in array macro
+Object.defineProperty(Array.prototype, "last", {get: function(){ 
+    return this.length == 0 ? 0 : this[this.length - 1]; 
+}});
 
 if (chrome.runtime) {
     //Start logging network requests.
@@ -17,6 +21,7 @@ UI.time.keep();
 UI.time.initTimers();
 BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
 Unf.areaInfo.init();
+//UI.battle.init();
 
 
 function updatePendants (data) {

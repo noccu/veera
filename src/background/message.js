@@ -110,6 +110,7 @@ function hearQuery (data, sender, respond) {
             break;
         case "plannerSeriesList":
             retValue = Planner.listSeries();
+            break;
         case "loadData":
             Storage.get(data, respond);
             break;

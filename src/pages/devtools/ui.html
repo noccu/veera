@@ -7,8 +7,9 @@
         <script type="text/javascript" src="message.js"></script>
         <script type="text/javascript" src="network.js"></script>
         <script type="text/javascript" src="../../lib/Chart.min.js"></script>
+        <script type="text/javascript" src="ui.js"></script>
         <script  type="text/javascript" src="unf.js"></script>
-        <script type="text/javascript" src="ui.js" defer></script>
+        <script  type="text/javascript" src="battleUI.js" defer></script>
         <script type="text/javascript" src="main.js" defer></script>
     </head>
     <body>
@@ -240,7 +241,19 @@
                 </div>
             </div>
             <div id="battle" class="tab">
-                Placeholder
+                <div class="panel">
+                    <span class="panel-header do-collapse">Overview</span>
+                    <div class="panel-content">
+                        <div class="canvas-container">
+                            <canvas id="battle-overview-graph"></canvas>
+                        </div>
+                        <div>Total Damage: <span id="battle-totalDmg">0</span></div>
+                        <div>Avg Damage / Turn: <span id="battle-avgTurnDmg">0</span></div>
+                        <div>Crit rate: <span id="battle-avgCritRate">0</span>%</div>
+                        <div>Total Honor: <span id="battle-totalHonor">0</span></div>
+                        <div>Avg Honor / Turn: <span id="battle-avgTurnHonor">0</span></div>
+                    </div>                
+                </div>
             </div>
             <div id="unf" class="tab">
                 <div id="unf-pn-area" class="panel">
@@ -251,7 +264,7 @@
                         <button id="unf-graph-upd">Update</button>
                         <button id="unf-graph-save">Save</button>
                         <button id="unf-graph-load">Load</button>
-                        <div class="chart-container">
+                        <div class="canvas-container">
                             <canvas id="unf-area-chart"></canvas>
                         </div>
                     </div>

@@ -33,15 +33,15 @@ function setVeeraDefaults() {
 }
 
 function loadSettings() { //TODO: proper update handling, versions etc
-    function load(loadedSettings) {
-        if (loadedSettings.theme) {
-            State.settings = loadedSettings;
+    function load(data) {
+        if (data.settings.theme) {
+            State.settings = data.settings;
         }
         else {
             setVeeraDefaults();
             saveSettings();
         }
-        Stats.devlog("Settings loaded", loadedSettings);
+        State.devlog("Settings loaded", data.settings);
     }
     
     Storage.get("settings", load);
@@ -49,7 +49,7 @@ function loadSettings() { //TODO: proper update handling, versions etc
 
 function saveSettings() {
     Storage.set({settings: State.settings});
-    Stats.devlog("Settings saved.");
+    State.devlog("Settings saved.");
 }
 
 function toggleDebug() {
