@@ -54,6 +54,11 @@ window.BackgroundPage = {
                 break;
             case "updBattleData":
                 UI.battle.update(msg.data);
+                break;
+            case "updBattleNewRaid":
+                UI.battle.reset();
+                UI.battle.setPartyNames(msg.data.characters.list);
+                break;
         }
     }
 };

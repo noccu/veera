@@ -1,10 +1,13 @@
 /*globals DevTools: true, State: true, Supplies*/
 const UPDATED = false;
 const EVENTS = {
-    connected: new Event("veeraConnected")
+    connected: new Event("veeraConnected"),
+//    newBattle: new Event("newBattle")
 };
 
 window.addEventListener("veeraConnected", MainInit);
+//window.addEventListener("newBattle", );
+
 DevTools.wait(); //Listen for devtools conn
 loadSettings();
 //Adding a last item in array macro

@@ -1,9 +1,11 @@
-/*globals clearGraph, Chart*/
+/*globals clearGraph, Chart, devLog*/
+const NUMBER_FORMAT = new Intl.NumberFormat(navigator.language, {maximumFractionDigits: 3});
 
 window.UI.battle = {
     display: {overview:{},
               chars: {}},
     isInit: false,
+    current: 0,
     graph: {overview: null,
             chars: {}},
     graphData: {overview: null,
@@ -14,14 +16,11 @@ window.UI.battle = {
         chars: {turnDmg: 0,
                 turnCritRate: 1}
     },
-    initDisplay: function (stats) {
+    initDisplay: function () {
         //Overview
-        var ele;
-        for (let stat of Object.keys(stats)) {
-            ele = document.getElementById(`battle-${stat}`); //TODO: adapt using char structure below
-            if (ele) {
-                this.display.overview[stat] = ele;
-            }
+        var store = document.querySelectorAll("#battle-overview .battle-stats");
+        for (let statEle of store) {
+                this.display.overview[statEle.dataset.stat] = statEle.children[0];
         }
         this.createOverviewGraph();
         
@@ -34,32 +33,23 @@ window.UI.battle = {
             temp.content.querySelector(".battle-char-container").dataset.char = i;
             temp.content.querySelector(".battle-char-name").textContent = `Char ${i+1}`;
             
-            ele = document.importNode(temp, true).content.children[0];
-            let statsList = ele.getElementsByClassName("battle-stats"),
-                id = ele.dataset.char;
+            store = document.importNode(temp, true).content.children[0];
+            let statsList = store.getElementsByClassName("battle-stats"),
+                id = store.dataset.char;
             if (!this.display.chars[id]) {
                 this.display.chars[id] = {};
             }
             for (let statEle of statsList) {
                 this.display.chars[id][statEle.dataset.stat] = statEle.children[0];
             }
-            list.appendChild(ele);
+            list.appendChild(store);
             
             this.createCharaGraph(i);
         }
         
-        
         this.isInit = true;
     },
-    update: function(battle){
-        if (!this.isInit) { this.initDisplay(battle.stats); }
-        if (battle.turn < this.graphData.overview.labels.last) { //new battle TODO: update to use raid start/end msg, will fail currently with 1turn battles
-            clearGraph(this.graph.overview);
-            for (let char of Object.keys(this.graph.chars)) {
-                clearGraph(this.graph.chars[char]);
-            }
-        }
-        
+    update: function(battle){        
         for (let stat of Object.keys(battle.stats)) {
             this.updateOverview(battle.turn, stat, battle.stats[stat]);
         }
@@ -70,10 +60,19 @@ window.UI.battle = {
             this.graph.chars[char].update();
         }
     },
+    reset: function() {
+        if (!this.isInit) { this.initDisplay(); }
+        if (this.graph.overview) {
+            clearGraph(this.graph.overview);
+        }
+        for (let char of Object.keys(this.graph.chars)) {
+            clearGraph(this.graph.chars[char]);
+        }  
+    },
     updateOverview: function(turn, stat, statValue) {
         //Readouts
         if (this.display.overview[stat]) {
-            this.display.overview[stat].textContent = statValue;
+            this.display.overview[stat].textContent = NUMBER_FORMAT.format(statValue);
         }
         
         //GraphData
@@ -96,7 +95,7 @@ window.UI.battle = {
                 disp = this.display.chars[charData.char][stat];
                 if (disp) {
                     try {
-                        disp.textContent = disp.dataset && disp.dataset.deci ? charData.stats[stat].toFixed(3) : charData.stats[stat];
+                        disp.textContent = NUMBER_FORMAT.format(charData.stats[stat]);
                     }
                     catch (e) {
                         devLog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
@@ -157,15 +156,20 @@ window.UI.battle = {
                     scales: {
                         yAxes: [{id: 'tdmg',
                                  type: 'linear',
-                                position: "left",
-                                ticks: { suggestedMin: 0}},
+                                 position: "left",
+                                 ticks: { suggestedMin: 0}},
                                 {id: 'crit',
                                  type: 'linear',
-                                position: "right"}]
+                                 position: "right",
+                                 ticks: { suggestedMin: 0}}]
                     }
                 }
             });
         this.graphData.chars[char] = this.graph.chars[char].config.data;
+    },
+    setPartyNames: function(party) {
+        var eles = document.querySelectorAll(".battle-char-container .battle-char-name");
+        party.forEach((entry, idx) => eles[idx].textContent = entry.name);  //just hope for consistent selector output lmao
     }
 };
 

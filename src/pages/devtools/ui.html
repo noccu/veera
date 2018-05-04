@@ -241,24 +241,24 @@
                 </div>
             </div>
             <div id="battle" class="tab">
-                <div class="panel">
+                <div class="panel" id="battle-overview">
                     <span class="panel-header do-collapse">Overview</span>
                     <div class="panel-content">
                         <div class="canvas-container">
                             <canvas id="battle-overview-graph"></canvas>
                         </div>
                         <div class="battle-stats-group">
-                            <div class="battle-stats">Total Damage: <span id="battle-totalDmg">0</span></div>
-                            <div class="battle-stats">Avg Damage: <span id="battle-avgTurnDmg">0</span></div>
+                            <div class="battle-stats" data-stat="totalDmg">Total Damage: <span>0</span></div>
+                            <div class="battle-stats" data-stat="avgTurnDmg">Avg Damage: <span>0</span></div>
                         </div>
-                        <div class="battle-stats">Crit rate: <span id="battle-avgCritRate">0</span>%</div>
+                        <div class="battle-stats" data-stat="avgCritRate">Crit rate: <span data-deci="true">0</span>%</div>
                          <div class="battle-stats-group">
-                            <div class="battle-stats">Total Honor: <span id="battle-totalHonor">0</span></div>
-                            <div class="battle-stats">Avg Honor: <span id="battle-avgTurnHonor">0</span></div>
+                            <div class="battle-stats" data-stat="totalHonor">Total Honor: <span>0</span></div>
+                            <div class="battle-stats" data-stat="avgTurnHonor">Avg Honor: <span>0</span></div>
                         </div>
                          <div class="battle-stats-group">
-                            <div class="battle-stats">Avg DA: <span id="battle-avgDaRate">0</span>%</div>
-                            <div class="battle-stats">Avg TA: <span id="battle-avgTaRate">0</span>%</div>
+                            <div class="battle-stats" data-stat="avgDaRate">DA rate: <span data-deci="true">0</span>%</div>
+                            <div class="battle-stats" data-stat="avgTaRate">TA rate: <span data-deci="true">0</span>%</div>
                         </div>
                     </div>                
                 </div>
@@ -277,8 +277,8 @@
                                         <div class="battle-stats" data-stat="avgDmg">Avg Dmg: <span>0</span></div>
                                     </div>
                                     <div class="battle-stats-group chara">
-                                        <div class="battle-stats" data-stat="daRate">Avg DA: <span data-deci="true">0</span>%</div>
-                                        <div class="battle-stats" data-stat="taRate">Avg TA: <span data-deci="true">0</span>%</div>
+                                        <div class="battle-stats" data-stat="daRate">DA: <span data-deci="true">0</span>%</div>
+                                        <div class="battle-stats" data-stat="taRate">TA: <span data-deci="true">0</span>%</div>
                                     </div>
                                     <div class="battle-stats" data-stat="critRate">Crit: <span data-deci="true">0</span>%</div>
                                     <div class="battle-stats" data-stat="ougiRate">Ougi: <span data-deci="true">0</span>%</div>
