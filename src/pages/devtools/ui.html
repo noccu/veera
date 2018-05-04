@@ -247,12 +247,45 @@
                         <div class="canvas-container">
                             <canvas id="battle-overview-graph"></canvas>
                         </div>
-                        <div>Total Damage: <span id="battle-totalDmg">0</span></div>
-                        <div>Avg Damage / Turn: <span id="battle-avgTurnDmg">0</span></div>
-                        <div>Crit rate: <span id="battle-avgCritRate">0</span>%</div>
-                        <div>Total Honor: <span id="battle-totalHonor">0</span></div>
-                        <div>Avg Honor / Turn: <span id="battle-avgTurnHonor">0</span></div>
+                        <div class="battle-stats-group">
+                            <div class="battle-stats">Total Damage: <span id="battle-totalDmg">0</span></div>
+                            <div class="battle-stats">Avg Damage: <span id="battle-avgTurnDmg">0</span></div>
+                        </div>
+                        <div class="battle-stats">Crit rate: <span id="battle-avgCritRate">0</span>%</div>
+                         <div class="battle-stats-group">
+                            <div class="battle-stats">Total Honor: <span id="battle-totalHonor">0</span></div>
+                            <div class="battle-stats">Avg Honor: <span id="battle-avgTurnHonor">0</span></div>
+                        </div>
+                         <div class="battle-stats-group">
+                            <div class="battle-stats">Avg DA: <span id="battle-avgDaRate">0</span>%</div>
+                            <div class="battle-stats">Avg TA: <span id="battle-avgTaRate">0</span>%</div>
+                        </div>
                     </div>                
+                </div>
+                <div class="panel centered" id="battle-characters">
+                    <span class="panel-header do-collapse">Characters</span>
+                    <div class="panel-content">
+                        <template id="battle-char-container">
+                            <div class="battle-char-container" data-char="0">
+                                <div class="battle-char-name">Char 1</div>
+                                <div class="canvas-container chara-graph">
+                                    <canvas class="battle-char-graph"></canvas>
+                                </div>
+                                <div class="battle-stats-container">
+                                    <div class="battle-stats-group chara">
+                                        <div class="battle-stats" data-stat="dmg">Dmg: <span>0</span></div>
+                                        <div class="battle-stats" data-stat="avgDmg">Avg Dmg: <span>0</span></div>
+                                    </div>
+                                    <div class="battle-stats-group chara">
+                                        <div class="battle-stats" data-stat="daRate">Avg DA: <span data-deci="true">0</span>%</div>
+                                        <div class="battle-stats" data-stat="taRate">Avg TA: <span data-deci="true">0</span>%</div>
+                                    </div>
+                                    <div class="battle-stats" data-stat="critRate">Crit: <span data-deci="true">0</span>%</div>
+                                    <div class="battle-stats" data-stat="ougiRate">Ougi: <span data-deci="true">0</span>%</div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </div>
             <div id="unf" class="tab">

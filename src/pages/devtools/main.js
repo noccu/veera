@@ -23,6 +23,11 @@ BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
 Unf.areaInfo.init();
 //UI.battle.init();
 
+function devLog() {
+    if (DEBUG) {
+        console.log(arguments);
+    }
+}
 
 function updatePendants (data) {
     UI.setValue([{

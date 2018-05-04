@@ -1,5 +1,5 @@
 /*globals Supplies, Storage, updateUI*/
-const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment"};
+const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment", NOT_TRACKED: -1};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
 
@@ -95,6 +95,7 @@ window.Supplies = {
             consumabledUpdated = false;
         
         function _upd (type, id, delta, name, category) {
+            if (type == SUPPLYTYPE.NOT_TRACKED) { return; }
             var isTreasure = (type == SUPPLYTYPE.treasure);
             var idx = isTreasure ? Supplies.treasure.index : Supplies.consumable.index[type]; //TODO: this doesn't work here, figure out why just for learning
             if (idx[id]) { //Update
@@ -185,7 +186,7 @@ function translateItemKind(kind) {
         case 17:
             return SUPPLYTYPE.evolution; //TODO: check?
         default:
-            return SUPPLYTYPE.treasure;
+            return SUPPLYTYPE.NOT_TRACKED;
     }
 }
 
