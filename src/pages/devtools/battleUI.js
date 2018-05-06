@@ -66,6 +66,10 @@ window.UI.battle = {
             clearGraph(this.graph.overview);
         }
         for (let char of Object.keys(this.graph.chars)) {
+            for (let stat of Object.keys(this.graphStats.chars)) { //Graph scale sync
+//                this.graph.chars[char].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks.suggestedMax = 100;
+                this.graph.chars[char].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks.max = 100;
+            }
             clearGraph(this.graph.chars[char]);
         }  
     },
@@ -114,7 +118,8 @@ window.UI.battle = {
                 
                 for (let graph of Object.keys(this.graph.chars)) { //Graph scale sync
                     let cur = this.graph.chars[graph].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks;
-                    cur.suggestedMax = Math.max(cur.suggestedMax ? cur.suggestedMax : 0, charData.stats[stat] * 1.05);
+//                    cur.suggestedMax = Math.max(cur.suggestedMax ? cur.suggestedMax : 0, charData.stats[stat] * 1.05);
+                    cur.max = Math.max(cur.max || 0, charData.stats[stat] * 1.05);
                 }
             }
             }

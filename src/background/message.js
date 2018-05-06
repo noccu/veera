@@ -84,6 +84,9 @@ function hear (msg) {
                 case url.ismatch("rest/multiraid/normal_attack_result.json"):
                     battleAttack(msg.data.json);
                     break;
+                case url.ismatch("rest/multiraid/summon_result"):
+                    battleUseSummon(msg.data.json);
+                    break;
                 case url.ismatch("rest/multiraid/start"):
                     Battle.log.reset(msg.data.json);
             }
