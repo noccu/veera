@@ -78,15 +78,19 @@ function hear (msg) {
                 case url.ismatch("teamraid037/bookmaker/content/top"):
                     DevTools.send("updUnfAreas", msg.data.json);
                     break;
+                case url.ismatch("rest/raid/ability_result.json"):
                 case url.ismatch("rest/multiraid/ability_result.json"):
                     battleUseAbility(msg.data.json);
                     break;
+                case url.ismatch("rest/raid/normal_attack_result.json"):
                 case url.ismatch("rest/multiraid/normal_attack_result.json"):
                     battleAttack(msg.data.json);
                     break;
+                case url.ismatch("rest/raid/summon_result"):
                 case url.ismatch("rest/multiraid/summon_result"):
                     battleUseSummon(msg.data.json);
                     break;
+                case url.ismatch("rest/raid/start"):
                 case url.ismatch("rest/multiraid/start"):
                     Battle.log.reset(msg.data.json);
             }

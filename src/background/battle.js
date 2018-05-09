@@ -25,7 +25,8 @@ window.Battle = {
             return this.log.filter(t => (t instanceof BattleTurnData));
         },
         reset: function(json) { //new battle
-            if (json.twitter.battle_id != Battle.id) {
+            let id = json.multi ? json.twitter.battle_id : json.raid_id;
+            if (id != Battle.id) {
                 this.log = [];
                 this.turn = 1;
                 Battle.characters.reset(json.player.param);
@@ -34,7 +35,7 @@ window.Battle = {
                     Battle.stats[stat] = 0;
                 }
                 
-                Battle.id = json.twitter.battle_id;
+                Battle.id = id;
                 updateUI("updBattleNewRaid", Battle);
             }
         }
