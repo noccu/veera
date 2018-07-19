@@ -10,16 +10,19 @@ window.Planner = {
         }
 
         for (let key of Object.keys(PlannerData[series])) {
-             var itemArray;
+             var itemArray,
+                 templateKey;
              switch (key) {
                 case "core":
                     itemArray = PlannerData[series].core;
                      break;
                 case "wtype":
-                    itemArray = PlannerData[series].wtype[wtype];
+                    itemArray = PlannerData[series].wtype["templates"].concat(PlannerData[series].wtype[wtype]);
+                    templateKey = wtype;
                     break;
                 case "element":
-                    itemArray = PlannerData[series].element[element];
+                    itemArray = PlannerData[series].element["templates"].concat(PlannerData[series].element[element]);
+                     templateKey = element;
                     break;
                  case "stepNames":
                      continue;
@@ -32,6 +35,9 @@ window.Planner = {
                  for (let item of itemArray) {
                     if (start < item.step) { //start is exclusive (we already have it!)
                         if (item.step <= end) { //see else
+                            if (typeof item.id != "number") { //Dealing with templates
+                                item = createItemFromTemplate(item, templateKey);
+                            }
                             var plannedItem = plan.find(equalID, item);
                             if (plannedItem) {
                                 plannedItem.needed += item.needed;

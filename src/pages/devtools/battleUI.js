@@ -14,9 +14,23 @@ window.UI.battle = {
         overview: {turnDmg: 0,
                    turnCritRate: 1},
         chars: {turnDmg: 0,
-                turnCritRate: 1}
+                turnCritDmg: 1,
+                turnDmgTaken: 2}
     },
     initDisplay: function () {
+        Chart.defaults.scale.ticks.callback = function (value, index, values) {
+            return NUMBER_FORMAT.format(value);
+        }
+        Chart.defaults.global.tooltips.callbacks.label = function (tooltipItem, data) {
+            return `${data.datasets[tooltipItem.datasetIndex].label}: ${NUMBER_FORMAT.format(tooltipItem.yLabel)}`;
+        }
+        Chart.defaults.global.tooltips.callbacks.title = function (tooltipItemArr, data) {
+            var title = tooltipItemArr.length > 1 ? "Turns: " : "Turn: ";
+            for (let item of tooltipItemArr) {
+                title += item.xLabel;
+            } 
+            return title;
+        }
         //Overview
         var store = document.querySelectorAll("#battle-overview .battle-stats");
         for (let statEle of store) {
@@ -155,7 +169,8 @@ window.UI.battle = {
                 data: {
                     labels: [],
                     datasets: [createBattleDataset("Turn Damage", 'rgb(87, 129, 61)', 'rgba(87, 129, 61,0.2)', "tdmg"),
-                               createBattleDataset("Crit Rate", 'rgb(61, 79, 129)', 'rgba(61, 79, 129, 0.2)', "crit")]
+                               createBattleDataset("Crit Damage", 'rgb(61, 79, 129)', 'rgba(61, 79, 129, 0.2)', "tdmg"),
+                               createBattleDataset("Damage Taken", 'rgb(134, 25, 54)', 'rgba(134, 25, 54, 0.2)', "bdmg")]
                 },
                 options: {
                     scales: {
@@ -163,7 +178,11 @@ window.UI.battle = {
                                  type: 'linear',
                                  position: "left",
                                  ticks: { suggestedMin: 0}},
-                                {id: 'crit',
+/*                                {id: 'crit',
+                                 type: 'linear',
+                                 position: "right",
+                                 ticks: { suggestedMin: 0}},*/
+                                {id: 'bdmg',
                                  type: 'linear',
                                  position: "right",
                                  ticks: { suggestedMin: 0}}]
@@ -178,7 +197,7 @@ window.UI.battle = {
     }
 };
 
-function createBattleDataset (stat, color, bgColor,axisID) {
+function createBattleDataset (stat, color, bgColor, axisID) {
     return {label: stat,
             data: [],
             backgroundColor: bgColor,
