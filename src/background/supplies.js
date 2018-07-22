@@ -125,14 +125,14 @@ window.Supplies = {
         if (!mode || mode == "c") { o.sup_idx_consumable = this.consumable.index; }
         
         Storage.set(o);
-        State.devlog("Supply indices saved.");
+        devlog("Supply indices saved.");
     },
     load: function() {
         function _load(data) {
             Supplies.treasure.index = data.sup_idx_treasure;
             Supplies.consumable.index = data.sup_idx_consumable;
             
-            State.devlog("Supply indices loaded.");
+            devlog("Supply indices loaded.");
             updateUI("setTreasure", Supplies.treasure.index);
             updateUI("setConsumables", Supplies.consumable.index);
         }

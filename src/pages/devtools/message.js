@@ -49,6 +49,9 @@ window.BackgroundPage = {
             case "newPlanCreated":
                 UI.planner.displayPlan(msg.data);
                 break;
+            case "updUnfEdition":
+                Unf.setEdition(msg.data);
+                break;
             case "updUnfAreas":
                 updUnfAreas(msg.data);
                 break;

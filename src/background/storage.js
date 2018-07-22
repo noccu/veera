@@ -13,11 +13,11 @@ window.Storage = {
         }
         
         if (result) {
-            State.devlog("Data loaded: ", ...Object.keys(result));
+            devlog("Data loaded: ", ...Object.keys(result));
             if (cb) { cb(result); }
         }
         else {
-            State.devlog("Data saved: ", ...Object.keys(v));
+            devlog("Data saved: ", ...Object.keys(v));
             if (cb) { cb(); }
         }
     }

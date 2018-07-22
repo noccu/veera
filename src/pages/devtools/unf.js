@@ -29,37 +29,38 @@ window.Unf = {
                 }
             });
         },
-        update: function (honorsArr) {
-            if (honorsArr.length != 4) {
+        update: function (newHonorsArr) {
+            if (newHonorsArr.length != 4) {
                 console.error("UNF area update: Invalid arguments");
                 return;
             }
             if (!this.graph) { this.create(); }
          
-            for (let i = 0; i < honorsArr.length; i++) {
-                let data = this.graph.config.data.datasets[i].data;
-                let last = data[data.length - 1];
-                //Data not yet updated.
-                if (last == honorsArr[i]) {//should only be called on first iteration really
+            let graphData = this.graph.config.data;
+            for (let i = 0; i < newHonorsArr.length; i++) {
+                let data = graphData.datasets[i].data;
+                let lastHonors = data.last;
+                //Honors not yet updated.
+                if (lastHonors == newHonorsArr[i]) {
+                    //early term on first iteration/area
                     return;
                 }
                 //New day/fight
-                if (last > honorsArr[i]) {
+                if (lastHonors > newHonorsArr[i]) {
                     data = [];
-                    if (this.graph.config.data.labels.length > 0) {
-                        this.graph.config.data.labels = [];
-                    }
+                    graphData.labels = [];
                 }
                 
-                data.push(honorsArr[i]);
+                data.push(newHonorsArr[i]);
             }
             var date = new Date();
-            this.graph.config.data.labels.push(date.toLocaleString(navigator.language, {hour: "numeric", minute: "numeric"}));
+            graphData.labels.push(date.toLocaleString(navigator.language, {hour: "numeric", minute: "numeric"}));
             this.graph.update();
         },
         startLog: function() {
             if (!Unf.areaInfo.logging) {
                 Unf.areaInfo.iv = setInterval(xhrUnfAreaData, 1000*60*21);
+                Unf.areaInfo.logging = true;
             }
         },
         stopLog: function(){
@@ -95,6 +96,14 @@ window.Unf = {
              }
              chrome.storage.local.get("unf", _load);
         }
+    },
+    edition: "",
+    setEdition: function (url) {
+        let m = url.match(/\/teamraid(\d+)\//);
+        if (m) {
+            this.edition = m[1];
+            BackgroundPage.send("setUnfEdition", this.edition);
+        }
     }
 };
 
@@ -113,7 +122,7 @@ function updUnfAreas(json) {
     var pts = [];
     var data = input.body.querySelectorAll(".lis-area .point");
     for (let el of data) {
-        pts.push(parseInt(el.textContent));
+        pts.push(parseInt(el.textContent.replace(/,/g, '')));
     }
     
     Unf.areaInfo.update(pts);
@@ -125,7 +134,7 @@ function xhrUnfAreaData() {
     xhr.onload = function() {
         updUnfAreas(xhr.response);
     };
-    xhr.open("GET", `${CONSTANTS.baseGameUrl}teamraid037/bookmaker/content/top`);
+    xhr.open("GET", `${CONSTANTS.baseGameUrl}teamraid${Unf.edition}/bookmaker/content/top`);
 //    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 //    xhr.setRequestHeader("X-VERSION", "1524565238");
     xhr.responseType = "json";

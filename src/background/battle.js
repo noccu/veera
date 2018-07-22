@@ -370,7 +370,7 @@ function battleUseAbility (json) {
             Battle.log.currentTurn.actions.push(action);
             updateBattleStats(action);
         }
-        State.devlog("Battle info updated", actions);
+        devlog("Battle info updated", actions);
         updateUI("updBattleData", Battle);
     }
 }
@@ -467,10 +467,10 @@ function battleAttack(json) {
             Battle.log.currentTurn.actions.push(action);
             updateBattleStats(action);
         }
-        State.devlog("Battle info updated", actions);
+        devlog("Battle info updated", actions);
         updateUI("updBattleData", Battle);
     }
-    State.devlog("Start turn ", json.status.turn);
+    devlog("Start turn ", json.status.turn);
 }
 
 function battleUseSummon(json) {
@@ -495,7 +495,7 @@ function battleUseSummon(json) {
             Battle.log.currentTurn.actions.push(action);
             updateBattleStats(action);
         }
-        State.devlog("Battle info updated", actions);
+        devlog("Battle info updated", actions);
         updateUI("updBattleData", Battle);
     }
 }

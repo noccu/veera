@@ -14,14 +14,16 @@ if (chrome.runtime) {
     Network.listen();
     //TODO: Query options and adjust UI.
     BackgroundPage.query("theme", resp => UI.setTheme(resp.value));
+    BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
+    BackgroundPage.query("unfEdition", resp => Unf.edition = resp.value);
+    
+    UI.initButtons();
+    UI.time.keep();
+    UI.time.initTimers();
+    Unf.areaInfo.init();
+    //UI.battle.init();
 }
 
-UI.initButtons();
-UI.time.keep();
-UI.time.initTimers();
-BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
-Unf.areaInfo.init();
-//UI.battle.init();
 
 function devLog() {
     if (DEBUG) {

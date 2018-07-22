@@ -1,12 +1,7 @@
 /*globals State, Storage*/
 window.State = {
     debug: true,
-    devlog: function() {
-        if (this.debug) { console.log(... arguments); }
-    },
-    deverror: function() {
-        if (this.debug) { console.error(... arguments); }
-    },
+    unfEdition: "",
     
     settings: {
         theme: {
@@ -25,6 +20,32 @@ window.State = {
         raids: {
             sortByDiff: true
         }
+    },
+    
+    save: function() {
+        let o = {};
+        for (let e of Object.keys(this)) {
+            if (!["save", "load"].includes(e)) {
+                o[e] = State[e];
+            }
+        }
+        Storage.set({state: o});
+        devlog("State saved.");
+    },
+    load: function() {
+        function l(data) {
+            if (!data.state) {
+                devlog("No saved state, initializing from defaults.");
+                setVeeraDefaults();
+                State.save();
+                return;
+            }
+            for (let e of Object.keys(data.state)) {
+                State[e] = data.state[e];
+                devlog("State loaded.");
+            }
+        }
+        Storage.get("state", l);
     }
 };
 
@@ -32,26 +53,14 @@ function setVeeraDefaults() {
     State.settings.theme.current = 0;
 }
 
-function loadSettings() { //TODO: proper update handling, versions etc
-    function load(data) {
-        if (data.settings.theme) {
-            State.settings = data.settings;
-        }
-        else {
-            setVeeraDefaults();
-            saveSettings();
-        }
-        State.devlog("Settings loaded", data.settings);
-    }
-    
-    Storage.get("settings", load);
-}
-
-function saveSettings() {
-    Storage.set({settings: State.settings});
-    State.devlog("Settings saved.");
-}
-
 function toggleDebug() {
     State.debug = !State.debug;
+}
+
+function devlog() {
+    if (State.debug) { console.log(... arguments); }
+}
+
+function deverror() {
+    if (State.debug) { console.error(... arguments); }
 }

@@ -1,4 +1,4 @@
-/*globals chrome:false, Profile: true, Supplies: true, State: true*/
+/*globals chrome:false, Profile: true, Supplies: true, State: true, DevTools*/
 window.DevTools = {
     devToolsConnection: null,
     wait: function() {
@@ -14,7 +14,7 @@ window.DevTools = {
         window.dispatchEvent(EVENTS.connected);
     },
     listen: function(data) {
-        State.devlog("[background] Heard:", data);
+        devlog("[background] Heard:", data);
         hear(data);
     },
     deafen: function() {
@@ -75,7 +75,10 @@ function hear (msg) {
                 case url.ismatch("evolution_npc/item_evolution"):
                     uncapEnd(msg.data.json);
                     break;
-                case url.ismatch("teamraid037/bookmaker/content/top"):
+                case /\/teamraid\d+\//.test(url):
+                    DevTools.send("updUnfEdition", url);
+                    break;
+                case url.ismatch("/bookmaker/content/top"): //bookmaker is only in unf r-right?
                     DevTools.send("updUnfAreas", msg.data.json);
                     break;
                 case url.ismatch("rest/raid/ability_result.json"):
@@ -108,6 +111,12 @@ function hear (msg) {
         case "saveData":
             Storage.set(msg.data);
             break;
+        case "setUnfEdition":
+            if (State.unfEdition != msg.data) {
+                State.unfEdition = msg.data;
+                State.save();
+            }
+            break;
     }
 }
 
@@ -123,6 +132,9 @@ function hearQuery (data, sender, respond) {
             break;
         case "loadData":
             Storage.get(data, respond);
+            break;
+        case "unfEdition":
+            retValue = State.unfEdition;
             break;
     }
     
