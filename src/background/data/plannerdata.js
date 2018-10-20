@@ -71,7 +71,8 @@ function supplyTemplate (step, template, needed) {
         step,
         type: template.type,
         id: template,
-        needed
+        needed,
+        isTemplate: true
     };
 }
 
