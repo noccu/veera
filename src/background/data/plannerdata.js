@@ -49,12 +49,67 @@ const PLANNER_TEMPLATES = {
         light: 1352,
         dark: 1362
     },
+    scales: {
+        type: SUPPLYTYPE.treasure,
+        fire: 1111, 
+        water: 1121, 
+        earth: 1131,
+        wind: 1141,
+        light: 1151,
+        dark: 1161
+    },
     stones: {
         type: SUPPLYTYPE.treasure,
-        axe: 4041,
         sword: 4011,
-        
+        dagger: 4021,
+        spear: 4031,
+        axe: 4041,
+        staff: 4051,
+        gun: 4061,
+        fist: 4071,
+        bow: 4081,
+        harp: 4091,
+        katana: 4101
+    },
+    trueAnima: {
+        type: SUPPLYTYPE.treasure,
+        fire: 41, 
+        water: 42, 
+        earth: 43,
+        wind: 44,
+        light: 45,
+        dark: 46
+},
+    anima: {
+        primal: {
+            type: SUPPLYTYPE.treasure,
+            fire: 11, 
+            water: 12, 
+            earth: 13,
+            wind: 10,
+            light: 25,
+            dark: 30
+        }
+    },
+    omegaItem: {
+        type: SUPPLYTYPE.treasure,
+        fire: 47, 
+        water: 48, 
+        earth: 49,
+        wind: 32,
+        light: 50,
+        dark: 51
     }
+};
+
+const PLANNER_ITEMS = {
+    blueSkyCrystal: 1,
+    championMerit: 2001,
+    supremeMerit: 2002,
+    legendaryMerit: 2003,
+    flawlessPrism: 1203,
+    rainbowPrism: 1204,
+    antiqueCloth: 54
 };
 
 function createItem(step, type, id, needed) {
@@ -423,37 +478,123 @@ window.PlannerData = {
     
     Revenant:{
         core: [
-            createItem(1, SUPPLYTYPE.treasure, 1052, 50),
-            createItem(1, SUPPLYTYPE.treasure, 1352, 50),
-            createItem(1, SUPPLYTYPE.treasure, 1353, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.high.light, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.scrolls.light, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.light, 50),
             createItem(1, SUPPLYTYPE.treasure, 1151, 50),
             createItem(1, SUPPLYTYPE.treasure, 2001, 50),
 //            createItem(1, SUPPLYTYPE.treasure, 1052, 50),
             
             createItem(2, SUPPLYTYPE.treasure, 1202, 250),
             
-            //6 Upgrades
-            createItem(3, SUPPLYTYPE.treasure, 1202, 250),
-            createItem(3, SUPPLYTYPE.treasure, 1202, 250),
-            createItem(3, SUPPLYTYPE.treasure, 1202, 250),
-            createItem(3, SUPPLYTYPE.treasure, 1202, 250),
-            createItem(3, SUPPLYTYPE.treasure, 1202, 250),
+            //Upgrade 1
+            createItem(3, SUPPLYTYPE.treasure, 2, 300),
+            createItem(3, SUPPLYTYPE.treasure, 5, 100),
+            createItem(3, SUPPLYTYPE.treasure, 8, 100),
+            createItem(3, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
+            createItem(3, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 3),
+            //crystals 100
             
-            createItem(4, SUPPLYTYPE.treasure, 1202, 250),
+            //2
+            createItem(4, SUPPLYTYPE.treasure, 6, 100),
+            createItem(4, SUPPLYTYPE.treasure, 24, 100),
+            createItem(4, SUPPLYTYPE.treasure, 28, 100),
+            createItem(4, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 50),
+            createItem(4, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 5),
+            //crystals 200
+            
+            //3
+            createItem(5, SUPPLYTYPE.treasure, 3, 300),
+            createItem(5, SUPPLYTYPE.treasure, 22, 100),
+            createItem(5, SUPPLYTYPE.treasure, 39, 80),
+            createItem(5, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
+            createItem(5, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 7),
+            //crystal 300
+            
+            //4
+            createItem(6, SUPPLYTYPE.treasure, 17, 100),
+            createItem(6, SUPPLYTYPE.treasure, 29, 100),
+            createItem(6, SUPPLYTYPE.treasure, 40, 80),
+            createItem(6, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 150),
+            createItem(6, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 10),
+            //crystal 400
+            
+            //5
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.wind, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.fire, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.water, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.earth, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.light, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.dark, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.antiqueCloth, 100),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 15),
+            //crystals 500
+            
+            //6
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.fire, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.water, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.earth, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.wind, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.light, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.dark, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 250),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 30)
+            //Gold brick 1
+            //crystal 500
         ],
-        wtype: {},
+        wtype: {
+            sword: null,
+            axe: null,
+            spear: null,
+            staff: null,
+            gun: null,
+            fist: null,
+            katana: null,
+            harp: null,
+            dagger: null,
+            bow: null,
+        },
         element: {
+            fire: null, 
+            water: null, 
+            earth: null,
+            wind: null,
+            light: null,
+            dark: null,
             templates: [
                 supplyTemplate(2, PLANNER_TEMPLATES.orbs.low, 250),
                 supplyTemplate(2, PLANNER_TEMPLATES.whorls, 250),
                 
-                //6 upgrades
+                //Upgrade 1
                 supplyTemplate(3, PLANNER_TEMPLATES.orbs.low, 100),
                 supplyTemplate(3, PLANNER_TEMPLATES.whorls, 100),
                 supplyTemplate(3, PLANNER_TEMPLATES.tomes, 100),
-                supplyTemplate(3, PLANNER_TEMPLATES.scrolls, 100),
+                supplyTemplate(3, PLANNER_TEMPLATES.scrolls, 150),
+                
+                //Upgrade 2
+                supplyTemplate(4, PLANNER_TEMPLATES.orbs.low, 150),
+                supplyTemplate(4, PLANNER_TEMPLATES.tomes, 150),
+                supplyTemplate(4, PLANNER_TEMPLATES.whorls, 150),
+                supplyTemplate(4, PLANNER_TEMPLATES.scales, 30),
+                supplyTemplate(4, PLANNER_TEMPLATES.trueAnima, 3),
+                
+                //Upgrade 3
+                supplyTemplate(5, PLANNER_TEMPLATES.orbs.low, 200),
+                supplyTemplate(5, PLANNER_TEMPLATES.orbs.high, 100),
+                supplyTemplate(5, PLANNER_TEMPLATES.whorls, 200),
+                supplyTemplate(5, PLANNER_TEMPLATES.anima.primal, 100),
+                
+                //Upgrade 4
+                supplyTemplate(6, PLANNER_TEMPLATES.orbs.low, 250),
+                supplyTemplate(6, PLANNER_TEMPLATES.scales, 50),
+                supplyTemplate(6, PLANNER_TEMPLATES.whorls, 250),
+                supplyTemplate(6, PLANNER_TEMPLATES.trueAnima, 3),
+                
+                //Upgrade 5
+                supplyTemplate(7, PLANNER_TEMPLATES.omegaItem, 60),
             ]            
         },
-        stepNames: ["Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5"]
+        stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6"]
     }
 };

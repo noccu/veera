@@ -4,13 +4,14 @@ window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
         var plan = [];
 
-        //find() function for duplicate items in steps (this) in planned items (entry)
-        function equalID(entry) {
-            return entry.id == this.id;
+        //find() function checks if given id(this) is already in plan (p)
+        function equalID(p) {
+            return p.id == this;
         }
 
         for (let key of Object.keys(PlannerData[series])) {
-             var itemArray,
+             let id,
+                 itemArray,
                  templateKey,
                  t;
              switch (key) {
@@ -35,34 +36,31 @@ window.Planner = {
              }
 
             if (itemArray) {
-                 for (let item of itemArray) {
+                for (let item of itemArray) {
+                    if (item == null) { continue; }
                     if (start < item.step) { //start is exclusive (we already have it!)
                         if (item.step <= end) { //see else
-                            if (item.isTemplate) { //Dealing with templates
-//                                item = createItemFromTemplate(item, templateKey);
-                                item.id = item.id[templateKey];
-                            }
-                            var plannedItem = plan.find(equalID, item);
+                            id = item.isTemplate ? item.id[templateKey] : item.id; //Dealing with templates
+                            var plannedItem = plan.find(equalID, id);
                             if (plannedItem) {
                                 plannedItem.needed += item.needed;
-                            }
-                            else {
-                                var supplydata = Supplies.getData(item.type, item.id);
+                            } else {
+                                var supplydata = Supplies.getData(item.type, id);
                                 if (supplydata) {
-                                    plan.push({type: item.type,
-                                               id: item.id,
-                                               name: supplydata.name,
-                                               needed: item.needed,
-                                               current: supplydata.count
-                                              });
+                                    plan.push({
+                                        type: item.type,
+                                        id: id,
+                                        name: supplydata.name,
+                                        needed: item.needed,
+                                        current: supplydata.count
+                                    });
                                 }
                             }
-                        }
-                        else {  //early term when not finished build. WARN: Assumes step-ordered data & loop.
+                        } else { //early term when not finished build. WARN: Assumes step-ordered data & loop.
                             break;
                         }
                     }
-                 }
+                }
             }
         }
 
