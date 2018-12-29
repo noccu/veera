@@ -10,27 +10,28 @@ window.UI.battle = {
             chars: {}},
     graphData: {overview: null,
                 chars:{}},
-    graphStats: { //List stats showing in overview graph and their dataset ID. TODO: configurable settings that are code-filled so I don't have to repeat the names
+    graphStats: { //List stats showing in overview graph and their dataset ID. TODO: configurable settings that are code-filled so I don't have to repeat the names. And maybe user choice for what's visible...
         overview: {turnDmg: 0,
                    turnCritRate: 1},
         chars: {turnDmg: 0,
-                turnCritDmg: 1,
-                turnDmgTaken: 2}
+//                turnCritDmg: 1,
+                turnDmgTaken: 1}
     },
     initDisplay: function () {
         Chart.defaults.scale.ticks.callback = function (value, index, values) {
             return NUMBER_FORMAT.format(value);
-        }
+        };
         Chart.defaults.global.tooltips.callbacks.label = function (tooltipItem, data) {
             return `${data.datasets[tooltipItem.datasetIndex].label}: ${NUMBER_FORMAT.format(tooltipItem.yLabel)}`;
-        }
+        };
         Chart.defaults.global.tooltips.callbacks.title = function (tooltipItemArr, data) {
-            var title = tooltipItemArr.length > 1 ? "Turns: " : "Turn: ";
+/*            var title = "Turn: ";
             for (let item of tooltipItemArr) {
                 title += item.xLabel;
             } 
-            return title;
-        }
+            return title;*/
+            return `Turn: ${tooltipItemArr[0].xLabel}`;
+        };
         //Overview
         var store = document.querySelectorAll("#battle-overview .battle-stats");
         for (let statEle of store) {
@@ -40,7 +41,7 @@ window.UI.battle = {
         
         //Characters
         var list = document.querySelector("#battle-characters .panel-content"),
-            temp = document.getElementById("battle-char-container");
+            temp = document.getElementById("t-battle-char-container");
 //        ele = document.getElementsByClassName("battle-char-container");
 //        var charaStats = document.querySelectorAll("#battle-characters span[data-stat]")
         for (let i = 0; i < 6; i++) {
@@ -80,9 +81,9 @@ window.UI.battle = {
             clearGraph(this.graph.overview);
         }
         for (let char of Object.keys(this.graph.chars)) {
-            for (let stat of Object.keys(this.graphStats.chars)) { //Graph scale sync
-//                this.graph.chars[char].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks.suggestedMax = 100;
-                this.graph.chars[char].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks.max = 100;
+            let charGraph = this.graph.chars[char];
+            for (let axis of charGraph.config.options.scales.yAxes) { //Graph scale sync
+                axis.ticks.max = 100;
             }
             clearGraph(this.graph.chars[char]);
         }  
@@ -105,15 +106,26 @@ window.UI.battle = {
         }
     },
     updateCharacters: function (turn, characters){
-        var charData, disp;
+        var charData, charGraphData, disp;
         for (let id of Object.keys(characters)) {
             charData = characters[id];
+            charGraphData = this.graphData.chars[charData.char];
             //Readouts
-            for (let stat of Object.keys(charData.stats)) {
+/*            for (let stat of Object.keys(charData.stats)) {
                 disp = this.display.chars[charData.char][stat];
                 if (disp) {
                     try {
                         disp.textContent = NUMBER_FORMAT.format(charData.stats[stat]);
+                    }
+                    catch (e) {
+                        devLog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
+                    }
+                }
+            }*/
+            for (let stat of Object.keys(this.display.chars[charData.char])) {
+                if (charData.stats[stat]) {
+                    try {
+                        this.display.chars[charData.char][stat].textContent = NUMBER_FORMAT.format(charData.stats[stat]);
                     }
                     catch (e) {
                         devLog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
@@ -124,19 +136,22 @@ window.UI.battle = {
             //Graph
             for (let stat of Object.keys(this.graphStats.chars)) {
                 let statID = this.graphStats.chars[stat];
-                if (turn > this.graphData.chars[id].labels.last) {
-                    this.graphData.chars[id].labels.push(turn);
-                    this.offset = turn - 1 - this.graphData.chars[id].datasets[statID].data.length; //dealing with missing turn data
+                if (turn > charGraphData.labels.last) {
+                    charGraphData.labels.push(turn);
+                    this.offset = turn - 1 - charGraphData.datasets[statID].data.length; //dealing with missing turn data
                 }
-                this.graphData.chars[id].datasets[statID].data[turn - 1 - this.offset] = charData.stats[stat];
+                charGraphData.datasets[statID].data[turn - 1 - this.offset] = charData.stats[stat];
                 
-                for (let graph of Object.keys(this.graph.chars)) { //Graph scale sync
-                    let cur = this.graph.chars[graph].config.options.scales.yAxes[this.graphStats.chars[stat]].ticks;
-//                    cur.suggestedMax = Math.max(cur.suggestedMax ? cur.suggestedMax : 0, charData.stats[stat] * 1.05);
-                    cur.max = Math.max(cur.max || 0, charData.stats[stat] * 1.05);
+                for (let graph of Object.keys(this.graph.chars)) { //Graph scale sync (global)
+                    let charGraphConfig = this.graph.chars[graph].config;
+                    for (let axis of charGraphConfig.options.scales.yAxes) { //Group axes (for stats measured on the same axis)
+                        if (axis.id == charGraphData.datasets[statID].yAxisID) {
+                            axis.ticks.max = Math.max(axis.ticks.max || 0, charData.stats[stat]);
+                        }
+                    }
                 }
             }
-            }
+        }
     },
     createOverviewGraph: function(){
         var ctx = document.getElementById("battle-overview-graph");
@@ -169,7 +184,7 @@ window.UI.battle = {
                 data: {
                     labels: [],
                     datasets: [createBattleDataset("Turn Damage", 'rgb(87, 129, 61)', 'rgba(87, 129, 61,0.2)', "tdmg"),
-                               createBattleDataset("Crit Damage", 'rgb(61, 79, 129)', 'rgba(61, 79, 129, 0.2)', "tdmg"),
+//                               createBattleDataset("Crit Damage", 'rgb(61, 79, 129)', 'rgba(61, 79, 129, 0.2)', "tdmg"),
                                createBattleDataset("Damage Taken", 'rgb(134, 25, 54)', 'rgba(134, 25, 54, 0.2)', "bdmg")]
                 },
                 options: {
@@ -178,7 +193,7 @@ window.UI.battle = {
                                  type: 'linear',
                                  position: "left",
                                  ticks: { suggestedMin: 0}},
-/*                                {id: 'crit',
+/*                                {id: 'cdmg',
                                  type: 'linear',
                                  position: "right",
                                  ticks: { suggestedMin: 0}},*/
@@ -202,7 +217,7 @@ function createBattleDataset (stat, color, bgColor, axisID) {
             data: [],
             backgroundColor: bgColor,
             borderColor: color,
-            borderWidth: 3,
+            borderWidth: 2,
             fill: false,
             yAxisID: axisID};
 }

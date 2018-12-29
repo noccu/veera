@@ -10,11 +10,11 @@ const BATTLE_ACTIONS = {attack: {name: "Attack"},
                         counter: {name: "Counter"},
                         chain: {name: "Chain burst"},
                         bossAtk: {name: "Boss attack"},
-                        super: {name: "Boss ougi"}}; //As objects for faster comparison while keeping a name string.
+                        super: {name: "Boss ougi"}}; //As objects for faster/easier comparison while keeping a name string.
 
 window.Battle = {
     turn: 1, //default at 1 so our math doesn't /0
-    id:0,
+    id: 0,
     log: {
         log: [],
         get currentTurn() {
@@ -94,20 +94,17 @@ window.Battle = {
     characters: {
         current: [0,1,2,3], //pos = id
         get active() {
-            return this._active || 1;
-        },
-        set active(val) { //number of characters actively participating in battle, used for some stat calcs.
-            this._active = Math.min(val, 6);
+            let n = 0;
+            Battle.characters.list.forEach(function(entry) {
+                if (entry.activeTurns) {
+                    n++;
+                }
+            });
+            return n;
         },
         list: [],
-/*        addIfNew: function(id) {
-            if (!this.list[id]) {
-                this.list[id] = new BattleCharData(id);
-            }
-        },*/
         swap: function(pos, id) {
             this.current[pos] = id;
-            this.active++; //TODO: Figure out a smart system that deals with all cases.
         },
         getAtPos: function (pos) {
             return this.list[ this.current[pos] ];
@@ -118,7 +115,6 @@ window.Battle = {
         reset: function(party) {
             this.list = [];
             party.forEach((entry, idx) => this.list[idx] = new BattleCharData(idx, entry.name));
-            this.active = Math.min(party.length, 4);
             this.current = [0,1,2,3];
         }
     }
@@ -199,7 +195,7 @@ BattleTurnData.prototype.getCritDmg = function(char) {
         }
     }
     return total;
-}
+};
 BattleTurnData.prototype.getDamageTaken = function(char) {
     let dmg = 0;
     for (let action of this.actions) {
@@ -216,7 +212,7 @@ function BattleCharData(id, name = "") {
     this.char = id;
     this.name = name;
 //    this.activities = {}; //Used for stat calcs.
-    this.activeTurns = 1;
+    this.activeTurns = 0;
     
     var self = this;
     this.stats = {
@@ -241,10 +237,10 @@ function BattleCharData(id, name = "") {
             return safeDivide(this.ta, self.activeTurns - this.ougis) * 100;
         },
         get ougiRate () {
-            return this.ougis / self.activeTurns * 100;
+            return safeDivide(this.ougis, self.activeTurns) * 100;
         },
         get avgDmg() {
-            return Math.floor(this.dmg / Battle.turn);
+            return Math.floor(safeDivide(this.dmg, self.activeTurns));
         },
         get turnDmg() {
             return Battle.log.currentTurn.getDmg(self.char);
