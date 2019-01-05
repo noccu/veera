@@ -1,4 +1,4 @@
-/*globals Supplies, Storage, updateUI*/
+/*globals Supplies, Storage, updateUI, devlog*/
 const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment", NOT_TRACKED: -1};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
@@ -97,9 +97,24 @@ window.Supplies = {
         function _upd (type, id, delta, name, category) {
             if (type == SUPPLYTYPE.NOT_TRACKED) { return; }
             var isTreasure = (type == SUPPLYTYPE.treasure);
-            var idx = isTreasure ? Supplies.treasure.index : Supplies.consumable.index[type]; //TODO: this doesn't work here, figure out why just for learning
+            var idx = isTreasure ? Supplies.treasure.index : Supplies.consumable.index[type];
             if (idx[id]) { //Update
                 idx[id].count += delta;
+                
+                //Check data and fill gaps. Kinda weird but eyy. TODO: can prob optimize.
+                //Disabled because so far only category is missing... on every single item.
+                //day after: idk I'm p sure this is a bad idea actually but I'll leave it to remind myself category isn't set anywhere apparently.
+/*                for (let k of Object.keys(idx[id])) {
+                    let i = idx[id][k];
+                    if (i == undefined || i == null) {
+                        let o = {count: delta,
+                                 name,
+                                 category};
+                        if (o[k]) {
+                            i = o[k];
+                        }
+                    }
+                }*/
             }
             else { //Add new
                 idx[id] = {name,
@@ -175,6 +190,36 @@ function gotQuestLoot(data) {
         }
     }
     Supplies.update(upd);
+}
+
+function purchaseItem(data) {    
+    let upd = []; //Supply update func expects array.
+    //Only ever buy 1 item at once... I think?
+    if (data.article.item_ids) {
+        //The item we get.
+        let nBought = parseInt(data.purchase_number);
+        upd.push({type: translateItemKind(data.article.item_kind[0]), 
+                  id: parseInt(data.article.item_ids[0]), 
+                  delta: nBought,
+                  //In case of new mats
+                  name: data.article.name_en,
+                  category: null}); //TODO: figure out what and where... and why
+        
+        //The items we trade in. Max 4, 1-indexed
+        for (let i = 1; i < 5; i++) {
+            let ingr = data.article["article" + i];
+            if (ingr) {
+                let nReq = parseInt(data.article["article" + i + "_number"]);
+                upd.push ({type: translateItemKind(ingr.master.item_kind),
+                           id: ingr.master.id,
+                           delta: -(nReq * nBought),
+                           name: ingr.master.name_en,
+                           category: null});
+            }
+        }
+        
+        Supplies.update(upd);
+    }
 }
 
 function translateItemKind(kind) {
