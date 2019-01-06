@@ -1,4 +1,4 @@
-/*globals BackgroundPage: true, UI*/
+/*globals BackgroundPage: true, UI, changeSeries, updatePlan, createPlannerItem, createSupplyURL*/
 var UNF_CHART;
 
 window.UI = {
@@ -38,6 +38,7 @@ window.UI = {
             nav.addEventListener("click", this.switchNav);
         }
         document.getElementById("tabs").addEventListener("click", evhCollapsiblePanels);
+        document.getElementById("treasure-search").addEventListener("change", evhTreasureSearch);
     },
     
     time: {
@@ -202,6 +203,18 @@ function evhCollapsiblePanels (e) {
     }
 }
 
+function evhTreasureSearch(e) { //just treasure for now
+    var list = document.getElementById("treasure-list");
+
+    var r = new RegExp(e.target.value, "i"); //Faster
+    for (let item of list.children) {
+        if (r.test(item.title)) {
+            item.classList.remove("hidden");
+        } else {
+            item.classList.add("hidden");
+        }
+    }
+}
 
 //Planner
 function stylePlanItem(el, current, needed) {
@@ -218,16 +231,17 @@ function stylePlanItem(el, current, needed) {
 }
 
 function syncPlanner(index, type) { //TODO: make it work with consumables
-    var list = document.querySelectorAll("#planner-list li");
-//    var isTreasure = type == "treasure";
     if (type != "treasure") { return; }
-    var cur;
+    
+    var list = document.getElementById("planner-list").getElementsByClassName("collection-item");
+//    var isTreasure = type == "treasure";
+    var curDisp;
     for (let item of list) {
         if (item.dataset.type == "article") {
-            cur = item.getElementsByClassName("planner-current")[0];
-            cur.textContent = index[item.dataset.id].count;
+            curDisp = item.getElementsByClassName("planner-current")[0];
+            curDisp.textContent = index[item.dataset.id].count;
     //        cur.textContent = isTreasure ? index[item.dataset.id].count : index[type][item.dataset.id].count;
-            stylePlanItem(item, item.dataset.count, item.dataset.needed);
+            stylePlanItem(item, index[item.dataset.id].count, item.dataset.needed);
         }
     }
     

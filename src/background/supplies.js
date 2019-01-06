@@ -2,6 +2,163 @@
 const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment", NOT_TRACKED: -1};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
+const ITEM_KIND = {
+    "1": {
+        "name": "Weapon",
+        "class": "Weapon",
+        "path": "weapon"
+    },
+    "2": {
+        "name": "Summon",
+        "class": "Summon",
+        "path": "summon"
+    },
+    "3": {
+        "name": "Character",
+        "class": "Npc",
+        "path": "npc"
+    },
+    "4": {
+        "name": "Item",
+        "class": "Normal",
+        "path": "item/normal"
+    },
+    "6": {
+        "name": "Wonder",
+        "class": "Memorial",
+        "path": "item/memorial"
+    },
+    "7": {
+        "name": "Rupie",
+        "class": "Money",
+        "path": "item/normal"
+    },
+    "8": {
+        "name": "Draw Ticket",
+        "class": "Ticket",
+        "path": "item/ticket"
+    },
+    "9": {
+        "name": "Crystal",
+        "class": "Stone",
+        "path": "item/normal"
+    },
+    "10": {
+        "name": "Treasure",
+        "class": "Article",
+        "path": "item/article"
+    },
+    "16": {
+        "name": "Lucky Draw Ticket",
+        "class": "Raffleticket",
+        "path": "item/ticket"
+    },
+    "17": {
+        "name": "Power-up",
+        "class": "Evolution",
+        "path": "item/evolution"
+    },
+    "19": {
+        "name": "CP",
+        "class": "JobPoint",
+        "path": "item/normal"
+    },
+    "23": {
+        "name": "Pick Ticket",
+        "class": "Exchangeticket",
+        "path": "item/campaign"
+    },
+    "25": {
+        "name": "Event Item",
+        "class": "Event\\Temporary",
+        "path": "item/event/temporary"
+    },
+    "31": {
+        "name": "Casino Chip",
+        "class": "Medal",
+        "path": "item/normal"
+    },
+    "32": {
+        "name": "Origin Crystal",
+        "class": "RawStone",
+        "path": "item/normal"
+    },
+    "34": {
+        "name": "Event Pick Ticket",
+        "class": "Eventexchangeticket",
+        "path": "item/campaign"
+    },
+    "37": {
+        "name": "Weapon",
+        "class": "Additionalweapon",
+        "path": "weapon"
+    },
+    "38": {
+        "name": "Summon",
+        "class": "Additionalsummon",
+        "path": "summon"
+    },
+    "39": {
+        "name": "Character",
+        "class": "Additionalnpc",
+        "path": "npc"
+    },
+    "40": {
+        "name": "EMP",
+        "class": "Limitpoint",
+        "path": "item/normal"
+    },
+    "41": {
+        "name": "Gem",
+        "class": "Gem",
+        "path": "item/normal"
+    },
+    "43": {
+        "name": "Miscellaneous",
+        "class": "Specialitem",
+        "path": "item/specialitem"
+    },
+    "50": {
+        "name": "Class Outfit",
+        "class": "Job\\Skin",
+        "path": "leader"
+    },
+    "55": {
+        "name": "Sweepstake",
+        "class": "Lottery",
+        "path": "item/lottery"
+    },
+    "58": {
+        "name": "Defense Item",
+        "class": "Defendorder",
+        "path": "item/defendorder"
+    },
+    "59": {
+        "name": "Siege Shield",
+        "class": "Defendorderpoint",
+        "path": "item/article"
+    },
+    "62": {
+        "name": "Sticker",
+        "class": "Stamp",
+        "path": "item/stamp"
+    },
+    "65": {
+        "name": "Arcarum Items",
+        "class": "Arcarum",
+        "path": "item/arcarum"
+    },
+    "73": {
+        "name": "Rings",
+        "class": "Npcaugment",
+        "path": "item/npcaugment"
+    },
+    "75": {
+        "name": "Recycling",
+        "class": "Recycling",
+        "path": "item/recycling"
+    }
+}
 
 window.Supplies = {
     treasure: {

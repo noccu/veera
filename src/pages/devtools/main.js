@@ -1,4 +1,4 @@
-/*globals UI, BackgroundPage, Network, Unf*/
+/*globals DEBUG, chrome, UI, BackgroundPage, Network, Unf*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
 const CONSTANTS = {
     baseGameUrl: "http://game.granbluefantasy.jp/"
@@ -112,48 +112,60 @@ function updateStatus (data) {
 
 function updateTreasure (idx) {
     var list = document.getElementById("treasure-list");
-    list.innerHTML = "";
+//    list.innerHTML = "";
     var temp = document.createElement("template");
     for (let id of Object.keys(idx)) {
-        var li = createSupplyItem(idx[id].name, 
-                                  idx[id].count, 
-                                  createSupplyURL(id, "article"));
-        temp.content.appendChild(li);
-    }
-    list.appendChild(temp.content);
-}
-
-function updateConsumables (data) {
-    var list = document.getElementById("consumable-list");
-    list.innerHTML = "";
-    var temp = document.createElement("template");
-    for (let idx in data) {
-        if (data.hasOwnProperty(idx)) {
-            for (let id in data[idx]) {
-                if (data[idx].hasOwnProperty(id)) {
-                    var li = createSupplyItem(data[idx][id].name, 
-                                                 data[idx][id].count, 
-                                                 createSupplyURL(id, idx));
-                    temp.content.appendChild(li);
-//                    console.log("id:", id, "name:", data[idx][id].name, "data:", data,"idx:", idx);
-                }
-            }
+        let entry = document.getElementById("t-" + id);
+        if (entry) {
+            entry.getElementsByClassName("collection-data")[0].textContent = idx[id].count;
+        }
+        else {
+            var li = createSupplyItem("t-" + id,
+                                      idx[id].name, 
+                                      idx[id].count, 
+                                      createSupplyURL(id, "article"));
+            temp.content.appendChild(li);
         }
     }
     list.appendChild(temp.content);
 }
 
-function createSupplyItem (name, num, thumb) {
+//TODO: Can probably merge with above? And clean it up, Just lazy rn
+function updateConsumables (data) {
+    var list = document.getElementById("consumable-list");
+    list.innerHTML = "";
+    var temp = document.createElement("template");
+    for (let idx of Object.keys(data)) {
+        for (let id of Object.keys(data[idx])) {
+            var li = createSupplyItem(idx+"-"+id,
+                                      data[idx][id].name, 
+                                      data[idx][id].count, 
+                                      createSupplyURL(id, idx));
+            temp.content.appendChild(li);
+//                    console.log("id:", id, "name:", data[idx][id].name, "data:", data,"idx:", idx);
+        }
+    }
+    list.appendChild(temp.content);
+}
+
+function createSupplyItem (id, name, num, thumb) {
     var t = document.getElementById("template-supply-item");
-    t.content.querySelector("li").title = name;
+/*    t.content.querySelector("li").title = name;
     t.content.querySelector("img").src = thumb;
-    t.content.querySelector("div").textContent = num;
+    t.content.querySelector("div").textContent = num;*/
+    let item = t.content.firstElementChild;
+    item.id = id;
+    item.title = name;
+    item.getElementsByClassName("collection-icon")[0].src = thumb;
+    item.getElementsByClassName("collection-data")[0].textContent = num;
+    
     return document.importNode(t.content, true);
 }
 function createSupplyURL (id, type) {
     return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
 }
-//TODO: Can probably merge with above? And clean it up, Just lazy rn
+
+//Plannerfunctions
 function createPlannerItem (name, current, needed, thumb) {
         var t = document.getElementById("template-supply-item");
         t.content.querySelector("li").title = name;
@@ -162,7 +174,6 @@ function createPlannerItem (name, current, needed, thumb) {
         return document.importNode(t.content, true);
 }
 
-//Plannerfunctions
 function changeSeries(ev) { //Event handler, updates type and element list when series changes
     BackgroundPage.send("plannerSeriesChange", {newValue: ev.target.value});
 }
