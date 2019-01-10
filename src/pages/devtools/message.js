@@ -62,6 +62,9 @@ window.BackgroundPage = {
                 UI.battle.reset();
                 UI.battle.setPartyNames(msg.data.characters.list);
                 break;
+            case "updRaidLoot":
+                updRaidInfo(msg.data);
+                break;
         }
     }
 };

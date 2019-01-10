@@ -86,14 +86,14 @@
         <div id="tabs">
             <ul id="nav" class="tablist navlist">
                 <li class="nav-tab" data-navpage="dailies">Dailies</li>
-                <li class="nav-tab" data-navpage="raids">Raids</li>
-                <li class="nav-tab active" data-navpage="supplies">Supplies</li>
+                <li class="nav-tab active" data-navpage="raids">Raids</li>
+                <li class="nav-tab" data-navpage="supplies">Supplies</li>
                 <li class="nav-tab" data-navpage="battle">Battle</li>
                 <li class="nav-tab" data-navpage="unf">UNF</li>
             </ul>
             <div id="dailies" class="tab">
                 <div id="pendants-panel" class="panel">
-                    <span class="panel-header do-collapse">Pendants</span>
+                    <span class="panel-header" data-event="collapse">Pendants</span>
                     <ul class="panel-content">
                         <div id="renown">
                             <span class="panel-div-title">Renown</span>
@@ -111,7 +111,7 @@
                     </ul>
                 </div>
             </div>
-            <div id="supplies" class="tab active">
+            <div id="supplies" class="tab">
                 <ul id="nav-supplies" class="tab-view-list navlist">
                     <li class="tab-view active" data-navpage="treasure-view">Treasure</li>
                     <li class="tab-view" data-navpage="consumables-view">Consumables</li>
@@ -128,13 +128,13 @@
                                 </div>
                             </li>
                         </template>
-                        <span class="panel-header do-collapse">Treasure</span>
+                        <span class="panel-header" data-event="collapse">Treasure</span>
                         <div class="panel-filter">
                             <ul id="treasure-filter">
-                                <li>All</li>
-                                <li class="active">Primal</li>
-                                <li>Raid</li>
-                                <li class="active">Coop</li>
+                                <li class="active" data-event="filter" data-value="all">All</li>
+                                <li data-event="filter" data-value="primal">Primal</li>
+                                <li data-event="filter" data-value="raid">Raid</li>
+                                <li data-event="filter" data-value="coop">Coop</li>
                             </ul>
                             <input id="treasure-search" class="panel-search"/>
     <!--                        <div class="sep"></div>-->
@@ -172,7 +172,7 @@
                     </div>
                     <div class="spacer"></div>
                     <div id="planner-panel" class="panel">
-                        <span class="panel-header do-collapse">Step 1</span>
+                        <span class="panel-header" data-event="collapse">Step 1</span>
                         <div class="panel-content">
                             <div class="spacer"></div>
                             <ul id="planner-list" class="supply-list">
@@ -181,7 +181,30 @@
                     </div>
                 </div>
             </div>
-            <div id="raids" class="tab">
+            <div id="raids" class="tab active">
+                <div id="raids-current" class="panel">
+                    <span class="panel-header" data-event="collapse">Current Info</span>
+                    <div class="panel-content">
+                        <div class="panel-filter">
+                            <ul id="raids-current-filter">
+                                <li class="active" data-event="filter" data-value="all">All</li>
+                                <li data-event="filter" data-value="ssr">SSR only</li>
+                            </ul>
+                        </div>
+                        <div>Name:<span id="raid-current-name"></span></div>
+                        <div>Host:<span id="raid-current-host"></span></div>
+                        <div>Drops:
+                            <template id="t-raid-current-drop">
+                                <li class="raid-current-drop" data-rarity="0">
+                                    <img src="../../assets/images/anchiraicon.png">
+                                    <span>Anchi Banana (SSR)</span>
+                                </li>
+                            </template>
+                            <ul id="raid-current-drop-list">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <div id="raids-panel" class="panel">
                     <template id="template-raid-item">
                         <li class="raid-item" data-url="" data-id="">
@@ -204,15 +227,15 @@
                             <span class="raid-mat-req">45</span>
                         </div>
                     </template>
-                    <span class="panel-header do-collapse">Raids</span>
+                    <span class="panel-header" data-event="collapse">Raids</span>
                     <div class="panel-content">
                         <div class="panel-filter">
                             <ul id="raids-filter">
-                                <li>All</li>
-                                <li class="active">HL</li>
-                                <li class="active">Fire</li>
-                                <li class="active">Water</li>
-                                <li class="">Earth</li>
+                                <li class="active" data-event="filter" data-value="all">All</li>
+                                <li data-event="filter" data-value="hl">HL</li>
+                                <li data-event="filter" data-value="fire">Fire</li>
+                                <li data-event="filter" data-value="water">Water</li>
+                                <li data-event="filter" data-value="earth">Earth</li>
                                 <li>Wind</li>
                             </ul>
                         </div>

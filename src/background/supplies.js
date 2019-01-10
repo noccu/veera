@@ -320,12 +320,16 @@ window.Supplies = {
 function gotQuestLoot(data) {
     var upd = [];
     function makeUpd(item) {
-        return {type: translateItemKind(item.item_kind), 
+        return {type: translateItemKind(item.item_kind), //TODO: Supply refactor
                 id: item.id, 
                 delta: parseInt(item.count),
                 //In case of new mats
                 name: item.name,
-                category: item.category_type};
+                category: item.category_type,
+                kind: item.item_kind, //string
+                //only for loot?
+                path: ITEM_KIND[item.item_kind].path,
+                rarity: parseInt(item.rarity)}; 
     }
     
     //Non-box, side-scrolling
@@ -339,14 +343,15 @@ function gotQuestLoot(data) {
     //Box drops
     if (data.reward_list) {
         for (let key of Object.keys(data.reward_list)) {
-            let boxType = data.reward_list[key];
-            for (let key of Object.keys(boxType)) {
-                let item = boxType[key];
-                upd.push(makeUpd(item));
+            let boxType = data.reward_list[key]; 
+            //BOXTYPES? 1: bronze, 2: silver, 3: gold (incl flip?), 4: flip?, 11: reds, ??: blue
+            for (let item of Object.keys(boxType)) {
+                upd.push(makeUpd(boxType[item]));
             }
         }
     }
     Supplies.update(upd);
+    DevTools.send("updRaidLoot", upd);
 }
 
 function purchaseItem(data) {    

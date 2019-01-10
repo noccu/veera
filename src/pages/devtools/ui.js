@@ -37,7 +37,7 @@ window.UI = {
         for (let nav of nl) {
             nav.addEventListener("click", this.switchNav);
         }
-        document.getElementById("tabs").addEventListener("click", evhCollapsiblePanels);
+        document.getElementById("tabs").addEventListener("click", evhGlobalClick);
         document.getElementById("treasure-search").addEventListener("change", evhTreasureSearch);
     },
     
@@ -195,11 +195,32 @@ function clearDropdown(el) {
     }
 }
 
-
 //UI funcitonality
-function evhCollapsiblePanels (e) {
-    if (e.target.classList.contains("do-collapse")) {
-        e.target.nextElementSibling.classList.toggle('hidden');
+function evhGlobalClick (e) {
+    if (e.target.dataset) {
+        switch (e.target.dataset.event) {
+            case "collapse":
+                e.target.nextElementSibling.classList.toggle('hidden');
+                break;
+            case "filter":
+                if (e.target.dataset.value == "all") {
+                    for (let opt of e.target.parentElement.children) {
+                        opt.classList.remove("active");
+                    }
+                    e.target.classList.add("active");
+                }
+                else {
+                    e.target.classList.toggle("active");
+                    //Special casing the "all" filter
+                    if (e.target.parentElement.getElementsByClassName("active").length === 0) {
+                        e.target.parentElement.firstElementChild.classList.add("active");
+                    } 
+                    else {
+                        e.target.parentElement.firstElementChild.classList.remove("active");
+                    }
+                }
+                break;
+        }
     }
 }
 

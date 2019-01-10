@@ -59,6 +59,7 @@ html {
     background-color: var(--diff-color-a);
     font-size: 1.2em;
     font-weight: bold;
+    cursor: pointer;
 }
 
 
@@ -199,6 +200,10 @@ li {
 
 .panel-content {
     margin: 0.5em;
+}
+
+.panel-content > span{
+    display: block;
 }
 
 .panel-filter {
@@ -391,4 +396,26 @@ button {
 
 .battle-stats-container {
     text-align: left;
+}
+
+#raid-current-drop-list {
+    padding: 0.5em;
+}
+
+.raid-current-drop {
+    display: inline-block;
+    text-align: center;
+    margin: 0px 1em;
+}
+
+.raid-current-drop img {
+    max-height: 75px;
+}
+
+.raid-current-drop span {
+    display: block;
+}
+
+[data-event] {
+    cursor: pointer;
 }

@@ -1,11 +1,18 @@
 /*globals DEBUG, chrome, UI, BackgroundPage, Network, Unf*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
 const CONSTANTS = {
-    baseGameUrl: "http://game.granbluefantasy.jp/"
+    url: {
+        baseGame: "http://game.granbluefantasy.jp/",
+        assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
+        size: {
+            small: "s/",
+            medium: "m/"
+        }
+    },
 };
 //Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {get: function(){ 
-    return this.length == 0 ? 0 : this[this.length - 1]; 
+    return this.length === 0 ? 0 : this[this.length - 1]; 
 }});
 
 if (chrome.runtime) {
@@ -165,7 +172,12 @@ function createSupplyURL (id, type) {
     return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
 }
 
-//Plannerfunctions
+//TODO: merge with above, see Supply refactor. Path is set in Supplies based on constant.
+function createSupplyURLkind (id, path) {
+    return `${CONSTANTS.url.assets}${path}/${CONSTANTS.url.size.medium}${id}.jpg`;
+}
+
+//Planner functions
 function createPlannerItem (name, current, needed, thumb) {
         var t = document.getElementById("template-supply-item");
         t.content.querySelector("li").title = name;
@@ -192,6 +204,26 @@ function updatePlan () {  //Event handler
                 start: UI.planner.display.start.selectedIndex, 
                 end: UI.planner.display.end.selectedIndex};
     BackgroundPage.send("newPlanRequest", plan);
+}
+
+//Raids
+function updRaidInfo (data) {
+    //Just drops for now.
+    let list = document.getElementById("raid-current-drop-list"),
+        temp = document.getElementById("t-raid-current-drop"),
+        ssr_only = document.getElementById("raids-current-filter").children[1].classList.contains("active");
+    
+    list.innerHTML = "";
+    for (let item of data) {
+        if (ssr_only && item.rarity < 4) { continue; }
+        
+        let disp = temp.content.firstElementChild;
+        disp.dataset.rarity = item.rarity;
+        disp.getElementsByTagName("span")[0].textContent = item.delta > 1 ? item.name+" x"+item.delta : item.name;
+        disp.getElementsByTagName("img")[0].src = createSupplyURLkind(item.id, item.path);
+        
+        list.appendChild(document.importNode(temp.content, true));
+    }
 }
 
 function createRaid(name, mat, url, thumb) {
