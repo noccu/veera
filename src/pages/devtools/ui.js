@@ -280,7 +280,7 @@ function updateTimerDisplay (name, timer) {
 }
     //Maintenance
 function startMaintTimer(html) {
-    document.getElementById("timer-maint").classList.toggle("hidden");
+    document.getElementById("timer-maint").classList.remove("hidden");
     UI.time.timers.maint = new Date(getMaintEnd(html) - UI.time.jst);
     UI.time.initTimers();
 }
@@ -293,7 +293,7 @@ function getMaintEnd(html) {
     return new Date(date);
 }
 function endMaintTimer() {
-    document.getElementById("timer-maint").classList.toggle("hidden");
+    document.getElementById("timer-maint").classList.add("hidden");
     delete UI.time.timers.maint;
     UI.time.initTimers();
 }

@@ -344,7 +344,7 @@ function gotQuestLoot(data) {
     if (data.reward_list) {
         for (let key of Object.keys(data.reward_list)) {
             let boxType = data.reward_list[key]; 
-            //BOXTYPES? 1: bronze, 2: silver, 3: gold (incl flip?), 4: flip?, 11: reds, ??: blue
+            //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4 = flip
             for (let item of Object.keys(boxType)) {
                 upd.push(makeUpd(boxType[item]));
             }

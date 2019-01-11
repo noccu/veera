@@ -119,14 +119,14 @@ function updateStatus (data) {
 
 function updateTreasure (idx) {
     var list = document.getElementById("treasure-list");
-//    list.innerHTML = "";
-    var temp = document.createElement("template");
+    var temp;
     for (let id of Object.keys(idx)) {
         let entry = document.getElementById("t-" + id);
         if (entry) {
             entry.getElementsByClassName("collection-data")[0].textContent = idx[id].count;
         }
         else {
+            if (!temp) { temp = document.createElement("template"); }
             var li = createSupplyItem("t-" + id,
                                       idx[id].name, 
                                       idx[id].count, 
@@ -134,7 +134,7 @@ function updateTreasure (idx) {
             temp.content.appendChild(li);
         }
     }
-    list.appendChild(temp.content);
+    if (temp) { list.appendChild(temp.content); }
 }
 
 //TODO: Can probably merge with above? And clean it up, Just lazy rn

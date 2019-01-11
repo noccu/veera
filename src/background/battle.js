@@ -1,4 +1,4 @@
-/*globals Battle, State, updateUI*/
+/*globals Battle, State, updateUI, devlog, deverror*/
 const BATTLE_ACTION_TYPES = {dmgDealt: 1,
                              dmgTaken: 2,
                              heal: 3};
@@ -85,10 +85,12 @@ window.Battle = {
             return Math.floor(this.totalDmg / Battle.turn);
         },
         get avgDaRate() {
-            return safeDivide(this.totalDa, Battle.turn * Battle.characters.active) * 100;
+//            return safeDivide(this.totalDa, Battle.turn * Battle.characters.active) * 100;
+            return safeDivide(this.totalDa, Battle.characters.autoTurns) * 100;
         },
         get avgTaRate() {
-            return safeDivide(this.totalTa, Battle.turn * Battle.characters.active) * 100;
+//            return safeDivide(this.totalTa, Battle.turn * Battle.characters.active) * 100;
+            return safeDivide(this.totalTa, Battle.characters.autoTurns) * 100;
         }
     },
     characters: {
@@ -98,6 +100,15 @@ window.Battle = {
             Battle.characters.list.forEach(function(entry) {
                 if (entry.activeTurns) {
                     n++;
+                }
+            });
+            return n;
+        },
+        get autoTurns() {
+            let n = 0;
+            Battle.characters.list.forEach(function(entry) {
+                if (entry.activeTurns) {
+                    n += (entry.activeTurns - entry.stats.ougis);
                 }
             });
             return n;
@@ -310,7 +321,7 @@ function battleParseValue(input, actionData, type) {
         }
     }
     catch (e) {
-        State.deverror(e, input, actionData);
+        deverror(e, input, actionData);
     }
 }
 
@@ -472,9 +483,9 @@ function battleAttack(json) {
 function battleUseSummon(json) {
      if (!json || json.scenario[0].cmd == "finished") { return;} //Battle over
     
-    Battle.turn = json.status.turn;
-    var actions = [],
-        actionData;
+    Battle.turn = json.status.turn; //still same turn after summon
+//    var actions = [],
+//        actionData;
     
     for (let action of json.scenario) {
         switch (action.cmd) {
@@ -485,15 +496,16 @@ function battleUseSummon(json) {
                 break;
         }
     }
-    
-    if (actions.length > 0) {
+  
+    //Not currently used
+/*    if (actions.length > 0) {
         for (let action of actions) {
             Battle.log.currentTurn.actions.push(action);
             updateBattleStats(action);
         }
         devlog("Battle info updated", actions);
         updateUI("updBattleData", Battle);
-    }
+    }*/
 }
 
 function updateBattleStats(actionData) {
