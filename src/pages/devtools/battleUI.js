@@ -123,7 +123,7 @@ window.UI.battle = {
                 }
             }*/
             for (let stat of Object.keys(this.display.chars[charData.char])) {
-                if (charData.stats[stat]) {
+                if (charData.stats[stat] != undefined) { //stats can be 0 :V
                     try {
                         this.display.chars[charData.char][stat].textContent = NUMBER_FORMAT.format(charData.stats[stat]);
                     }

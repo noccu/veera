@@ -15,22 +15,22 @@ function createRaid(name, id, diff, minRank, maxHosts, apCost, matIDs, matNums, 
         matCost: mats,
         element: ele,
         isHL: isHL,
-        img: img,
+        img: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/summon/qm/" + img,
     };    
 }
 
 const ELEMENTS = { fire:0, water: 1, earth: 2, wind: 3, light: 4, dark: 5};
 
 window.RaidData = [
-    createRaid('Griffin (N)', 300011, 1, null, 3, null, null, null, ELEMENTS.wind, false, '2030003000.jpg'),
-    createRaid('Griffin (H)', 300021, 4, null, 3, null, null, null, ELEMENTS.wind, false, '2030003000_hard.jpg'),
+    createRaid('Griffin (N)', 300011, 1, null, 3, 10, null, null, ELEMENTS.wind, false, '2030003000.jpg'),
+    createRaid('Griffin (H)', 300021, 4, null, 3, 15, null, null, ELEMENTS.wind, false, '2030003000_hard.jpg'),
     createRaid('Tiamat (N)', 300031, 10, null, 3, null, null, null, ELEMENTS.wind, false, '2030000000.jpg'),
     createRaid('Tiamat (H)', 300041, 16, null, 3, null, null, null, ELEMENTS.wind, false, '2030000000_hard.jpg'),
-    createRaid('Tiamat Omega', 300051, 22, null, 3, null, [18], [2], ELEMENTS.wind, false, '2040020000_ex.jpg'),
-    createRaid('Nezha', 300421, 28, null, 2, null, [1343, 1141], [50, 6], ELEMENTS.wind, false, '2040042000_ex.jpg'),
+    createRaid('Tiamat Omega', 300051, 22, null, 3, 30, [18], [2], ELEMENTS.wind, false, '2040020000_ex.jpg'),
+    createRaid('Nezha', 300421, 28, null, 2, 40, [1343, 1141], [50, 6], ELEMENTS.wind, false, '2040042000_ex.jpg'),
     createRaid('Garuda', 301381, 34, null, 2, null, [1343, 1141], [50, 6], ELEMENTS.wind, false, '2040071000_ex.jpg'),
-    createRaid('Tiamat Omega (HL)', 300441, 42, null, 2, null, [32], [3], null, ELEMENTS.wind, '2040020000_high.jpg'),
-    createRaid('Nezha (HL)', 300451, 49, null, 1, null, [44], [1], null, ELEMENTS.wind, '2040042000_high.jpg'),
+    createRaid('Tiamat Omega (HL)', 300441, 42, null, 2, 50, [32], [3], null, ELEMENTS.wind, '2040020000_high.jpg'),
+    createRaid('Nezha (HL)', 300451, 49, null, 1, 50, [44], [1], null, ELEMENTS.wind, '2040042000_high.jpg'),
 
     createRaid('Flame (N)', 300061, 2, null, 3, null, null, null, ELEMENTS.fire, false, '2020018001.jpg'),
     createRaid('Flame (H)', 300071, 5, null, 3, null, null, null, ELEMENTS.fire, false, '2020018001_hard.jpg'),

@@ -84,27 +84,27 @@ window.UI = {
 //            translateDate(current, "toJST");
             
             var daily = new Date(current);
-            daily.setHours(5);
-            daily.setMinutes(0);
-            daily.setSeconds(0);
+            daily.setUTCHours(5);
+            daily.setUTCMinutes(0);
+            daily.setUTCSeconds(0);
             var weekly = new Date(daily);
             var monthly = new Date(daily);
             
             //Daily
-            if (current.getHours() >= 5) {
-                daily.setDate(daily.getDate() + 1);
+            if (current.getUTCHours() >= 5) {
+                daily.setUTCDate(daily.getUTCDate() + 1);
             }
             //Weekly
-            if (current.getDay() === 0) {
-                weekly.setDate(current.getDay() + 1);
+            if (current.getUTCDay() === 0) {
+                weekly.setUTCDate(current.getUTCDay() + 1);
             }
-            else if (current.getDay() != 1 || current.getHours() >= 5) {
-                weekly.setDate(current.getDate() + (8 - current.getDay()));
+            else if (current.getUTCDay() != 1 || current.getUTCHours() >= 5) {
+                weekly.setUTCDate(current.getUTCDate() + (8 - current.getUTCDay()));
             }
             //Monthly
-            if (current.getDate() > 1 || current.getHours() >= 5) {
-                monthly.setDate(1);
-                monthly.setMonth(current.getMonth() + 1);
+            if (current.getUTCDate() > 1 || current.getUTCHours() >= 5) {
+                monthly.setUTCDate(1);
+                monthly.setUTCMonth(current.getUTCMonth() + 1);
             }
             
             this.timers.daily = new Date(daily - current);
@@ -273,10 +273,10 @@ function updateTimer (timer, delta) {
     timer.setSeconds(timer.getSeconds() + delta);
 }
 function updateTimerDisplay (name, timer) {
-    if (UI.time.display[name].d) {UI.time.display[name].d.textContent = timer.getDate() - 1;}
-    UI.time.display[name].h.textContent = ('0' + timer.getHours()).slice(-2);
-    UI.time.display[name].m.textContent = ('0' + timer.getMinutes()).slice(-2);
-    UI.time.display[name].s.textContent = ('0' + timer.getSeconds()).slice(-2);
+    if (UI.time.display[name].d) {UI.time.display[name].d.textContent = timer.getUTCDate() - 1;}
+    UI.time.display[name].h.textContent = ('0' + timer.getUTCHours()).slice(-2);
+    UI.time.display[name].m.textContent = ('0' + timer.getUTCMinutes()).slice(-2);
+    UI.time.display[name].s.textContent = ('0' + timer.getUTCSeconds()).slice(-2);
 }
     //Maintenance
 function startMaintTimer(html) {
@@ -302,10 +302,10 @@ function endMaintTimer() {
 function translateDate(date, tz) { //lucky JST doesn't observe DST
     switch (tz) {
         case "toJST":
-            date.setHours(date.getUTCHours() + 9);
+            date.setUTCHours(date.getUTCHours() + 9);
             break;
         case "fromJST":
-            date.setUTCHours(date.getHours() - 9);
+            date.setUTCHours(date.getUTCHours() - 9);
             break;
     }
     return date;

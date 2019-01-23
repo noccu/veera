@@ -53,6 +53,7 @@ window.Unf = {
                 
                 data.push(newHonorsArr[i]);
             }
+            //TODO: use JST. Actually this is easy (UI.jst) but add a switch to users can choose
             var date = new Date();
             graphData.labels.push(date.toLocaleString(navigator.language, {hour: "numeric", minute: "numeric"}));
             this.graph.update();
@@ -86,13 +87,14 @@ window.Unf = {
         },
         load: function () {
             function _load(loadedData) {
-                 if (!Unf.areaInfo.graph) { Unf.areaInfo.create(); }
-                 Unf.areaInfo.graph.config.data.labels = loadedData.unf.areaInfo.times;
-                 
-                 for (let i = 0; i < loadedData.unf.areaInfo.honors.length; i++) {
-                     Unf.areaInfo.graph.config.data.datasets[i].data = loadedData.unf.areaInfo.honors[i]; 
-                 }
-                 Unf.areaInfo.graph.update();
+                if (!loadedData.unf) { return; }
+                if (!Unf.areaInfo.graph) { Unf.areaInfo.create(); }
+                Unf.areaInfo.graph.config.data.labels = loadedData.unf.areaInfo.times;
+                
+                for (let i = 0; i < loadedData.unf.areaInfo.honors.length; i++) {
+                    Unf.areaInfo.graph.config.data.datasets[i].data = loadedData.unf.areaInfo.honors[i]; 
+                }
+                Unf.areaInfo.graph.update();
              }
              chrome.storage.local.get("unf", _load);
         }
@@ -134,7 +136,7 @@ function xhrUnfAreaData() {
     xhr.onload = function() {
         updUnfAreas(xhr.response);
     };
-    xhr.open("GET", `${CONSTANTS.baseGameUrl}teamraid${Unf.edition}/bookmaker/content/top`);
+    xhr.open("GET", `${CONSTANTS.url.baseGame}teamraid${Unf.edition}/bookmaker/content/top`);
 //    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 //    xhr.setRequestHeader("X-VERSION", "1524565238");
     xhr.responseType = "json";

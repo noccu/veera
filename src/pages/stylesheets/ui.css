@@ -126,7 +126,7 @@ html {
     position: relative;
     bottom: 2px;
     font-size: 1.1em;
-    margin-right: 0.1em;
+    margin-right: 0.15em;
 }
 
 #time {
@@ -287,21 +287,19 @@ select, option {
 }
 
 .raid-current {
-    font-size: 1.5em;
+/*    font-size: 1.5em;*/
 }
 
 .raid-max {
-    opacity: 0.5;
-}
-
-.raid-treasure {
-    display: inline-block;
+/*    opacity: 0.5;*/
 }
 
 
 
 
-.raid-item * {
+
+
+.raid * {
     vertical-align: middle;
 /*    margin-right: 2em;*/
 }
@@ -317,6 +315,7 @@ div.raid-hosts {
 
 .raid-data > *, .raid-icon {
     margin-right: 1em;
+    display: inline-block;
 }
 
 
@@ -325,7 +324,7 @@ div.raid-hosts {
     background-color: var(--highlight-color)
 }
 
-.raid-item {
+.raid {
     margin-bottom: 0.5em;
 }
 
@@ -413,7 +412,7 @@ button {
 }
 
 .raid-current-drop span {
-    display: block;
+/*    display: block;*/
 }
 
 [data-event] {

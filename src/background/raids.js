@@ -1,17 +1,18 @@
 /*globals RaidData, Supplies, Raids*/
+//Raids:
 // http://game.granbluefantasy.jp/#quest/supporter/300041/1
 // http://game.granbluefantasy.jp/#quest/supporter/300501/1/0/41
 // supporter/QUEST_ID/1 [/0/HOSTMAT_ID]
+
+//Solo quests:
+// http://game.granbluefantasy.jp/#quest/supporter/102961/3
 //const SORT_METHODS;
 window.Raids = {
     SORT_METHODS: {elements: 0, difficulty: 1},
     init: function() {
         this.list = Array.from(RaidData);
         for (let raid of this.list) {
-            raid.url = [];
-            for (let mat of raid.matCost) {
-                raid.url.push( this.createURL(raid.id, mat.id) );
-            }
+            raid.urls = this.createURLs(raid.id, raid.matCost);
             raid.currentHosts = raid.maxHosts;
 //            raid.done = false;
             raid.active = true;
@@ -21,21 +22,34 @@ window.Raids = {
         if (Raids.list){ return Raids.list.find(x => x.id == id); }
         else { State.deverror("Raid data not loaded."); }
     },
-    getList: function(sort) {
+    getList: function(sort, filter) {
+        let output;
+        
+        //switch filter here?
         switch (sort) {
             case this.SORT_METHODS.elements:
-                return Array.from(this.list.sort(sortByElement));
+                output = Array.from(this.list.sort(sortByElement));
                 break;
             case this.SORT_METHODS.difficulty:
-                return Array.from(this.list.sort(sortByDifficulty));
+                output = Array.from(this.list.sort(sortByDifficulty));
+                break;
             default:
-                return this.list;  
+                output = Array.from(this.list);
         }
+        
+        
+        
+        return output;
     },
-    createURL: function(id, mats) {
+    createURLs: function(id, mats) {
         var ret = [];
-        for (let mat of mats) {
-            ret.push(`http://game.granbluefantasy.jp/#quest/supporter/${id}/1/0/${mat}`);
+        if (!mats) {
+            ret.push(`http://game.granbluefantasy.jp/#quest/supporter/${id}/1`);
+        }
+        else {
+            for (let mat of mats) {
+                ret.push(`http://game.granbluefantasy.jp/#quest/supporter/${id}/1/0/${mat.id}`);
+            }
         }
         return ret;
     }

@@ -206,25 +206,25 @@
                     </div>
                 </div>
                 <div id="raids-panel" class="panel">
-                    <template id="template-raid-item">
-                        <li class="raid-item" data-url="" data-id="">
-                                <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg"/>
-                                <div class="raid-data">
-                                    <span class="raid-name">Ultimate Bahamut HL</span>
-                                    <div class="raid-treasure">
-<!--                                        Template goes here-->
-                                    </div>
-                                    <div class="raid-hosts">
-                                        <span class="raid-current">0</span> /<span class="raid-max">3</span>
-                                    </div>
+                    <template id="template-raid">
+                        <li id="" class="raid" data-cat="" data-element="" data-url="">
+                            <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg" />
+                            <div class="raid-data">
+                                <span class="raid-name">Ultimate Bahamut HL</span>
+                                <div class="raid-cost"><span>50</span> AP</div>
+                                <div class="raid-host-mats">
+<!--                                    Templates-->
                                 </div>
-                            </li>
+                                <div class="raid-hosts">
+                                    <span class="current-value">0</span>/<span class="max-value">3</span> hosts
+                                </div>
+                            </div>
+                        </li>
                     </template>
                     <template id="template-raid-material">
                         <div class="raid-mat">
-                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
-                            <span class="raid-mat-cur">2500</span>
-                            <span class="raid-mat-req">45</span>
+                            <img title="Mat name" class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                            <span class="current-value">45</span>/<span class="max-value">450</span>
                         </div>
                     </template>
                     <span class="panel-header" data-event="collapse">Raids</span>
@@ -240,22 +240,23 @@
                             </ul>
                         </div>
                         <ul id="raids-list" class="raid-list">
-                           <li id="" class="raid-item" data-cat="" data-url="">
+                           <li id="" class="raid" data-cat="" data-url="">
                                 <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg"/>
                                 <div class="raid-data">
                                     <span class="raid-name">Ultimate Bahamut HL</span>
-                                    <div class="raid-treasure">
+                                    <div><span class="raid-cost">50</span> AP</div>
+                                    <div class="raid-host-mats">
                                         <div class="raid-mat">
-                                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
-                                            <span class="raid-mat-req">45</span>
+                                            <img title="Mat name" class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                                            <span class="current-value">45</span>/<span class="max-value">450</span>
                                         </div>
                                         <div class="raid-mat">
-                                            <img class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
-                                            <span class="raid-mat-req">6</span>
+                                            <img title="Mat name" class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                                            <span class="raid-mat-req current-value">6</span>/<span class="raid-mat-have max-value">30</span>
                                         </div>
                                     </div>
                                     <div class="raid-hosts">
-                                        <span class="raid-current">0</span> /<span class="raid-max">3</span>
+                                        <span class="current-value">0</span>/<span class="max-value">3</span> hosts
                                     </div>
                                 </div>
                             </li>

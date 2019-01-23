@@ -21,7 +21,7 @@ window.BackgroundPage = {
         this.connection.postMessage({action, data});
     },
     hear: function(msg){
-        if (DEBUG) { console.log("[devtools] Heard:", msg); }
+        if (DEBUG) { console.debug("[devtools] Heard:", msg); }
         switch (msg.action){
             case "sayHi":
                 console.log("Onee-sama gokigenyou! 	(´ ∀ ` *)");
@@ -63,7 +63,7 @@ window.BackgroundPage = {
                 UI.battle.setPartyNames(msg.data.characters.list);
                 break;
             case "updRaidLoot":
-                updRaidInfo(msg.data);
+                updCurrentRaidInfo(msg.data);
                 break;
         }
     }

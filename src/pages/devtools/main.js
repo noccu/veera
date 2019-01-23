@@ -207,7 +207,7 @@ function updatePlan () {  //Event handler
 }
 
 //Raids
-function updRaidInfo (data) {
+function updCurrentRaidInfo (data) {
     //Just drops for now.
     let list = document.getElementById("raid-current-drop-list"),
         temp = document.getElementById("t-raid-current-drop"),
@@ -226,11 +226,37 @@ function updRaidInfo (data) {
     }
 }
 
-function createRaid(name, mat, url, thumb) {
-    var newRaid = document.getElementById("template-raid-item");
+function createRaid(raidData) {
+    var newRaid = document.getElementById("template-raid");
     var newRaidMat = document.getElementById("template-raid-material");
-    newRaid.content.querySelector(".raid-name").title = name;
-    newRaid.content.querySelector(".raid-icon").src = thumb;
-    t.content.querySelector("div").textContent = num;
-    return document.importNode(t.content, true);
+       
+    newRaid.content.querySelector(".raid-name").title = raidData.name;
+    newRaid.content.querySelector(".raid-icon").src = raidData.thumb;
+    newRaid.content.querySelector(".raid-cost").textContent = raidData.apCost;
+    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidData.hosts.left;
+    newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidData.hosts.max;
+   
+    newRaid = document.importNode(newRaid.content, true);
+    
+    let matsCost = newRaid.getElementsByClassName("raid-host-mats")[0];
+    for (let mat of raidData.mats) {
+        newRaidMat.content.querySelector(".current-value").textContent = mat.req;
+        newRaidMat.content.querySelector(".max-value").textContent = mat.current;
+        newRaidMat.content.querySelector(".raid-mat-icon").src = mat.icon;
+        matsCost.appendChild(document.importNode(newRaidMat, true));
+    }
+    
+    return newRaid;
+}
+
+function populateRaids (raids) { //called when bg page sends response to reqRaidList.
+    let list = document.getElementById("raids-list");
+    for (let raid of raids) {
+        list.appendChild(createRaid(raid));
+    }
+}
+
+function evhFilterRaids(e) { //called on changing filters
+    let filterData = e.dothings(); //TODO
+    BackgroundPage.send("reqRaidList", filterData);
 }
