@@ -5,100 +5,100 @@ const PLANNER_TEMPLATES = {
     orbs: {
         low: {
             type: SUPPLYTYPE.treasure,
-            fire: 1011,
-            water: 1021,
-            earth: 1031,
-            wind: 1041,
-            light: 1051,
-            dark: 1061
+            Fire: 1011,
+            Water: 1021,
+            Earth: 1031,
+            Wind: 1041,
+            Light: 1051,
+            Dark: 1061
         },
         high: {
             type: SUPPLYTYPE.treasure,
-            fire: 1012, 
-            water: 1022, 
-            earth: 1032,
-            wind: 1042,
-            light: 1052,
-            dark: 1062,
+            Fire: 1012, 
+            Water: 1022, 
+            Earth: 1032,
+            Wind: 1042,
+            Light: 1052,
+            Dark: 1062,
         }
     },
     whorls: {
         type: SUPPLYTYPE.treasure,
-        fire: 1313, 
-        water: 1323, 
-        earth: 1333,
-        wind: 1343,
-        light: 1353,
-        dark: 1363
+        Fire: 1313, 
+        Water: 1323, 
+        Earth: 1333,
+        Wind: 1343,
+        Light: 1353,
+        Dark: 1363
     },
     tomes: {
         type: SUPPLYTYPE.treasure,
-        fire: 1311, 
-        water: 1321, 
-        earth: 1331,
-        wind: 1341,
-        light: 1351,
-        dark: 1361
+        Fire: 1311, 
+        Water: 1321, 
+        Earth: 1331,
+        Wind: 1341,
+        Light: 1351,
+        Dark: 1361
     },
     scrolls: {
         type: SUPPLYTYPE.treasure,
-        fire: 1312, 
-        water: 1322, 
-        earth: 1332,
-        wind: 1342,
-        light: 1352,
-        dark: 1362
+        Fire: 1312, 
+        Water: 1322, 
+        Earth: 1332,
+        Wind: 1342,
+        Light: 1352,
+        Dark: 1362
     },
     scales: {
         type: SUPPLYTYPE.treasure,
-        fire: 1111, 
-        water: 1121, 
-        earth: 1131,
-        wind: 1141,
-        light: 1151,
-        dark: 1161
+        Fire: 1111, 
+        Water: 1121, 
+        Earth: 1131,
+        Wind: 1141,
+        Light: 1151,
+        Dark: 1161
     },
     stones: {
         type: SUPPLYTYPE.treasure,
-        sword: 4011,
-        dagger: 4021,
-        spear: 4031,
-        axe: 4041,
-        staff: 4051,
-        gun: 4061,
-        fist: 4071,
-        bow: 4081,
-        harp: 4091,
-        katana: 4101
+        Sword: 4011,
+        Dagger: 4021,
+        Spear: 4031,
+        Axe: 4041,
+        Staff: 4051,
+        Gun: 4061,
+        Fist: 4071,
+        Bow: 4081,
+        Harp: 4091,
+        Katana: 4101
     },
     trueAnima: {
         type: SUPPLYTYPE.treasure,
-        fire: 41, 
-        water: 42, 
-        earth: 43,
-        wind: 44,
-        light: 45,
-        dark: 46
+        Fire: 41, 
+        Water: 42, 
+        Earth: 43,
+        Wind: 44,
+        Light: 45,
+        Dark: 46
 },
     anima: {
         primal: {
             type: SUPPLYTYPE.treasure,
-            fire: 11, 
-            water: 12, 
-            earth: 13,
-            wind: 10,
-            light: 25,
-            dark: 30
+            Fire: 11, 
+            Water: 12, 
+            Earth: 13,
+            Wind: 10,
+            Light: 25,
+            Dark: 30
         }
     },
     omegaItem: {
         type: SUPPLYTYPE.treasure,
-        fire: 47, 
-        water: 48, 
-        earth: 49,
-        wind: 32,
-        light: 50,
-        dark: 51
+        Fire: 47, 
+        Water: 48, 
+        Earth: 49,
+        Wind: 32,
+        Light: 50,
+        Dark: 51
     }
 };
 
@@ -544,24 +544,24 @@ window.PlannerData = {
             //crystal 500
         ],
         wtype: {
-            sword: null,
-            axe: null,
-            spear: null,
-            staff: null,
-            gun: null,
-            fist: null,
-            katana: null,
-            harp: null,
-            dagger: null,
-            bow: null,
+            "Uno (spear)": null,
+            "Sorn (bow)": null,
+            "Sarasa (axe)": null,
+            "Feower (dagger)": null,
+            "Funf (staff)": null,
+            "Six (fist)": null,
+            "Siete (sword)": null,
+            "Okto (katana)": null,
+            "Nio (harp)": null,
+            "Esser (gun)": null,
         },
         element: {
-            fire: null, 
-            water: null, 
-            earth: null,
-            wind: null,
-            light: null,
-            dark: null,
+            Fire: null, 
+            Water: null, 
+            Earth: null,
+            Wind: null,
+            Light: null,
+            Dark: null,
             templates: [
                 supplyTemplate(2, PLANNER_TEMPLATES.orbs.low, 250),
                 supplyTemplate(2, PLANNER_TEMPLATES.whorls, 250),
@@ -595,6 +595,29 @@ window.PlannerData = {
                 supplyTemplate(7, PLANNER_TEMPLATES.omegaItem, 60),
             ]            
         },
-        stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6"]
+        stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6"],
+        typeNames: {
+            "Uno (spear)": "Spear",
+            "Sorn (bow)": "Bow",
+            "Sarasa (axe)": "Axe",
+            "Feower (dagger)": "Dagger",
+            "Funf (staff)": "Staff",
+            "Six (fist)": "Fist",
+            "Siete (sword)": "Sword",
+            "Okto (katana)": "Katana",
+            "Nio (harp)": "Harp",
+            "Esser (gun)": "Gun",
+        }
     }
 };
+
+(function hideTemplates(o) {
+    if (o["templates"]) {
+        Object.defineProperty(o, "templates", {enumerable: false});
+    }
+    else {
+        for (let k of Object.keys(o)) {
+            if (o[k] instanceof Object) { hideTemplates(o[k]); }
+        }
+    }
+})(PlannerData);

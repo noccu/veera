@@ -21,13 +21,14 @@ window.Planner = {
                  case "wtype":
                      t = PlannerData[series].wtype.templates || [];
                      itemArray = t.concat(PlannerData[series].wtype[wtype]);
-                     templateKey = wtype;
+                     templateKey = PlannerData[series].typeNames ? PlannerData[series].typeNames[wtype] : wtype;
                      break;
                  case "element":
                      t = PlannerData[series].element.templates || [];
                      itemArray = t.concat(PlannerData[series].element[element]);
                      templateKey = element;
                      break;
+                 case "typeNames":
                  case "stepNames":
                      continue;
                  default:
