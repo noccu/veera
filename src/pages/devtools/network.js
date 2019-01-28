@@ -22,8 +22,9 @@ window.Network = {
                                                    });
                 });
             }
-            else if (entry.request.url.indexOf("maintenance") != -1) {
-                startMaintTimer();
+            else if (entry.request.url.indexOf("maintenance") != -1 && entry.response.content.mimeType == "text/html") {
+                entry.getContent(data => startMaintTimer(data));
+                if (DEBUG) { console.debug(entry); }
             }
         }
     },

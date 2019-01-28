@@ -270,7 +270,7 @@ function syncPlanner(index, type) { //TODO: make it work with consumables
 
 //Timing functions
 function updateTimer (timer, delta) {
-    timer.setSeconds(timer.getSeconds() + delta);
+    timer.setUTCSeconds(timer.getUTCSeconds() + delta);
 }
 function updateTimerDisplay (name, timer) {
     if (UI.time.display[name].d) {UI.time.display[name].d.textContent = timer.getUTCDate() - 1;}
@@ -289,8 +289,13 @@ function getMaintEnd(html) {
     var doc = document.implementation.createHTMLDocument("");
     doc.documentElement.innerHTML = html;
     var info = doc.querySelector(".prt-maintenance-infomation");
-    var date = info.firstElementChild.textContent.match(/(?:\d+\/?)+ (?:\d+:?)+$/m)[0];
-    return new Date(date);
+    var dateMatch = info.firstElementChild.textContent.match(/(\d+)\/(\d+)\/(\d+) (\d+)(?::\d+)+$/m);
+    var endDate = new Date(dateMatch[0]);
+    endDate.setUTCFullYear(parseInt(dateMatch[1]));
+    endDate.setUTCMonth(parseInt(dateMatch[2]));
+    endDate.setUTCDate(parseInt(dateMatch[3]));
+    endDate.setUTCHours(parseInt(dateMatch[4]));
+    return endDate;
 }
 function endMaintTimer() {
     document.getElementById("timer-maint").classList.add("hidden");
