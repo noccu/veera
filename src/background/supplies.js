@@ -2,6 +2,7 @@
 const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment", NOT_TRACKED: -1};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
+//ITEM KIND gotten from game response in crate, but incomplete. Manual entries marked.
 const ITEM_KIND = {
     "1": {
         "name": "Weapon",
@@ -118,6 +119,12 @@ const ITEM_KIND = {
         "class": "Specialitem",
         "path": "item/specialitem"
     },
+    "49": { //manual
+        "name": "ROTB pendants",
+        "class": "ROTB",
+        "path": "item/event/article",
+        manual: true
+    },
     "50": {
         "name": "Class Outfit",
         "class": "Job\\Skin",
@@ -142,6 +149,12 @@ const ITEM_KIND = {
         "name": "Sticker",
         "class": "Stamp",
         "path": "item/stamp"
+    },
+    "63": { //manual entry
+        "name": "ROTB badges",
+        "class": "ROTB",
+        "path": "item/event/defeat/platinum",
+        manual: true
     },
     "65": {
         "name": "Arcarum Items",
@@ -320,6 +333,11 @@ window.Supplies = {
 function gotQuestLoot(data) {
     var upd = [];
     function makeUpd(item) {
+        let itemData = ITEM_KIND[item.item_kind];
+        if (!itemData || itemData.manual) {
+            console.warn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
+            if (!itemData) { itemData = {path: item.type && item.type.includes("item") ? item.type : ITEM_KIND[10].path} } //default to treasure/article, seems most common. also path's the only thing used so far...
+        }
         return {type: translateItemKind(item.item_kind), //TODO: Supply refactor
                 id: item.id, 
                 delta: parseInt(item.count),
@@ -328,7 +346,7 @@ function gotQuestLoot(data) {
                 category: item.category_type,
                 kind: item.item_kind, //string
                 //only for loot?
-                path: ITEM_KIND[item.item_kind].path,
+                path: itemData.path,
                 rarity: parseInt(item.rarity)}; 
     }
     

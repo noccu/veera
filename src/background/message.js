@@ -99,6 +99,7 @@ function hear (msg) {
                     break;
                 case url.ismatch("shop_exchange/purchase"):
                     purchaseItem(msg.data.json);
+                    //TODO: May need to ignore the next item/article_list request cause some items go to crate, causing the data in the response to not be updated...
                     break;
             }
             break;
