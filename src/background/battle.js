@@ -4,6 +4,7 @@ const BATTLE_ACTION_TYPES = {dmgDealt: 1,
                              heal: 3};
 const BATTLE_ACTIONS = {attack: {name: "Attack"},
                         skill: {name: "Skill"},
+                        postAtkTrigger: {name: "Post-attack skill trigger"},
                         ougi: {name: "Ougi"},
                         ougiEcho: {name: "Ougi echo"},
                         effect: {name: "Effect (Reflect, etc)"},
@@ -447,9 +448,14 @@ function battleAttack(json) {
                     if (!isPlayerTurn) {
                         actionData = new BattleActionData(BATTLE_ACTIONS.effect);
                     }
-                    if (actionData.action == BATTLE_ACTIONS.ougi) {
+                    else if (actionData.action == BATTLE_ACTIONS.ougi) {
                         let char = actionData.char;
                         actionData = new BattleActionData(BATTLE_ACTIONS.ougiEcho);
+                        actionData.char = char;
+                    }
+                    else if (actionData.action == BATTLE_ACTIONS.attack) {
+                        let char = actionData.char;
+                        actionData = new BattleActionData(BATTLE_ACTIONS.postAtkTrigger);
                         actionData.char = char;
                     }
                     battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
