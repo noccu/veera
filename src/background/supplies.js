@@ -172,6 +172,20 @@ const ITEM_KIND = {
         "path": "item/recycling"
     }
 };
+const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming. TODO: add IDs also move these 2 consts to own file.
+    2: {id: -1, name: "Scattered Cargo (1/115)"},
+    3: {id: -1, name: "Scattered Cargo (1/115)"},
+    5: {id: -1, name: "Special Op's Request (8) or Lucky Charm Hunt (6)"},
+    6: {id: -1, name: "Threat to the Fisheries (9)"},
+    8: {id: -1, name: "Whiff of Danger (13/39/52) or The Fruit of Lumacie (13/39/52)"},
+    17: {id: -1, name: "Whiff of Danger (13/39/52) or The Fruit of Lumacie (13/39/52)"},
+    22: {id: -1, name: "What's in the Box? (20) or I Challenge You! (17, use Belle Sylphid)"},
+    24: {id: -1, name: "Strength and Chivalry (18) or What's in the Box? (20)"},
+    28: {id: -1, name: "Playing Cat and Mouse (22) or For Whom the Bell Tolls (22)"},
+    29: {id: -1, name: "Playing Cat and Mouse (22) or For Whom the Bell Tolls (22)"},
+    39: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"},
+    40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
+};
 
 window.Supplies = {
     treasure: {
@@ -186,6 +200,7 @@ window.Supplies = {
                     category: item.category_type, 
                     count: parseInt(item.number)
                     };
+                checkFarmLocation(item.item_id);
             }
             
             Supplies.save("t");
@@ -330,10 +345,16 @@ window.Supplies = {
     }
 };
 
+function checkFarmLocation (id) {
+    if (id in TREASURE_SOURCES) {
+        Supplies.treasure.index[id].questLocation = TREASURE_SOURCES[id].name;
+    }
+}
+
 function gotQuestLoot(data) {
     var upd = [];
     function makeUpd(item) {
-        let itemData = ITEM_KIND[item.item_kind];
+        let itemData = ITEM_KIND[item.item_kind || item.kind];
         if (!itemData || itemData.manual) {
             console.warn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
             if (!itemData) { itemData = {path: item.type && item.type.includes("item") ? item.type : ITEM_KIND[10].path}; } //default to treasure/article, seems most common. also path's the only thing used so far...

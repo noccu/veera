@@ -171,7 +171,7 @@ window.UI = {
             for (let item of plan) {
 //                console.log(item);
                 
-                entry = createPlannerItem(item.name, item.current, item.needed, createSupplyURL(item.id, item.type));
+                entry = createPlannerItem(item.id, item.name, item.current, item.needed, createSupplyURL(item.id, item.type), item.loc);
                 entry.firstElementChild.dataset.id = item.id;
                 entry.firstElementChild.dataset.needed = item.needed;
                 entry.firstElementChild.dataset.type = item.type;

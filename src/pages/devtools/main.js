@@ -130,7 +130,8 @@ function updateTreasure (idx) {
             var li = createSupplyItem("t-" + id,
                                       idx[id].name, 
                                       idx[id].count, 
-                                      createSupplyURL(id, "article"));
+                                      createSupplyURL(id, "article"),
+                                      idx[id].questLocation);
             temp.content.appendChild(li);
         }
     }
@@ -155,14 +156,14 @@ function updateConsumables (data) {
     list.appendChild(temp.content);
 }
 
-function createSupplyItem (id, name, num, thumb) {
+function createSupplyItem (id, name, num, thumb, loc) {
     var t = document.getElementById("template-supply-item");
 /*    t.content.querySelector("li").title = name;
     t.content.querySelector("img").src = thumb;
     t.content.querySelector("div").textContent = num;*/
     let item = t.content.firstElementChild;
     item.id = id;
-    item.title = name;
+    item.title = loc ? `${name}\nGet from: ${loc}`: name;
     item.getElementsByClassName("collection-icon")[0].src = thumb;
     item.getElementsByClassName("collection-data")[0].textContent = num;
     
@@ -178,12 +179,10 @@ function createSupplyURLkind (id, path) {
 }
 
 //Planner functions
-function createPlannerItem (name, current, needed, thumb) {
-        var t = document.getElementById("template-supply-item");
-        t.content.querySelector("li").title = name;
-        t.content.querySelector("img").src = thumb;
-        t.content.querySelector("div").innerHTML = `<span class="planner-current">${current}</span> /<span class="planner-needed">${needed}</span>`;
-        return document.importNode(t.content, true);
+function createPlannerItem (id, name, current, needed, thumb, loc) {
+        let item = createSupplyItem("p"+id, name, 0, thumb, loc);
+        item.querySelector(".collection-data").innerHTML = `<span class="planner-current">${current}</span> /<span class="planner-needed">${needed}</span>`;
+        return item;
 }
 
 function changeSeries(ev) { //Event handler, updates type and element list when series changes

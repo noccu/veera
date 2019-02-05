@@ -53,7 +53,8 @@ window.Planner = {
                                         id: id,
                                         name: supplydata.name,
                                         needed: item.needed,
-                                        current: supplydata.count
+                                        current: supplydata.count,
+                                        loc: supplydata.questLocation
                                     });
                                 }
                             }

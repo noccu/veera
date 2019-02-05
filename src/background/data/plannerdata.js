@@ -478,9 +478,9 @@ window.PlannerData = {
     
     Revenant:{
         core: [
-            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.high.light, 50),
-            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.scrolls.light, 50),
-            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.light, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.high.Light, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.scrolls.Light, 50),
+            createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Light, 50),
             createItem(1, SUPPLYTYPE.treasure, 1151, 50),
             createItem(1, SUPPLYTYPE.treasure, 2001, 50),
 //            createItem(1, SUPPLYTYPE.treasure, 1052, 50),
@@ -520,24 +520,24 @@ window.PlannerData = {
             //crystal 400
             
             //5
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.wind, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.fire, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.water, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.earth, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.light, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.dark, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Wind, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Fire, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Water, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Earth, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Light, 20),
+            createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Dark, 20),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.antiqueCloth, 100),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 15),
             //crystals 500
             
             //6
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.fire, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.water, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.earth, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.wind, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.light, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.dark, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wire, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fater, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Warth, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Eind, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Light, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 3),
             createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 250),
             createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 30)
             //Gold brick 1
