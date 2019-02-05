@@ -171,7 +171,7 @@ const ITEM_KIND = {
         "class": "Recycling",
         "path": "item/recycling"
     }
-}
+};
 
 window.Supplies = {
     treasure: {
@@ -336,7 +336,7 @@ function gotQuestLoot(data) {
         let itemData = ITEM_KIND[item.item_kind];
         if (!itemData || itemData.manual) {
             console.warn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
-            if (!itemData) { itemData = {path: item.type && item.type.includes("item") ? item.type : ITEM_KIND[10].path} } //default to treasure/article, seems most common. also path's the only thing used so far...
+            if (!itemData) { itemData = {path: item.type && item.type.includes("item") ? item.type : ITEM_KIND[10].path}; } //default to treasure/article, seems most common. also path's the only thing used so far...
         }
         return {type: translateItemKind(item.item_kind), //TODO: Supply refactor
                 id: item.id, 
@@ -369,7 +369,7 @@ function gotQuestLoot(data) {
         }
     }
     Supplies.update(upd);
-    DevTools.send("updRaidLoot", upd);
+    DevTools.send("updRaidLoot", {loot: upd});
 }
 
 function purchaseItem(data) {    

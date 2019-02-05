@@ -174,7 +174,7 @@ function createSupplyURL (id, type) {
 
 //TODO: merge with above, see Supply refactor. Path is set in Supplies based on constant.
 function createSupplyURLkind (id, path) {
-    return `${CONSTANTS.url.assets}${path}/${CONSTANTS.url.size.medium}${id}.jpg`;
+    return `${CONSTANTS.url.assets}${path}/${CONSTANTS.url.size.small}${id}.jpg`;
 }
 
 //Planner functions
@@ -209,21 +209,24 @@ function updatePlan () {  //Event handler
 //Raids
 function updCurrentRaidInfo (data) {
     //Just drops for now.
-    let list = document.getElementById("raid-current-drop-list"),
-        temp = document.getElementById("t-raid-current-drop"),
-        ssr_only = document.getElementById("raids-current-filter").children[1].classList.contains("active");
-    
-    list.innerHTML = "";
-    for (let item of data) {
-        if (ssr_only && item.rarity < 4) { continue; }
-        
-        let disp = temp.content.firstElementChild;
-        disp.dataset.rarity = item.rarity;
-        disp.getElementsByTagName("span")[0].textContent = item.delta > 1 ? item.name+" x"+item.delta : item.name;
-        disp.getElementsByTagName("img")[0].src = createSupplyURLkind(item.id, item.path);
-        
-        list.appendChild(document.importNode(temp.content, true));
+    if (data.hasOwnProperty("loot")) {
+        let list = document.getElementById("raid-current-drop-list"),
+            temp = document.getElementById("t-raid-current-drop"),
+            ssr_only = document.getElementById("raids-current-filter").children[1].classList.contains("active");
+
+        list.innerHTML = "";
+        for (let item of data.loot) {
+            if (ssr_only && item.rarity < 4) { continue; }
+
+            let disp = temp.content.firstElementChild;
+            disp.dataset.rarity = item.rarity;
+            disp.getElementsByTagName("span")[0].textContent = item.delta > 1 ? item.name+" x"+item.delta : item.name;
+            disp.getElementsByTagName("img")[0].src = createSupplyURLkind(item.id, item.path);
+
+            list.appendChild(document.importNode(temp.content, true));
+        }
     }
+    UI.setValue({id: "raid-next-quest", value: data.nextQuest || ""});
 }
 
 function createRaid(raidData) {

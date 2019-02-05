@@ -64,6 +64,7 @@ function hear (msg) {
                 case url.ismatch("result/data"): //Quest loot screen
                     gotQuestLoot(msg.data.json.rewards);
                     getPendantsRaid(msg.data.json);
+                    checkNextQuest(msg.data.json);
                     break;
                 case url.ismatch("weapon/evolution_materials"):
                     weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao

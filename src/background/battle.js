@@ -28,6 +28,7 @@ window.Battle = {
             return this.log.filter(t => (t instanceof BattleTurnData));
         },
         reset: function(json) { //new battle
+            if (!json) { return; } //Quiet occasional error.
             let id = json.multi ? json.twitter.battle_id : json.raid_id;
             if (id != Battle.id) {
                 this.log = [];
@@ -392,6 +393,12 @@ function battleAttack(json) {
         actionData,
         isPlayerTurn = true;
     
+    function checkInvalidatedDamage(ad) {
+        if (ad.hits > 0 && ad.dmg === 0) {
+            ad.invalidatedDmg = true;
+        }
+    }
+    
     for (let action of json.scenario) {
         switch (action.cmd) {
             case "super": //Boss ougi
@@ -403,32 +410,38 @@ function battleAttack(json) {
                 }
                 break;
             case "special": //Player ougi
-            case "special_npc":
+            case "special_npc": //Chara ougi
                 actionData = new BattleActionData(BATTLE_ACTIONS.ougi);
                 actionData.char = Battle.characters.getAtPos(action.pos).char;
                 Battle.characters.getAtPos(action.pos).activeTurns++;
                 if (action.list) { //Some ougis do no dmg
                     battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt); 
-                    actions.push(actionData);
                 }
+                else {
+                    actionData.noDmgOugi = true;
+                }
+                checkInvalidatedDamage(actionData);
+                actions.push(actionData);
                 break;
             case "attack":
                 if (action.from == "player") {
                     actionData = new BattleActionData(isPlayerTurn ? BATTLE_ACTIONS.attack : BATTLE_ACTIONS.counter);
                     actionData.char = Battle.characters.getAtPos(action.pos).char;
                     Battle.characters.getAtPos(action.pos).activeTurns++;
-                    if (action.damage) {
+                    if (action.hasOwnProperty("damage")) {
                         battleParseValue(action.damage, actionData, BATTLE_ACTION_TYPES.dmgDealt);
                         actions.push(actionData);
+                        checkInvalidatedDamage(actionData);
                     }
                 }
                 else { //boss atk
                     isPlayerTurn = false;
                     if (action.from == "boss") {
                         actionData = new BattleActionData(BATTLE_ACTIONS.bossAtk);
-                        if (action.damage) {
+                        if (action.hasOwnProperty("damage")) {
                             battleParseValue(action.damage, actionData, BATTLE_ACTION_TYPES.dmgTaken);
                             actions.push(actionData);
+                            checkInvalidatedDamage(actionData);
                         }
                     }
                 }
@@ -459,6 +472,7 @@ function battleAttack(json) {
                         actionData.char = char;
                     }
                     battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
+                    checkInvalidatedDamage(actionData);
                     actions.push(actionData);
                 }
                 break;

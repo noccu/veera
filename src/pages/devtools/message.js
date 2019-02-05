@@ -63,6 +63,7 @@ window.BackgroundPage = {
                 UI.battle.setPartyNames(msg.data.characters.list);
                 break;
             case "updRaidLoot":
+            case "nextQuestTriggered":
                 updCurrentRaidInfo(msg.data);
                 break;
         }

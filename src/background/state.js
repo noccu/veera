@@ -58,7 +58,7 @@ function toggleDebug() {
 }
 
 function devlog() {
-    if (State.debug) { console.log(... arguments); }
+    if (State.debug) { console.debug(... arguments); }
 }
 
 function deverror() {

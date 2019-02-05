@@ -65,3 +65,25 @@ function sortByElement (a, b) {
 function sortByDifficulty (a, b) {
     return a.diff - b.diff;
 }
+
+//NM Triggers etc
+function checkNextQuest(data) {
+    if (data.appearance) {
+        DevTools.send("nextQuestTriggered", {nextQuest: data.appearance.quest_name});
+    }
+    
+    /* data dump
+        appearance:
+            chapter_id: "51005"
+        group_id: "100"
+        is_normal_hell: {
+            type: true
+        }
+        is_quest: true
+        location_id: "10000"
+        open_chapter_id: "51005"
+        quest_id: "510051"
+        quest_name: "Dimension Halo"
+        quest_type: "5"
+    */
+}
