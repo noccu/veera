@@ -1,4 +1,3 @@
-/*globals chrome:false, Profile: true, Supplies: true, State: true, DevTools*/
 window.DevTools = {
     devToolsConnection: null,
     wait: function() {

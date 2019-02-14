@@ -1,5 +1,3 @@
-/*globals PlannerData:true, SUPPLYTYPE, Supplies*/
-
 window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
         var plan = [];

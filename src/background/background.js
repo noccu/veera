@@ -1,4 +1,3 @@
-/*globals DevTools: true, State: true, Supplies*/
 const UPDATED = false;
 const EVENTS = {
     connected: new Event("veeraConnected"),

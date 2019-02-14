@@ -1,5 +1,3 @@
-/*globals SUPPLYTYPE*/
-
 //Templates
 const PLANNER_TEMPLATES = {
     orbs: {

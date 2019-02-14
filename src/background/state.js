@@ -1,4 +1,3 @@
-/*globals State, Storage*/
 window.State = {
     debug: true,
     unfEdition: "",
@@ -61,6 +60,10 @@ function devlog() {
     if (State.debug) { console.debug(... arguments); }
 }
 
+function devwarn() {
+    if (State.debug) { console.warn(... arguments); }
+}
+
 function deverror() {
-    if (State.debug) { console.error(... arguments); }
+    console.error(... arguments);
 }

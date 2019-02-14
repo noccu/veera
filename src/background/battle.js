@@ -1,4 +1,3 @@
-/*globals Battle, State, updateUI, devlog, deverror*/
 const BATTLE_ACTION_TYPES = {dmgDealt: 1,
                              dmgTaken: 2,
                              heal: 3};

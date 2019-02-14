@@ -1,4 +1,3 @@
-/*globals updateUI, Profile*/
 window.Profile = {
     pendants: {
         count: {

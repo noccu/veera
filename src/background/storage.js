@@ -1,4 +1,3 @@
-/*globals chrome, State*/
 window.Storage = {
     set: function (value, cb) {
         chrome.storage.local.set(value, res => this.response(res, cb, value));       

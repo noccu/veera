@@ -1,4 +1,3 @@
-/*globals RaidData, Supplies, Raids*/
 //Raids:
 // http://game.granbluefantasy.jp/#quest/supporter/300041/1
 // http://game.granbluefantasy.jp/#quest/supporter/300501/1/0/41
