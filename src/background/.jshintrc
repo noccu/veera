@@ -17,6 +17,7 @@
     "devwarn": false,
     "updateUI": false,
       
-    "SUPPLYTYPE": false
+    "SUPPLYTYPE": false,
+    "ITEM_KIND": false
   }
 }

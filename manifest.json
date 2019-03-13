@@ -2,8 +2,8 @@
    "manifest_version": 2,
    
    "name": "Veera",
-   "description": "The GBF Companion Extension that's absolutely yandere.",
-   "version": "1.0.0",
+   "description": "The GBF Companion that keeps a close watch.",
+   "version": "1.1.0",
    
    "icons": {
       "128": "src/assets/images/icon128.png",

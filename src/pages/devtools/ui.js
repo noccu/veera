@@ -1,4 +1,3 @@
-/*globals BackgroundPage: true, UI, changeSeries, updatePlan, createPlannerItem, createSupplyURL*/
 var UNF_CHART;
 
 window.UI = {
@@ -13,12 +12,14 @@ window.UI = {
     setValue: function (upd) {
         if (Array.isArray(upd)) {
             for (let entry of upd) {
-                this.setValue({id: entry.id, value: entry.value});
+                this.setValue(entry);
             }
         }
         else {
             var ele = document.getElementById(upd.id);
-            ele.textContent = upd.value;
+            if (ele) {
+                ele.textContent = upd.value;
+            }
         }
     },
     
@@ -37,8 +38,11 @@ window.UI = {
         for (let nav of nl) {
             nav.addEventListener("click", this.switchNav);
         }
+        //Global filters
         document.getElementById("tabs").addEventListener("click", evhGlobalClick);
-        document.getElementById("treasure-search").addEventListener("change", evhTreasureSearch);
+        document.getElementById("supplies-search").addEventListener("change", evhSuppliesSearch);
+        //Specific filters
+        document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
     },
     
     time: {
@@ -171,11 +175,11 @@ window.UI = {
             for (let item of plan) {
 //                console.log(item);
                 
-                entry = createPlannerItem(item.id, item.name, item.current, item.needed, createSupplyURL(item.id, item.type), item.loc);
+                entry = createPlannerItem(item);
                 entry.firstElementChild.dataset.id = item.id;
                 entry.firstElementChild.dataset.needed = item.needed;
-                entry.firstElementChild.dataset.type = item.type;
-                stylePlanItem(entry, item.current, item.needed);
+//                entry.firstElementChild.dataset.type = item.type;
+                stylePlanItem(entry, item.count, item.needed);
 
 //                entry = createPlannerItem(item.name, item.current, item.needed, "../../assets/images/anchiraicon.png");
                 list.appendChild(entry);
@@ -203,35 +207,61 @@ function evhGlobalClick (e) {
                 e.target.nextElementSibling.classList.toggle('hidden');
                 break;
             case "filter":
-                if (e.target.dataset.value == "all") {
-                    for (let opt of e.target.parentElement.children) {
-                        opt.classList.remove("active");
+                let activeFilters = [];
+                if (e.target.dataset.value == "All") {
+                    for (let filter of e.target.parentElement.children) {
+                        filter.classList.remove("active");
                     }
                     e.target.classList.add("active");
+                    activeFilters.push(e.target.dataset.value);
                 }
                 else {
                     e.target.classList.toggle("active");
                     //Special casing the "all" filter
-                    if (e.target.parentElement.getElementsByClassName("active").length === 0) {
-                        e.target.parentElement.firstElementChild.classList.add("active");
-                    } 
-                    else {
-                        e.target.parentElement.firstElementChild.classList.remove("active");
+                    let list = e.target.parentElement,
+                        defaultFilter = list.firstElementChild;
+                    defaultFilter.classList.remove("active");
+                    
+                    for (let entry of list.getElementsByClassName("active")) {
+                        activeFilters.push(entry.dataset.value);
                     }
+                    if (activeFilters.length === 0) {
+                        defaultFilter.classList.add("active");
+                        activeFilters.push(defaultFilter.dataset.value);
+                    } 
+//                    else {
+//                        defaultFilter.classList.remove("active");
+//                    }
                 }
+                
+                e.target.dispatchEvent( new CustomEvent("filter", {bubbles: true, detail: activeFilters}) );
                 break;
         }
     }
 }
-
-function evhTreasureSearch(e) { //just treasure for now
-    var list = document.getElementById("treasure-list");
+function evhSuppliesSearch (e) { //just treasure for now
+    var list = document.getElementById("supplies-list");
 
     var r = new RegExp(e.target.value, "i"); //Faster
     for (let item of list.children) {
         if (r.test(item.title)) {
             item.classList.remove("hidden");
         } else {
+            item.classList.add("hidden");
+        }
+    }
+}
+function evhSuppliesFilter (e) {
+    var list = document.getElementById("supplies-list");
+//    var r = new RegExp(e.target.dataset.value, "i"); //Faster
+    let filters = e.detail,
+        showAll = filters[0] == "All";
+    
+    for (let item of list.children) {
+        if (showAll || filters.includes(item.dataset.type) || (item.dataset.metaType && filters.includes(item.dataset.metaType)) ) {
+            item.classList.remove("hidden");
+        }
+        else {
             item.classList.add("hidden");
         }
     }

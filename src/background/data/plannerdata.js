@@ -101,13 +101,13 @@ const PLANNER_TEMPLATES = {
 };
 
 const PLANNER_ITEMS = {
-    blueSkyCrystal: 1,
-    championMerit: 2001,
-    supremeMerit: 2002,
-    legendaryMerit: 2003,
-    flawlessPrism: 1203,
-    rainbowPrism: 1204,
-    antiqueCloth: 54
+    blueSkyCrystal: {type: SUPPLYTYPE.treasure, id: 1},
+    championMerit: {type: SUPPLYTYPE.treasure, id: 2001},
+    supremeMerit: {type: SUPPLYTYPE.treasure, id: 2002},
+    legendaryMerit: {type: SUPPLYTYPE.treasure, id: 2003},
+    flawlessPrism: {type: SUPPLYTYPE.treasure, id: 1203},
+    rainbowPrism: {type: SUPPLYTYPE.treasure, id: 1204},
+    antiqueCloth: {type: SUPPLYTYPE.treasure, id: 54}
 };
 
 function createItem(step, type, id, needed) {
@@ -129,19 +129,10 @@ function supplyTemplate (step, template, needed) {
     };
 }
 
-function createItemFromTemplate(templateItem, key) {
-    templateItem.id = templateItem.id[key];
-    return templateItem;
-}
-
-/*function templateItem(step, template, type, needed) {
-    return {
-        step,
-        type: template.type,
-        id: template[type],
-        needed
-    };
-}*/
+//function createItemFromTemplate(templateItem, key) {
+//    templateItem.id = templateItem.id[key];
+//    return templateItem;
+//}
 
 window.PlannerData = {
     Bahamut: {
@@ -489,32 +480,32 @@ window.PlannerData = {
             createItem(3, SUPPLYTYPE.treasure, 2, 300),
             createItem(3, SUPPLYTYPE.treasure, 5, 100),
             createItem(3, SUPPLYTYPE.treasure, 8, 100),
-            createItem(3, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
-            createItem(3, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 3),
+            createItem(3, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
+            createItem(3, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 3),
             //crystals 100
             
             //2
             createItem(4, SUPPLYTYPE.treasure, 6, 100),
             createItem(4, SUPPLYTYPE.treasure, 24, 100),
             createItem(4, SUPPLYTYPE.treasure, 28, 100),
-            createItem(4, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 50),
-            createItem(4, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 5),
+            createItem(4, PLANNER_ITEMS.rainbowPrism.type, PLANNER_ITEMS.rainbowPrism.id, 50),
+            createItem(4, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 5),
             //crystals 200
             
             //3
             createItem(5, SUPPLYTYPE.treasure, 3, 300),
             createItem(5, SUPPLYTYPE.treasure, 22, 100),
             createItem(5, SUPPLYTYPE.treasure, 39, 80),
-            createItem(5, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
-            createItem(5, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 7),
+            createItem(5, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
+            createItem(5, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 7),
             //crystal 300
             
             //4
             createItem(6, SUPPLYTYPE.treasure, 17, 100),
             createItem(6, SUPPLYTYPE.treasure, 29, 100),
             createItem(6, SUPPLYTYPE.treasure, 40, 80),
-            createItem(6, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 150),
-            createItem(6, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 10),
+            createItem(6, PLANNER_ITEMS.rainbowPrism.type, PLANNER_ITEMS.rainbowPrism.id, 150),
+            createItem(6, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 10),
             //crystal 400
             
             //5
@@ -524,21 +515,21 @@ window.PlannerData = {
             createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Earth, 20),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Light, 20),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Dark, 20),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.antiqueCloth, 100),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.supremeMerit, 10),
-            createItem(7, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 15),
+            createItem(7, PLANNER_ITEMS.antiqueCloth.type, PLANNER_ITEMS.antiqueCloth.id, 100),
+            createItem(7, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
+            createItem(7, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 15),
             //crystals 500
             
             //6
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wire, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fater, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Warth, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Eind, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Earth, 3),
+            createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wind, 3),
             createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Light, 3),
             createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 3),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.rainbowPrism, 250),
-            createItem(8, SUPPLYTYPE.treasure, PLANNER_ITEMS.blueSkyCrystal, 30)
-            //Gold brick 1
+            createItem(8, PLANNER_ITEMS.rainbowPrism.type, PLANNER_ITEMS.rainbowPrism.id, 250),
+            createItem(8, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 30),
+            createItem(8, SUPPLYTYPE.evolution, 20004, 1) //Gold brick 1
             //crystal 500
         ],
         wtype: {

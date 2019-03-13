@@ -54,10 +54,10 @@ function hear (msg) {
                     Profile.pendants.set(msg.data.json);
                     break;
                 case url.ismatch("item/article_list")://Treasure list
-                    Supplies.treasure.set(msg.data.json);
+                    Supplies.setTreasure(msg.data.json);
                     break;
                 case url.ismatch("item/recovery_and_evolution_list")://Consumables list
-                    Supplies.consumable.set(msg.data.json);
+                    Supplies.setConsumables(msg.data.json);
                     break;
                 case url.ismatch("resultmulti/data")://Raid loot screen
                 case url.ismatch("result/data"): //Quest loot screen

@@ -1,15 +1,5 @@
-/*globals DEBUG, chrome, UI, BackgroundPage, Network, Unf*/
 window.DEBUG = true; //TODO: remove/replace with proper thing
-const CONSTANTS = {
-    url: {
-        baseGame: "http://game.granbluefantasy.jp/",
-        assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
-        size: {
-            small: "s/",
-            medium: "m/"
-        }
-    },
-};
+
 //Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {get: function(){ 
     return this.length === 0 ? 0 : this[this.length - 1]; 
@@ -117,72 +107,54 @@ function updateStatus (data) {
     d.classList.toggle("highlight", data.ap > data.apMax || data.bp > 10);
 }
 
-function updateTreasure (idx) {
-    var list = document.getElementById("treasure-list");
-    var temp;
-    for (let id of Object.keys(idx)) {
-        let entry = document.getElementById("t-" + id);
-        if (entry) {
-            entry.getElementsByClassName("collection-data")[0].textContent = idx[id].count;
+function updateSupplies (idx) {
+    if (idx) {
+        var list = document.getElementById("supplies-list");
+        var temp;
+        
+        for (let item of idx) {
+            let entry = document.getElementById(item.type + item.id);
+            if (entry) {
+                entry.getElementsByClassName("collection-data")[0].textContent = item.count;
+            }
+            else {
+                if (!temp) { temp = document.createElement("template"); }
+                var li = createSupplyItem(item);
+                temp.content.appendChild(li);
+            }
         }
-        else {
-            if (!temp) { temp = document.createElement("template"); }
-            var li = createSupplyItem("t-" + id,
-                                      idx[id].name, 
-                                      idx[id].count, 
-                                      createSupplyURL(id, "article"),
-                                      idx[id].questLocation);
-            temp.content.appendChild(li);
-        }
-    }
-    if (temp) { list.appendChild(temp.content); }
-}
-
-//TODO: Can probably merge with above? And clean it up, Just lazy rn
-function updateConsumables (data) {
-    var list = document.getElementById("consumable-list");
-    list.innerHTML = "";
-    var temp = document.createElement("template");
-    for (let idx of Object.keys(data)) {
-        for (let id of Object.keys(data[idx])) {
-            var li = createSupplyItem(idx+"-"+id,
-                                      data[idx][id].name, 
-                                      data[idx][id].count, 
-                                      createSupplyURL(id, idx));
-            temp.content.appendChild(li);
-//                    console.log("id:", id, "name:", data[idx][id].name, "data:", data,"idx:", idx);
+        if (temp) { 
+            list.appendChild(temp.content);
         }
     }
-    list.appendChild(temp.content);
 }
 
-function createSupplyItem (id, name, num, thumb, loc) {
+function createSupplyItem (data) {
     var t = document.getElementById("template-supply-item");
 /*    t.content.querySelector("li").title = name;
     t.content.querySelector("img").src = thumb;
     t.content.querySelector("div").textContent = num;*/
     let item = t.content.firstElementChild;
-    item.id = id;
+    item.id = data.type + data.id;
+    let loc = data.location,
+        name = data.name;
     item.title = loc ? `${name}\nGet from: ${loc}`: name;
-    item.getElementsByClassName("collection-icon")[0].src = thumb;
-    item.getElementsByClassName("collection-data")[0].textContent = num;
+    item.getElementsByClassName("collection-icon")[0].src = data.path;
+    item.getElementsByClassName("collection-data")[0].textContent = data.count;
+    item.dataset.type = data.typeName;
+    if (data.metaType) {
+        item.dataset.metaType = data.metaType;   
+    }
+//    item.classList.add(data.typeName.replace(" ",""));
     
     return document.importNode(t.content, true);
 }
-function createSupplyURL (id, type) {
-    return `http://game-a.granbluefantasy.jp/assets_en/img_low/sp/assets/item/${type}/s/${id}.jpg`;
-}
-
-//TODO: merge with above, see Supply refactor. Path is set in Supplies based on constant.
-function createSupplyURLkind (id, path) {
-    return `${CONSTANTS.url.assets}${path}/${CONSTANTS.url.size.small}${id}.jpg`;
-}
 
 //Planner functions
-function createPlannerItem (id, name, current, needed, thumb, loc) {
-        let item = createSupplyItem("p"+id, name, 0, thumb, loc);
-        item.querySelector(".collection-data").innerHTML = `<span class="planner-current">${current}</span> /<span class="planner-needed">${needed}</span>`;
-        return item;
+function createPlannerItem (item) {
+        let li = createSupplyItem(item);//TODO: uguu
+        li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
+        return li;
 }
 
 function changeSeries(ev) { //Event handler, updates type and element list when series changes
@@ -220,7 +192,7 @@ function updCurrentRaidInfo (data) {
             let disp = temp.content.firstElementChild;
             disp.dataset.rarity = item.rarity;
             disp.getElementsByTagName("span")[0].textContent = item.delta > 1 ? item.name+" x"+item.delta : item.name;
-            disp.getElementsByTagName("img")[0].src = createSupplyURLkind(item.id, item.path);
+            disp.getElementsByTagName("img")[0].src = item.path;
 
             list.appendChild(document.importNode(temp.content, true));
         }

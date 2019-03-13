@@ -1,0 +1,15 @@
+{
+  "globals": {
+    "chrome": false,
+    
+    "UI": false,
+    "Unf": false,
+    "BackgroundPage": false,
+    "Network": false,
+      
+    "DEBUG": false,
+    "devlog": false,
+    "deverror": false,
+    "devwarn": false
+  }
+}

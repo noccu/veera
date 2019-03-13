@@ -166,6 +166,7 @@ li {
     padding: 0.2em;
     vertical-align: baseline;
     line-height: 1;
+    cursor: pointer;
 /*    background-color: var(--diff-color-b)*/
 }
 
@@ -224,7 +225,7 @@ li {
 
 
 
-#treasure-filter {
+.panel-filter ul {
     display: inline-block;
     margin-right: 1em;
 }

@@ -1,8 +1,21 @@
-const SUPPLYTYPE = {treasure: "article", recovery: "normal", evolution: "evolution", skill: "skillplus", augment: "npcaugment", NOT_TRACKED: -1}; //jshint ignore:line
+//commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, Untracked: [1,2,3,19,37,38,39,50]}; //jshint ignore:line
+SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
+
+const GAME_URL = {
+    baseGame: "http://game.granbluefantasy.jp/",
+    assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
+    size: {
+        small: "s/",
+        medium: "m/"
+    }
+};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
+//item_kind/kind and type are used interchangeably here.
+//TODO: split off data to different file
 //ITEM KIND gotten from game response in crate, but incomplete. Manual entries marked.
-const ITEM_KIND = {
+const ITEM_KIND = {//jshint ignore:line
     "1": {
         "name": "Weapon",
         "class": "Weapon",
@@ -160,6 +173,12 @@ const ITEM_KIND = {
         "class": "Arcarum",
         "path": "item/arcarum"
     },
+    "67": { //manual entry
+        "name": "Gauph Keys",
+        "class": "Keys",
+        "path": "item/skillplus",
+        manual: true
+    },
     "73": {
         "name": "Rings",
         "class": "Npcaugment",
@@ -186,195 +205,215 @@ const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
 
-window.Supplies = {
-    treasure: {
-        index: {},
-        set: function (json) {//Set the full index, for use with game's supply page.
-            //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
-            this.index = {};
-            for (let item of json) {
-                this.index[item.item_id] = {
-                    name: item.name, 
-//                    desc: item.comment, 
-                    category: item.category_type, 
-                    count: parseInt(item.number)
-                    };
-                checkFarmLocation(item.item_id);
-            }
-            
-            Supplies.save("t");
-            updateUI("setTreasure", this.index);
-        },
-        get: function (id) {
-            if (Array.isArray(id)) {
-                var ret = [];
-                for (let entry of id) {
-                    ret.push( this.get(entry) );
-                }
-                return ret;
-            } else {
-                return this.index[id];
-            }
-        },
-    },
-    consumable: {
-        index: {},       
-        set: function (json) {//TODO: should rename to parse or something prob cause that's what it really does
-            var index = {
-                normal: json[0], //AP/EP
-                evolution: json[1], //Bars, etc
-                skillplus: json[2], //Atma keys
-                npcaugment: json[3] //Rings
-            };
-                
-            //Parses list into index
-            function parse(list, idx) {
-                for (let item of list) {
-                    idx[item.item_id] = {name: item.name, 
-//                                         desc: item.comment,
-                                         count: parseInt(item.number)};
-                }
-            }
-            
-            for ( let type of Object.keys(index) ) {
-                let idx = {};
-                if (type == SUPPLYTYPE.evolution) { //because ??? thanks cygames
-                    for (let arr of index[type]) {
-                        parse(arr, idx);
-                    }
-                } 
-                else {
-                    parse(index[type], idx);
-                }
-                this.index[type] = idx;
-            }
-            
-            Supplies.save("c");
-            updateUI("setConsumables", this.index);
-        },
-        get: function (type, id) {
-            if (Array.isArray(type)) {
-                var ret = [];
-                for (let entry of type) {
-                    ret.push( this.get(entry.type, entry.id) );
-                }
-                return ret;
-            } else {
-                if (this.index[type]) {
-                    return this.index[type][id];
-                }
-            }
+function SupplyItem (type, id, count, name) {
+    this.type = parseInt(type) || SUPPLYTYPE.treasure;
+    this.id = id;
+    this.name = name;
+    this.count = count;
+    this.typeName = ITEM_KIND[type] ? ITEM_KIND[type].name : "Unknown";
+    
+    for (let t in SUPPLYTYPE) { //TODO: If consumables is always the only type we have then just use that...
+        if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
+//            this.metaType = t[0].toUpperCase() + t.slice(1); 
+            this.metaType = t; 
         }
-    },
-    getData: function (type, id) {
-        if (type == SUPPLYTYPE.treasure) {
-                return this.treasure.get(id); 
+    }
+    if (ITEM_KIND[type]) {
+        this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${id}.jpg`;
+    }
+    if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
+        this.location = TREASURE_SOURCES[id].name;
+    }
+}
+//TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
+window.Supplies = {
+    index: {},
+    /** Look up information on a specific supply item or list of items. 
+    @arg {(number=10|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
+    @arg {number} id - The id to look up.
+    @returns {Object|Object[]} The item's data or array of item data.
+    */
+    get: function (type, id) {
+        if (Array.isArray(arguments[0])) {
+            if (typeof arguments[0][0] != "object") {
+                deverror("Use getType to look up meta types");
+                return;
+            }
+            let ret = [];
+            for (let entry of arguments[0]) {
+                ret.push( this.get(entry.type, entry.id) );
+            }
+            return ret;
         }
         else {
-            return this.consumable.get(type, id);
+            if (!this.index[type]) {
+                deverror("Invalid type lookup: " + type);
+                return;
+            }
+            let item = this.index[type][id];
+            if (item) {
+                return new SupplyItem(type, id, item.count, item.name);
+            }
+            else {
+                return undefined;
+            }
         }
     },
-    update: function(updArr) { //[ {type, id, delta} ]
-        var treasureUpdated = false,
-            consumabledUpdated = false;
-        
-        function _upd (type, id, delta, name, category) {
-            if (type == SUPPLYTYPE.NOT_TRACKED) { return; }
-            var isTreasure = (type == SUPPLYTYPE.treasure);
-            var idx = isTreasure ? Supplies.treasure.index : Supplies.consumable.index[type];
-            if (idx[id]) { //Update
-                idx[id].count += delta;
-                
-                //Check data and fill gaps. Kinda weird but eyy. TODO: can prob optimize.
-                //Disabled because so far only category is missing... on every single item.
-                //day after: idk I'm p sure this is a bad idea actually but I'll leave it to remind myself category isn't set anywhere apparently.
-/*                for (let k of Object.keys(idx[id])) {
-                    let i = idx[id][k];
-                    if (i == undefined || i == null) {
-                        let o = {count: delta,
-                                 name,
-                                 category};
-                        if (o[k]) {
-                            i = o[k];
-                        }
-                    }
-                }*/
+    /** Set or create information on a specific supply item or list of items. 
+    @arg {(number=10|{type: number, id: number, data: Object}[])} type - The {@link ITEM_KIND} to add, or a list of items with set()'s arguments as properties.
+    @arg {number} id - The id to add.
+    */
+    set: function (data) {
+        if (Array.isArray(data)) {
+            for (let entry of data) {
+                this.set(entry);
             }
-            else { //Add new
-                idx[id] = {name,
-                           category,
-                           count: delta};
-            }
-            
-            treasureUpdated = treasureUpdated || isTreasure;
-            consumabledUpdated = consumabledUpdated || !isTreasure;
         }
+        else {
+            if (SUPPLYTYPE.Untracked.includes(data.type)) { return; }
+            
+            if (!this.index.hasOwnProperty(data.type)) {
+                this.index[data.type] = {};
+                devlog("Created new type index: " + data.type);
+            }
+            this.index[data.type][data.id] = {name: data.name,
+                                              count: data.count};
+        }
+    },
+    /**Gets the list of items belonging to a specific {@link SUPPLY_TYPES}.
+    @arg {SUPPLY_TYPES} type
+    @returns {Object[]}
+    */
+    getType: function (type) {
+        let ret = [];
+        if (Array.isArray(type)) {
+            for (let t of type) {
+                ret = ret.concat(this.getType(t));
+            }
+        }
+        else {
+            for (let id in this.index[type]) {
+                ret.push(this.get(type, id));
+            }
+        }
+        return ret;
+    },
+    /**Set the full treasure index, for use with game's supplies page.*/
+    setTreasure: function (json) {
+        //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
+        if (!json) {return};
         
-        for (let item of updArr) {
-            _upd(item.type, item.id, item.delta, item.name, item.category);
+        let upd = [];
+        for (let item of json) {
+            upd.push( new SupplyItem(SUPPLYTYPE.treasure, item.item_id, parseInt(item.number), item.name));
         }
 
-        if (treasureUpdated) { updateUI("setTreasure", this.treasure.index); }
-        if (consumabledUpdated) { updateUI("setConsumables", this.consumable.index); }
+        this.set(upd);
+        this.save();
+        updateUI("setTreasure", upd); //TODO: merge the event to "update supplies" as it now sends through the type explicitly
     },
-    save: function(mode) {
-        //TODO: Just xhr it from game on startup.
-        var o = {};
-        if (!mode || mode == "t") { o.sup_idx_treasure = this.treasure.index; }
-        if (!mode || mode == "c") { o.sup_idx_consumable = this.consumable.index; }
+    /**Set the full consumables index, for use with game's supplies page.*/
+    setConsumables: function (json) {
+        if (!json) {return};
         
-        Storage.set(o);
-        devlog("Supply indices saved.");
+        let data = {},
+            upd = [];
+        data[SUPPLYTYPE.recovery] = json[0]; //AP/EP
+        data[SUPPLYTYPE.evolution] = json[1]; //Bars, etc
+        data[SUPPLYTYPE.skill] = json[2]; //Atma keys
+        data[SUPPLYTYPE.augment] = json[3]; //Rings
+        data[SUPPLYTYPE.vessels] = json[4]; //EXP vessels
+
+        /** Parses list into index
+        @arg {Object[]} list
+        @arg {Object} idx
+        */
+        function parse(list, type) {
+            for (let item of list) {
+                if (Array.isArray(item)) {
+                    parse(item, type);
+                }
+                else {
+                    upd.push(new SupplyItem(type, item.item_id, parseInt(item.number), item.name));
+                }
+            }
+        }
+
+        for (let type in data) {
+            parse(data[type], type);
+        }
+
+        this.set(upd);
+        this.save();
+        updateUI("setConsumables", upd);
+    },
+    /** Updates supply item data, adding if new. Note: only used for incremental updates, use set() otherwise.
+    @arg {{type, id, delta:number, name:string}[]} updArr
+    */
+    update: function(updArr) {    
+        function _upd(item) {
+            //            let itemData = ITEM_KIND[type];
+            //            if (!ITEM_KIND.hasOwnProperty(type) || UNTRACKED_TYPES.includes(type)) { return; }
+            if (!ITEM_KIND[item.type] || ITEM_KIND[item.type].manual) {
+                devwarn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
+            }
+
+            if (this.index[item.type] && this.index[item.type][item.id]) { //Update
+                item.count = this.index[item.type][item.id].count += item.delta;
+            }
+            else { //Add new
+                item.count = item.delta;
+                this.set(item); //_upd not called with object = no this
+            }
+        }
+        for (let item of updArr) {
+            _upd.call(this, item);
+        }
+
+        updateUI("setTreasure", updArr.filter(e => e.type == SUPPLYTYPE.treasure));
+        updateUI("setConsumables", updArr.filter(e => SUPPLYTYPE.Consumables.includes(e.type)));
+        this.save();
+    },
+    save: function() {
+        //TODO: Just xhr it from game on startup maybe? Violates no-req policy tho.
+        Storage.set({sup_idx: this.index});
+        devlog("Supply index saved.");
     },
     load: function() {
         function _load(data) {
-            Supplies.treasure.index = data.sup_idx_treasure;
-            Supplies.consumable.index = data.sup_idx_consumable;
+            this.index = data.sup_idx || {};
             
-            devlog("Supply indices loaded.");
-            updateUI("setTreasure", Supplies.treasure.index);
-            updateUI("setConsumables", Supplies.consumable.index);
+            devlog("Supply index loaded.");
+            updateUI("setTreasure", this.getType(SUPPLYTYPE.treasure));
+            updateUI("setConsumables", this.getType(SUPPLYTYPE.Consumables));
         }
         
-        Storage.get(["sup_idx_treasure", "sup_idx_consumable"], _load);
+        Storage.get(["sup_idx"], _load.bind(this));
     },
     clear: function() {
-        this.treasure.index = {};
-        this.consumable.index= {};
+        this.index = {};
     }
 };
 
-function checkFarmLocation (id) {
-    if (id in TREASURE_SOURCES) {
-        Supplies.treasure.index[id].questLocation = TREASURE_SOURCES[id].name;
-    }
-}
-
 function gotQuestLoot(data) {
     var upd = [];
-    function makeUpd(item) {
-        let itemData = ITEM_KIND[item.item_kind || item.kind];
-        if (!itemData || itemData.manual) {
-            console.warn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
-            if (!itemData) { itemData = {path: item.type && item.type.includes("item") ? item.type : ITEM_KIND[10].path}; } //default to treasure/article, seems most common. also path's the only thing used so far...
+    function addUpdItem(entry) {
+        let type = entry.item_kind || entry.kind;
+        let item = new SupplyItem(type, entry.id, 0, entry.name);
+        item.delta = parseInt(entry.count);
+        item.rarity = parseInt(entry.rarity);
+        if (!item.path) {
+            //Read path from response (item.type) or default to treasure, seems most common.
+            item.path = entry.type && entry.type.includes("item") ? entry.type : ITEM_KIND[SUPPLYTYPE.treasure].path;
         }
-        return {type: translateItemKind(item.item_kind), //TODO: Supply refactor
-                id: item.id, 
-                delta: parseInt(item.count),
-                //In case of new mats
-                name: item.name,
-                category: item.category_type,
-                kind: item.item_kind, //string
-                //only for loot?
-                path: itemData.path,
-                rarity: parseInt(item.rarity)}; 
+        upd.push(item);
     }
     
     //Non-box, side-scrolling
     if (data.article_list) {
         for (let key of Object.keys(data.article_list)) {
-            let item = data.article_list[key];
-            upd.push(makeUpd(item));
+            let entry = data.article_list[key];
+            addUpdItem(entry);
         }
     }
     
@@ -382,9 +421,9 @@ function gotQuestLoot(data) {
     if (data.reward_list) {
         for (let key of Object.keys(data.reward_list)) {
             let boxType = data.reward_list[key]; 
-            //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4 = flip
-            for (let item of Object.keys(boxType)) {
-                upd.push(makeUpd(boxType[item]));
+            //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
+            for (let entry of Object.keys(boxType)) {
+                addUpdItem(boxType[entry]);
             }
         }
     }
@@ -393,45 +432,29 @@ function gotQuestLoot(data) {
 }
 
 function purchaseItem(data) {    
-    let upd = []; //Supply update func expects array.
-    //Only ever buy 1 item at once... I think?
+    let upd = [],
+        item; //Supply update func expects array.
+    //Only ever buy 1 (type of) item at once... I think?
     if (data.article.item_ids) {
         //The item we get.
         let nBought = parseInt(data.purchase_number);
-        upd.push({type: translateItemKind(data.article.item_kind[0]), 
-                  id: parseInt(data.article.item_ids[0]), 
-                  delta: nBought,
-                  //In case of new mats
-                  name: data.article.name_en,
-                  category: null}); //TODO: figure out what and where... and why
+        item = new SupplyItem(data.article.item_kind[0], data.article.item_ids[0], 0, data.article.name_en);
+        item.delta = nBought;
+        upd.push(item);
         
         //The items we trade in. Max 4, 1-indexed
         for (let i = 1; i < 5; i++) {
             let ingr = data.article["article" + i];
             if (ingr) {
                 let nReq = parseInt(data.article["article" + i + "_number"]);
-                upd.push ({type: translateItemKind(ingr.master.item_kind),
-                           id: ingr.master.id,
-                           delta: -(nReq * nBought),
-                           name: ingr.master.name_en,
-                           category: null});
+                item = new SupplyItem(ingr.master.item_kind, ingr.master.id, 0, ingr.master.name_en);
+                item.delta = -(nReq * nBought);
+                upd.push (item);
             }
+            else { break; } //assuming ordered list
         }
         
         Supplies.update(upd);
-    }
-}
-
-function translateItemKind(kind) {
-    switch (parseInt(kind)) {
-        case 10:
-            return SUPPLYTYPE.treasure;
-        case 4:
-            return SUPPLYTYPE.recovery;
-        case 17:
-            return SUPPLYTYPE.evolution; //TODO: check?
-        default:
-            return SUPPLYTYPE.NOT_TRACKED;
     }
 }
 
@@ -443,10 +466,11 @@ function weaponUncapStart(data) {
     for (let key of Object.keys(data.json)) {
         if (key == "options") { continue; }
         
-        let item = data.json[key];
-        update.items.push({type: translateItemKind(item.item_kind),
-                           id: item.item_id, 
-                           delta: (- parseInt(item.item_number)) });
+        let item = data.json[key],
+            si;
+        si = new SupplyItem(item.item_kind, item.item_id);
+        si.delta = (- parseInt(item.item_number));
+        update.items.push(si);
     }
     
     Supplies.pendingUncap = update;
@@ -457,10 +481,10 @@ function npcUncapStart(data) {
                    items: [] };
     
 //    update.id = data.url.match(/materials\/(\d+)\?/)[1];
-    for (let item of data.json.requirements) {        
-        update.items.push({type: translateItemKind(item.item_kind.id),
-                           id: item.item_id, 
-                           delta: (- parseInt(item.item_number)) });
+    for (let item of data.json.requirements) {
+        let si = new SupplyItem(item.item_kind.id, item.item_id);
+        si.delta = (- parseInt(item.item_number));
+        update.items.push(si);
     }
     
     Supplies.pendingUncap = update;
@@ -469,5 +493,6 @@ function npcUncapStart(data) {
 function uncapEnd(json) {
     if (Supplies.pendingUncap.id == json.new.id) {
         Supplies.update(Supplies.pendingUncap.items);
+        delete Supplies.pendingUncap;
     }
 }

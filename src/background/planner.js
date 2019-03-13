@@ -37,27 +37,17 @@ window.Planner = {
             if (itemArray) {
                 for (let item of itemArray) {
                     if (item == null) { continue; }
-                    if (start < item.step) { //start is exclusive (we already have it!)
-                        if (item.step <= end) { //see else
-                            id = item.isTemplate ? item.id[templateKey] : item.id; //Dealing with templates
-                            var plannedItem = plan.find(equalID, id);
-                            if (plannedItem) {
-                                plannedItem.needed += item.needed;
-                            } else {
-                                var supplydata = Supplies.getData(item.type, id);
-                                if (supplydata) {
-                                    plan.push({
-                                        type: item.type,
-                                        id: id,
-                                        name: supplydata.name,
-                                        needed: item.needed,
-                                        current: supplydata.count,
-                                        loc: supplydata.questLocation
-                                    });
-                                }
+                    if (start < item.step && item.step <= end) { //start is exclusive (we already have it!)
+                        id = item.isTemplate ? item.id[templateKey] : item.id; //Dealing with templates
+                        var plannedItem = plan.find(equalID, id);
+                        if (plannedItem) {
+                            plannedItem.needed += item.needed;
+                        } else {
+                            var supplydata = Supplies.get(item.type, id);
+                            if (supplydata) {
+                                supplydata.needed = item.needed;
+                                plan.push(supplydata);
                             }
-                        } else { //early term when not finished build. WARN: Assumes step-ordered data & loop.
-                            break;
                         }
                     }
                 }
@@ -94,12 +84,22 @@ window.Planner = {
 
 //DBG/Build data: Find by name, use with Supply
 function fi(s){
+    var search = new RegExp(s, "i");
     var ret = []; 
-    for (let item of Object.keys(Supplies.treasure.index)) {
-        if(Supplies.treasure.index[item].name.toLowerCase().indexOf(s.toLowerCase())!=-1){
-            ret.push(Supplies.treasure.index[item].name);
-            ret.push(item);
+    
+    function f(obj, type) {
+        for (let key of Object.keys(obj)) {
+            let item = obj[key];
+            if (item.hasOwnProperty("name") && search.test(item.name)) {
+                let kind = ITEM_KIND[type] ? `${ITEM_KIND[type].name}/${ITEM_KIND[type].class}` : "Unknown!";
+                ret.push(`${item.name} from ${kind} (type: ${type}) is ${key}`);
+            }
+            else if (typeof item == "object"){
+                f(item, key);
+            }
         }
-    } 
-    return ret;
+    }
+    
+    f(Supplies.index);
+    return ret.join("\n");
 }
