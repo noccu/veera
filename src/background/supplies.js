@@ -1,5 +1,5 @@
 //commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
-const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, Untracked: [1,2,3,19,37,38,39,50]}; //jshint ignore:line
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, Untracked: [1,2,3,19,37,38,39,50,82]}; //jshint ignore:line
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
 
 const GAME_URL = {
@@ -218,7 +218,7 @@ function SupplyItem (type, id, count, name) {
             this.metaType = t; 
         }
     }
-    if (ITEM_KIND[type]) {
+    if (ITEM_KIND[type] && id) {
         this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${id}.jpg`;
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
@@ -301,7 +301,7 @@ window.Supplies = {
     /**Set the full treasure index, for use with game's supplies page.*/
     setTreasure: function (json) {
         //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
-        if (!json) {return};
+        if (!json) {return;}
         
         let upd = [];
         for (let item of json) {
@@ -314,7 +314,7 @@ window.Supplies = {
     },
     /**Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
-        if (!json) {return};
+        if (!json) {return;}
         
         let data = {},
             upd = [];
@@ -455,6 +455,69 @@ function purchaseItem(data) {
         }
         
         Supplies.update(upd);
+    }
+}
+
+function reduce (data) {
+    if (data && data.articles) {
+        let upd = [];
+        for (let item of data.articles) {
+            let si = new SupplyItem(item.item_kind_id, item.item_id, 0, item.item_name);
+            si.delta = item.item_number + item.bonus_number;
+            upd.push(si);
+        }
+        if (upd) { Supplies.update(upd); }
+        
+        //upd( rupie, -data.requirement_money);
+    }
+}
+
+function storeImminentRaidsTreasure (data) {
+    function parseHtml (s, decode) {
+        let p = new DOMParser();
+        return p.parseFromString(decode ? decodeURIComponent(s) : s, "text/html");
+    }
+    let store = [];
+    
+    //normal raids
+    if (data.json.quest_id) {
+        for (let i = 0; i < data.json.treasure_id.length; i++) {
+            store.push({questId: data.json.quest_id,
+                        itemId: data.json.treasure_id[i],
+                        type: data.json.treasure_kind[i],
+                        num: parseInt(data.json.consume[i]) });
+        }
+    }
+    //event raids
+    else if (data.json.option) {
+        data = parseHtml(data.json.option.quest.list, true);
+        let list = data.querySelectorAll("[id*=raid]");
+
+        for (let entry of list) {
+            entry = parseHtml(entry.innerHTML, false);
+            let itemNum = entry.querySelector(".consume .txt-article-num"),
+                questData = entry.querySelector("[data-treasure-id]");
+            if (itemNum && questData && questData.dataset.treasureId) {
+                store.push({questId:questData.dataset.questId,
+                            itemId: questData.dataset.treasureId,
+                            num: parseInt(itemNum.textContent),
+                            type: SUPPLYTYPE.treasure });
+            }
+        }
+    }
+    
+    Supplies.currentImminentRaids = store;
+    //lmao I could actually just store and save a whole list of raids slowly accrued and use that for speed. Even useful for building Raids/RaidList functionality!
+}
+
+function consumeImminentRaidsTreasure (data) {
+    if (data.json.result == "ok" && Supplies.currentImminentRaids) {
+        let itemData = Supplies.currentImminentRaids.find(x => x.questId == data.postData.quest_id);
+        if (itemData) {
+            let si = new SupplyItem(itemData.type, itemData.itemId, 0);
+            si.delta = - itemData.num;
+            Supplies.update([si]);
+        }
     }
 }
 

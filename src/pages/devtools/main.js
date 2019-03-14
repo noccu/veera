@@ -113,7 +113,7 @@ function updateSupplies (idx) {
         var temp;
         
         for (let item of idx) {
-            let entry = document.getElementById(item.type + item.id);
+            let entry = document.getElementById(`${item.type}_${item.id}`);
             if (entry) {
                 entry.getElementsByClassName("collection-data")[0].textContent = item.count;
             }
@@ -130,12 +130,16 @@ function updateSupplies (idx) {
 }
 
 function createSupplyItem (data) {
+    if (!data.id) {
+        console.warn("No id for item: ", data);
+        return;
+    }
     var t = document.getElementById("template-supply-item");
 /*    t.content.querySelector("li").title = name;
     t.content.querySelector("img").src = thumb;
     t.content.querySelector("div").textContent = num;*/
     let item = t.content.firstElementChild;
-    item.id = data.type + data.id;
+    item.id = `${data.type}_${data.id}`;
     let loc = data.location,
         name = data.name;
     item.title = loc ? `${name}\nGet from: ${loc}`: name;
