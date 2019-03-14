@@ -445,6 +445,9 @@ function battleAttack(json) {
                     }
                 }
                 break;
+            case "ability": //Attack-turn activated abilities (Athena, Nighthound, etc)
+                actionData = new BattleActionData(BATTLE_ACTIONS.skill);
+                actionData.char = Battle.characters.getAtPos(action.pos).char;
             case "turn":
                 if (action.mode == "boss") {
                     isPlayerTurn = false;
@@ -454,11 +457,14 @@ function battleAttack(json) {
                 actionData = new BattleActionData(BATTLE_ACTIONS.chain);
                 actionData.chainNum = action.chain_num;
                 break;
-            case "damage": //Chain burst, Ougi echo, ...? TODO: check more cases
+            case "damage": //Chain burst, Ougi echo, Skill counter (Athena), ...? TODO: check more cases
             case "loop_damage": //eg.: Sarasa 5* ougi plain dmg part
                 if (action.to == "boss") {
                     if (!isPlayerTurn) {
-                        actionData = new BattleActionData(BATTLE_ACTIONS.effect);
+                        //If skill, char is already set and nothing else is needed here.
+                        if (actionData.action != BATTLE_ACTIONS.skill) {
+                            actionData = new BattleActionData(BATTLE_ACTIONS.effect);
+                        }
                     }
                     else if (actionData.action == BATTLE_ACTIONS.ougi) {
                         let char = actionData.char;
