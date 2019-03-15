@@ -14,6 +14,10 @@ const BATTLE_ACTIONS = {attack: {name: "Attack"},
 
 window.Battle = {
     turn: 1, //default at 1 so our math doesn't /0
+    //For calculating more accurately when rejoining raids, activating Veera mid-battle, or any other time turns get desynced.
+    //Starts at 1 to prevent /0 when using skills
+    //It is now default
+    activeTurns: 1,
     id: 0,
     log: {
         log: [],
@@ -80,10 +84,10 @@ window.Battle = {
             return safeDivide(this.totalCrits, this.totalHits) * 100;
         },
         get avgTurnHonor() {
-            return Math.floor(this.totalHonor / Battle.turn);
+            return Math.floor(this.totalHonor / Battle.activeTurns);
         },
         get avgTurnDmg() {
-            return Math.floor(this.totalDmg / Battle.turn);
+            return Math.floor(this.totalDmg / Battle.activeTurns);
         },
         get avgDaRate() {
 //            return safeDivide(this.totalDa, Battle.turn * Battle.characters.active) * 100;
@@ -410,6 +414,7 @@ function battleAttack(json) {
     if (!json || json.scenario[0].cmd == "finished") { return;} //Battle over
 
     Battle.turn = json.status.turn - 1; //json shows status after attack, so counting the data for prev turn.
+    //Active turns is increased after all the stat calcs
 //    Battle.log.checkReset();
     var actions = [],
         actionData,
@@ -449,7 +454,7 @@ function battleAttack(json) {
                 if (action.from == "player") {
                     actionData = new BattleActionData(isPlayerTurn ? BATTLE_ACTIONS.attack : BATTLE_ACTIONS.counter);
                     actionData.char = Battle.characters.getAtPos(action.pos).char;
-                    Battle.characters.getAtPos(action.pos).activeTurns++;
+                    if (isPlayerTurn) { Battle.characters.getAtPos(action.pos).activeTurns++; }
                     if (action.hasOwnProperty("damage")) {
                         battleParseDamage(action.damage, actionData, BATTLE_ACTION_TYPES.dmgDealt);
                         actions.push(actionData);
@@ -471,6 +476,7 @@ function battleAttack(json) {
             case "ability": //Attack-turn activated abilities (Athena, Nighthound, etc)
                 actionData = new BattleActionData(BATTLE_ACTIONS.skill);
                 actionData.char = Battle.characters.getAtPos(action.pos).char;
+                break;
             case "turn":
                 if (action.mode == "boss") {
                     isPlayerTurn = false;
@@ -524,6 +530,7 @@ function battleAttack(json) {
         }
         devlog("Battle info updated", actions);
         updateUI("updBattleData", Battle);
+        Battle.activeTurns += 1;
     }
     devlog("Start turn ", json.status.turn);
 }
