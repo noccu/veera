@@ -6,7 +6,7 @@ const BATTLE_ACTIONS = {attack: {name: "Attack"},
                         postAtkTrigger: {name: "Post-attack skill trigger"},
                         ougi: {name: "Ougi"},
                         ougiEcho: {name: "Ougi echo"},
-                        effect: {name: "Effect (Reflect, etc)"},
+                        effect: {name: "Effect (Reflect, DoT, etc)"},
                         counter: {name: "Counter"},
                         chain: {name: "Chain burst"},
                         bossAtk: {name: "Boss attack"},
@@ -269,7 +269,7 @@ function BattleCharData(id, name = "") {
     };
 }
 
-function battleParseValue(input, actionData, type) {
+function battleParseDamage(input, actionData, type) {
     function parse(entry) {
         if (entry.hasOwnProperty("value")) { //single target, entry = hit/dmg instance
             switch (type) {
@@ -303,10 +303,10 @@ function battleParseValue(input, actionData, type) {
             }
         }
         else if(entry.hasOwnProperty("damage")) {
-            battleParseValue(entry.damage, actionData, type);
+            battleParseDamage(entry.damage, actionData, type);
         }
         else { //aoe/mutlitarget? entry = boss pos
-            battleParseValue(entry, actionData, type);
+            battleParseDamage(entry, actionData, type);
         }
     }
     try {             
@@ -320,6 +320,7 @@ function battleParseValue(input, actionData, type) {
                 parse(input[key]);
             }
         }
+        actionData.dmgParsed = true;
     }
     catch (e) {
         deverror(e, input, actionData);
@@ -344,7 +345,7 @@ function battleUseAbility (json) {
             case "damage":
             case "loop_damage":
                 if (action.to == "boss") {
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
                     if (!actions.includes(actionData)) {
                         actions.push(actionData); 
                     }
@@ -358,7 +359,7 @@ function battleUseAbility (json) {
             case "heal":
                 if (action.to == "player") {
 //                    actionData = new BattleActionData(BATTLE_ACTIONS.selfHeal);
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.heal);
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.heal);
                     if (!actions.includes(actionData)) {
                         actions.push(actionData);
                     }
@@ -404,7 +405,7 @@ function battleAttack(json) {
                 isPlayerTurn = false;
                 actionData = new BattleActionData(BATTLE_ACTIONS.super);
                 if (action.list) { //Some ougis do no dmg
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgTaken); 
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgTaken); 
                     actions.push(actionData);
                 }
                 break;
@@ -414,7 +415,7 @@ function battleAttack(json) {
                 actionData.char = Battle.characters.getAtPos(action.pos).char;
                 Battle.characters.getAtPos(action.pos).activeTurns++;
                 if (action.list) { //Some ougis do no dmg
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt); 
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt); 
                 }
                 else {
                     actionData.noDmgOugi = true;
@@ -428,7 +429,7 @@ function battleAttack(json) {
                     actionData.char = Battle.characters.getAtPos(action.pos).char;
                     Battle.characters.getAtPos(action.pos).activeTurns++;
                     if (action.hasOwnProperty("damage")) {
-                        battleParseValue(action.damage, actionData, BATTLE_ACTION_TYPES.dmgDealt);
+                        battleParseDamage(action.damage, actionData, BATTLE_ACTION_TYPES.dmgDealt);
                         actions.push(actionData);
                         checkInvalidatedDamage(actionData);
                     }
@@ -438,7 +439,7 @@ function battleAttack(json) {
                     if (action.from == "boss") {
                         actionData = new BattleActionData(BATTLE_ACTIONS.bossAtk);
                         if (action.hasOwnProperty("damage")) {
-                            battleParseValue(action.damage, actionData, BATTLE_ACTION_TYPES.dmgTaken);
+                            battleParseDamage(action.damage, actionData, BATTLE_ACTION_TYPES.dmgTaken);
                             actions.push(actionData);
                             checkInvalidatedDamage(actionData);
                         }
@@ -462,7 +463,7 @@ function battleAttack(json) {
                 if (action.to == "boss") {
                     if (!isPlayerTurn) {
                         //If skill, char is already set and nothing else is needed here.
-                        if (actionData.action != BATTLE_ACTIONS.skill) {
+                        if (actionData.action != BATTLE_ACTIONS.skill || actionData.dmgParsed) {
                             actionData = new BattleActionData(BATTLE_ACTIONS.effect);
                         }
                     }
@@ -476,14 +477,14 @@ function battleAttack(json) {
                         actionData = new BattleActionData(BATTLE_ACTIONS.postAtkTrigger);
                         actionData.char = char;
                     }
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
                     checkInvalidatedDamage(actionData);
                     actions.push(actionData);
                 }
                 break;
             case "heal": //Must be part of atk or ougi, even if caused by ability. Can assume actionData was pushed.
                 if (action.to == "player") {
-                    battleParseValue(action.list, actionData, BATTLE_ACTION_TYPES.heal);
+                    battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.heal);
                 }
                 break;
             case "replace": //Chara swap
