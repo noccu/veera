@@ -183,7 +183,25 @@ BattleTurnData.prototype.getDmg = function (char) {
     let total = 0;
     for (let action of this.actions) {
         if (char === undefined || action.char == char) {
+            total += action.dmg + action.echoDmg;
+        }
+    }
+    return total;
+};
+BattleTurnData.prototype.getDmgBase = function (char) {
+    let total = 0;
+    for (let action of this.actions) {
+        if (char === undefined || action.char == char) {
             total += action.dmg;
+        }
+    }
+    return total;
+};
+BattleTurnData.prototype.getDmgEcho = function (char) {
+    let total = 0;
+    for (let action of this.actions) {
+        if (char === undefined || action.char == char) {
+            total += action.echoDmg;
         }
     }
     return total;
@@ -230,6 +248,7 @@ function BattleCharData(id, name = "") {
     this.stats = {
         dmg: 0,
         hits: 0,
+        echoDmg: 0,
         echoHits: 0,
         crits: 0,
         da: 0,
@@ -251,8 +270,11 @@ function BattleCharData(id, name = "") {
         get ougiRate () {
             return safeDivide(this.ougis, self.activeTurns) * 100;
         },
+        get totalDmg () {
+            return this.dmg + this.echoDmg;
+        },
         get avgDmg() {
-            return Math.floor(safeDivide(this.dmg, self.activeTurns));
+            return Math.floor(safeDivide(this.totalDmg, self.activeTurns));
         },
         get turnDmg() {
             return Battle.log.currentTurn.getDmg(self.char);
@@ -540,6 +562,7 @@ function updateBattleStats(actionData) {
     if (actionData.char != -1) { //Character-based actions
         let charStats = Battle.characters.getById(actionData.char).stats;
         charStats.hits += actionData.hits;
+        charStats.echoDmg += actionData.echoDmg;
         charStats.echoHits += actionData.echoHits;
         charStats.dmg += actionData.dmg;
         charStats.crits += actionData.crits;
@@ -565,5 +588,5 @@ function updateBattleStats(actionData) {
 
     Battle.stats.totalHits += actionData.hits;
     Battle.stats.totalCrits += actionData.crits;
-    Battle.stats.totalDmg += actionData.dmg;
+    Battle.stats.totalDmg += actionData.dmg + actionData.echoDmg;
 }
