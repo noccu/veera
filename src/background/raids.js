@@ -23,7 +23,7 @@ window.Raids = {
     },
     getList: function(sort, filter) {
         let output;
-        
+
         //switch filter here?
         switch (sort) {
             case this.SORT_METHODS.elements:
@@ -35,9 +35,9 @@ window.Raids = {
             default:
                 output = Array.from(this.list);
         }
-        
-        
-        
+
+
+
         return output;
     },
     createURLs: function(id, mats) {
@@ -70,7 +70,7 @@ function checkNextQuest(data) {
     if (data.appearance) {
         DevTools.send("nextQuestTriggered", {nextQuest: data.appearance.quest_name});
     }
-    
+
     /* data dump
         appearance:
             chapter_id: "51005"

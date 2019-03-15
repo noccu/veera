@@ -1,6 +1,6 @@
 window.Storage = {
     set: function (value, cb) {
-        chrome.storage.local.set(value, res => this.response(res, cb, value));       
+        chrome.storage.local.set(value, res => this.response(res, cb, value));
     },
     get: function(key, cb) {
         chrome.storage.local.get(key, res => this.response(res, cb));
@@ -10,7 +10,7 @@ window.Storage = {
             console.error("[Storage] Error:", chrome.runtime.lastError);
             return;
         }
-        
+
         if (result) {
             devlog("Data loaded: ", ...Object.keys(result));
             if (cb) { cb(result); }

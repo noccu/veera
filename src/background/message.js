@@ -152,7 +152,7 @@ function hear (msg) {
 
 function hearQuery (data, sender, respond) {
     var retValue;
-    
+
     switch (data.query) {
         case "theme":
             retValue = State.settings.theme.current;
@@ -167,7 +167,7 @@ function hearQuery (data, sender, respond) {
             retValue = State.unfEdition;
             break;
     }
-    
-    respond({query: data.query, 
+
+    respond({query: data.query,
              value: retValue});
 }

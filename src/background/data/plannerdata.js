@@ -12,8 +12,8 @@ const PLANNER_TEMPLATES = {
         },
         high: {
             type: SUPPLYTYPE.treasure,
-            Fire: 1012, 
-            Water: 1022, 
+            Fire: 1012,
+            Water: 1022,
             Earth: 1032,
             Wind: 1042,
             Light: 1052,
@@ -22,8 +22,8 @@ const PLANNER_TEMPLATES = {
     },
     whorls: {
         type: SUPPLYTYPE.treasure,
-        Fire: 1313, 
-        Water: 1323, 
+        Fire: 1313,
+        Water: 1323,
         Earth: 1333,
         Wind: 1343,
         Light: 1353,
@@ -31,8 +31,8 @@ const PLANNER_TEMPLATES = {
     },
     tomes: {
         type: SUPPLYTYPE.treasure,
-        Fire: 1311, 
-        Water: 1321, 
+        Fire: 1311,
+        Water: 1321,
         Earth: 1331,
         Wind: 1341,
         Light: 1351,
@@ -40,8 +40,8 @@ const PLANNER_TEMPLATES = {
     },
     scrolls: {
         type: SUPPLYTYPE.treasure,
-        Fire: 1312, 
-        Water: 1322, 
+        Fire: 1312,
+        Water: 1322,
         Earth: 1332,
         Wind: 1342,
         Light: 1352,
@@ -49,8 +49,8 @@ const PLANNER_TEMPLATES = {
     },
     scales: {
         type: SUPPLYTYPE.treasure,
-        Fire: 1111, 
-        Water: 1121, 
+        Fire: 1111,
+        Water: 1121,
         Earth: 1131,
         Wind: 1141,
         Light: 1151,
@@ -71,8 +71,8 @@ const PLANNER_TEMPLATES = {
     },
     trueAnima: {
         type: SUPPLYTYPE.treasure,
-        Fire: 41, 
-        Water: 42, 
+        Fire: 41,
+        Water: 42,
         Earth: 43,
         Wind: 44,
         Light: 45,
@@ -81,8 +81,8 @@ const PLANNER_TEMPLATES = {
     anima: {
         primal: {
             type: SUPPLYTYPE.treasure,
-            Fire: 11, 
-            Water: 12, 
+            Fire: 11,
+            Water: 12,
             Earth: 13,
             Wind: 10,
             Light: 25,
@@ -91,8 +91,8 @@ const PLANNER_TEMPLATES = {
     },
     omegaItem: {
         type: SUPPLYTYPE.treasure,
-        Fire: 47, 
-        Water: 48, 
+        Fire: 47,
+        Water: 48,
         Earth: 49,
         Wind: 32,
         Light: 50,
@@ -184,7 +184,7 @@ window.PlannerData = {
              //Elechange
              createItem(3, SUPPLYTYPE.treasure, 107, 3),
              createItem(3, SUPPLYTYPE.treasure, 1, 15),
-             
+
              createItem(4, SUPPLYTYPE.treasure, 20771, 3),
              createItem(4, SUPPLYTYPE.treasure, 79, 1),
              createItem(4, SUPPLYTYPE.treasure, 1, 20),
@@ -197,7 +197,7 @@ window.PlannerData = {
                       createItem(1, SUPPLYTYPE.treasure, 20111, 30),
                       createItem(2, SUPPLYTYPE.treasure, 20411, 10),
                       createItem(2, SUPPLYTYPE.treasure, 4041, 256),
-                      createItem(2, SUPPLYTYPE.treasure, 5011, 50), 
+                      createItem(2, SUPPLYTYPE.treasure, 5011, 50),
                       createItem(2, SUPPLYTYPE.treasure, 20211, 25),
                       createItem(3, SUPPLYTYPE.treasure, 20411, 30),
 //                      createItem(3, SUPPLYTYPE.treasure, 4041, 512),
@@ -464,7 +464,7 @@ window.PlannerData = {
         },
         stepNames: ["Replica", "Forge", "Rebuild", "Elechange", "FLB"]
     },
-    
+
     Revenant:{
         core: [
             createItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.high.Light, 50),
@@ -473,9 +473,9 @@ window.PlannerData = {
             createItem(1, SUPPLYTYPE.treasure, 1151, 50),
             createItem(1, SUPPLYTYPE.treasure, 2001, 50),
 //            createItem(1, SUPPLYTYPE.treasure, 1052, 50),
-            
+
             createItem(2, SUPPLYTYPE.treasure, 1202, 250),
-            
+
             //Upgrade 1
             createItem(3, SUPPLYTYPE.treasure, 2, 300),
             createItem(3, SUPPLYTYPE.treasure, 5, 100),
@@ -483,7 +483,7 @@ window.PlannerData = {
             createItem(3, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
             createItem(3, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 3),
             //crystals 100
-            
+
             //2
             createItem(4, SUPPLYTYPE.treasure, 6, 100),
             createItem(4, SUPPLYTYPE.treasure, 24, 100),
@@ -491,7 +491,7 @@ window.PlannerData = {
             createItem(4, PLANNER_ITEMS.rainbowPrism.type, PLANNER_ITEMS.rainbowPrism.id, 50),
             createItem(4, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 5),
             //crystals 200
-            
+
             //3
             createItem(5, SUPPLYTYPE.treasure, 3, 300),
             createItem(5, SUPPLYTYPE.treasure, 22, 100),
@@ -499,7 +499,7 @@ window.PlannerData = {
             createItem(5, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
             createItem(5, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 7),
             //crystal 300
-            
+
             //4
             createItem(6, SUPPLYTYPE.treasure, 17, 100),
             createItem(6, SUPPLYTYPE.treasure, 29, 100),
@@ -507,7 +507,7 @@ window.PlannerData = {
             createItem(6, PLANNER_ITEMS.rainbowPrism.type, PLANNER_ITEMS.rainbowPrism.id, 150),
             createItem(6, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 10),
             //crystal 400
-            
+
             //5
             createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Wind, 20),
             createItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Fire, 20),
@@ -519,7 +519,7 @@ window.PlannerData = {
             createItem(7, PLANNER_ITEMS.supremeMerit.type, PLANNER_ITEMS.supremeMerit.id, 10),
             createItem(7, PLANNER_ITEMS.blueSkyCrystal.type, PLANNER_ITEMS.blueSkyCrystal.id, 15),
             //crystals 500
-            
+
             //6
             createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 3),
             createItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 3),
@@ -545,8 +545,8 @@ window.PlannerData = {
             "Esser (gun)": null,
         },
         element: {
-            Fire: null, 
-            Water: null, 
+            Fire: null,
+            Water: null,
             Earth: null,
             Wind: null,
             Light: null,
@@ -554,35 +554,35 @@ window.PlannerData = {
             templates: [
                 supplyTemplate(2, PLANNER_TEMPLATES.orbs.low, 250),
                 supplyTemplate(2, PLANNER_TEMPLATES.whorls, 250),
-                
+
                 //Upgrade 1
                 supplyTemplate(3, PLANNER_TEMPLATES.orbs.low, 100),
                 supplyTemplate(3, PLANNER_TEMPLATES.whorls, 100),
                 supplyTemplate(3, PLANNER_TEMPLATES.tomes, 100),
                 supplyTemplate(3, PLANNER_TEMPLATES.scrolls, 150),
-                
+
                 //Upgrade 2
                 supplyTemplate(4, PLANNER_TEMPLATES.orbs.low, 150),
                 supplyTemplate(4, PLANNER_TEMPLATES.tomes, 150),
                 supplyTemplate(4, PLANNER_TEMPLATES.whorls, 150),
                 supplyTemplate(4, PLANNER_TEMPLATES.scales, 30),
                 supplyTemplate(4, PLANNER_TEMPLATES.trueAnima, 3),
-                
+
                 //Upgrade 3
                 supplyTemplate(5, PLANNER_TEMPLATES.orbs.low, 200),
                 supplyTemplate(5, PLANNER_TEMPLATES.orbs.high, 100),
                 supplyTemplate(5, PLANNER_TEMPLATES.whorls, 200),
                 supplyTemplate(5, PLANNER_TEMPLATES.anima.primal, 100),
-                
+
                 //Upgrade 4
                 supplyTemplate(6, PLANNER_TEMPLATES.orbs.low, 250),
                 supplyTemplate(6, PLANNER_TEMPLATES.scales, 50),
                 supplyTemplate(6, PLANNER_TEMPLATES.whorls, 250),
                 supplyTemplate(6, PLANNER_TEMPLATES.trueAnima, 3),
-                
+
                 //Upgrade 5
                 supplyTemplate(7, PLANNER_TEMPLATES.omegaItem, 60),
-            ]            
+            ]
         },
         stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6"],
         typeNames: {

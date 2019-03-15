@@ -11,12 +11,12 @@
     "Profile": true,
     "PlannerData": false,
     "RaidData": false,
-      
+
     "devlog": false,
     "deverror": false,
     "devwarn": false,
     "updateUI": false,
-      
+
     "SUPPLYTYPE": false,
     "ITEM_KIND": false
   }

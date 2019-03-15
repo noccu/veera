@@ -74,7 +74,7 @@ window.Planner = {
             return PlannerData[series].stepNames;
         }
     },
-    getSeriesOptions: function (series) {    
+    getSeriesOptions: function (series) {
         return {types: this.listTypes(series),
                 elements: this.listElements(series),
                 steps: this.listSteps(series)};
@@ -85,8 +85,8 @@ window.Planner = {
 //DBG/Build data: Find by name, use with Supply
 function fi(s){
     var search = new RegExp(s, "i");
-    var ret = []; 
-    
+    var ret = [];
+
     function f(obj, type) {
         for (let key of Object.keys(obj)) {
             let item = obj[key];
@@ -99,7 +99,7 @@ function fi(s){
             }
         }
     }
-    
+
     f(Supplies.index);
     return ret.join("\n");
 }

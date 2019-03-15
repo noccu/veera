@@ -15,7 +15,7 @@ window.Profile = {
                 crew: {current: 0, max: 0}
             }
         },
-        
+
         update: function (updArr) { //[ { pendantType, limitType, delta }]
             for (let item of updArr) {
                 this.count[item.pendantType][item.limitType].current += item.delta;
@@ -30,13 +30,13 @@ window.Profile = {
             var prestige = pendants['92002'];
             this.count = {
                 renown: {
-                    total: {current: parseInt(renown.article.number), max: parseInt(renown.article.limit)}, 
-                    weekly: {current: parseInt(renown.limit_info['10100'].data.weekly.get_number), max: parseInt(renown.limit_info['10100'].data.weekly.get_limit)}, 
+                    total: {current: parseInt(renown.article.number), max: parseInt(renown.article.limit)},
+                    weekly: {current: parseInt(renown.limit_info['10100'].data.weekly.get_number), max: parseInt(renown.limit_info['10100'].data.weekly.get_limit)},
                     daily: {current: parseInt(renown.limit_info['10100'].data.daily.get_number), max: parseInt(renown.limit_info['10100'].data.daily.get_limit)},
                     sr: {current: parseInt(renown.limit_info['20200'].data.weekly.get_number), max: parseInt(renown.limit_info['20200'].data.weekly.get_limit)},
                     r: {current: parseInt(renown.limit_info['20100'].data.weekly.get_number), max: parseInt(renown.limit_info['20100'].data.weekly.get_limit)}
                     },
-                
+
                 prestige: {
                     total: {current: parseInt(prestige.article.number), max: parseInt(prestige.article.limit)},
                     weekly: {current: parseInt(prestige.limit_info['10100'].data.weekly.get_number), max: parseInt(prestige.limit_info['10100'].data.weekly.get_limit)},
@@ -49,19 +49,19 @@ window.Profile = {
     status: {
         ap: {current: 0, max: 0},
         bp: {current: 0, max: 0},
-        
+
         level: 0,
         levelPerc: 0,
         jobLevel: 0,
         exp: 0,
-        
+
         set: function (json) {
             this.ap = {current: json.now_action_point, max: parseInt(json.max_action_point)};
             this.bp = {current: json.now_battle_point, max: json.max_battle_point};
-            
+
             this.level = parseInt(json.level);
             this.levelPerc = parseInt(json.levelGauge.slice(0,-1));
-            
+
             updateUI("updStatus", {ap: this.ap.current, apMax: this.ap.max, bp: this.bp.current, lvl: this.level, lvlP: this.levelPerc});
         }
     }

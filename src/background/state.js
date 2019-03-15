@@ -1,7 +1,7 @@
 window.State = {
     debug: true,
     unfEdition: "",
-    
+
     settings: {
         theme: {
             list: [
@@ -20,7 +20,7 @@ window.State = {
             sortByDiff: true
         }
     },
-    
+
     save: function() {
         let o = {};
         for (let e of Object.keys(this)) {

@@ -10,8 +10,8 @@ window.addEventListener("veeraConnected", MainInit);
 DevTools.wait(); //Listen for devtools conn
 State.load();
 //Adding a last item in array macro
-Object.defineProperty(Array.prototype, "last", {get: function(){ 
-    return this.length == 0 ? 0 : this[this.length - 1]; 
+Object.defineProperty(Array.prototype, "last", {get: function(){
+    return this.length == 0 ? 0 : this[this.length - 1];
 }});
 
 function MainInit() {

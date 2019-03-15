@@ -16,7 +16,7 @@ function createRaid(name, id, diff, minRank, maxHosts, apCost, matIDs, matNums, 
         element: ele,
         isHL: isHL,
         img: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/summon/qm/" + img,
-    };    
+    };
 }
 
 const ELEMENTS = { fire:0, water: 1, earth: 2, wind: 3, light: 4, dark: 5};
