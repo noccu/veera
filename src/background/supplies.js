@@ -512,7 +512,7 @@ function storeImminentRaidsTreasure (data) {
 
 function consumeImminentRaidsTreasure (data) {
     if (data.json.result == "ok" && Supplies.currentImminentRaids) {
-        let itemData = Supplies.currentImminentRaids.find(x => x.questId == data.postData.quest_id);
+        let itemData = Supplies.currentImminentRaids.find(x => x.questId == data.postData.quest_id && x.itemId == data.postData.use_item_id);
         if (itemData) {
             let si = new SupplyItem(itemData.type, itemData.itemId, 0);
             si.delta = - itemData.num;
