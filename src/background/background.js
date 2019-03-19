@@ -17,6 +17,7 @@ Object.defineProperty(Array.prototype, "last", {
 
 function MainInit() {
     State.load()
+        .then(() => State.game.linkToTab())
         .then(Supplies.load)
         .then(v => {
             updateUI("init_theme", State.settings.theme.current);

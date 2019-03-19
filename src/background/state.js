@@ -1,71 +1,96 @@
 window.State = {
-    debug: true,
-    unfEdition: "",
+    store: {
+        unfEdition: "",
+        config: {version: 1, updDelta: 0}
+    },
 
     settings: {
-        theme: {
-            list: [
-                {name: "Tiamat Night", fname: "night"},
-                {name: "Anichra Day", fname: "day"}
-                ],
-            get current() {
-                return this.list[this._current];
-            },
-            set current(idx) {
-                this._current = idx;
-            }
-            //set: function(n) {this.current = n};
-        },
+        debug: true,
+        theme: 0,
         raids: {
             sortByDiff: true
         }
     },
 
-    save: function() {
-        let o = {};
-        for (let e of Object.keys(this)) {
-            if (!["save", "load"].includes(e)) {
-                o[e] = State[e];
+    theme: {
+        list: [{name: "Tiamat Night", fname: "night"},
+               {name: "Anichra Day", fname: "day"}],
+        get current() {
+            return this.list[State.settings.theme];
+        },
+        set current(idx) {
+            State.settings.theme = idx;
+        }
+    },
+    game: {
+        tabId: null,
+        linkToTab: function () {
+            chrome.tabs.query({active: true, url:"*://*.granbluefantasy.jp/"}, t => {
+                if (t) { this.tabId = t[0].id; }
+            });
+        },
+        navigateTo: function (url) {
+            if (this.tabId && url) {
+                chrome.tabs.update(this.tabId, {url: url}, () => devlog("Navigated to " + url));
             }
         }
+    },
+
+    save: function() {
+        let o = {store: this.store, settings: this.settings};
         Storage.set({state: o});
         devlog("State saved.");
     },
     load: function () { //Called out of context
         return new Promise((r, x) => {
-            function l(data) {
+            function _load(data) {
                 if (!data.state) {
                     devlog("No saved state, initializing from defaults.");
                     setVeeraDefaults();
                     State.save();
-                    r();
-                    return;
                 }
-                for (let e of Object.keys(data.state)) {
-                    State[e] = data.state[e];
+                else if (data.state.store && data.state.store.config) {
+                    if (data.state.store.config.version == State.store.config.version) {
+                        State.settings = data.state.settings;
+                        State.store = data.state.store;
+                        devlog("State loaded.");
+                    }
+                    else if (State.store.config.version - data.state.store.config.version <= this.store.config.updDelta) {
+                        devlog("Attempting state update from older version.");
+                        for (let obj of ["store", "settings"]) {
+                            for (let key in State[obj]) {
+                                State[obj][key] = data.state[obj][key];
+                            }
+                        }
+                    }
                 }
-                devlog("State loaded.");
+                else {
+                    devlog("Invalid stored state, internal Veera update?");
+                    devlog("Loading defaults.");
+                    setVeeraDefaults();
+                    State.save();
+                }
                 r();
             }
-            Storage.get("state", l);
+            Storage.get("state", _load);
         });
     }
 };
 
 function setVeeraDefaults() {
-    State.settings.theme.current = 0;
+    State.theme.current = 0;
 }
 
 function toggleDebug() {
-    State.debug = !State.debug;
+    State.settings.debug = !State.settings.debug;
 }
 
 function devlog() {
-    if (State.debug) { console.debug(... arguments); }
+    if (State.settings.debug) { console.debug(... arguments); }
 }
 
 function devwarn() {
-    if (State.debug) { console.warn(... arguments); }
+    if (State.settings.debug) { console.warn(... arguments); }
 }
 
 function deverror() {
