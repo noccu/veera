@@ -8,16 +8,22 @@ window.addEventListener("veeraConnected", MainInit);
 //window.addEventListener("newBattle", );
 
 DevTools.wait(); //Listen for devtools conn
-State.load();
 //Adding a last item in array macro
-Object.defineProperty(Array.prototype, "last", {get: function(){
-    return this.length == 0 ? 0 : this[this.length - 1];
-}});
+Object.defineProperty(Array.prototype, "last", {
+    get: function () {
+        return this.length == 0 ? 0 : this[this.length - 1];
+    }
+});
 
 function MainInit() {
-    Supplies.load();
+    State.load()
+        .then(Supplies.load)
+        .then(v => {
+            updateUI("init_theme", State.settings.theme.current);
+            updateUI("init_plannerSeriesList", Planner.listSeries());
+            updateUI("init_unfEdition", State.unfEdition);
+        });
 }
-
 //Old function, kept for now due to ease of reading intended use.
 function updateUI (type, value) {
     DevTools.send(type, value);

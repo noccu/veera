@@ -29,6 +29,15 @@ window.BackgroundPage = {
             case "sayBye":
                 console.log("Iya da onee-sama!! ＼(º □ º l|l)");
                 break;
+            case "init_theme":
+                UI.setTheme(msg.data);
+                break;
+            case "init_plannerSeriesList":
+                UI.planner.init(msg.data);
+                break;
+            case "init_unfEdition":
+                Unf.edition = msg.data;
+                break;
             case "updPendants":
                 updatePendants(msg.data);
                 break;

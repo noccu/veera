@@ -154,18 +154,7 @@ function hearQuery (data, sender, respond) {
     var retValue;
 
     switch (data.query) {
-        case "theme":
-            retValue = State.settings.theme.current;
-            break;
-        case "plannerSeriesList":
-            retValue = Planner.listSeries();
-            break;
-        case "loadData":
-            Storage.get(data, respond);
-            break;
-        case "unfEdition":
-            retValue = State.unfEdition;
-            break;
+            //Nothing so far since change.
     }
 
     respond({query: data.query,

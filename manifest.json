@@ -26,10 +26,10 @@
                  "src/background/profile.js",
                  "src/background/state.js",
                  "src/background/supplies.js",
-                 "src/background/data/plannerdata.js",
                  "src/background/planner.js",
-                 "src/background/data/raiddata.js",
+                 "src/background/data/plannerdata.js",
                  "src/background/raids.js",
+                 "src/background/data/raiddata.js",
                  "src/background/battle.js",
                  "src/background/background.js"]
    },

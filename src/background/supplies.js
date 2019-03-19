@@ -2,7 +2,7 @@
 const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, Untracked: [1,2,3,19,37,38,39,50,82]}; //jshint ignore:line
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
 
-const GAME_URL = {
+const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
     assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
     size: {
@@ -235,10 +235,10 @@ window.Supplies = {
     */
     get: function (type, id) {
         if (Array.isArray(arguments[0])) {
-            if (typeof arguments[0][0] != "object") {
+/*            if (typeof arguments[0][0] != "object") {
                 deverror("Use getType to look up meta types");
                 return;
-            }
+            }*/
             let ret = [];
             for (let entry of arguments[0]) {
                 ret.push( this.get(entry.type, entry.id) );
@@ -379,16 +379,18 @@ window.Supplies = {
         Storage.set({sup_idx: this.index});
         devlog("Supply index saved.");
     },
-    load: function() {
-        function _load(data) {
-            this.index = data.sup_idx || {};
+    load: function() { //Called out of context
+        return new Promise((r,x) => {
+            function _load(data) {
+                Supplies.index = data.sup_idx || {};
 
-            devlog("Supply index loaded.");
-            updateUI("setTreasure", this.getType(SUPPLYTYPE.treasure));
-            updateUI("setConsumables", this.getType(SUPPLYTYPE.Consumables));
-        }
-
-        Storage.get(["sup_idx"], _load.bind(this));
+                devlog("Supply index loaded.");
+                updateUI("setTreasure", Supplies.getType(SUPPLYTYPE.treasure));
+                updateUI("setConsumables", Supplies.getType(SUPPLYTYPE.Consumables));
+                r();
+            }
+            Storage.get(["sup_idx"], _load);
+        });
     },
     clear: function() {
         this.index = {};

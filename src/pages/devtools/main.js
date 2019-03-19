@@ -9,10 +9,6 @@ if (chrome.runtime) {
     //Start logging network requests.
     BackgroundPage.connect();
     Network.listen();
-    //TODO: Query options and adjust UI.
-    BackgroundPage.query("theme", resp => UI.setTheme(resp.value));
-    BackgroundPage.query("plannerSeriesList", resp => UI.planner.init(resp.value));
-    BackgroundPage.query("unfEdition", resp => Unf.edition = resp.value);
     
     UI.initButtons();
     UI.time.keep();

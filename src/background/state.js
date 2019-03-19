@@ -31,20 +31,24 @@ window.State = {
         Storage.set({state: o});
         devlog("State saved.");
     },
-    load: function() {
-        function l(data) {
-            if (!data.state) {
-                devlog("No saved state, initializing from defaults.");
-                setVeeraDefaults();
-                State.save();
-                return;
-            }
-            for (let e of Object.keys(data.state)) {
-                State[e] = data.state[e];
+    load: function () { //Called out of context
+        return new Promise((r, x) => {
+            function l(data) {
+                if (!data.state) {
+                    devlog("No saved state, initializing from defaults.");
+                    setVeeraDefaults();
+                    State.save();
+                    r();
+                    return;
+                }
+                for (let e of Object.keys(data.state)) {
+                    State[e] = data.state[e];
+                }
                 devlog("State loaded.");
+                r();
             }
-        }
-        Storage.get("state", l);
+            Storage.get("state", l);
+        });
     }
 };
 
