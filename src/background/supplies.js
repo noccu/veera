@@ -5,6 +5,7 @@ SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.
 const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
     assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
+    assets_light: "http://game.granbluefantasy.jp/assets_en/img_light/sp/assets/",
     size: {
         small: "s/",
         medium: "m/"

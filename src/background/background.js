@@ -20,7 +20,7 @@ function MainInit() {
         .then(() => State.game.linkToTab())
         .then(Supplies.load)
         .then(v => {
-            updateUI("init_theme", State.settings.theme.current);
+            updateUI("init_theme", State.theme.current);
             updateUI("init_plannerSeriesList", Planner.listSeries());
             updateUI("init_unfEdition", State.unfEdition);
         });

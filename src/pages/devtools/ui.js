@@ -199,7 +199,7 @@ function clearDropdown(el) {
     }
 }
 
-//UI funcitonality
+//UI functionality
 function evhGlobalClick (e) {
     if (e.target.dataset) {
         switch (e.target.dataset.event) {
@@ -258,7 +258,7 @@ function evhSuppliesFilter (e) {
         showAll = filters[0] == "All";
     
     for (let item of list.children) {
-        if (showAll || filters.includes(item.dataset.type) || (item.dataset.metaType && filters.includes(item.dataset.metaType)) ) {
+        if (showAll || filters.some(f => f == item.dataset.type || (item.dataset.metaType && f == item.dataset.metaType))) {
             item.classList.remove("hidden");
         }
         else {

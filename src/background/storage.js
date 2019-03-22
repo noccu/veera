@@ -3,6 +3,9 @@ window.Storage = {
         chrome.storage.local.set(value, res => this.response(res, cb, value));
     },
     get: function(key, cb) {
+        if (!Array.isArray(key)) {
+            key = [key];
+        }
         chrome.storage.local.get(key, res => this.response(res, cb));
     },
     response: function(result, cb, v) {
