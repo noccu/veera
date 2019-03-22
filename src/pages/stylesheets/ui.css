@@ -276,71 +276,87 @@ select, option {
     background-color: var(--diff-color-b)
 }
 
-
-
-.raid-data {
-    display: inline-block;
+/* Raids */
+#raids-list a {
+    color: inherit;
+    text-decoration: none;
 }
-
-.raid-icon {
-    height: 3em;
-/*    width: calc(20% - 2em);*/
+.raid {
+    display: grid;
+    grid-template-columns: 60px auto;
+    grid-template-rows: 1fr;
+    grid-template-areas: "thumb data";
+    align-items: center;
+    margin-bottom: 5px;
 }
-
-.raid-current {
-/*    font-size: 1.5em;*/
-}
-
-.raid-max {
-/*    opacity: 0.5;*/
-}
-
-
-
-
-
-
 .raid * {
     vertical-align: middle;
 /*    margin-right: 2em;*/
 }
-
-div.raid-hosts {
-    display: inline-block;
-    margin-right: 0;
+.raid-icon {
+    height: 3em;
+    grid-area: thumb;
+/*    width: calc(20% - 2em);*/
 }
-
+.raid-data {
+    display: inline-block;
+    grid-area: data;
+    align-items: center;
+    grid-template-columns: 1fr 50px 80px 2fr;
+    grid-template-rows: 100%;
+    grid-template-areas: "name cost mat hosts";
+    display: grid;
+}
+.raid-name {
+    grid-area: name;
+    min-width: 120px;
+    line-height: 2em;
+    cursor: pointer;
+}
+.raid-name:hover {
+    background-color: var(--highlight-color);
+}
+.raid-cost {
+    grid-area: cost;
+}
+.raid-cost:not(:empty)::after {
+    content: " AP";
+}
+.raid-host-mats {
+    grid-area: mat;
+}
 .raid-mat-icon {
     height: 1.5em;
 }
-
+.raid-mat {
+    margin: 2px;
+    cursor: pointer;
+}
+.raid-mat * {
+/*    Needed for hosting script*/
+    pointer-events: none;
+}
+.raid-mat:hover {
+    background-color: var(--highlight-color)
+}
+.raid-hosts {
+    grid-area: hosts;
+    display: inline-block;
+    margin-right: 0;
+}
+.raid-current {
+/*    font-size: 1.5em;*/
+}
+.raid-max {
+/*    opacity: 0.5;*/
+}
+/*
 .raid-data > *, .raid-icon {
     margin-right: 1em;
     display: inline-block;
 }
+*/
 
-
-
-.raid-mat:hover {
-    background-color: var(--highlight-color)
-}
-
-.raid {
-    margin-bottom: 0.5em;
-}
-
-.raid-name {
-/*    display: inline-block;*/
-/*    width: 60%;*/
-}
-
-#raids-list {
-/*    text-align: center;*/
-}
-
-.raid-mat {
-    margin: 2px;
-}
 
 .canvas-container {
     width: 100%;

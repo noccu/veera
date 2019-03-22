@@ -126,6 +126,8 @@ function hear (msg) {
                     break;
                 case url.ismatch("quest/create_quest"):
                     consumeImminentRaidsTreasure(msg.data);
+//                    Raids.update("host", msg.data);
+                    raidHosted(msg.data);
             }
             break;
         case "plannerSeriesChange":
@@ -147,6 +149,8 @@ function hear (msg) {
                 State.save();
             }
             break;
+        case "hostRaid":
+            Raids.start(msg.data.raidId, msg.data.matId);
     }
 }
 

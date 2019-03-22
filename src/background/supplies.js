@@ -8,7 +8,8 @@ const GAME_URL = {//jshint ignore:line
     assets_light: "http://game.granbluefantasy.jp/assets_en/img_light/sp/assets/",
     size: {
         small: "s/",
-        medium: "m/"
+        medium: "m/",
+        questMedium: "qm/"
     }
 };
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};

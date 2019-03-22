@@ -43,6 +43,7 @@ window.UI = {
         document.getElementById("supplies-search").addEventListener("change", evhSuppliesSearch);
         //Specific filters
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
+        document.getElementById("raids-panel").addEventListener("filter", evhRaidsFilter);
     },
     
     time: {
@@ -187,8 +188,13 @@ window.UI = {
         }
     },
     raids: {
-        add: function() {
-            var t = document.getElementById("template-raid-item");
+        list: null,
+        evhStartRaid: function(ev) {
+            if (ev.currentTarget.entryObj) {
+                let raidId = ev.currentTarget.entryObj.data.id,
+                    matId = ev.target.dataset.matId || undefined;
+                BackgroundPage.send("hostRaid", {raidId, matId});
+            }
         }
     }
 };
@@ -264,6 +270,22 @@ function evhSuppliesFilter (e) {
         else {
             item.classList.add("hidden");
         }
+    }
+}
+function evhRaidsFilter (e) {
+//    var list = document.getElementById("supplies-list");
+//    var r = new RegExp(e.target.dataset.value, "i"); //Faster
+    let filters = e.detail,
+        showAll = filters[0] == "All",
+        filterables = ["isHl", "elementName"];
+    
+    for (let raid of UI.raids.list) {
+            if (showAll || filters.some(f => filterables.some(k => raid.entryObj.data[k] == f))) {
+                raid.classList.remove("hidden");
+            }
+            else {
+                raid.classList.add("hidden");
+            }
     }
 }
 

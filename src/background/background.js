@@ -19,12 +19,15 @@ function MainInit() {
     State.load()
         .then(() => State.game.linkToTab())
         .then(Supplies.load)
+        .then(Raids.load)
         .then(v => {
             updateUI("init_theme", State.theme.current);
             updateUI("init_plannerSeriesList", Planner.listSeries());
             updateUI("init_unfEdition", State.unfEdition);
+            updateUI("init_raidList", Raids.getList());
         });
 }
+
 //Old function, kept for now due to ease of reading intended use.
 function updateUI (type, value) {
     DevTools.send(type, value);

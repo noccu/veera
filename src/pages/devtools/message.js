@@ -38,6 +38,9 @@ window.BackgroundPage = {
             case "init_unfEdition":
                 Unf.edition = msg.data;
                 break;
+            case "init_raidList":
+                populateRaids(msg.data);
+                break;
             case "updPendants":
                 updatePendants(msg.data);
                 break;

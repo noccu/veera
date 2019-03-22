@@ -1,23 +1,30 @@
 {
-  "globals": {
-    "chrome": false,
-    "Supplies": true,
-    "Storage": true,
-    "DevTools": true,
-    "State": true,
-    "Battle": true,
-    "Raids": true,
-    "Planner": true,
-    "Profile": true,
-    "PlannerData": false,
-    "RaidData": false,
+    "globals": {
+        //Objects
+        "chrome": false,
+        "Supplies": true,
+        "Storage": true,
+        "DevTools": true,
+        "State": true,
+        "Battle": true,
+        "Raids": true,
+        "Planner": true,
+        "Profile": true,
+        "PlannerData": false,
+        "RaidList": false,
 
-    "devlog": false,
-    "deverror": false,
-    "devwarn": false,
-    "updateUI": false,
+        //Constructors
+        "RaidData": false,
 
-    "SUPPLYTYPE": false,
-    "ITEM_KIND": false
-  }
+        //Functions
+        "devlog": false,
+        "deverror": false,
+        "devwarn": false,
+        "updateUI": false,
+
+        //Constants
+        "SUPPLYTYPE": false,
+        "ITEM_KIND": false,
+        "GAME_URL": false
+    }
 }

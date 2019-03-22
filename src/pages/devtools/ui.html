@@ -200,7 +200,7 @@
                 </div>
                 <div id="raids-panel" class="panel">
                     <template id="template-raid">
-                        <li id="" class="raid" data-cat="" data-element="" data-url="">
+                        <li id="" class="raid">
                             <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg" />
                             <div class="raid-data">
                                 <span class="raid-name">Ultimate Bahamut HL</span>
@@ -215,25 +215,26 @@
                         </li>
                     </template>
                     <template id="template-raid-material">
-                        <div class="raid-mat">
-                            <img title="Mat name" class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
-                            <span class="current-value">45</span>/<span class="max-value">450</span>
-                        </div>
+                            <div class="raid-mat">
+                                <img title="Mat name" class="raid-mat-icon" src="../../assets/images/anchiraicon.png"/>
+                                <span class="current-value">45</span>/<span class="max-value">450</span>
+                            </div>
                     </template>
                     <span class="panel-header" data-event="collapse">Raids</span>
                     <div class="panel-content">
                         <div class="panel-filter">
                             <ul id="raids-filter">
-                                <li class="active" data-event="filter" data-value="all">All</li>
+                                <li class="active" data-event="filter" data-value="All">All</li>
                                 <li data-event="filter" data-value="hl">HL</li>
                                 <li data-event="filter" data-value="fire">Fire</li>
                                 <li data-event="filter" data-value="water">Water</li>
                                 <li data-event="filter" data-value="earth">Earth</li>
-                                <li>Wind</li>
+                                <li data-event="filter" data-value="wind">Wind</li>
+                                <li data-event="filter" data-value="noEle">Null</li>
                             </ul>
                         </div>
                         <ul id="raids-list" class="raid-list">
-                           <li id="" class="raid" data-cat="" data-url="">
+<!--                           <li id="raid-test" class="raid" data-cat="" data-url="">
                                 <img class="raid-icon" src="../../assets/images/quests/2020018001.jpg"/>
                                 <div class="raid-data">
                                     <span class="raid-name">Ultimate Bahamut HL</span>
@@ -252,7 +253,7 @@
                                         <span class="current-value">0</span>/<span class="max-value">3</span> hosts
                                     </div>
                                 </div>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </div>

@@ -199,34 +199,46 @@ function updCurrentRaidInfo (data) {
     UI.setValue({id: "raid-next-quest", value: data.nextQuest || ""});
 }
 
-function createRaid(raidData) {
+function createRaid(raidEntry) {
     var newRaid = document.getElementById("template-raid");
     var newRaidMat = document.getElementById("template-raid-material");
-       
-    newRaid.content.querySelector(".raid-name").title = raidData.name;
-    newRaid.content.querySelector(".raid-icon").src = raidData.thumb;
-    newRaid.content.querySelector(".raid-cost").textContent = raidData.apCost;
-    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidData.hosts.left;
-    newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidData.hosts.max;
-   
+
+    newRaid.content.querySelector(".raid").id = raidEntry.data.id;
+    newRaid.content.querySelector(".raid-name").textContent = raidEntry.data.name;
+//    newRaid.content.querySelector(".raid-icon").src = raidEntry.data.img;
+    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
+    devLog(raidEntry.data.img);
+    newRaid.content.querySelector(".raid-cost").textContent = raidEntry.data.apCost;
+    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
+    newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidEntry.data.dailyHosts;
+
     newRaid = document.importNode(newRaid.content, true);
-    
-    let matsCost = newRaid.getElementsByClassName("raid-host-mats")[0];
-    for (let mat of raidData.mats) {
-        newRaidMat.content.querySelector(".current-value").textContent = mat.req;
-        newRaidMat.content.querySelector(".max-value").textContent = mat.current;
-        newRaidMat.content.querySelector(".raid-mat-icon").src = mat.icon;
-        matsCost.appendChild(document.importNode(newRaidMat, true));
+    newRaid.firstElementChild.entryObj = raidEntry;
+    newRaid.firstElementChild.addEventListener("click", UI.raids.evhStartRaid);
+
+    if (raidEntry.data.matCost) {
+        let matCost = newRaid.querySelector(".raid-host-mats");
+        for (let mat of raidEntry.data.matCost) {
+            newRaidMat.content.querySelector(".current-value").textContent = mat.supplyData.count;
+            newRaidMat.content.querySelector(".max-value").textContent = mat.num;
+            newRaidMat.content.querySelector(".raid-mat-icon").src = mat.supplyData.path;
+            newRaidMat.content.querySelector(".raid-mat").dataset.matId = mat.id;
+//            newRaid.querySelector(".raid-name").dataset.url = raidEntry.data.urls[Object.keys(raidEntry.data.urls)[0]];
+            matCost.appendChild(document.importNode(newRaidMat.content, true));
+        }
     }
-    
+
     return newRaid;
 }
 
 function populateRaids (raids) { //called when bg page sends response to reqRaidList.
     let list = document.getElementById("raids-list");
+    let frag = document.createDocumentFragment();
     for (let raid of raids) {
-        list.appendChild(createRaid(raid));
+        frag.appendChild(createRaid(raid));
     }
+    list.appendChild(frag);
+    UI.raids.list = list.children;
 }
 
 function evhFilterRaids(e) { //called on changing filters
