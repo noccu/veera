@@ -27,7 +27,7 @@ function RaidData(name, id, diff, minHostRank, dailyHosts, apCost, matIDs, matNu
     this.id = id;
     this.diff = diff;
     this.minHostRank = minHostRank;
-    this.isHl = minHostRank > 100 ? "hl" : false;
+    this.isHl = minHostRank > 100;
     this.dailyHosts = dailyHosts;
     this.apCost = apCost;
     this.matCost = mats;

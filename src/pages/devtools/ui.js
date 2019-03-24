@@ -214,7 +214,7 @@ function evhGlobalClick (e) {
                 break;
             case "filter":
                 let activeFilters = [];
-                if (e.target.dataset.value == "All") {
+                if (e.target.dataset.value == "ALL") {
                     for (let filter of e.target.parentElement.children) {
                         filter.classList.remove("active");
                     }
@@ -273,14 +273,51 @@ function evhSuppliesFilter (e) {
     }
 }
 function evhRaidsFilter (e) {
-//    var list = document.getElementById("supplies-list");
-//    var r = new RegExp(e.target.dataset.value, "i"); //Faster
-    let filters = e.detail,
-        showAll = filters[0] == "All",
-        filterables = ["isHl", "elementName"];
+    let filters = e.detail;
+    let filterables = ["elementName"];
+    
+    let check = {hl: {do: false},
+                 inactive: {do: false},
+                 active: {do: true}};
+    function filter (raid) {
+        let specialCasesFound = 0; //Allow Special cases to AND each other when they are the only filters.
+        check.active.val = raid.entryObj.active == true;
+        
+        let ret = filters.some(f => { //This requires special case filters to be before general ones. If unwanted then update to do a full loop.
+            switch (f) {
+                case "ALL": //Actually more like ACTIVE
+                    return true;
+                case "INACTIVE":
+                    //Delay actual checking so we can AND with other filters if needed.
+                    check.inactive.do = true;
+                    check.active.do = false;
+                    check.inactive.val = !check.active.val;
+                    specialCasesFound++;
+                    if (filters.length == specialCasesFound) {return true;} //Allow to check other filters if they exist, return if not.
+                    break;
+                case "HL":
+                    check.hl.do = true;
+                    check.hl.val = raid.entryObj.data.isHl;
+                    specialCasesFound++;
+                    if (filters.length == specialCasesFound) {return true;}
+                    break;
+                default:
+                    return filterables.some(k => raid.entryObj.data[k] == f);
+            }
+        });       
+        if (ret) { //AND special cases
+            for (let c in check) {
+                if (check[c].do) {
+                    ret = ret && check[c].val;
+                }
+            }
+        }
+
+        return ret;
+    }
     
     for (let raid of UI.raids.list) {
-            if (showAll || filters.some(f => filterables.some(k => raid.entryObj.data[k] == f))) {
+            if (filter(raid)) {
                 raid.classList.remove("hidden");
             }
             else {
