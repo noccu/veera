@@ -205,9 +205,9 @@ function createRaid(raidEntry) {
 
     newRaid.content.querySelector(".raid").id = raidEntry.data.id;
     newRaid.content.querySelector(".raid-name").textContent = raidEntry.data.name;
-//    newRaid.content.querySelector(".raid-icon").src = raidEntry.data.img;
-    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
-    devLog(raidEntry.data.img);
+    newRaid.content.querySelector(".raid-icon").src = raidEntry.data.img;
+//    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
+//    devLog(raidEntry.data.img);
     newRaid.content.querySelector(".raid-cost").textContent = raidEntry.data.apCost;
     newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidEntry.data.dailyHosts;
