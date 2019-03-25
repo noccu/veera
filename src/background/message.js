@@ -61,7 +61,8 @@ function hear (msg) {
                     break;
                 case url.ismatch("resultmulti/data")://Raid loot screen
                 case url.ismatch("result/data"): //Quest loot screen
-                    gotQuestLoot(msg.data.json.rewards);
+                case url.ismatch("arcarum/open_chest"):
+                    gotQuestLoot(msg.data.json);
                     getPendantsRaid(msg.data.json);
                     checkNextQuest(msg.data.json);
                     break;

@@ -402,34 +402,58 @@ window.Supplies = {
 function gotQuestLoot(data) {
     var upd = [];
     function addUpdItem(entry) {
-        let type = entry.item_kind || entry.kind;
-        let item = new SupplyItem(type, entry.id, 0, entry.name);
-        item.delta = parseInt(entry.count);
-        item.rarity = parseInt(entry.rarity);
+        let type = entry.item_kind || entry.kind,
+            id = entry.id || entry.item_id,
+            count = entry.count || entry.num,
+            name = entry.name || entry.item_name;
+        
+        let item = new SupplyItem(type, id, 0, name);
+        item.delta = parseInt(count);
+        if (entry.rarity) {
+            item.rarity = parseInt(entry.rarity);
+        }
         if (!item.path) {
             //Read path from response (item.type) or default to treasure, seems most common.
-            item.path = entry.type && entry.type.includes("item") ? entry.type : ITEM_KIND[SUPPLYTYPE.treasure].path;
+            item.path = type && type.includes("item") ? type : ITEM_KIND[SUPPLYTYPE.treasure].path;
         }
         upd.push(item);
     }
 
     //Non-box, side-scrolling
-    if (data.article_list) {
-        for (let key of Object.keys(data.article_list)) {
-            let entry = data.article_list[key];
+    let loot = data.rewards.article_list,
+        content;
+    if (loot.length == undefined) { //It's an array when empty apparently...
+        content = Object.keys(loot);
+        for (let key of content) {
+            let entry = loot[key];
             addUpdItem(entry);
         }
+        devlog(`[Loot] Got ${content.length} items from side-scroll.`);
     }
 
     //Box drops
-    if (data.reward_list) {
-        for (let key of Object.keys(data.reward_list)) {
-            let boxType = data.reward_list[key];
+    loot = data.rewards.reward_list;
+    if (loot.length == undefined) { //An object when not
+        content = Object.keys(loot);
+        let numItems = 0;
+        for (let key of content) {
+            let boxType = loot[key];
             //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
             for (let entry of Object.keys(boxType)) {
                 addUpdItem(boxType[entry]);
+                numItems++;
             }
         }
+        devlog(`[Loot] Got ${numItems} items from boxes.`);
+    }
+    
+    //Arcarum chests
+    loot = data.contents;
+    if (loot) { //Is actually an array or undef/missing.
+        for (let item of loot) {
+            addUpdItem(item);
+        }
+        devlog(`[Loot] Got ${loot.length} items from arcarum chest.`);
     }
     Supplies.update(upd);
     DevTools.send("updRaidLoot", {loot: upd});
