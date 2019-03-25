@@ -207,7 +207,7 @@ function clearDropdown(el) {
 
 //UI functionality
 function evhGlobalClick (e) {
-    if (e.target.dataset) {
+    if (e.target.dataset.event) { //dataset is always accesible
         switch (e.target.dataset.event) {
             case "collapse":
                 e.target.nextElementSibling.classList.toggle('hidden');
@@ -222,11 +222,20 @@ function evhGlobalClick (e) {
                     activeFilters.push(e.target.dataset.value);
                 }
                 else {
-                    e.target.classList.toggle("active");
-                    //Special casing the "all" filter
-                    let list = e.target.parentElement,
+                    let list,
+                        defaultFilter;
+                    //Special action on the list parent to trigger filter with same values.
+                    if (e.target.dataset.value == "REFILTER") {
+                        list = e.target;
                         defaultFilter = list.firstElementChild;
-                    defaultFilter.classList.remove("active");
+                    }
+                    else {
+                        //Special casing the "all" filter
+                        list = e.target.parentElement;
+                        e.target.classList.toggle("active");
+                        defaultFilter = list.firstElementChild;
+                        defaultFilter.classList.remove("active");
+                    }
                     
                     for (let entry of list.getElementsByClassName("active")) {
                         activeFilters.push(entry.dataset.value);
