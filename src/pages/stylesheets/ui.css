@@ -421,15 +421,21 @@ button {
 .raid-current-drop {
     display: inline-block;
     text-align: center;
-    margin: 0.3em 0.3em;
+    margin: 0.15em 0.15em;
+    vertical-align: top;
 }
 
 .raid-current-drop img {
-    max-height: 75px;
+    max-width: var(--icon-size-raid-info);
 }
 
 .raid-current-drop span {
     display: block;
+    max-width: var(--icon-size-raid-info);
+/*    max-height: 2.4em;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
 [data-event] {

@@ -188,9 +188,10 @@ function updCurrentRaidInfo (data) {
         for (let item of data.loot) {
             if (ssr_only && item.rarity < 4) { continue; }
 
-            let disp = temp.content.firstElementChild;
+            let disp = temp.content.firstElementChild,
+                name = disp.getElementsByTagName("span")[0];
             disp.dataset.rarity = item.rarity;
-            disp.getElementsByTagName("span")[0].textContent = item.delta > 1 ? item.name+" x"+item.delta : item.name;
+            name.textContent = name.title = item.delta > 1 ? item.name+" x"+item.delta : item.name;
             disp.getElementsByTagName("img")[0].src = item.path;
 
             list.appendChild(document.importNode(temp.content, true));
