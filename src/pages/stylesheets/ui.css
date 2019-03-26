@@ -285,7 +285,7 @@ select, option {
     display: grid;
     grid-template-columns: 60px auto;
     grid-template-rows: 1fr;
-    grid-template-areas: "thumb data";
+    grid-template-areas: "thumb data toggle";
     align-items: center;
     margin-bottom: 5px;
 }
@@ -309,7 +309,7 @@ select, option {
 }
 .raid-name {
     grid-area: name;
-    min-width: 120px;
+    min-width: 125px;
     line-height: 2em;
     cursor: pointer;
 }
@@ -337,25 +337,25 @@ select, option {
     pointer-events: none;
 }
 .raid-mat:hover {
-    background-color: var(--highlight-color)
+    background-color: var(--highlight-color);
 }
 .raid-hosts {
     grid-area: hosts;
     display: inline-block;
     margin-right: 0;
 }
-.raid-current {
-/*    font-size: 1.5em;*/
+.raid-toggle {
+    grid-area: toggle;
 }
-.raid-max {
-/*    opacity: 0.5;*/
+.raid-toggle:before {
+    content: "X";
+/*    cursor: pointer;*/
+    font-size: 1.2em;
+    color: var(--diff-color-c);
 }
-/*
-.raid-data > *, .raid-icon {
-    margin-right: 1em;
-    display: inline-block;
+.host-limit {
+    opacity: 0.4;
 }
-*/
 
 
 .canvas-container {

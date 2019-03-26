@@ -126,9 +126,13 @@ function hear (msg) {
                     storeImminentRaidsTreasure(msg.data);
                     break;
                 case url.ismatch("quest/create_quest"):
-                    consumeImminentRaidsTreasure(msg.data);
-//                    Raids.update("host", msg.data);
-                    raidHosted(msg.data);
+                    if (msg.data.json.result == "ok") {
+                        consumeImminentRaidsTreasure(msg.data);
+                        Raids.update({
+                            action: "hosted",
+                            id: msg.data.postData.quest_id
+                        });
+                    }
             }
             break;
         case "plannerSeriesChange":
@@ -149,6 +153,9 @@ function hear (msg) {
                 State.unfEdition = msg.data;
                 State.save();
             }
+            break;
+        case "updRaid":
+            Raids.update(msg.data);
             break;
         case "hostRaid":
             Raids.start(msg.data.raidId, msg.data.matId);

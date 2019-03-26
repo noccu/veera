@@ -210,12 +210,14 @@ function createRaid(raidEntry) {
 //    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
 //    devLog(raidEntry.data.img);
     newRaid.content.querySelector(".raid-cost").textContent = raidEntry.data.apCost;
-    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
+    
+//    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidEntry.data.dailyHosts;
 
     newRaid = document.importNode(newRaid.content, true);
     newRaid.firstElementChild.entryObj = raidEntry;
     newRaid.firstElementChild.addEventListener("click", UI.raids.evhStartRaid);
+    updateRaidTrackingDisplay(newRaid.firstElementChild);
 
     if (raidEntry.data.matCost) {
         let matCost = newRaid.querySelector(".raid-host-mats");
@@ -230,6 +232,27 @@ function createRaid(raidEntry) {
     }
 
     return newRaid;
+}
+
+function updateRaidTrackingDisplay(raidEle) {
+    let raidEntry = raidEle.entryObj;
+    
+    let hostsLeft = raidEntry.data.dailyHosts - raidEntry.hosts.today;
+    raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
+
+    if (raidEntry.active) {
+        raidEle.classList.remove("hidden");
+    }
+    else {
+        raidEle.classList.add("hidden");
+    }
+    
+    if (hostsLeft == 0) {
+        raidEle.classList.add("host-limit");
+    }
+    else {
+        raidEle.classList.remove("host-limit");
+    }
 }
 
 function populateRaids (raids) { //called when bg page sends response to reqRaidList.

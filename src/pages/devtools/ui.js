@@ -189,12 +189,35 @@ window.UI = {
     },
     raids: {
         list: null,
-        evhStartRaid: function(ev) {
-            if (ev.currentTarget.entryObj) {
+        evhStartRaid (ev) {
+            if (!ev.target.dataset.event && ev.currentTarget.entryObj) {
                 let raidId = ev.currentTarget.entryObj.data.id,
-                    matId = ev.target.dataset.matId || undefined;
+                    matId = ev.target.dataset.matId; //undef is handled in the bg page function
                 BackgroundPage.send("hostRaid", {raidId, matId});
             }
+        },
+        evhToggle (raid) {
+//            raid.classList.toggle("hidden");
+            BackgroundPage.send("updRaid", {action: "toggleActive",
+                                            raidEntry: raid.entryObj});
+        },
+        update (raidEntry) {
+            function upd(entry) {
+                let el = document.getElementById(entry.data.id);
+                el.entryObj = entry;
+                updateRaidTrackingDisplay(el);
+            }
+            
+            if (Array.isArray(raidEntry)) {
+                for (let re of raidEntry) {
+                    upd(re);
+                }
+            }
+            else {
+                upd(raidEntry);
+            }
+
+            document.getElementById("raids-filter").click();
         }
     }
 };
@@ -250,6 +273,9 @@ function evhGlobalClick (e) {
                 }
                 
                 e.target.dispatchEvent( new CustomEvent("filter", {bubbles: true, detail: activeFilters}) );
+                break;
+            case "toggleRaid":
+                UI.raids.evhToggle(e.target.parentElement);
                 break;
         }
     }

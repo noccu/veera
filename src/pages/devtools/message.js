@@ -76,6 +76,8 @@ window.BackgroundPage = {
             case "nextQuestTriggered":
                 updCurrentRaidInfo(msg.data);
                 break;
+            case "updRaid":
+                UI.raids.update(msg.data);
         }
     }
 };
