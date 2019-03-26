@@ -62,6 +62,7 @@ window.State = {
                                 State[obj][key] = data.state[obj][key];
                             }
                         }
+                        State.save();
                     }
                 }
                 else {
