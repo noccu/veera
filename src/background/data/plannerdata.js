@@ -69,6 +69,15 @@ const PLANNER_TEMPLATES = {
         Harp: 4091,
         Katana: 4101
     },
+    quartz: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 5011,
+        Water: 5021,
+        Earth: 5031,
+        Wind: 5041,
+        Light: 5051,
+        Dark: 5061
+    },
     trueAnima: {
         type: SUPPLYTYPE.treasure,
         Fire: 41,
@@ -97,6 +106,25 @@ const PLANNER_TEMPLATES = {
         Wind: 32,
         Light: 50,
         Dark: 51
+    },
+    trialFragments: {
+//        __proto__: PlannerTemplate,
+        type: SUPPLYTYPE.treasure,
+        Fire: 5111,
+        Water: 5121,
+        Earth: 5131,
+        Wind: 5141,
+        Light: [5111, 5141],
+        Dark: [5121, 5131]
+    },
+    urns: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 111,
+        Water: 112,
+        Earth: 113,
+        Wind: 114,
+        Light: 115,
+        Dark: 116
     }
 };
 
@@ -108,6 +136,9 @@ const PLANNER_ITEMS = {
     flawlessPrism: new PlannerItem(SUPPLYTYPE.treasure, 1203),
     rainbowPrism: new PlannerItem(SUPPLYTYPE.treasure, 1204),
     antiqueCloth: new PlannerItem(SUPPLYTYPE.treasure, 54),
+    flawedPrism: new PlannerItem(SUPPLYTYPE.treasure, 1202),
+    bahaHorn: new PlannerItem(SUPPLYTYPE.treasure, 59),
+    silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107)
 };
 
 /** Creates an item for the planner from any accepted input.
@@ -605,6 +636,54 @@ window.PlannerData = {
             "Nio (harp)": "Harp",
             "Esser (gun)": "Gun",
         }
+    },
+
+    "Atma/Ultima": {
+        core: [
+            new PlannerItem(1, PLANNER_ITEMS.flawedPrism, 250),
+
+            new PlannerItem(2, PLANNER_ITEMS.bahaHorn, 2),
+            new PlannerItem(2, SUPPLYTYPE.treasure, 137, 10),
+            new PlannerItem(2, PLANNER_ITEMS.supremeMerit, 20),
+            new PlannerItem(2, SUPPLYTYPE.treasure, 140, 1),
+
+            new PlannerItem(3, PLANNER_ITEMS.legendaryMerit, 10),
+            new PlannerItem(3, PLANNER_ITEMS.silverCentrum, 10),
+            new PlannerItem(3, SUPPLYTYPE.treasure, 79, 3),
+            new PlannerItem(3, SUPPLYTYPE.treasure, 138, 5)
+        ],
+        wtype: {
+            Sword: null,
+            Dagger: null,
+            Spear: null,
+            Axe: null,
+            Staff: null,
+            Gun: null,
+            Fist: null,
+            Bow: null,
+            Harp: null,
+            Katana: null,
+            templates: [
+                new PlannerItem(3, PLANNER_TEMPLATES.stones, 500),
+                new PlannerItem(3, PLANNER_TEMPLATES.quartz, 500),
+                new PlannerItem(3, PLANNER_TEMPLATES.urns, 30)
+            ]
+        },
+        element: {
+            Fire: null,
+            Water: null,
+            Earth: null,
+            Wind: null,
+            Light: null,
+            Dark: null,
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.orbs.low, 250),
+                new PlannerItem(1, PLANNER_TEMPLATES.whorls, 250),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.trialFragments, 20)
+            ]
+        },
+        stepNames: ["Rusted", "Relic", "Atma", "Ultima"]
     }
 };
 
