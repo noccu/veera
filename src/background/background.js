@@ -20,12 +20,13 @@ function MainInit() {
         .then(() => State.game.linkToTab())
         .then(Supplies.load)
         .then(Raids.load)
-        .then(v => {
+        .then(() => {
             updateUI("init_theme", State.theme.current);
             updateUI("init_plannerSeriesList", Planner.listSeries());
             updateUI("init_unfEdition", State.unfEdition);
             updateUI("init_raidList", Raids.getList());
-        });
+        })
+        .then(checkReset);
 }
 
 //Old function, kept for now due to ease of reading intended use.

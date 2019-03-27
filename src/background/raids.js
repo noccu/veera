@@ -209,7 +209,6 @@ function checkReset () {
     let newReset = new Date(lastReset.getTime() + 86401000);
      setTimeout(checkReset, newReset - now);
 }
-checkReset();
 
 //import("/src/background/data/raidlist.js").then(o => Raids.List = o.raidInfo);
 //console.log(Raids.List);

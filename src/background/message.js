@@ -34,7 +34,6 @@ window.DevTools = {
 
 //Add a simple fast boolean return match function just cause I like it better :>
 String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
-// function ismatch (s) { return this.indexOf(s) != -1};
 
 function hear (msg) {
 //    console.log("Processing:", data);
