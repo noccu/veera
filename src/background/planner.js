@@ -2,35 +2,58 @@ window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
         var plan = [];
 
-        //find() function checks if given id(this) is already in plan (p)
-        function equalID(p) {
-            return p.id == this;
+        function addToPlan(item, templateKey) {
+            function addById(id) {
+                let plannedItem = plan.find(p => p.id == id);
+                if (plannedItem) {
+                    plannedItem.needed += item.needed;
+                }
+                else {
+                    let newItem = Supplies.get(item.type, id);
+                    if (newItem) {
+                        newItem.needed = item.needed;
+                        plan.push(newItem);
+                    }
+                }
+            }
+            
+            //Dealing with templates
+            let id = item.isTemplate ? item.id[templateKey] : item.id;
+            //Dealing with multi-item teplates
+            if (Array.isArray(id)) {
+                for (let itemId of id) {
+                    addById(itemId);
+                }
+            }
+            else {
+                addById(id);
+            }
         }
 
-        for (let key of Object.keys(PlannerData[series])) {
-             let id,
-                 itemArray,
-                 templateKey,
-                 t;
-             switch (key) {
+        for (let category of Object.keys(PlannerData[series])) {
+             let itemArray,
+                 templateKey;
+             switch (category) {
                  case "core":
                      itemArray = PlannerData[series].core;
                      break;
                  case "wtype":
-                     t = PlannerData[series].wtype.templates || [];
-                     itemArray = t.concat(PlannerData[series].wtype[wtype]);
+                     itemArray = PlannerData[series].wtype[wtype] || [];
+                     if (PlannerData[series].wtype.templates) {
+                         itemArray = itemArray.concat(PlannerData[series].wtype.templates);
+                     }           
                      templateKey = PlannerData[series].typeNames ? PlannerData[series].typeNames[wtype] : wtype;
                      break;
                  case "element":
-                     t = PlannerData[series].element.templates || [];
-                     itemArray = t.concat(PlannerData[series].element[element]);
+                     itemArray = PlannerData[series].element[element] || [];
+                     itemArray = itemArray.concat(PlannerData[series].element.templates);
                      templateKey = element;
                      break;
                  case "typeNames":
                  case "stepNames":
                      continue;
                  default:
-                     deverror("Internal data error (Planner). Given: ", key);
+                     deverror("[Planner] Invalid plan item category: ", category);
                      return;
              }
 
@@ -38,17 +61,7 @@ window.Planner = {
                 for (let item of itemArray) {
                     if (item == null) { continue; }
                     if (start < item.step && item.step <= end) { //start is exclusive (we already have it!)
-                        id = item.isTemplate ? item.id[templateKey] : item.id; //Dealing with templates
-                        var plannedItem = plan.find(equalID, id);
-                        if (plannedItem) {
-                            plannedItem.needed += item.needed;
-                        } else {
-                            var supplydata = Supplies.get(item.type, id);
-                            if (supplydata) {
-                                supplydata.needed = item.needed;
-                                plan.push(supplydata);
-                            }
-                        }
+                        addToPlan(item, templateKey);
                     }
                 }
             }
