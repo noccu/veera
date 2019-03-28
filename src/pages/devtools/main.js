@@ -6,15 +6,15 @@ Object.defineProperty(Array.prototype, "last", {get: function(){
 }});
 
 if (chrome.runtime) {
-    //Start logging network requests.
-    BackgroundPage.connect();
-    Network.listen();
-
+//    UI.planner.init();
+    //UI.battle.init();
     UI.initButtons();
     UI.time.keep();
     UI.time.initTimers();
     Unf.areaInfo.init();
-    //UI.battle.init();
+
+    BackgroundPage.connect();
+    Network.listen();
 }
 
 function devLog() {
@@ -123,14 +123,14 @@ function updateSupplies (idx) {
     }
 }
 
-function createSupplyItem (data) {
+function createSupplyItem (data, idPrefix) {
     if (!data.id) {
         console.warn("No id for item: ", data);
         return;
     }
     var t = document.getElementById("template-supply-item");
     let item = t.content.firstElementChild;
-    item.id = `${data.type}_${data.id}`;
+    item.id = `${idPrefix || ""}${data.type}_${data.id}`;
     item.title = data.location ? `${data.name}\nGet from: ${data.location}`: data.name;
     item.getElementsByClassName("collection-icon")[0].src = data.path;
     item.getElementsByClassName("collection-data")[0].textContent = data.count;
@@ -148,7 +148,7 @@ function createSupplyItem (data) {
 
 //Planner functions
 function createPlannerItem (item) {
-        let li = createSupplyItem(item);//TODO: uguu
+        let li = createSupplyItem(item, "p");
         li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
         return li;
 }
@@ -165,11 +165,11 @@ function updateSeriesOptions (data) { //receives list of each option type.
 }
 
 function updatePlan () {  //Event handler
-    var plan = {series: UI.planner.display.series.value,
-                type: UI.planner.display.type.value,
-                element: UI.planner.display.element.value,
-                start: UI.planner.display.start.selectedIndex,
-                end: UI.planner.display.end.selectedIndex};
+    var plan = {series: UI.planner.dom.series.value,
+                type: UI.planner.dom.type.value,
+                element: UI.planner.dom.element.value,
+                start: UI.planner.dom.start.selectedIndex,
+                end: UI.planner.dom.end.selectedIndex};
     BackgroundPage.send("newPlanRequest", plan);
 }
 
@@ -207,7 +207,7 @@ function createRaid(raidEntry) {
 //    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
 //    devLog(raidEntry.data.img);
     newRaid.content.querySelector(".raid-cost").textContent = raidEntry.data.apCost;
-    
+
 //    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidEntry.data.dailyHosts;
 
@@ -235,7 +235,7 @@ function createRaid(raidEntry) {
 
 function updateRaidTrackingDisplay(raidEle) {
     let raidEntry = raidEle.entryObj;
-    
+
     let hostsLeft = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
 
@@ -245,8 +245,8 @@ function updateRaidTrackingDisplay(raidEle) {
             raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
         }
     }
-    
-    
+
+
     //CSS
     if (raidEntry.active) {
         raidEle.classList.remove("hidden");
@@ -254,7 +254,7 @@ function updateRaidTrackingDisplay(raidEle) {
     else {
         raidEle.classList.add("hidden");
     }
-    
+
     if (hostsLeft == 0) {
         raidEle.classList.add("host-limit");
     }
@@ -263,17 +263,8 @@ function updateRaidTrackingDisplay(raidEle) {
     }
 }
 
-function populateRaids (raids) { //called when bg page sends response to reqRaidList.
+function populateRaids (raids) {
     let list = document.getElementById("raids-list");
-    let frag = document.createDocumentFragment();
-    for (let raid of raids) {
-        frag.appendChild(createRaid(raid));
-    }
-    list.appendChild(frag);
+    UI.setList(list, raids, createRaid);
     UI.raids.list = list.children;
-}
-
-function evhFilterRaids(e) { //called on changing filters
-    let filterData = e.dothings(); //TODO
-    BackgroundPage.send("reqRaidList", filterData);
 }

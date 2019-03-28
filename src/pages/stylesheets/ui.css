@@ -267,12 +267,12 @@ select, option {
     opacity: 0.5;
 }
 
-.collection-item[data-done] {
+.collection-item.done {
     opacity: 0.25;
 /*    background-color: var(--diff-color-b)*/
 }
 
-.collection-item[data-low] {
+.collection-item.low {
     background-color: var(--diff-color-b)
 }
 

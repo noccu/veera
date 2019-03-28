@@ -22,12 +22,25 @@ window.UI = {
             }
         }
     },
-    
+    /**(re)Creates a DOM list, adding each entry in entryArray to list, optionally passed through the function f
+    @arg {HTMLElement} list - A DOM element to serve as list root.
+    @arg {Array} - Array of items to add to list.
+    @arg {function} f - Defines transform of each entryArray item, given item.
+    **/
+    setList (list, entryArray, f) {
+        list.innerHTML = "";
+        let frag = document.createDocumentFragment();
+        for (let entry of entryArray) {
+            frag.appendChild(f ? f(entry) : entry);
+        }
+        list.appendChild(frag);
+    },
+
     switchNav: function (ev) {
         if (!ev.target.dataset.navpage) {return;}
         var oldNav = this.getElementsByClassName("active")[0];
         oldNav.classList.remove("active");
-        var oldTab = document.getElementById(oldNav.dataset.navpage); 
+        var oldTab = document.getElementById(oldNav.dataset.navpage);
         oldTab.classList.remove("active");
 
         ev.target.classList.add("active");
@@ -45,25 +58,25 @@ window.UI = {
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
         document.getElementById("raids-panel").addEventListener("filter", evhRaidsFilter);
     },
-    
+
     time: {
         display: {},
         timers: {},
         jst: {}, //Current time
         int: {},
-        
-        keep: function() {            
+
+        keep: function() {
             function tick() {
                 updateTimer(UI.time.jst, 1);
                 updateTimerDisplay("jst", UI.time.jst);
             }
-            
+
             this.display.jst = {
                 h: document.getElementById("jst-h"),
                 m: document.getElementById("jst-m"),
                 s: document.getElementById("jst-s")
             };
-            
+
             this.jst = new Date();
             translateDate(this.jst, "toJST");
             updateTimerDisplay("jst", this.jst);
@@ -82,19 +95,19 @@ window.UI = {
             this.int.resets = setInterval(this.updateTimers, 1000);
         },
         setStrike: function() {
-            
+
         },
         setTimers: function () {
             var current = this.jst;
 //            translateDate(current, "toJST");
-            
+
             var daily = new Date(current);
             daily.setUTCHours(5);
             daily.setUTCMinutes(0);
             daily.setUTCSeconds(0);
             var weekly = new Date(daily);
             var monthly = new Date(daily);
-            
+
             //Daily
             if (current.getUTCHours() >= 5) {
                 daily.setUTCDate(daily.getUTCDate() + 1);
@@ -111,7 +124,7 @@ window.UI = {
                 monthly.setUTCDate(1);
                 monthly.setUTCMonth(current.getUTCMonth() + 1);
             }
-            
+
             this.timers.daily = new Date(daily - current);
             this.timers.weekly = new Date(weekly - current);
             this.timers.monthly = new Date(monthly - current);
@@ -126,41 +139,43 @@ window.UI = {
                     }
                     UI.time.setTimers();
                 }
-                
+
                 updateTimer(UI.time.timers[timer], -1);
                 updateTimerDisplay(timer, UI.time.timers[timer]);
             }
         }
     },
     planner: {
-        display: {},
+        dom: {
+        },
         init: function(seriesList) {
-            this.display.series = document.getElementById("planner-craftSeries");
-            this.display.type = document.getElementById("planner-craftType");
-            this.display.element = document.getElementById("planner-craftElement");
-            this.display.start = document.getElementById("planner-craftStart");
-            this.display.end = document.getElementById("planner-craftEnd");
-            
-            this.populateSelection("series", seriesList);//Msg
+            this.dom.series = document.getElementById("planner-craftSeries");
+            this.dom.type = document.getElementById("planner-craftType");
+            this.dom.element = document.getElementById("planner-craftElement");
+            this.dom.start = document.getElementById("planner-craftStart");
+            this.dom.end = document.getElementById("planner-craftEnd");
+            this.dom.list = document.getElementById("planner-list");
+            this.dom.plan = this.dom.list.getElementsByClassName("collection-item");
 
+            UI.planner.populateSelection("series", seriesList);
+            
             var dummy = document.createElement("option");
             dummy.value = "";//empty value !important
             dummy.textContent = "Select...";
-            this.display.series.options.add(dummy, 0);
+            this.dom.series.options.add(dummy, 0);
             dummy.selected = true;
-            
-            this.display.series.onchange = changeSeries;
-            
-            this.display.type.onchange = updatePlan;
-            this.display.element.onchange = updatePlan;
-            this.display.start.onchange = updatePlan;
-            this.display.end.onchange = updatePlan;
+
+            this.dom.series.onchange = changeSeries;
+            this.dom.type.onchange = updatePlan;
+            this.dom.element.onchange = updatePlan;
+            this.dom.start.onchange = updatePlan;
+            this.dom.end.onchange = updatePlan;
         },
         //String, Array
         populateSelection: function(name, list) {
-            var display = this.display[name];
-            clearDropdown(display);
             if (!list) {return;}
+            var display = this.dom[name];
+            clearDropdown(display);
             for (let option of list) {
                 var el = document.createElement("option");
                 el.value = el.textContent = option;
@@ -169,22 +184,15 @@ window.UI = {
             }
         },
         displayPlan: function(plan) {
-            var list = document.getElementById("planner-list");
-            list.innerHTML = "";
-            
-            var entry;
-            for (let item of plan) {
-//                console.log(item);
-                
-                entry = createPlannerItem(item);
-                entry.firstElementChild.dataset.id = item.id;
-                entry.firstElementChild.dataset.needed = item.needed;
-//                entry.firstElementChild.dataset.type = item.type;
-                stylePlanItem(entry, item.count, item.needed);
+//            this.display.list.innerHTML = "";
+            this.dom.list.createdPlan = plan;
 
-//                entry = createPlannerItem(item.name, item.current, item.needed, "../../assets/images/anchiraicon.png");
-                list.appendChild(entry);
-            }
+            UI.setList(this.dom.list, plan, item => {
+                let ele = createPlannerItem(item);
+                ele.firstElementChild.plannerData = item;
+                stylePlanItem(ele, item);
+                return ele;
+            });
         }
     },
     raids: {
@@ -255,19 +263,19 @@ function evhGlobalClick (e) {
                         defaultFilter = list.firstElementChild;
                         defaultFilter.classList.remove("active");
                     }
-                    
+
                     for (let entry of list.getElementsByClassName("active")) {
                         activeFilters.push(entry.dataset.value);
                     }
                     if (activeFilters.length === 0) {
                         defaultFilter.classList.add("active");
                         activeFilters.push(defaultFilter.dataset.value);
-                    } 
+                    }
 //                    else {
 //                        defaultFilter.classList.remove("active");
 //                    }
                 }
-                
+
                 e.target.dispatchEvent( new CustomEvent("filter", {bubbles: true, detail: activeFilters}) );
                 break;
             case "toggleRaid":
@@ -314,14 +322,14 @@ function evhSuppliesFilter (e) {
 function evhRaidsFilter (e) {
     let filters = e.detail;
     let filterables = ["elementName"];
-    
+
     let check = {hl: {do: false},
                  inactive: {do: false},
                  active: {do: true}};
     function filter (raid) {
         let specialCasesFound = 0; //Allow Special cases to AND each other when they are the only filters.
         check.active.val = raid.entryObj.active == true;
-        
+
         let ret = filters.some(f => { //This requires special case filters to be before general ones. If unwanted then update to do a full loop.
             switch (f) {
                 case "ALL": //Actually more like ACTIVE
@@ -343,7 +351,7 @@ function evhRaidsFilter (e) {
                 default:
                     return filterables.some(k => raid.entryObj.data[k] == f);
             }
-        });       
+        });
         if (ret) { //AND special cases
             for (let c in check) {
                 if (check[c].do) {
@@ -354,7 +362,7 @@ function evhRaidsFilter (e) {
 
         return ret;
     }
-    
+
     for (let raid of UI.raids.list) {
             if (filter(raid)) {
                 raid.classList.remove("hidden");
@@ -366,34 +374,34 @@ function evhRaidsFilter (e) {
 }
 
 //Planner
-function stylePlanItem(el, current, needed) {
+function stylePlanItem(el, item) {
     if(el.nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
         el = el.firstElementChild;
     }
-    
-    if (current >= needed) {
-        el.dataset.done = "";
+
+    if (item.count >= el.plannerData.needed) {
+        el.classList.add("done");
     }
-    else if(current < Math.floor(needed/10)) {
-        el.dataset.low = "";
+    else if(item.count < Math.floor(el.plannerData.needed/10)) {
+        el.classList.add("low");
+        el.classList.remove("done");
+    }
+    else {
+        el.classList.remove("done", "low");
     }
 }
 
-function syncPlanner(index, type) { //TODO: make it work with consumables
-    if (type != "treasure") { return; }
-    
-    var list = document.getElementById("planner-list").getElementsByClassName("collection-item");
-//    var isTreasure = type == "treasure";
-    var curDisp;
-    for (let item of list) {
-        if (item.dataset.type == "article") {
-            curDisp = item.getElementsByClassName("planner-current")[0];
-            curDisp.textContent = index[item.dataset.id].count;
-    //        cur.textContent = isTreasure ? index[item.dataset.id].count : index[type][item.dataset.id].count;
-            stylePlanItem(item, index[item.dataset.id].count, item.dataset.needed);
+function syncPlanner(index) {
+    if (UI.planner.dom.list.createdPlan) {
+        let ele;
+        for (let item of index) {
+            ele = UI.planner.dom.plan.namedItem(`p${item.type}_${item.id}`);
+            if (ele) {
+                ele.getElementsByClassName("planner-current")[0].textContent = item.count;
+                stylePlanItem(ele, item);
+            }
         }
     }
-    
 }
 
 //Timing functions

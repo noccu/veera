@@ -34,6 +34,7 @@ window.BackgroundPage = {
                 break;
             case "init_plannerSeriesList":
                 UI.planner.init(msg.data);
+//                UI.planner.populateSelection("series", msg.data);
                 break;
             case "init_unfEdition":
                 Unf.edition = msg.data;
@@ -49,7 +50,7 @@ window.BackgroundPage = {
                 break;
             case "updSupplies":
                 updateSupplies(msg.data);
-                syncPlanner(msg.data, "treasure");
+                syncPlanner(msg.data);
                 break;
             case "newPlannerSeriesOptions":
                 updateSeriesOptions(msg.data);
