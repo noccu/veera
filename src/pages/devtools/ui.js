@@ -295,11 +295,19 @@ function evhSuppliesSearch (e) { //just treasure for now
 function evhSuppliesFilter (e) {
     var list = document.getElementById("supplies-list");
 //    var r = new RegExp(e.target.dataset.value, "i"); //Faster
-    let filters = e.detail,
-        showAll = filters[0] == "All";
-    
+    let filters = e.detail;
+    function filter (item){
+        return filters.some(f => {
+            switch (f) {
+                case "ALL":
+                case item.dataset.type:
+                case item.dataset.metaType:
+                    return true;
+            }
+        });
+    }
     for (let item of list.children) {
-        if (showAll || filters.some(f => f == item.dataset.type || (item.dataset.metaType && f == item.dataset.metaType))) {
+        if (filter(item)) {
             item.classList.remove("hidden");
         }
         else {
