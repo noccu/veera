@@ -202,19 +202,15 @@ window.UI = {
                                             raidEntry: raid.entryObj});
         },
         update (raidEntry) {
-            function upd(entry) {
-                let el = document.getElementById(entry.data.id);
-                el.entryObj = entry;
-                updateRaidTrackingDisplay(el);
-            }
-            
             if (Array.isArray(raidEntry)) {
                 for (let re of raidEntry) {
-                    upd(re);
+                    this.update(re);
                 }
             }
             else {
-                upd(raidEntry);
+                let el = document.getElementById(raidEntry.data.id);
+                el.entryObj = raidEntry;
+                updateRaidTrackingDisplay(el);
             }
 
             document.getElementById("raids-filter").click();
