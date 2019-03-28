@@ -47,10 +47,8 @@ window.BackgroundPage = {
             case "updStatus":
                 updateStatus(msg.data);
                 break;
-            case "setTreasure":
-            case "setConsumables":
+            case "updSupplies":
                 updateSupplies(msg.data);
-//                updateConsumables(msg.data);
                 syncPlanner(msg.data, "treasure");
                 break;
             case "newPlannerSeriesOptions":

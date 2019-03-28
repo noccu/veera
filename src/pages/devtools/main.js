@@ -105,21 +105,20 @@ function updateStatus (data) {
 function updateSupplies (idx) {
     if (idx) {
         var list = document.getElementById("supplies-list");
-        var temp;
+        var newItems;
 
         for (let item of idx) {
             let entry = document.getElementById(`${item.type}_${item.id}`);
-            if (entry) {
+            if (entry) { //update
                 entry.getElementsByClassName("collection-data")[0].textContent = item.count;
             }
-            else {
-                if (!temp) { temp = document.createElement("template"); }
-                var li = createSupplyItem(item);
-                temp.content.appendChild(li);
+            else { //add new
+                if (!newItems) { newItems = document.createElement("template"); }
+                newItems.content.appendChild(createSupplyItem(item));
             }
         }
-        if (temp) {
-            list.appendChild(temp.content);
+        if (newItems) {
+            list.appendChild(newItems.content);
         }
     }
 }
@@ -130,19 +129,17 @@ function createSupplyItem (data) {
         return;
     }
     var t = document.getElementById("template-supply-item");
-/*    t.content.querySelector("li").title = name;
-    t.content.querySelector("img").src = thumb;
-    t.content.querySelector("div").textContent = num;*/
     let item = t.content.firstElementChild;
     item.id = `${data.type}_${data.id}`;
-    let loc = data.location,
-        name = data.name;
-    item.title = loc ? `${name}\nGet from: ${loc}`: name;
+    item.title = data.location ? `${data.name}\nGet from: ${data.location}`: data.name;
     item.getElementsByClassName("collection-icon")[0].src = data.path;
     item.getElementsByClassName("collection-data")[0].textContent = data.count;
     item.dataset.type = data.typeName;
     if (data.metaType) {
         item.dataset.metaType = data.metaType;
+    }
+    else {
+        delete item.dataset.metaType;
     }
 //    item.classList.add(data.typeName.replace(" ",""));
 

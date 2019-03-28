@@ -25,6 +25,7 @@ function MainInit() {
             updateUI("init_plannerSeriesList", Planner.listSeries());
             updateUI("init_unfEdition", State.unfEdition);
             updateUI("init_raidList", Raids.getList());
+            updateUI("updSupplies", Supplies.getAll());
         })
         .then(checkReset);
 }

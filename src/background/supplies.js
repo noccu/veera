@@ -300,6 +300,9 @@ window.Supplies = {
         }
         return ret;
     },
+    getAll() {
+        return this.getType(Object.keys(this.index));
+    },
     /**Set the full treasure index, for use with game's supplies page.*/
     setTreasure: function (json) {
         //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
@@ -312,7 +315,7 @@ window.Supplies = {
 
         this.set(upd);
         this.save();
-        updateUI("setTreasure", upd); //TODO: merge the event to "update supplies" as it now sends through the type explicitly
+        updateUI("updSupplies", upd); //TODO: merge the event to "update supplies" as it now sends through the type explicitly
     },
     /**Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
@@ -365,15 +368,14 @@ window.Supplies = {
             }
             else { //Add new
                 item.count = item.delta;
-                this.set(item); //_upd not called with object = no this
+                this.set(item);
             }
         }
         for (let item of updArr) {
             _upd.call(this, item);
         }
 
-        updateUI("setTreasure", updArr.filter(e => e.type == SUPPLYTYPE.treasure));
-        updateUI("setConsumables", updArr.filter(e => SUPPLYTYPE.Consumables.includes(e.type)));
+        updateUI("updSupplies", updArr);
         this.save();
     },
     save: function() {
@@ -387,8 +389,7 @@ window.Supplies = {
                 Supplies.index = data.sup_idx || {};
 
                 devlog("Supply index loaded.");
-                updateUI("setTreasure", Supplies.getType(SUPPLYTYPE.treasure));
-                updateUI("setConsumables", Supplies.getType(SUPPLYTYPE.Consumables));
+//                updateUI("updSupplies", Supplies.getAll());
                 r();
             }
             Storage.get(["sup_idx"], _load);
