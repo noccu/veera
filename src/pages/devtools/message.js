@@ -77,6 +77,9 @@ window.BackgroundPage = {
                 break;
             case "updRaid":
                 UI.raids.update(msg.data);
+                break;
+            default:
+                window.dispatchEvent(msg.action, msg.data);
         }
     }
 };
