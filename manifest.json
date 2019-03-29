@@ -3,7 +3,7 @@
 
    "name": "Veera",
    "description": "The GBF Companion that keeps a close watch.",
-   "version": "1.1.0",
+   "version": "1.2.0",
 
    "icons": {
       "128": "src/assets/images/icon128.png",
@@ -22,16 +22,16 @@
 
    "background": {
      "scripts": ["src/background/message.js",
+                 "src/background/background.js",
                  "src/background/storage.js",
-                 "src/background/profile.js",
                  "src/background/state.js",
+                 "src/background/profile.js",
                  "src/background/supplies.js",
                  "src/background/planner.js",
                  "src/background/data/plannerdata.js",
                  "src/background/raids.js",
                  "src/background/data/raiddata.js",
-                 "src/background/battle.js",
-                 "src/background/background.js"]
+                 "src/background/battle.js"]
    },
 
    "permissions": [

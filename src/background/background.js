@@ -34,3 +34,27 @@ function MainInit() {
 function updateUI (type, value) {
     DevTools.send(type, value);
 }
+
+//Utils
+function Enum(...names) { //eh it's neat but can't auto-complete and not JSON
+    let idx = 1;
+    Object.defineProperty(this, "dict", {
+        enumerable: false,
+        value: {}
+    });
+    
+    for (let name of names) {
+        this.dict[idx] = name;
+        this[name] = idx;
+        idx++;
+    }
+    Object.freeze(this.dict);
+    Object.freeze(this);
+}
+Enum.prototype.getName = function (value) {
+    return this.dict[value];
+};
+
+function getEnumNamedValue(list, val) { //for the simple plain obj enum actually used
+    return Object.entries(list).find(x => x[1] == val)[0];
+}
