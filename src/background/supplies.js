@@ -569,7 +569,7 @@ function weaponUncapStart(data) {
 }
 
 function npcUncapStart(data) {
-    var update = { id: data.url.match(/materials\/(\d+)\?/)[1],
+    var update = { id: data.url.match(/materials\/(\d+)/)[1],
                    items: [] };
 
 //    update.id = data.url.match(/materials\/(\d+)\?/)[1];
