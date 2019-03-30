@@ -122,16 +122,32 @@ function hear (msg) {
                     */
                 case url.ismatch("quest/treasure_raid"):
                 case /treasureraid\d+\/top\/content\/newindex/.test(url):
-                    storeImminentRaidsTreasure(msg.data);
+                    storePendingRaidsTreasure(msg.data);
                     break;
                 case url.ismatch("quest/create_quest"):
                     if (msg.data.json.result == "ok") {
-                        consumeImminentRaidsTreasure(msg.data);
+                        consumePendingRaidsTreasure(msg.data);
                         Raids.update({
                             action: "hosted",
                             id: msg.data.postData.quest_id
                         });
                     }
+                    break;
+                case url.ismatch("disabled_job/"):
+                    storePendingJobUnlock(msg.data.json);
+                    break;
+                case url.ismatch("party/release_job"):
+                    consumePendingJobUnlock(msg.data);
+                    break;
+                case url.ismatch("archaic/job/replica_exchange/"):
+                case url.ismatch("archaic/job/original_exchange/"):
+                case url.ismatch("archaic/job/rebuilt_exchange/"):
+                    storePendingForgeCCW(msg.data.json);
+                    break;
+                case url.ismatch("archaic/job/replica_exchange_result"):
+                case url.ismatch("archaic/job/original_exchange_result"):
+                case url.ismatch("archaic/job/rebuilt_exchange_result"):
+                    consumePendingForgeCCW(msg.data.postData);
             }
             break;
         case "plannerSeriesChange":
