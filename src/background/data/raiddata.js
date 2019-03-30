@@ -108,7 +108,7 @@ window.RaidList = [
     new RaidData("Anubis", 303071, RAID_TIER.Epic, 101, 1, 80, [46], [1], ELEMENTS.dark, "2040134000_high.png"),
     
     new RaidData("Shiva", 303151, RAID_TIER.Genesis, 120, 2, 90, [522], [1], ELEMENTS.fire, "2040185000_high.png"),
-    new RaidData("Europa", 303161, RAID_TIER.Genesis, 120, 2, 90, [523], [1], ELEMENTS.earth, "2040225000_high.png"),
+    new RaidData("Europa", 303161, RAID_TIER.Genesis, 120, 2, 90, [523], [1], ELEMENTS.water, "2040225000_high.png"),
     new RaidData("Godsworn Alexiel", 303171, RAID_TIER.Genesis, 120, 2, 90, [524], [1], ELEMENTS.earth, "2040205000_high.png"),
     new RaidData("Grimnir", 303181, RAID_TIER.Genesis, 120, 2, 90, [525], [1], ELEMENTS.wind, "2040261000_high.png"),
     new RaidData("Metatron", 303191, RAID_TIER.Genesis, 120, 2, 90, [526], [1], ELEMENTS.light, "2040276000_high.png"),
