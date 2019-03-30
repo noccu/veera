@@ -3,6 +3,18 @@
 An entirely new and rewritten Granblue companion based on the Ancheera concept.
 Keep track of supplies, plan weapon crafts, analyze battle & GW data, and more.
 
+# About
+
+Veera is a QoL extension. It does not modify anything about the game, its data, browser page, UI, requests, nor overlays anything.
+All it does is read and display game traffic for ease of use, or loads it from its own local storage.
+Some of this data, or Veera's funtionality based on it, is not readily available through the game UI (obviously, this is kind of the point) but this does not change the above.
+
+It tries to be as passive as possible, minimizing out of order requests and server load.
+For some features, this may not be possible. In such cases the feature is determined to be useful enough and the load/risk minimal, and/or initiated explicitly by the user.
+Even so Veera will usually not behave much different from bookmarks, for example.
+
+__WARNING: Regardless of how low the risk is, it is still an unofficial tool and thus technically against TOS.__
+
 # Development
 
 * Still a WIP so parts don't work, features are missing. Help is appreciated.
