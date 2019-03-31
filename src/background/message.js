@@ -95,7 +95,7 @@ function hear (msg) {
                     break;
                 case url.ismatch("rest/raid/start"):
                 case url.ismatch("rest/multiraid/start"):
-                    Battle.log.reset(msg.data.json);
+                    Battle.reset(msg.data.json);
                     break;
                 case url.ismatch("shop_exchange/purchase"):
                     purchaseItem(msg.data.json);
