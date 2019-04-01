@@ -220,7 +220,7 @@ function SupplyItem (type, id, count, name) {
             this.metaType = t;
         }
     }
-    if (ITEM_KIND[type] && id) {
+    if (ITEM_KIND[type] && id !== undefined) { //id can be 0
         this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${id}.jpg`;
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
@@ -485,6 +485,38 @@ function purchaseItem(data) {
 
         Supplies.update(upd);
     }
+}
+
+function cratePickup(data) { //single item pick up TODO: check multi
+    let upd = [];
+    function parse(entry) {
+        let si = new SupplyItem(entry.item_kind_id, entry.item_id, 0, entry.item_name);
+        si.delta = parseInt(entry.number);
+        upd.push(si);
+    }
+    
+    if (Array.isArray(data.presents)) { //Pickup all
+        for (let item of data.presents) {
+            parse(item);
+        }
+    }
+    else { //pickup single
+        parse(data.presents);
+    }
+    
+    Supplies.update(upd);
+}
+function trophyPickup(data) {
+    let upd = [],
+        si, id;
+    for (let item in data.reward) {
+        id = item.slice(item.lastIndexOf("_") + 1);
+        si = new SupplyItem(data.reward.item_kind, id, 0, data.reward.name);
+        si.delta = parseInt(data.reward.number);
+        upd.push(si);
+    }
+    
+    Supplies.update(upd);
 }
 
 function reduce (data) {

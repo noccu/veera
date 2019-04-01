@@ -148,6 +148,15 @@ function hear (msg) {
                 case url.ismatch("archaic/job/original_exchange_result"):
                 case url.ismatch("archaic/job/rebuilt_exchange_result"):
                     consumePendingForgeCCW(msg.data.postData);
+                    break;
+                //There is a confirm for _all which triggers if not checking end of path, hence split.
+                case url.ismatch("present/receive?"):
+                case url.ismatch("present/receive_all?"):
+                    //is  normally followed by article list but that only shows treasure. There's more to pick up than that...
+                    cratePickup(msg.data.json);
+                    break;
+                case url.ismatch("rest/title/par_claim"): //trophy pickup
+                    trophyPickup(msg.data.json);
             }
             break;
         case "plannerSeriesChange":
