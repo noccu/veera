@@ -16,12 +16,15 @@
 
         //Constructors
         "RaidData": false,
+        "SupplyItem": false,
+        "BattleData": false,
 
         //Functions
         "devlog": false,
         "deverror": false,
         "devwarn": false,
         "updateUI": false,
+        "parseDom": false,
 
         //Constants
         "SUPPLYTYPE": false,
