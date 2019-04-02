@@ -190,9 +190,6 @@ li {
 .spacer {
     margin-bottom: 1em;
 }
-
-
-
 .sep {
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
@@ -373,32 +370,45 @@ button {
     padding: 0.3em;
 }
 
+/* Battle */
 .battle-char-container {
     width: 32%;
     margin: 0.5em 0.2em;
     display: inline-block;
 }
-
+.battle-stats-container { /*Used only for chars it seems*/
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "left right";
+}
+.battle-stats-container .sep {
+    grid-area: auto / left / auto / right;
+}
 .battle-stats {
     display: inline-block;
+/*
     margin-right: 2em;
     text-align: left;
+*/
 }
-
-.battle-stats-group .battle-stats {
-    display: block;
-    margin-right: 0;
-}
-
 .battle-stats-group {
     display: inline-block;
+/*
     margin-right: 2em;
     max-width: 20%
+*/
+}
+.battle-stats-group .battle-stats {
+    display: block;
+/*    margin-right: 0;*/
 }
 
 .battle-stats-group.chara {
+/*
     max-width: 49%;
     margin-right: 1em
+*/
 }
 
 .battle-char-name {
@@ -410,9 +420,6 @@ button {
     text-align: center;
 }
 
-.battle-stats-container {
-    text-align: left;
-}
 
 #raid-current-drop-list {
     padding: 0.5em;

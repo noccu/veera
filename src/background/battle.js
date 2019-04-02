@@ -197,6 +197,7 @@ function BattleActionData(action) {
     this.hits = 0;
     this.echoDmg = 0;
     this.echoHits = 0;
+    this.skillDmg = 0;
     this.crits = 0;
     this.critDmg = 0;
     this.misses = 0;
@@ -299,6 +300,7 @@ function BattleCharData(id, name = "") {
         hits: 0,
         echoDmg: 0,
         echoHits: 0,
+        skillDmg: 0,
         crits: 0,
         da: 0,
         ta: 0,
@@ -331,7 +333,13 @@ const battleCharStatsShared = {
         return safeDivide(this.ougis, this.instance.activeTurns) * 100;
     },
     get totalDmg() {
-        return this.dmg + this.echoDmg;
+        return this.dmg + this.echoDmg + this.skillDmg;
+    },
+    get skillDmgPerc() {
+        return safeDivide(this.skillDmg, this.totalDmg) * 100;
+    },
+    get echoDmgPerc() {
+        return safeDivide(this.echoDmg, this.totalDmg) * 100;
     },
     get totalHits() {
         return this.hits + this.echoHits;
@@ -373,7 +381,12 @@ function battleParseDamage(input, actionData, type) {
                         actionData.echoHits++;
                     }
                     else {
-                        actionData.dmg += parseInt(entry.value);
+                        if (actionData.action == BATTLE_ACTIONS.skill) {
+                            actionData.skillDmg += parseInt(entry.value);
+                        }
+                        else {
+                            actionData.dmg += parseInt(entry.value);
+                        }
                         actionData.hits++;
                     }
 
@@ -536,6 +549,7 @@ function battleAttack(json) {
                 //Also some bosses cast them from buffs (e.g. Alex plain dmg buff)
                 if (action.to == "player") {
                     actionData = new BattleActionData(BATTLE_ACTIONS.skill);
+                    actionData.name = action.name;
                     actionData.char = Battle.current.characters.getAtPos(action.pos).char;
                 }
                 else {//boss
@@ -646,6 +660,7 @@ function updateBattleStats(actionData) {
         charStats.dmg += actionData.dmg;
         charStats.echoHits += actionData.echoHits;
         charStats.echoDmg += actionData.echoDmg;
+        charStats.skillDmg += actionData.skillDmg;
         charStats.crits += actionData.crits;
         if (actionData.action == BATTLE_ACTIONS.ougi) {
             charStats.ougis++;
