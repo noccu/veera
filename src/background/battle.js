@@ -198,6 +198,7 @@ function BattleActionData(action) {
     this.echoDmg = 0;
     this.echoHits = 0;
     this.skillDmg = 0;
+    this.ougiDmg = 0;
     this.crits = 0;
     this.critDmg = 0;
     this.misses = 0;
@@ -209,7 +210,7 @@ function BattleActionData(action) {
 Object.defineProperties(BattleActionData.prototype, {
     totalDmg: {
         get() {
-            return this.dmg + this.echoDmg;
+            return this.dmg + this.echoDmg + this.skillDmg + this.ougiDmg;
         }
     },
     totalHits: {
@@ -301,6 +302,7 @@ function BattleCharData(id, name = "") {
         echoDmg: 0,
         echoHits: 0,
         skillDmg: 0,
+        ougiDmg: 0,
         crits: 0,
         da: 0,
         ta: 0,
@@ -333,13 +335,16 @@ const battleCharStatsShared = {
         return safeDivide(this.ougis, this.instance.activeTurns) * 100;
     },
     get totalDmg() {
-        return this.dmg + this.echoDmg + this.skillDmg;
+        return this.dmg + this.echoDmg + this.skillDmg + this.ougiDmg;
     },
     get skillDmgPerc() {
         return safeDivide(this.skillDmg, this.totalDmg) * 100;
     },
     get echoDmgPerc() {
         return safeDivide(this.echoDmg, this.totalDmg) * 100;
+    },
+    get ougiDmgPerc() {
+        return safeDivide(this.ougiDmg, this.totalDmg) * 100;
     },
     get totalHits() {
         return this.hits + this.echoHits;
@@ -376,22 +381,27 @@ function battleParseDamage(input, actionData, type) {
                     actionData.dmgTaken[char] += parseInt(entry.value);
                     break;
                 case BATTLE_ACTION_TYPES.dmgDealt:
-                    if (entry.concurrent_attack_count > 0) {
-                        actionData.echoDmg += parseInt(entry.value);
+                    let dmg = parseInt(entry.value);
+                    if (entry.concurrent_attack_count > 0) { //echo
+                        actionData.echoDmg += dmg;
                         actionData.echoHits++;
                     }
                     else {
-                        if (actionData.action == BATTLE_ACTIONS.skill) {
-                            actionData.skillDmg += parseInt(entry.value);
-                        }
-                        else {
-                            actionData.dmg += parseInt(entry.value);
+                        switch(actionData.action) {
+                            case BATTLE_ACTIONS.skill:
+                                actionData.skillDmg += dmg;
+                                break;
+                            case BATTLE_ACTIONS.ougi:
+                                actionData.ougiDmg += dmg;
+                                break;
+                            default: //normal atk
+                                actionData.dmg += dmg;
                         }
                         actionData.hits++;
                     }
 
-                    if (entry.critical) {
-                        actionData.critDmg += parseInt(entry.value);
+                    if (entry.critical) { //crit is not a "source" of dmg
+                        actionData.critDmg += dmg;
                         actionData.crits++;
                     }
                     if (entry.miss > 0) {
@@ -661,6 +671,7 @@ function updateBattleStats(actionData) {
         charStats.echoHits += actionData.echoHits;
         charStats.echoDmg += actionData.echoDmg;
         charStats.skillDmg += actionData.skillDmg;
+        charStats.ougiDmg += actionData.ougiDmg;
         charStats.crits += actionData.crits;
         if (actionData.action == BATTLE_ACTIONS.ougi) {
             charStats.ougis++;

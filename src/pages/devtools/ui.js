@@ -237,7 +237,21 @@ function evhGlobalClick (e) {
     if (e.target.dataset.event) { //dataset is always accesible
         switch (e.target.dataset.event) {
             case "collapse":
-                e.target.nextElementSibling.classList.toggle('hidden');
+                //collapse all in <parent> for <id>
+                if (e.target.dataset.in && e.path) { //chrome only but so is gbf (technically)
+                    let cId = e.target.dataset.id;
+                    for (let parent of e.path) {
+                        if (parent.classList && parent.classList.contains(e.target.dataset.in)) {
+                            let cList = parent.querySelectorAll(`[data-id='${cId}']`);
+                            for (let node of cList) {
+                                node.nextElementSibling.classList.toggle('hidden');
+                            }
+                        }
+                    }
+                }
+                else {
+                    e.target.nextElementSibling.classList.toggle('hidden');
+                }
                 break;
             case "filter":
                 let activeFilters = [];

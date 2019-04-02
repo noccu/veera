@@ -388,6 +388,9 @@ button {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "left right";
 }
+.battle-stats-container .battle-stats-container { /*Nested*/
+    grid-area: auto / left /auto / right;
+}
 .battle-stats-container .sep {
     grid-area: auto / left / auto / right;
 }
