@@ -27,6 +27,7 @@ function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNu
     this.name = name;
     this.id = id;
     this.tier = tier;
+    this.tierName = getEnumNamedValue(RAID_TIER, tier);
     this.minHostRank = minHostRank;
     this.isHl = minHostRank > 100;
     this.dailyHosts = dailyHosts;
@@ -75,7 +76,7 @@ window.RaidList = [
     new RaidData("Macula (HL)", 300521, RAID_TIER.Ancient, 101, 1, 50, [42], [1], ELEMENTS.water, "2040002000_high.png"),
     new RaidData("Gabriel", 303091, RAID_TIER.Primarch, 40, 1, 50, [5321], [2], ELEMENTS.water, "2040201000_multi.png"),
 
-    new RaidData("Dragon (H)", 300171,RAID_TIER.A7, null, 3, null, null, null, ELEMENTS.earth, "2030004000_hard.png"),
+    new RaidData("Dragon (H)", 300171, RAID_TIER.A, null, 3, null, null, null, ELEMENTS.earth, "2030004000_hard.png"),
     new RaidData("Yggdrasil (N)", 300181, RAID_TIER.B, 10, 3, 10, null, null, ELEMENTS.earth, "2030015000.png"),
     new RaidData("Yggdrasil (H)", 300191, RAID_TIER.B, 20, 3, 15, null, null, ELEMENTS.earth, "2030015000_hard.png"),
     new RaidData("Yggdrasil (H+)", 305041, RAID_TIER.B, 101, 1, 45, null, null, ELEMENTS.earth, "2030015000_hard_plus.png"),

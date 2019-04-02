@@ -195,6 +195,12 @@ li {
     padding-bottom: 0.5em;
     border-bottom: 1px solid var(--line-color);
 }
+.sep-v {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    padding-left: 0.5em;
+    border-left: 1px solid var(--line-color);
+}
 
 .panel-content {
     margin: 0.5em;

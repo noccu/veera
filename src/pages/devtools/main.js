@@ -238,14 +238,15 @@ function updateRaidTrackingDisplay(raidEle) {
 
     let hostsLeft = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
+    let outOfMats = false;
 
     if (raidEntry.data.matCost) {
         let matCost = raidEle.querySelector(".raid-host-mats");
         for (let mat of raidEntry.data.matCost) {
             raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
+            outOfMats = outOfMats || mat.supplyData.count < mat.num;
         }
     }
-
 
     //CSS
     if (raidEntry.active) {
@@ -255,7 +256,7 @@ function updateRaidTrackingDisplay(raidEle) {
         raidEle.classList.add("hidden");
     }
 
-    if (hostsLeft == 0) {
+    if (hostsLeft == 0 || outOfMats) {
         raidEle.classList.add("host-limit");
     }
     else {

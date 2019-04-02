@@ -321,7 +321,7 @@ function evhSuppliesFilter (e) {
 }
 function evhRaidsFilter (e) {
     let filters = e.detail;
-    let filterables = ["elementName"];
+    let filterables = ["elementName", "tierName"];
 
     let check = {hl: {do: false},
                  inactive: {do: false},
