@@ -45,6 +45,7 @@ function hear (msg) {
                 case url.ismatch("user/content/index"): //Homepage
                     Profile.pendants.set(msg.data.json);
                     Profile.status.set(msg.data.json.option.mydata_assets.mydata.status);
+                    setCurrencies(msg.data.json);
                     break;
                 case url.ismatch("user/status"):
                     Profile.status.set(msg.data.json.status);

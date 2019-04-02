@@ -1,6 +1,7 @@
 //commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
-const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, Untracked: [1,2,3,19,37,38,39,50,82]}; //jshint ignore:line
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1,2,3,37,38,39,50,82]}; //jshint ignore:line
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
+SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
 const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
@@ -206,6 +207,23 @@ const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming
     39: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"},
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
+//Pathnames that don't follow the usual pattern, organized as item_kind -> item_id -> filename
+const ITEM_SPECIAL_ID = {
+    //Just a note: type 9, id 0 = rupie icon
+    9: {
+        0: "gem" //Crystals
+    },
+    //TODO check ids for lupi and cp
+    7: {
+        0: "lupi"
+    },
+    19: {
+        0: "jp"
+    },
+    31: {
+        0: "casino_medal"
+    }
+};
 
 function SupplyItem (type, id, count, name) {
     this.type = parseInt(type) || SUPPLYTYPE.treasure;
@@ -221,7 +239,17 @@ function SupplyItem (type, id, count, name) {
         }
     }
     if (ITEM_KIND[type] && id !== undefined) { //id can be 0
-        this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${id}.jpg`;
+        let fname = id;
+        if (ITEM_SPECIAL_ID[type] && ITEM_SPECIAL_ID[type][id]) {
+            fname = ITEM_SPECIAL_ID[type][id];
+        }
+        if (!fname) { //don't want any undefined.jpg in their server logs lmao
+            devwarn("[SupplyItem] Invalid path, nuking: ", this);
+            this.path = null;
+        }
+        else {
+            this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${fname}.jpg`;
+        }
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
         this.location = TREASURE_SOURCES[id].name;

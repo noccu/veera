@@ -1,4 +1,11 @@
 window.Profile = {
+    get currencies() { //TODO: maybe better as object return
+        return Supplies.get([
+            {type: SUPPLYTYPE.rupie, id: 0},
+            {type: 19, id: 0},
+            {type: SUPPLYTYPE.crystals, id: 0}
+        ]);
+    },
     pendants: {
         count: {
             //Here to show the structure cleanly, doesn't actually need to be changed on updates.
@@ -89,4 +96,16 @@ function getPendantsRaid (json) {
                 break;
         }
     }
+}
+
+function setCurrencies(json) {
+    let dom = parseDom(json.data);
+    let c = dom.querySelector(".prt-info-possessed");
+
+    Supplies.set(new SupplyItem(SUPPLYTYPE.rupie, 0, parseInt(c.children[0].textContent), "Rupie"));
+    Supplies.set(new SupplyItem(19, 0, parseInt(c.children[1].textContent), "CP"));
+    Supplies.set(new SupplyItem(SUPPLYTYPE.crystals, 0, parseInt(c.children[2].textContent), "Crystals"));
+
+    Supplies.save();
+    updateUI("updSupplies", Profile.currencies);
 }
