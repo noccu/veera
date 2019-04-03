@@ -3,10 +3,12 @@ const BATTLE_ACTION_TYPES = {dmgDealt: 1,
                              heal: 3};
 const BATTLE_ACTIONS = {attack: {name: "Attack"},
                         skill: {name: "Skill"},
-                        postAtkTrigger: {name: "Post-attack skill trigger"},
+                        triggerSkill: {name: "Triggered skill"},
+//                        postAtkTrigger: {name: "Post-attack skill trigger"},
                         ougi: {name: "Ougi"},
                         ougiEcho: {name: "Ougi echo"},
-                        effect: {name: "Effect (Reflect, DoT, etc)"},
+                        effect: {name: "Effect (Reflect, DoT, ...)"},
+                        healFffect: {name: "Heal effect (Refresh, Revitalize, ...)"},
                         counter: {name: "Counter"},
                         chain: {name: "Chain burst"},
                         bossAtk: {name: "Boss attack"},
@@ -465,12 +467,10 @@ function battleUseAbility (json) {
                 break;
             case "heal":
                 if (action.to == "player") {
-//                    actionData = new BattleActionData(BATTLE_ACTIONS.selfHeal);
                     battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.heal);
                     if (!actions.includes(actionData)) {
                         actions.push(actionData);
                     }
-//                    actionData.healTo = Battle.characters.getAtPos(action.pos);
                 }
                 break;
             case "contribution":
@@ -558,7 +558,7 @@ function battleAttack(json) {
                 //Attack-turn activated abilities (Athena, Nighthound, etc)
                 //Also some bosses cast them from buffs (e.g. Alex plain dmg buff)
                 if (action.to == "player") {
-                    actionData = new BattleActionData(BATTLE_ACTIONS.skill);
+                    actionData = new BattleActionData(BATTLE_ACTIONS.triggerSkill);
                     actionData.name = action.name;
                     actionData.char = Battle.current.characters.getAtPos(action.pos).char;
                 }
@@ -582,7 +582,7 @@ function battleAttack(json) {
                 if (action.to == "boss") {
                     if (!isPlayerTurn) {
                         //If skill, char is already set and nothing else is needed here.
-                        if (actionData.action != BATTLE_ACTIONS.skill || actionData.dmgParsed) {
+                        if (actionData.action != BATTLE_ACTIONS.triggerSkill || actionData.dmgParsed) {
                             actionData = new BattleActionData(BATTLE_ACTIONS.effect);
                         }
                     }
@@ -593,7 +593,7 @@ function battleAttack(json) {
                     }
                     else if (actionData.action == BATTLE_ACTIONS.attack) {
                         let char = actionData.char;
-                        actionData = new BattleActionData(BATTLE_ACTIONS.postAtkTrigger);
+                        actionData = new BattleActionData(BATTLE_ACTIONS.triggerSkill);
                         actionData.char = char;
                     }
                     battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgDealt);
@@ -607,8 +607,14 @@ function battleAttack(json) {
                     }
                 }
                 break;
-            case "heal": //Must be part of atk or ougi, even if caused by ability. Can assume actionData was pushed.
+            case "heal":
                 if (action.to == "player") {
+                    //If heal comes from ougi or atk (drain) actionData is pushed to actions already, add it to that.
+                    if (actionData.action != BATTLE_ACTIONS.ougi && actionData.action != BATTLE_ACTIONS.attack) {
+                        //refresh, etc. Just kinda activates, no char, and no way to tell unless we try to store and track buffs, dealing with overwrites and stacking...
+                        actionData = new BattleActionData(BATTLE_ACTIONS.healFffect);
+                        actions.push(actionData);
+                    }
                     battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.heal);
                 }
                 break;
