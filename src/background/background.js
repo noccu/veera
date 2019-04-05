@@ -17,7 +17,7 @@ Object.defineProperty(Array.prototype, "last", {
 
 function MainInit() {
     State.load()
-        .then(() => State.game.linkToTab())
+        .then(State.game.linkToTab)
         .then(Supplies.load)
         .then(Raids.load)
         .then(() => {

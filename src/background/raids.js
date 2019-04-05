@@ -21,7 +21,7 @@ function RaidEntry (id, trackingObj) {
     }
     if (this.data.matCost) {
         for (let mat of this.data.matCost) { //Need to regen with updates on every query.
-            mat.supplyData = Supplies.get(SUPPLYTYPE.treasure, mat.id);
+            mat.supplyData = Supplies.get(SUPPLYTYPE.treasure, mat.id) || {};
         }
     }
 
@@ -57,7 +57,7 @@ window.Raids = {
     //                });
                 }*/
                 Raids.list = idx.raid_list || {};
-                devlog(`Raid list loaded, ${Object.keys(idx.raid_list).length} stored raids of ${RaidList.length} total.`);
+                devlog(`Raid list loaded, ${Object.keys(Raids.list).length} stored raids of ${RaidList.length} total.`);
                 r();
             }
 

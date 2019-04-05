@@ -26,7 +26,8 @@ window.State = {
         tabId: null,
         linkToTab: function () {
             chrome.tabs.query({active: true, url:"*://*.granbluefantasy.jp/"}, t => {
-                if (t) { this.tabId = t[0].id; }
+                if (t.length) { State.game.tabId = t[0].id; }
+                else { deverror("Can't link to game page."); }
             });
         },
         navigateTo: function (url) {

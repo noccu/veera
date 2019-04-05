@@ -221,10 +221,8 @@ function createRaid(raidEntry) {
         for (let mat of raidEntry.data.matCost) {
             matEle.dataset.matId = mat.id;
             matEle.dataset.title = mat.supplyData.name;
-//            newRaidMat.content.querySelector(".current-value").textContent = mat.supplyData.count;
             newRaidMat.content.querySelector(".max-value").textContent = mat.num;
             newRaidMat.content.querySelector(".raid-mat-icon").src = mat.supplyData.path;
-//            newRaid.querySelector(".raid-name").dataset.url = raidEntry.data.urls[Object.keys(raidEntry.data.urls)[0]];
             matCost.appendChild(document.importNode(newRaidMat.content, true));
         }
     }
