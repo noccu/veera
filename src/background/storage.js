@@ -22,5 +22,8 @@ window.Storage = {
             devlog("Data saved: ", ...Object.keys(v));
             if (cb) { cb(); }
         }
+    },
+    clear() {
+        chrome.storage.local.clear();
     }
 };

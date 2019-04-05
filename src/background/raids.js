@@ -137,7 +137,7 @@ window.Raids = {
     update: function ({action, id, raidEntry}) {
         if (!raidEntry) {
             if (!id) {
-                deverror("Invalid data format, can't update raid.");
+                deverror(`Invalid data format, can't update raid ${id}.`);
                 return;
             }
             raidEntry = this.get(id);

@@ -51,7 +51,7 @@ window.Planner = {
                  case "stepNames":
                      continue;
                  default:
-                     deverror("[Planner] Invalid plan item category: ", category);
+                     deverror("[Planner] Invalid plan category: ", category);
                      return;
              }
 

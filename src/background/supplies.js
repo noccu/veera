@@ -250,7 +250,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown"
         }
         if (!fname) { //don't want any undefined.jpg in their server logs lmao
             devwarn("[SupplyItem] Invalid path, nuking: ", this);
-            this.path = null;
+            this.path = "";
         }
         else {
             this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${fname}.jpg`;
@@ -288,9 +288,6 @@ window.Supplies = {
             let item = this.index[type][id];
             if (item) {
                 return new SupplyItem(type, id, item.count, item.name);
-            }
-            else {
-                return undefined;
             }
         }
     },

@@ -76,6 +76,14 @@ window.State = {
             }
             Storage.get("state", _load);
         });
+    },
+    reset () {
+        if (confirm("Clear all stored data and settings?")) {
+            Supplies.clear();
+            Storage.clear();
+            setVeeraDefaults();
+            console.log("Cleared all stored data and settings.");
+        }
     }
 };
 
