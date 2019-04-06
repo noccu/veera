@@ -1,13 +1,10 @@
 window.BackgroundPage = {
-    query: function(key, response){
-      chrome.runtime.sendMessage({
-                                    source: "devtools",
-                                    query: key
-                                 },
-                                 response) ; 
+    query: function(key) {
+        return new Promise(r => chrome.runtime.sendMessage({source: "dt", query: key}, ret => r(ret.value)));
     },
     connection: null,
     connect: function() {
+        chrome.runtime.onMessage.addListener(hearQuery);
         this.connection = chrome.runtime.connect({
             name: "devtools-page"
         });
@@ -29,18 +26,8 @@ window.BackgroundPage = {
             case "sayBye":
                 console.log("Iya da onee-sama!! ＼(º □ º l|l)");
                 break;
-            case "init_theme":
-                UI.setTheme(msg.data);
-                break;
-            case "init_plannerSeriesList":
-                UI.planner.init(msg.data);
-//                UI.planner.populateSelection("series", msg.data);
-                break;
-            case "init_unfEdition":
-                Unf.edition = msg.data;
-                break;
-            case "init_raidList":
-                populateRaids(msg.data);
+            case "init":
+                initialize(msg.data);
                 break;
             case "updPendants":
                 updatePendants(msg.data);
@@ -83,3 +70,16 @@ window.BackgroundPage = {
         }
     }
 };
+
+function hearQuery (data, sender, respond) {
+    if (data.source == "bg") {
+        var retValue;
+        switch (data.query) {
+            case "tabId":
+                retValue = chrome.devtools.inspectedWindow.tabId;
+        }
+
+        respond({query: data.query,
+                 value: retValue});
+    }
+}

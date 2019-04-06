@@ -20,7 +20,12 @@ window.DevTools = {
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
-        DevTools.devToolsConnection.onMessage.removeListener(DevTools.listen);
+        //Apparently devToolsConnection is already null at this point. Thanks chrome? Nice docs.
+    },
+    disconnect () {
+        DevTools.devToolsConnection.onMessage.removeListener(this.listen);
+        chrome.runtime.onMessage.removeListener(hearQuery);
+        DevTools.devToolsConnection.disconnect();
         DevTools.devToolsConnection = null;
     },
     send: function(action, data) {
@@ -29,6 +34,9 @@ window.DevTools = {
             return;
         }
         this.devToolsConnection.postMessage({action, data});
+    },
+    query: function(key) {
+        return new Promise(r => chrome.runtime.sendMessage({source: "bg", query: key}, ret => r(ret.value)));
     }
 };
 
@@ -36,7 +44,6 @@ window.DevTools = {
 String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
 
 function hear (msg) {
-//    console.log("Processing:", data);
     switch (msg.action) {
         case "request":
             var url = msg.data.url;
@@ -188,12 +195,13 @@ function hear (msg) {
 }
 
 function hearQuery (data, sender, respond) {
-    var retValue;
-
-    switch (data.query) {
+    if (data.source == "dt") {
+        var retValue;
+        switch (data.query) {
             //Nothing so far since change.
-    }
+        }
 
-    respond({query: data.query,
-             value: retValue});
+        respond({query: data.query,
+                 value: retValue});
+    }
 }

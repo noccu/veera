@@ -24,10 +24,17 @@ window.State = {
     },
     game: {
         tabId: null,
-        linkToTab: function () {
-            chrome.tabs.query({active: true, url:"*://*.granbluefantasy.jp/"}, t => {
-                if (t.length) { State.game.tabId = t[0].id; }
-                else { deverror("Can't link to game page."); }
+        linkToTab: function (id) {
+            return new Promise ((r,x) => {
+                chrome.tabs.get(id, t => {
+                    if (/game\.granbluefantasy\.jp|gbf\.game\.mbga\.jp/.test(t.url)) {
+                        devlog(`Ufufu... onee-sama ha tab ${id} wo mite imasu ne.`);
+                        this.tabId = id;
+                        r();
+                    } else {
+                        x("Onee-sama wo damasu to ha ii dokyou desu wa!");
+                    }
+                });
             });
         },
         navigateTo: function (url) {

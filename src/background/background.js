@@ -16,19 +16,23 @@ Object.defineProperty(Array.prototype, "last", {
 });
 
 function MainInit() {
-    State.load()
-        .then(State.game.linkToTab)
+    DevTools.query("tabId").then(id => State.game.linkToTab(id))
+        .then(State.load)
         .then(Supplies.load)
         .then(Raids.load)
         .then(() => {
-            updateUI("init_theme", State.theme.current);
-            updateUI("init_plannerSeriesList", Planner.listSeries());
-            updateUI("init_unfEdition", State.unfEdition);
-            updateUI("init_raidList", Raids.getList());
+            updateUI("init", {theme: State.theme.current,
+                              planner: Planner.listSeries(),
+                              unfEdition: State.unfEdition,
+                              raids: Raids.getList()});
             updateUI("updSupplies", Supplies.getAll());
         })
-        .then(checkReset);
-}
+        .then(checkReset)//jshint ignore:line
+        .catch(e => {
+            DevTools.disconnect();
+            console.error(e);
+        });
+    }
 
 //Old function, kept for now due to ease of reading intended use.
 function updateUI (type, value) {

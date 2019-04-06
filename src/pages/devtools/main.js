@@ -6,14 +6,20 @@ Object.defineProperty(Array.prototype, "last", {get: function(){
 }});
 
 if (chrome.runtime) {
-//    UI.planner.init();
-    //UI.battle.init();
+    BackgroundPage.connect();
+}
+
+function initialize(data) {
+    UI.setTheme(data.theme);
+    Unf.edition = data.unfEdition;
+    populateRaids(data.raids);
+    UI.planner.init(data.planner);
+
     UI.initButtons();
     UI.time.keep();
     UI.time.initTimers();
     Unf.areaInfo.init();
 
-    BackgroundPage.connect();
     Network.listen();
 }
 
