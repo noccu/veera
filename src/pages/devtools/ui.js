@@ -1,4 +1,4 @@
-var UNF_CHART;
+const NUMBER_FORMAT = new Intl.NumberFormat(navigator.language, {maximumFractionDigits: 3});
 
 window.UI = {
     setTheme: function (theme) {
@@ -9,16 +9,16 @@ window.UI = {
 
     //Input: {id, value} optionally in Array
     //Updates every id in upd with the given value.
-    setValue: function (upd) {
+    setValue: function (upd, format) {
         if (Array.isArray(upd)) {
             for (let entry of upd) {
-                this.setValue(entry);
+                this.setValue(entry, format);
             }
         }
         else {
             var ele = document.getElementById(upd.id);
             if (ele) {
-                ele.textContent = upd.value;
+                ele.textContent = format ? NUMBER_FORMAT.format(upd.value) : upd.value;
             }
         }
     },

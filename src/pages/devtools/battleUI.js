@@ -1,5 +1,4 @@
 /*globals clearGraph, Chart, devLog*/
-const NUMBER_FORMAT = new Intl.NumberFormat(navigator.language, {maximumFractionDigits: 3});
 
 window.UI.battle = {
     display: {overview:{},
