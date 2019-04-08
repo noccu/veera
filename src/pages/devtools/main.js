@@ -10,6 +10,7 @@ if (chrome.runtime) {
 }
 
 function initialize(data) {
+    document.getElementById("inactive").style.display = "none";
     UI.setTheme(data.theme);
     Unf.edition = data.unfEdition;
     populateRaids(data.raids);

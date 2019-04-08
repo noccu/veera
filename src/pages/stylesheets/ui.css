@@ -461,3 +461,16 @@ button {
     background-color: var(--diff-color-b);
     font-size: 2em;
 }
+
+#inactive {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 1, 1, 0.65);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: pre-line;
+    text-align: center;
+}
