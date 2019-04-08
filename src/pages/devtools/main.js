@@ -84,29 +84,42 @@ function updatePendants (data) {
         }
     ]);
 }
-
 function updateStatus (data) {
-    UI.setValue([{
-        id: "ap-current",
-        value: data.ap
-    },{
-        id: "bp-current",
-        value: data.bp
-    },{
-        id: "ap-max",
-        value: data.apMax
-    },{
-        id: "rank",
-        value: data.lvl
-    }/*,{
-        id: "",
-        value: data.lvlP
-    }*/
-    //TODO: level bar
-    ]);
+    UI.setValue([
+        {id: "ap-current", value: data.ap.current},
+        {id: "bp-current", value: data.bp.current},
+        {id: "ap-max", value: data.ap.max},
+        {id: "rank", value: data.level}
+        /*,{
+            id: "",
+            value: data.lvlP
+            }*/ 
+        //TODO: level bar
+    ], true);
 
     var d = document.getElementById("ap-bp-display");
     d.classList.toggle("highlight", data.ap > data.apMax || data.bp > 10);
+}
+function updateArca(data) {
+    UI.setValue([
+        {id: "num-arc-tck", value: data.tickets.current},
+        {id: "max-arc-tck", value: data.tickets.max},
+        {id: "num-arc-pts", value: data.points.current},
+        {id: "max-arc-pts", value: data.points.max}
+    ], true);
+}
+function updateCurrencies(data) {
+    UI.setValue([
+        {id: "num-rupies", value: data.rupie.count},
+        {id: "num-cp", value: data.cp.count},
+        {id: "num-crystal", value: data.crystals.count}
+    ], true);
+
+    updateSupplies([
+        data.rupie,
+        data.cp,
+        data.crystals
+    ]);
 }
 
 function updateSupplies (idx) {

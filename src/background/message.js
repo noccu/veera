@@ -50,15 +50,9 @@ function hear (msg) {
             // var req = u.slice(30, u.lastIndexOf("/"));
             switch (true) {
                 case url.ismatch("user/content/index"): //Homepage
-                    Profile.pendants.set(msg.data.json);
-                    Profile.status.set(msg.data.json.option.mydata_assets.mydata.status);
-                    setCurrencies(msg.data.json);
-                    break;
+                case url.ismatch("profile/content/index"): //Profile
                 case url.ismatch("user/status"):
-                    Profile.status.set(msg.data.json.status);
-                    break;
-                case url.ismatch("profile/content/index"):
-                    Profile.pendants.set(msg.data.json);
+                    Profile.update(msg.data.json);
                     break;
                 case url.ismatch("item/article_list")://Treasure list
                     Supplies.setTreasure(msg.data.json);

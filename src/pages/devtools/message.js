@@ -29,11 +29,17 @@ window.BackgroundPage = {
             case "init":
                 initialize(msg.data);
                 break;
+            case "updStatus":
+                updateStatus(msg.data);
+                break;
             case "updPendants":
                 updatePendants(msg.data);
                 break;
-            case "updStatus":
-                updateStatus(msg.data);
+            case "updCurrencies":
+                updateCurrencies(msg.data);
+                break;
+            case "updArca":
+                updateArca(msg.data);
                 break;
             case "updSupplies":
                 updateSupplies(msg.data);
