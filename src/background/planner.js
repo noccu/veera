@@ -1,5 +1,6 @@
 window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
+        console.group(`Creating plan for ${series}`);
         var plan = [];
 
         function addToPlan(item, templateKey) {
@@ -65,6 +66,7 @@ window.Planner = {
             }
         }
 
+        console.groupEnd();
         return plan;
     },
     listSeries: function() {

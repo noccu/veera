@@ -16,16 +16,21 @@ Object.defineProperty(Array.prototype, "last", {
 });
 
 function MainInit() {
-    DevTools.query("tabId").then(id => State.game.linkToTab(id))
+    DevTools.query("tabId").then(id => {
+            State.game.linkToTab(id).then(() => console.group("Loading data"));
+        })
         .then(State.load)
         .then(Supplies.load)
         .then(Raids.load)
         .then(() => {
+            console.groupEnd();
+            console.groupCollapsed("Initiliaze UI");
             updateUI("init", {theme: State.theme.current,
                               planner: Planner.listSeries(),
                               unfEdition: State.unfEdition,
                               raids: Raids.getList()});
             updateUI("updSupplies", Supplies.getAll());
+            console.groupEnd();
         })
         .then(checkReset)//jshint ignore:line
         .catch(e => {

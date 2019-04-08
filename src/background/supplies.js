@@ -282,7 +282,7 @@ window.Supplies = {
         }
         else {
             if (!this.index[type]) {
-                deverror("Invalid type lookup: " + type);
+                console.warn("[Supplies] No such type: " + type);
                 return;
             }
             let item = this.index[type][id];
@@ -409,20 +409,30 @@ window.Supplies = {
         this.save();
     },
     save: function() {
-        //TODO: Just xhr it from game on startup maybe? Violates no-req policy tho.
         Storage.set({sup_idx: this.index});
         devlog("Supply index saved.");
     },
     load: function() { //Called out of context
         return new Promise((r,x) => {
             function _load(data) {
-                Supplies.index = data.sup_idx || {};
+                if (data.sup_idx) {
+                    Supplies.index = data.sup_idx;
 
-                devlog("Supply index loaded.");
-//                updateUI("updSupplies", Supplies.getAll());
+                    console.info("Supply index loaded.");
+                }
+                else {
+                    //TODO: Load basic store or consider xhr
+                    console.warn("Supply index not found, some functionality will be dodgy until you visit game supplies page and reload Veera.");
+                }
                 r();
             }
-            Storage.get(["sup_idx"], _load);
+            try {
+                Storage.get(["sup_idx"], _load);
+            }
+            catch (e) {
+                console.error(e);
+                x("Failed to load supplies.");
+        }
         });
     },
     clear: function() {

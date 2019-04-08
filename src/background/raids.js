@@ -16,7 +16,7 @@ function RaidEntry (id, trackingObj) {
         this.data = RaidList.find(x => x.id == id);
     }
     if (!this.data) {
-        deverror("No raid data for raid ID " + id);
+        devwarn("No raid data for raid ID " + id);
         return {};
     }
     if (this.data.matCost) {
@@ -48,16 +48,13 @@ window.Raids = {
     load: function() {
         return new Promise ( (r,x) => {
             function parse (idx) {
-    /*            for (let raid of idx) {
-                    this.list[raid.id] = raid;
-                    //Link data to raid, is not saved.
-    //                Object.defineProperty(this.getID(rd.id), "data", {
-    //                    enumerable: true,
-    //                    value: rd
-    //                });
-                }*/
-                Raids.list = idx.raid_list || {};
-                devlog(`Raid list loaded, ${Object.keys(Raids.list).length} stored raids of ${RaidList.length} total.`);
+                if (idx.raid_list) {
+                    Raids.list = idx.raid_list;
+                    console.info(`Raid list loaded, ${Object.keys(Raids.list).length} stored raids of ${RaidList.length} total.`);
+                }
+                else {
+                    console.info("No tracked raids.");
+                }
                 r();
             }
 
@@ -65,17 +62,8 @@ window.Raids = {
                 Storage.get("raid_list", parse);
             }
             catch (e) {
-                deverror("Failed to load raid list.", e);
-                x();
-
-    /*            devlog("Attempting initialization.");
-                parse({});
-                if (Object.keys(this.list).length > 0) { //TODO: p sure there's a more efficient way to check
-                    devlog("Initiliazation success.");
-                }
-                else {
-                    devwarn("Failed raid initialization.");
-                }*/
+                console.error(e);
+                x("Failed to load raid list.");
             }
         });
     },
@@ -125,13 +113,8 @@ window.Raids = {
         return output;
     },
     set: function (raidEntry) {
-        return this.list[raidEntry.data.id] = {hosts: raidEntry.hosts,
+        return this.list[raidEntry.data.id] = {hosts: raidEntry.hosts, //jshint ignore:line
                                                active: raidEntry.active};
-
-/*        let raid = this.getID(id);
-        raid.hosts.today = daily;
-        raid.hosts.total = total;
-        updateUI("raidListUpdated", raid);*/
     },
     //Updates the tracking object.
     update: function ({action, id, raidEntry}) {

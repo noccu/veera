@@ -53,7 +53,7 @@ window.State = {
         return new Promise((r, x) => {
             function _load(data) {
                 if (!data.state) {
-                    devlog("No saved state, initializing from defaults.");
+                    console.warn("No saved state, initializing from defaults.");
                     setVeeraDefaults();
                     State.save();
                 }
@@ -61,7 +61,7 @@ window.State = {
                     if (data.state.store.config.version == State.store.config.version) {
                         State.settings = data.state.settings;
                         State.store = data.state.store;
-                        devlog("State loaded.");
+                        console.info("State loaded.");
                     }
                     else if (State.store.config.version - data.state.store.config.version <= this.store.config.updDelta) {
                         devlog("Attempting state update from older version.");
@@ -74,8 +74,8 @@ window.State = {
                     }
                 }
                 else {
-                    devlog("Invalid stored state, internal Veera update?");
-                    devlog("Loading defaults.");
+                    console.warn("Invalid stored state, internal Veera update?");
+                    console.log("Loading defaults.");
                     setVeeraDefaults();
                     State.save();
                 }
