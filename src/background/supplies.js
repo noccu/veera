@@ -225,20 +225,25 @@ const ITEM_SPECIAL_ID = {
     }
 };
 
-function SupplyItem (type, id, count, name) {
-    this.type = parseInt(type) || SUPPLYTYPE.treasure;
-    this.id = id;
+function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown") {
+    if (!Number.isInteger(count)) {
+        throw new TypeError("[SupplyItem] Invalid count.");
+    }
+    this.type = parseInt(type);
+    this.id = parseInt(id);
+    if (Number.isNaN(this.type) || Number.isNaN(this.id)) {
+        throw new TypeError("[SupplyItem] Type or id do not resolve to number.");
+    }
     this.name = name;
     this.count = count;
     this.typeName = ITEM_KIND[type] ? ITEM_KIND[type].name : "Unknown";
 
-    for (let t in SUPPLYTYPE) { //TODO: If consumables is always the only type we have then just use that...
+    for (let t in SUPPLYTYPE) {
         if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
-//            this.metaType = t[0].toUpperCase() + t.slice(1);
             this.metaType = t;
         }
     }
-    if (ITEM_KIND[type] && id !== undefined) { //id can be 0
+    if (ITEM_KIND[type]) {
         let fname = id;
         if (ITEM_SPECIAL_ID[type] && ITEM_SPECIAL_ID[type][id]) {
             fname = ITEM_SPECIAL_ID[type][id];
@@ -435,7 +440,7 @@ function gotQuestLoot(data) {
             id = entry.id || entry.item_id,
             count = entry.count || entry.num,
             name = entry.name || entry.item_name;
-        
+
         let item = new SupplyItem(type, id, 0, name);
         item.delta = parseInt(count);
         if (entry.rarity) {
@@ -475,7 +480,7 @@ function gotQuestLoot(data) {
         }
         devlog(`[Loot] Got ${numItems} items from boxes.`);
     }
-    
+
     //Arcarum chests
     loot = data.contents;
     if (loot) { //Is actually an array or undef/missing.
@@ -522,7 +527,7 @@ function cratePickup(data) { //single item pick up TODO: check multi
         si.delta = parseInt(entry.number);
         upd.push(si);
     }
-    
+
     if (Array.isArray(data.presents)) { //Pickup all
         for (let item of data.presents) {
             parse(item);
@@ -531,7 +536,7 @@ function cratePickup(data) { //single item pick up TODO: check multi
     else { //pickup single
         parse(data.presents);
     }
-    
+
     Supplies.update(upd);
 }
 function trophyPickup(data) {
@@ -543,7 +548,7 @@ function trophyPickup(data) {
         si.delta = parseInt(data.reward.number);
         upd.push(si);
     }
-    
+
     Supplies.update(upd);
 }
 

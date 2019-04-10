@@ -9,11 +9,9 @@ window.Planner = {
                     plannedItem.needed += item.needed;
                 }
                 else {
-                    let newItem = Supplies.get(item.type, id);
-                    if (newItem) {
-                        newItem.needed = item.needed;
-                        plan.push(newItem);
-                    }
+                    let newItem = Supplies.get(item.type, id) || new SupplyItem(item.type, id);
+                    newItem.needed = item.needed;
+                    plan.push(newItem);
                 }
             }
             
