@@ -551,8 +551,9 @@ function trophyPickup(data) {
         si, id;
     for (let item in data.reward) {
         id = item.slice(item.lastIndexOf("_") + 1);
-        si = new SupplyItem(data.reward.item_kind, id, 0, data.reward.name);
-        si.delta = parseInt(data.reward.number);
+        item = data.reward[item];
+        si = new SupplyItem(item.item_kind, id, 0, item.item);
+        si.delta = parseInt(item.number);
         upd.push(si);
     }
 
