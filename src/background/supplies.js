@@ -5,8 +5,8 @@ SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
 const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
-    assets: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/",
-    assets_light: "http://game.granbluefantasy.jp/assets_en/img_light/sp/assets/",
+    assets: "assets_en/img/sp/assets/",
+    assets_light: "assets_en/img_light/sp/assets/",
     size: {
         small: "s/",
         medium: "m/",
@@ -213,7 +213,6 @@ const ITEM_SPECIAL_ID = {
     9: {
         0: "gem" //Crystals
     },
-    //TODO check ids for lupi and cp
     7: {
         0: "lupi"
     },
@@ -241,6 +240,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown"
     for (let t in SUPPLYTYPE) {
         if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
             this.metaType = t;
+            break;
         }
     }
     if (ITEM_KIND[type]) {
@@ -253,7 +253,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown"
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.assets}${ITEM_KIND[type].path}/${GAME_URL.size.small}${fname}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${ITEM_KIND[type].path}/${GAME_URL.size.small}${fname}.jpg`;
         }
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {

@@ -36,7 +36,7 @@ function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNu
     this.element = ele;
     this.elementName = getEnumNamedValue(ELEMENTS, ele);
 //        img: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/summon/qm/" + img
-    this.img = `${GAME_URL.assets}${ITEM_KIND[2].path}/${GAME_URL.size.questMedium}${thumb}`;
+    this.img = `${GAME_URL.baseGame}${GAME_URL.assets}${ITEM_KIND[2].path}/${GAME_URL.size.questMedium}${thumb}`;
 }
 
 window.RaidList = [
