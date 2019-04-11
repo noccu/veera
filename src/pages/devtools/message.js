@@ -72,7 +72,7 @@ window.BackgroundPage = {
                 UI.raids.update(msg.data);
                 break;
             default:
-                window.dispatchEvent(msg.action, msg.data);
+                window.dispatchEvent(new Event(msg.action), msg.data);
         }
     }
 };

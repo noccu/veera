@@ -43,7 +43,10 @@ I am doing this in large part as an educational experience, please don't expect 
   * I guess it doesn't really matter, especially now that Veera is its own thing but I wanted to clarify anyway.
   
 Data is initialized from specific pages and afterwards updated whenever a change is detected.  
-File an issue if a change to something that is tracked is not detected.  
+File an issue if a change to something that is tracked is not detected.
+
+If you have any issues, the background page (accessible through chrome's extension page) is the first place to look.  
+If this doesn't help you solve it yourself, please include (at least) any errors and warnings there in your issue submission.
 
 # Installation & Usage
 
