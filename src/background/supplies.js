@@ -52,7 +52,8 @@ const ITEM_KIND = {//jshint ignore:line
     "8": {
         "name": "Draw Ticket",
         "class": "Ticket",
-        "path": "item/ticket"
+        "path": "item/ticket",
+        noSize: true
     },
     "9": {
         "name": "Crystal",
@@ -225,16 +226,13 @@ const ITEM_SPECIAL_ID = {
 };
 
 function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown") {
-    if (!Number.isInteger(count)) {
-        throw new TypeError("[SupplyItem] Invalid count.");
-    }
     this.type = parseInt(type);
     this.id = parseInt(id);
-    if (Number.isNaN(this.type) || Number.isNaN(this.id)) {
-        throw new TypeError("[SupplyItem] Type or id do not resolve to number.");
+    this.count = parseInt(count);
+    if (Number.isNaN(this.type) || Number.isNaN(this.id) || Number.isNaN(this.count)) {
+        throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
     this.name = name;
-    this.count = count;
     this.typeName = ITEM_KIND[type] ? ITEM_KIND[type].name : "Unknown";
 
     for (let t in SUPPLYTYPE) {
@@ -253,7 +251,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id, count = 0, name = "Unknown"
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${ITEM_KIND[type].path}/${GAME_URL.size.small}${fname}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${ITEM_KIND[type].path}/${ITEM_KIND[type].noSize ? "" : GAME_URL.size.small}${fname}.jpg`;
         }
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
@@ -345,7 +343,7 @@ window.Supplies = {
 
         this.set(upd);
         this.save();
-        updateUI("updSupplies", upd); //TODO: merge the event to "update supplies" as it now sends through the type explicitly
+        updateUI("updSupplies", upd);
     },
     /**Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
@@ -380,11 +378,24 @@ window.Supplies = {
 
         this.set(upd);
         this.save();
-        updateUI("setConsumables", upd);
+        updateUI("updSupplies", upd);
     },
     /** Updates supply item data, adding if new. Note: only used for incremental updates, use set() otherwise.
     @arg {{type, id, delta:number, name:string}[]} updArr
     */
+    setTickets (json) {
+        if (json) {
+            let upd = [];
+            for (let arr of json) {
+                for (let item of arr) {
+                    upd.push( new SupplyItem(SUPPLYTYPE.drawTickets, item.item_id, item.number, item.name) );
+                }
+            }
+            this.set(upd);
+            this.save();
+            updateUI("updSupplies", upd);
+        }
+    },
     update: function(updArr) {
         function _upd(item) {
             //            let itemData = ITEM_KIND[type];
@@ -624,7 +635,7 @@ function consumePendingRaidsTreasure (data) {
 }
 
 function weaponUncapStart(data) {
-    var update = { id: data.url.match(/materials\/(\d+)\?/)[1],
+    var update = { id: data.url.match(/materials\/(\d+)/)[1],
                    items: [] };
 
 //    update.id = data.url.match(/materials\/(\d+)\?/)[1];

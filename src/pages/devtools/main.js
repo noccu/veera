@@ -130,6 +130,7 @@ function updateSupplies (idx) {
         for (let item of idx) {
             let entry = document.getElementById(`${item.type}_${item.id}`);
             if (entry) { //update
+                entry.title = item.name;
                 entry.getElementsByClassName("collection-data")[0].textContent = item.count;
             }
             else { //add new
@@ -154,16 +155,14 @@ function createSupplyItem (data, idPrefix) {
     item.title = data.location ? `${data.name}\nGet from: ${data.location}`: data.name;
     item.getElementsByClassName("collection-icon")[0].src = data.path;
     item.getElementsByClassName("collection-data")[0].textContent = data.count;
-    item.dataset.type = data.typeName;
+    
+    let newEle = document.importNode(t.content, true);
+    newEle.firstElementChild.dataset.type = data.type;
     if (data.metaType) {
-        item.dataset.metaType = data.metaType;
+        newEle.firstElementChild.dataset.metaType = data.metaType;
     }
-    else {
-        delete item.dataset.metaType;
-    }
-//    item.classList.add(data.typeName.replace(" ",""));
-
-    return document.importNode(t.content, true);
+    
+    return newEle;
 }
 
 //Planner functions

@@ -60,6 +60,9 @@ function hear (msg) {
                 case url.ismatch("item/recovery_and_evolution_list")://Consumables list
                     Supplies.setConsumables(msg.data.json);
                     break;
+                case url.ismatch("item/gacha_ticket_and_others_list_by_filter_mode"):
+                    Supplies.setTickets(msg.data.json);
+                    break;
                 case url.ismatch("resultmulti/data")://Raid loot screen
                 case url.ismatch("result/data"): //Quest loot screen
                 case url.ismatch("arcarum/open_chest"):
