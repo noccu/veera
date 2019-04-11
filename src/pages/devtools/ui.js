@@ -396,7 +396,7 @@ function stylePlanItem(el, item) {
     if (item.count >= el.plannerData.needed) {
         el.classList.add("done");
     }
-    else if(item.count < Math.floor(el.plannerData.needed/10)) {
+    else if(item.count < Math.ceil(el.plannerData.needed/10)) {
         el.classList.add("low");
         el.classList.remove("done");
     }
