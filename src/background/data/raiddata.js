@@ -1,23 +1,34 @@
 const ELEMENTS = { fire: 0, water: 1, earth: 2, wind: 3, light: 4, dark: 5, noEle: 6};
-const RAID_TIER = {A: 1, B: 2, Magna: 4, Ancient: 5, Epic: 6, Nightmare: 7, Primarch: 8, Genesis: 9, Ultimate: 10}; //These aren't exactly corresponding, just ease of use. whatever
+const RAID_TIER = {A: 1, B: 2, Magna: 4, Ancient: 5, Epic: 6, Nightmare: 7, Primarch: 8, Genesis: 9, Ultimate: 10, Rapture: 11}; //These aren't exactly corresponding, just ease of use. whatever
 
 function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNums, ele, thumb) {
     let mats;
     this.urls = {};
-    if (matIDs) {
-        if (matIDs.length == matNums.length) {
-            mats = [];
-            for (let i = 0; i < matIDs.length; i++) {
-                let mId = matIDs[i],
-                    mNum = matNums[i];
-                mats.push({id: mId, num: mNum});
-                this.urls[mId] = `${GAME_URL.baseGame}#quest/supporter/${id}/1/0/${mId}`;
+
+    function addMaterials(store, ids, nums) {
+        if (ids.length == nums.length) {
+            for (let i = 0; i < ids.length; i++) {
+                let mId = ids[i],
+                    mNum = nums[i];
+                if (Array.isArray(mId) && Array.isArray(mNum)) {
+                    store.push([]);
+                    addMaterials.call(this, store.last, mId, mNum);
+                }
+                else {
+                    store.push({id: mId, num: mNum});
+                    this.urls[mId] = `${GAME_URL.baseGame}#quest/supporter/${id}/1/0/${mId}`;
+                }
             }
         }
         else {
             deverror(`Malformed raid data for raid ${id}: ${name}`);
             return;
         }
+    }
+
+    if (matIDs && matNums) {
+        mats = [];
+        addMaterials.call(this, mats, matIDs, matNums);
     }
     else {
         this.urls[Raids.NO_HOST_MAT] = `${GAME_URL.baseGame}#quest/supporter/${id}/1`;
@@ -35,7 +46,6 @@ function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNu
     this.matCost = mats;
     this.element = ele;
     this.elementName = getEnumNamedValue(ELEMENTS, ele);
-//        img: "http://game.granbluefantasy.jp/assets_en/img/sp/assets/summon/qm/" + img
     this.img = `${GAME_URL.baseGame}${GAME_URL.assets}${ITEM_KIND[2].path}/${GAME_URL.size.questMedium}${thumb}`;
 }
 
@@ -106,14 +116,14 @@ window.RaidList = [
     new RaidData("Lich", 300551, RAID_TIER.Epic, 40, 2, 40, [1363, 1161], [50, 6], ELEMENTS.dark, "2040012000_ex.png"),
     new RaidData("Celeste Omega (HL)", 300581, RAID_TIER.Magna, 101, 2, 50, [51], [3], ELEMENTS.dark, "2040046000_high.png"),
     new RaidData("Olivia (HL)", 300591, RAID_TIER.Ancient, 101, 1, 50, [46], [1], ELEMENTS.dark, "2040005000_high.png"),
-    
+
     new RaidData("Prometheus", 302751, RAID_TIER.Epic, 101, 1, 80, [41], [1], ELEMENTS.fire, "2040125000_high.png"),
     new RaidData("Ca Ong", 303041, RAID_TIER.Epic, 101, 1, 80, [42], [1], ELEMENTS.water, "2040160000_high.png"),
     new RaidData("Gilgamesh", 302711, RAID_TIER.Epic, 101, 1, 80, [43], [1], ELEMENTS.earth, "2040130000_high.png"),
     new RaidData("Morrigna", 303051, RAID_TIER.Epic, 101, 1, 80, [44], [1], ELEMENTS.wind, "2040122000_high.png"),
     new RaidData("Hector", 303061, RAID_TIER.Epic, 101, 1, 80, [45], [1], ELEMENTS.light, "2040144000_high.png"),
     new RaidData("Anubis", 303071, RAID_TIER.Epic, 101, 1, 80, [46], [1], ELEMENTS.dark, "2040134000_high.png"),
-    
+
     new RaidData("Shiva", 303151, RAID_TIER.Genesis, 120, 2, 90, [522], [1], ELEMENTS.fire, "2040185000_high.png"),
     new RaidData("Europa", 303161, RAID_TIER.Genesis, 120, 2, 90, [523], [1], ELEMENTS.water, "2040225000_high.png"),
     new RaidData("Godsworn Alexiel", 303171, RAID_TIER.Genesis, 120, 2, 90, [524], [1], ELEMENTS.earth, "2040205000_high.png"),
@@ -128,10 +138,13 @@ window.RaidList = [
     new RaidData("Bahamut (HL)", 301061, RAID_TIER.Nightmare, 101, 1, 90, [59], [1], ELEMENTS.dark, "2040128000_hell.png"),
     new RaidData("Huanglong & Qilin (HL)", 303231, RAID_TIER.Nightmare, 120, 1, 90, [6005], [2], ELEMENTS.light, "2040157000_high.png"),
     new RaidData("Akasha", 303251, RAID_TIER.Nightmare, 150, 1, 90, [533], [3], ELEMENTS.light, "2040308000_high.png"),
-    
+
     new RaidData("Rose Queen (HL)", 300471, RAID_TIER.Ancient, 101, 1, 50, [1204], [10], ELEMENTS.wind, "2040105000_high.png"),
-    
+
     new RaidData("Ultimate Bahamut", 303131, RAID_TIER.Ultimate, 80, 1, 80, [133], [1], ELEMENTS.noEle, "2040223000.png"),
     new RaidData("Tiamat Malice", 303241, RAID_TIER.Epic, 120, 1, 80, [104, 106], [5, 5], ELEMENTS.wind, "2040307000_high.png"),
-    new RaidData("Ultimate Bahamut (HL)", 303141, RAID_TIER.Ultimate, 130, 1, 100, [136], [1], ELEMENTS.noEle, "2040223000_high.png")
+    new RaidData("Ultimate Bahamut (HL)", 303141, RAID_TIER.Ultimate, 130, 1, 100, [136], [1], ELEMENTS.noEle, "2040223000_high.png"),
+
+    new RaidData("Dark Rapture", 303271, RAID_TIER.Nightmare, 120, 1, 80, [[506, 507, 508, 509]], [[1, 1, 1, 1]], ELEMENTS.noEle, "2040056000.png"),
+    new RaidData("Dark Rapture (Hard)", 303281, RAID_TIER.Rapture, 170, 1, 100, [537], [1], ELEMENTS.noEle, "2040056000_high.png")
 ];

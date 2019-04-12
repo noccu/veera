@@ -19,10 +19,19 @@ function RaidEntry (id, trackingObj) {
         devwarn("No raid data for raid ID " + id);
         return {};
     }
-    if (this.data.matCost) {
-        for (let mat of this.data.matCost) { //Need to regen with updates on every query.
-            mat.supplyData = Supplies.get(SUPPLYTYPE.treasure, mat.id) || {};
+
+    function addSupplyData(list) {
+        for (let mat of list) { //Need to regen with updates on every query.
+            if (Array.isArray(mat)) {
+                addSupplyData(mat);
+            }
+            else {
+                mat.supplyData = Supplies.get(SUPPLYTYPE.treasure, mat.id) || {};
+            }
         }
+    }
+    if (this.data.matCost) {
+        addSupplyData(this.data.matCost);
     }
 
     if (trackingObj) {
@@ -34,7 +43,7 @@ function RaidEntry (id, trackingObj) {
                       total: 0,
                       last: null};
         this.active = true;
-        
+
     }
 }
 RaidEntry.prototype.canHost = function() {
@@ -126,7 +135,7 @@ window.Raids = {
             raidEntry = this.get(id);
             if (!raidEntry.data) { return; }
         }
-        
+
         switch (action) {
             case "toggleActive":
                 raidEntry.active = !raidEntry.active;
@@ -144,7 +153,7 @@ window.Raids = {
     },
     start: function (id, hostMat) {
         let raid = this.get(id);
-        if (!hostMat && raid.data.matCost) { hostMat = raid.data.matCost[0].id; } //Use default mat.
+        if (!hostMat && raid.data.matCost) { hostMat = raid.data.matCost[0].id || raid.data.matCost[0][0].id; } //Use default mat.
         let url = raid.data.urls[hostMat || this.NO_HOST_MAT];
         if (url) {
             State.game.navigateTo(url);
@@ -174,7 +183,7 @@ function checkReset () {
         State.save();
         return time;
     }
-    
+
     let now = new Date();
     let lastReset = State.store.lastReset;
     if (!lastReset) { //init a new date

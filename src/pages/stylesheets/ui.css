@@ -342,6 +342,11 @@ select, option {
 .raid-mat:hover {
     background-color: var(--highlight-color);
 }
+.mat-group .raid-mat:not(:last-child)::after {
+    content: "\2938";
+    top: 1em;
+    position: relative;
+}
 .raid-hosts {
     grid-area: hosts;
     display: inline-block;

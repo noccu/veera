@@ -93,7 +93,7 @@ function updateStatus (data) {
         /*,{
             id: "",
             value: data.lvlP
-            }*/ 
+            }*/
         //TODO: level bar
     ], true);
 
@@ -155,13 +155,13 @@ function createSupplyItem (data, idPrefix) {
     item.title = data.location ? `${data.name}\nGet from: ${data.location}`: data.name;
     item.getElementsByClassName("collection-icon")[0].src = data.path;
     item.getElementsByClassName("collection-data")[0].textContent = data.count;
-    
+
     let newEle = document.importNode(t.content, true);
     newEle.firstElementChild.dataset.type = data.type;
     if (data.metaType) {
         newEle.firstElementChild.dataset.metaType = data.metaType;
     }
-    
+
     return newEle;
 }
 
@@ -234,15 +234,29 @@ function createRaid(raidEntry) {
     newRaid.firstElementChild.entryObj = raidEntry;
     newRaid.firstElementChild.addEventListener("click", UI.raids.evhStartRaid);
 
-    if (raidEntry.data.matCost) {
-        let matCost = newRaid.querySelector(".raid-host-mats");
-        let matEle = newRaidMat.content.querySelector(".raid-mat");
-        for (let mat of raidEntry.data.matCost) {
+    function addMaterial(mat, container) {
+        if (Array.isArray(mat)) {
+            let subCont = document.createElement("div");
+            subCont.className = "raid-mat mat-group";
+            for (let item of mat) {
+                addMaterial(item, subCont);
+            }
+            container.appendChild(subCont);
+        }
+        else {
+            let matEle = newRaidMat.content.querySelector(".raid-mat");
             matEle.dataset.matId = mat.id;
-            matEle.dataset.title = mat.supplyData.name;
+            matEle.title = mat.supplyData.name;
             newRaidMat.content.querySelector(".max-value").textContent = mat.num;
             newRaidMat.content.querySelector(".raid-mat-icon").src = mat.supplyData.path;
-            matCost.appendChild(document.importNode(newRaidMat.content, true));
+            container.appendChild(document.importNode(newRaidMat.content, true));
+        }
+    }
+
+    if (raidEntry.data.matCost) {
+        let matContainer = newRaid.querySelector(".raid-host-mats");
+        for (let mat of raidEntry.data.matCost) {
+            addMaterial(mat, matContainer);
         }
     }
     updateRaidTrackingDisplay(newRaid.firstElementChild);
@@ -257,12 +271,19 @@ function updateRaidTrackingDisplay(raidEle) {
     raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
     let outOfMats = false;
 
-    if (raidEntry.data.matCost) {
-        let matCost = raidEle.querySelector(".raid-host-mats");
-        for (let mat of raidEntry.data.matCost) {
-            raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
-            outOfMats = outOfMats || mat.supplyData.count < mat.num;
+    function updMats (list) {
+        for (let mat of list) {
+            if (Array.isArray(mat)) {
+                updMats(mat);
+            }
+            else {
+                raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
+                outOfMats = outOfMats || mat.supplyData.count < mat.num;
+            }
         }
+    }
+    if (raidEntry.data.matCost) {
+        updMats(raidEntry.data.matCost);
     }
 
     //CSS

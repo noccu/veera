@@ -25,6 +25,7 @@
         "devwarn": false,
         "updateUI": false,
         "parseDom": false,
+        "getEnumNamedValue": false,
 
         //Constants
         "SUPPLYTYPE": false,
