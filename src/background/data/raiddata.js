@@ -46,7 +46,7 @@ function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNu
     this.matCost = mats;
     this.element = ele;
     this.elementName = getEnumNamedValue(ELEMENTS, ele);
-    this.img = `${GAME_URL.baseGame}${GAME_URL.assets}${ITEM_KIND[2].path}/${GAME_URL.size.questMedium}${thumb}`;
+    this.img = `${GAME_URL.baseGame}${GAME_URL.assets_light}${ITEM_KIND[2].path}/${GAME_URL.size.questMedium}${thumb}`;
 }
 
 window.RaidList = [
