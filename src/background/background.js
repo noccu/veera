@@ -22,6 +22,7 @@ function MainInit() {
         .then(State.load)
         .then(Supplies.load)
         .then(Raids.load)
+        .then(Profile.load)
         .then(() => {
             console.groupEnd();
             console.groupCollapsed("Initiliaze UI");
@@ -30,6 +31,10 @@ function MainInit() {
                               unfEdition: State.unfEdition,
                               raids: Raids.getList()});
             updateUI("updSupplies", Supplies.getAll());
+//            updateUI("updStatus", Profile.status);
+            updateUI("updCurrencies", Profile.currencies);
+            updateUI("updPendants", Profile.pendants);
+            updateUI("updArca", Profile.arcarum);
             console.groupEnd();
         })
         .then(checkReset)//jshint ignore:line
@@ -51,7 +56,7 @@ function Enum(...names) { //eh it's neat but can't auto-complete and not JSON
         enumerable: false,
         value: {}
     });
-    
+
     for (let name of names) {
         this.dict[idx] = name;
         this[name] = idx;

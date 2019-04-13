@@ -31,57 +31,25 @@ function devLog() {
 }
 
 function updatePendants (data) {
-    UI.setValue([{
-        id: "display-renown-total",
-        value: data.renown.total.current
-        },{
-        id: "panel-renown-weekly",
-        value: data.renown.weekly.current
-        },{
-        id: "panel-renown-daily",
-        value: data.renown.daily.current
-        },{
-        id: "panel-renown-sr",
-        value: data.renown.sr.current
-        },{
-        id: "panel-renown-r",
-        value: data.renown.r.current
-        },{
-        id: "display-prestige-total",
-        value: data.prestige.total.current
-        },{
-        id: "panel-prestige-weekly",
-        value: data.prestige.weekly.current
-        },{
-        id: "panel-prestige-crew",
-        value: data.prestige.crew.current
-        }
+    UI.setValue([
+        {id: "display-renown-total", value: data.renown.total.current},
+        {id: "panel-renown-weekly", value: data.renown.weekly.current},
+        {id: "panel-renown-daily", value: data.renown.daily.current},
+        {id: "panel-renown-sr", value: data.renown.sr.current},
+        {id: "panel-renown-r", value: data.renown.r.current},
+        {id: "display-prestige-total", value: data.prestige.total.current},
+        {id: "panel-prestige-weekly", value: data.prestige.weekly.current},
+        {id: "panel-prestige-crew", value: data.prestige.crew.current}
     ]);
-    UI.setValue([{
-        id: "display-renown-max",
-        value: data.renown.total.max
-        },{
-        id: "panel-renown-weekly-max",
-        value: data.renown.weekly.max
-        },{
-        id: "panel-renown-daily-max",
-        value: data.renown.daily.max
-        },{
-        id: "panel-renown-sr-max",
-        value: data.renown.sr.max
-        },{
-        id: "panel-renown-r-max",
-        value: data.renown.r.max
-        },{
-        id: "display-prestige-max",
-        value: data.prestige.total.max
-        },{
-        id: "panel-prestige-weekly-max",
-        value: data.prestige.weekly.max
-        },{
-        id: "panel-prestige-crew-max",
-        value: data.prestige.crew.max
-        }
+    UI.setValue([
+        {id: "display-renown-max", value: data.renown.total.max},
+        {id: "panel-renown-weekly-max", value: data.renown.weekly.max},
+        {id: "panel-renown-daily-max", value: data.renown.daily.max},
+        {id: "panel-renown-sr-max", value: data.renown.sr.max},
+        {id: "panel-renown-r-max", value: data.renown.r.max},
+        {id: "display-prestige-max", value: data.prestige.total.max},
+        {id: "panel-prestige-weekly-max", value: data.prestige.weekly.max},
+        {id: "panel-prestige-crew-max", value: data.prestige.crew.max}
     ]);
 }
 function updateStatus (data) {
@@ -112,13 +80,15 @@ function updateCurrencies(data) {
     UI.setValue([
         {id: "num-rupies", value: data.rupie.count},
         {id: "num-cp", value: data.cp.count},
-        {id: "num-crystal", value: data.crystals.count}
+        {id: "num-crystal", value: data.crystals.count},
+        {id: "num-chips", value: data.casinoChips.count}
     ], true);
 
     updateSupplies([
         data.rupie,
         data.cp,
-        data.crystals
+        data.crystals,
+        data.casinoChips
     ]);
 }
 

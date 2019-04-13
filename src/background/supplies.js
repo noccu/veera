@@ -397,6 +397,8 @@ window.Supplies = {
     /**Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
     @arg {SupplyItem[]]} updArr - Array of items to update. Uses count prop as delta.**/
     update: function(updArr) {
+        let currenciesUpdated = false;
+
         function _upd(item) {
             if (item.track) {
                 if (!ITEM_KIND[item.type] || ITEM_KIND[item.type].manual) {
@@ -409,6 +411,10 @@ window.Supplies = {
                 else { //Add new
                     this.set(item);
                 }
+
+                if (item.metaType == "Currencies") {
+                    currenciesUpdated = true;
+                }
             }
         }
         for (let item of updArr) {
@@ -416,6 +422,7 @@ window.Supplies = {
         }
 
         updateUI("updSupplies", updArr);
+        if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
         this.save();
     },
     save: function() {
@@ -437,12 +444,12 @@ window.Supplies = {
                 r();
             }
             try {
-                Storage.get(["sup_idx"], _load);
+                Storage.get("sup_idx", _load);
             }
             catch (e) {
                 console.error(e);
                 x("Failed to load supplies.");
-        }
+            }
         });
     },
     clear: function() {
@@ -572,7 +579,7 @@ function reduce (data) {
             upd.push(si);
         }
         upd.push( new SupplyItem(SUPPLYTYPE.rupie, 0, - parseInt(data.requirement_money), "Rupie") );
-        
+
         Supplies.update(upd);
     }
 }

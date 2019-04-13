@@ -54,6 +54,10 @@ function hear (msg) {
                 case url.ismatch("user/status"):
                     Profile.update(msg.data.json);
                     break;
+                case url.ismatch("casino/content/index"):
+                case url.ismatch("casino/content/list"):
+                    Profile.setCasino(msg.data.json);
+                    break;
                 case url.ismatch("item/article_list")://Treasure list
                     Supplies.setTreasure(msg.data.json);
                     break;

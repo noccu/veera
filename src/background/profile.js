@@ -12,8 +12,9 @@ window.Profile = {
         return {
             rupie: Supplies.get(SUPPLYTYPE.rupie, 0),
             cp: Supplies.get(19, 0),
-            crystals: Supplies.get(SUPPLYTYPE.crystals, 0)
-        }
+            crystals: Supplies.get(SUPPLYTYPE.crystals, 0),
+            casinoChips: Supplies.get(31, 0)
+        };
     },
     pendants: {
         renown: {
@@ -57,9 +58,9 @@ window.Profile = {
     updatePendants (updArr) { //[ { pendantType, limitType, delta }]
         for (let item of updArr) {
             this.pendants[item.pendantType][item.limitType].current += item.delta;
-//                this.count[item.pendantType][item.limitType].max += item.max;
         }
         updateUI("updPendants", this.pendants);
+        this.save();
     },
     setCurrencies (dom) {
         let info = dom.querySelector(".prt-info-possessed");
@@ -97,6 +98,18 @@ window.Profile = {
 
         updateUI("updStatus", this.status);
     },
+    setCasino(json){
+        if (json.data) {
+            let dom = parseDom(json.data);
+            let ele = dom.querySelector(".prt-having-medal .txt-value");
+            if (ele) {
+                let chips = parseInt(ele.getAttribute("value"));
+                Supplies.set( new SupplyItem(31, 0, chips, "Casino medals") );
+                Supplies.save();
+                updateUI("updCurrencies", this.currencies);
+            }
+        }
+    },
     update (json) {
         //Sometimes returns no info, like on gacha banners or other redirects.
         if (json.data) { //Currencies & arca
@@ -105,7 +118,7 @@ window.Profile = {
             this.setArca(dom);
         }
 
-        let status = json.status
+        let status = json.status;
         if (json.option) {
             if (!status && json.option.mydata_assets && json.option.mydata_assets.mydata) {
                 status = json.option.mydata_assets.mydata.status;
@@ -121,6 +134,39 @@ window.Profile = {
         if (status) {
             this.setStatus(status);
         }
+        Profile.save();
+    },
+    save () {
+        Storage.set({
+            profile: {
+//                status: this.status,
+                pendants: this.pendants,
+                arcarum: this.arcarum
+            }
+        });
+        devlog("Profile saved.");
+    },
+    load () {
+        return new Promise((r,x) => {
+            function _load(data) {
+                if (data.profile) {
+                    for (let key in data.profile) {
+                        Profile[key] = data.profile[key];
+                    }
+                }
+                else {
+                    console.warn("Could not load Profile data. Visit home page to initialize most of it.");
+                }
+                r();
+            }
+            try {
+                Storage.get("profile", _load);
+            }
+            catch (e) {
+                console.error(e);
+                x("Failed to load Profile.");
+            }
+        });
     }
 };
 
