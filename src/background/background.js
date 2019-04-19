@@ -74,6 +74,7 @@ function getEnumNamedValue(list, val) { //for the simple plain obj enum actually
 }
 
 const DOM_PARSER = new DOMParser();
-function parseDom(data, mime) {
-    return DOM_PARSER.parseFromString(decodeURIComponent(data), mime || "text/html");
+function parseDom(data, {decode = true, mime = "text/html"} = {}) {
+    if (decode) { data = decodeURIComponent(data); }
+    return DOM_PARSER.parseFromString(data, mime);
 }

@@ -131,7 +131,7 @@ function hear (msg) {
                     */
                 case url.ismatch("quest/treasure_raid"):
                 case /treasureraid\d+\/top\/content\/newindex/.test(url):
-                    storePendingRaidsTreasure(msg.data);
+                    storePendingRaidsTreasure(msg.data.json);
                     break;
                 case url.ismatch("quest/create_quest"):
                     if (msg.data.json.result == "ok") {

@@ -48,7 +48,10 @@ const ITEM_KIND = {//jshint ignore:line
     7: {
         name: "Rupie",
         class: "Money",
-        path: "item/normal"
+        path: "item/normal",
+        specialId: {
+            0: "lupi"
+        }
     },
     8: {
         name: "Draw Ticket",
@@ -59,7 +62,10 @@ const ITEM_KIND = {//jshint ignore:line
     9: {
         name: "Crystal",
         class: "Stone",
-        path: "item/normal"
+        path: "item/normal",
+        specialId: {
+            0: "gem"
+        }
     },
     10: {
         name: "Treasure",
@@ -79,7 +85,10 @@ const ITEM_KIND = {//jshint ignore:line
     19: {
         name: "CP",
         class: "JobPoint",
-        path: "item/normal"
+        path: "item/normal",
+        specialId: {
+            0: "jp"
+        }
     },
     23: {
         name: "Pick Ticket",
@@ -94,7 +103,10 @@ const ITEM_KIND = {//jshint ignore:line
     31: {
         name: "Casino Chip",
         class: "Medal",
-        path: "item/normal"
+        path: "item/normal",
+        specialId: {
+            0: "casino_medal"
+        }
     },
     32: {
         name: "Origin Crystal",
@@ -193,6 +205,14 @@ const ITEM_KIND = {//jshint ignore:line
         name: "Recycling",
         class: "Recycling",
         path: "item/recycling"
+    },
+    82: {
+        name: "Badges",
+        path: "item/event/newdefeat",
+        manual: true,
+        specialId: {
+            304401: "gold"
+        }
     }
 };
 const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming. TODO: add IDs also move these 2 consts to own file.
@@ -209,24 +229,8 @@ const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming
     39: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"},
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
-//Pathnames that don't follow the usual pattern, organized as item_kind -> item_id -> filename
-const ITEM_SPECIAL_ID = {
-    //Just a note: type 9, id 0 = rupie icon
-    9: {
-        0: "gem" //Crystals
-    },
-    7: {
-        0: "lupi"
-    },
-    19: {
-        0: "jp"
-    },
-    31: {
-        0: "casino_medal"
-    }
-};
 
-function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unknown") {
+function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unknown", uniqueId = undefined) {
     this.type = parseInt(type);
     this.id = parseInt(id);
     this.count = parseInt(count);
@@ -236,6 +240,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
     let data = ITEM_KIND[type];
     this.name = name;
     this.typeName = data ? data.name : "Unknown";
+    if (uniqueId) { this.uniqueId = uniqueId; }
 
     for (let t in SUPPLYTYPE) {
         if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
@@ -245,8 +250,8 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
     }
     if (data) {
         let fname = id;
-        if (ITEM_SPECIAL_ID[type] && ITEM_SPECIAL_ID[type][id]) {
-            fname = ITEM_SPECIAL_ID[type][id];
+        if (data.specialId && data.specialId[id]) {
+            fname = data.specialId[id];
         }
         if (!fname) { //don't want any undefined.jpg in their server logs lmao
             devwarn("[SupplyItem] Invalid path, nuking: ", this);
@@ -259,7 +264,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
         this.location = TREASURE_SOURCES[id].name;
     }
-    this.track = !SUPPLYTYPE.Untracked.includes(type);
+    this.track = !SUPPLYTYPE.Untracked.includes(this.type);
 }
 //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
 window.Supplies = {
@@ -400,23 +405,23 @@ window.Supplies = {
         let currenciesUpdated = false;
 
         function _upd(item) {
-            if (item.track) {
-                if (!ITEM_KIND[item.type] || ITEM_KIND[item.type].manual) {
-                    devwarn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
-                }
+            if (!ITEM_KIND[item.type] || ITEM_KIND[item.type].manual) {
+                devwarn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
+            }
 
-                if (this.index[item.type] && this.index[item.type][item.id]) { //Update
-                    item.count = this.index[item.type][item.id].count += item.count;
-                }
-                else { //Add new
-                    this.set(item);
-                }
+            if (this.index[item.type] && this.index[item.type][item.id]) { //Update
+                item.count = this.index[item.type][item.id].count += item.count;
+            }
+            else { //Add new
+                this.set(item);
+            }
 
-                if (item.metaType == "Currencies") {
-                    currenciesUpdated = true;
-                }
+            if (item.metaType == "Currencies") {
+                currenciesUpdated = true;
             }
         }
+        
+        updArr = updArr.filter(item => item.track);
         for (let item of updArr) {
             _upd.call(this, item);
         }
@@ -468,10 +473,6 @@ function gotQuestLoot(data) {
         let item = new SupplyItem(type, id, count, name);
         if (entry.rarity) {
             item.rarity = parseInt(entry.rarity);
-        }
-        if (!item.path) {
-            //Read path from response (entry.type) or default to treasure, seems most common.
-            item.path = type && type.includes("item") ? type : ITEM_KIND[SUPPLYTYPE.treasure].path;
         }
         upd.push(item);
     }
@@ -543,7 +544,8 @@ function purchaseItem(data) {
 function cratePickup(data) { //single item pick up TODO: check multi
     let upd = [];
     function parse(entry) {
-        let si = new SupplyItem(entry.item_kind_id, entry.item_id, entry.number, entry.item_name);
+        let si = new SupplyItem(entry.item_kind_id, entry.regular_id || entry.item_id, entry.number, entry.item_name);
+        if (entry.regular_id) { si.uniqueId = entry.item_id; }
         upd.push(si);
     }
 
@@ -585,50 +587,46 @@ function reduce (data) {
 }
 
 function storePendingRaidsTreasure (data) {
-    function parseHtml (s, decode) {
-        let p = new DOMParser();
-        return p.parseFromString(decode ? decodeURIComponent(s) : s, "text/html");
-    }
-    let store = [];
+    let store = {items: []};
 
     //normal raids
-    if (data.json.quest_id) {
-        for (let i = 0; i < data.json.treasure_id.length; i++) {
-            store.push({questId: data.json.quest_id,
-                        itemId: data.json.treasure_id[i],
-                        type: data.json.treasure_kind[i],
-                        num: parseInt(data.json.consume[i]) });
+    if (data.quest_id) {
+        for (let i = 0; i < data.treasure_id.length; i++) {
+            store.id = data.quest_id;
+            if (data.action_point) { store.ap = - parseInt(data.action_point); }
+            store.items.push( new SupplyItem(data.treasure_kind[i], data.treasure_id[i], - parseInt(data.consume[i]), data.treasure_name) );
         }
     }
     //event raids
-    else if (data.json.option) {
-        data = parseHtml(data.json.option.quest.list, true);
+    else if (data.option) {
+        data = parseDom(data.option.quest.list);
         let list = data.querySelectorAll("[id*=raid]");
 
         for (let entry of list) {
-            entry = parseHtml(entry.innerHTML, false);
+            entry = parseDom(entry.innerHTML, {decode: false});
             let itemNum = entry.querySelector(".consume .txt-article-num"),
                 questData = entry.querySelector("[data-treasure-id]");
             if (itemNum && questData && questData.dataset.treasureId) {
-                store.push({questId:questData.dataset.questId,
-                            itemId: questData.dataset.treasureId,
-                            num: parseInt(itemNum.textContent),
-                            type: SUPPLYTYPE.treasure });
+                store.id = questData.dataset.questId;
+                store.items.push( new SupplyItem(SUPPLYTYPE.treasure, questData.dataset.treasureId, - parseInt(itemNum.textContent)) );
             }
         }
     }
 
     Supplies.pendingRaidHost = store;
-    //lmao I could actually just store and save a whole list of raids slowly accrued and use that for speed. Even useful for building Raids/RaidList functionality!
 }
 
 function consumePendingRaidsTreasure (data) {
-    if (data.json.result == "ok" && Supplies.pendingRaidHost) {
-        let itemData = Supplies.pendingRaidHost.find(x => x.questId == data.postData.quest_id && x.itemId == data.postData.use_item_id);
-        if (itemData) {
-            let si = new SupplyItem(itemData.type, itemData.itemId, itemData.num);
-            Supplies.update([si]);
+    if (Supplies.pendingRaidHost.id == data.postData.quest_id) {
+        let consumedItems;
+        if (Array.isArray(data.postData.use_item_id)) { //This is an assumption. I don't want to host Luci just to check rn.
+            consumedItems = Supplies.pendingRaidHost.items.filter(item => data.postData.use_item_id.includes(item.id));
         }
+        else {
+            consumedItems = Supplies.pendingRaidHost.items.filter(item => item.id == data.postData.use_item_id);
+        }
+        Supplies.update(consumedItems);
+        delete Supplies.pendingRaidHost;
     }
 }
 
@@ -636,7 +634,6 @@ function weaponUncapStart(data) {
     var update = { id: data.url.match(/materials\/(\d+)/)[1],
                    items: [] };
 
-//    update.id = data.url.match(/materials\/(\d+)\?/)[1];
     for (let key of Object.keys(data.json)) {
         if (key == "options") { continue; }
 
@@ -678,8 +675,8 @@ function storePendingJobUnlock(data) {
     }
 
     Supplies.pendingJob = {id: data.master.id,
-                            cp: parseInt(data.job.use_job_point),
-                            items};
+                           cp: parseInt(data.job.use_job_point),
+                           items};
 }
 
 function consumePendingJobUnlock(data) {
