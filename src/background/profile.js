@@ -177,7 +177,7 @@ function getPendantsRaid (json) {
         switch (json.mbp_info.item_id) {
             case "92001": //renown
                 //It only gives a total number, taking into account daily and weekly, but we still have to add them.
-                Profile.pendants.update([
+                Profile.updatePendants([
                     {pendantType: "renown", limitType: "daily", delta: added['10100'].add_point},
                     {pendantType: "renown", limitType: "weekly", delta: added['10100'].add_point},
                     {pendantType: "renown", limitType: "sr", delta: added['20200'].add_point},
@@ -186,7 +186,7 @@ function getPendantsRaid (json) {
                 ]);
                 break;
             case "92002": //prestige
-                Profile.pendants.update([
+                Profile.updatePendants([
                     {pendantType: "prestige", limitType: "weekly", delta: added['10100'].add_point},
                     {pendantType: "prestige", limitType: "crew", delta: added['20300'].add_point},
                     {pendantType: "prestige", limitType: "total", delta: parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number} //Using given number to deal with multibox
