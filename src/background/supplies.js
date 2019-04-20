@@ -420,7 +420,7 @@ window.Supplies = {
                 currenciesUpdated = true;
             }
         }
-        
+
         updArr = updArr.filter(item => item.track);
         for (let item of updArr) {
             _upd.call(this, item);

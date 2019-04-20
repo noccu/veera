@@ -83,7 +83,7 @@ Object.defineProperties(BattleData.prototype, {
                 this.addTurn();
             }
             return this.log.last;
-            
+
 //            let turn = this.turn - 1; //0-indexed array, 1-indexed turns
 //            if (!this.log[turn]) {
 //                this.log[turn] = new BattleTurnData();
@@ -155,7 +155,7 @@ window.Battle = {
     },
     packageData: function () {//TODO: check if everything copies
         let data = JSON.parse(JSON.stringify(this.current));
-        
+
         for (let stat in this.current.stats) {
             data.stats[stat] = this.current.stats[stat];
         }
@@ -175,7 +175,7 @@ window.Battle = {
             //Unlogged raid, or new host/join of logged raid
             if (!logged || logged && json.turn < this.archive[id].turn) {
                 this.archive[id] = new BattleData(id, json.player.param);
-                
+
                 //Limit number of archived raids. TODO: find better way cause this sux
                 let stored = Object.keys(this.archive);
                 if (stored.length > this.MAX_STORED) {
@@ -325,7 +325,7 @@ const battleCharStatsShared = {
         return safeDivide(this.crits, this.totalHits) * 100;
     },
     get autoTurns() {
-      return this.instance.activeTurns - this.ougis;  
+      return this.instance.activeTurns - this.ougis;
     },
     get daRate() {
         return safeDivide(this.da, this.autoTurns) * 100;

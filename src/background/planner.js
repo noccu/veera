@@ -15,7 +15,7 @@ window.Planner = {
                     plan.push(newItem);
                 }
             }
-            
+
             //Dealing with templates
             let id = item.isTemplate ? item.id[templateKey] : item.id;
             //Dealing with multi-item teplates
@@ -40,7 +40,7 @@ window.Planner = {
                      itemArray = PlannerData[series].wtype[wtype] || [];
                      if (PlannerData[series].wtype.templates) {
                          itemArray = itemArray.concat(PlannerData[series].wtype.templates);
-                     }           
+                     }
                      templateKey = PlannerData[series].typeNames ? PlannerData[series].typeNames[wtype] : wtype;
                      break;
                  case "element":
