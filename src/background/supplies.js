@@ -617,7 +617,7 @@ function storePendingRaidsTreasure (data) {
 }
 
 function consumePendingRaidsTreasure (data) {
-    if (Supplies.pendingRaidHost.id == data.postData.quest_id) {
+    if (Supplies.pendingRaidHost && Supplies.pendingRaidHost.id == data.postData.quest_id) {
         let consumedItems;
         if (Array.isArray(data.postData.use_item_id)) { //This is an assumption. I don't want to host Luci just to check rn.
             consumedItems = Supplies.pendingRaidHost.items.filter(item => data.postData.use_item_id.includes(item.id));
@@ -660,7 +660,7 @@ function npcUncapStart(data) {
 }
 
 function uncapEnd(json) {
-    if (Supplies.pendingUncap.id == json.new.id) {
+    if (Supplies.pendingUncap && Supplies.pendingUncap.id == json.new.id) {
         Supplies.update(Supplies.pendingUncap.items);
         delete Supplies.pendingUncap;
     }
@@ -680,7 +680,7 @@ function storePendingJobUnlock(data) {
 }
 
 function consumePendingJobUnlock(data) {
-    if (data.json.success && data.postData.job_id == Supplies.pendingJob.id) {
+    if (Supplies.pendingJob && data.json.success && data.postData.job_id == Supplies.pendingJob.id) {
         Supplies.update(Supplies.pendingJob.items);
         delete Supplies.pendingJob;
     }
@@ -695,7 +695,7 @@ function storePendingForgeCCW (data) {
     }
 }
 function consumePendingForgeCCW (data) {
-    if ((data.new_weapon || data.get_weapon) == Supplies.pendingForge.newWeapId) {
+    if (Supplies.pendingForge && (data.new_weapon || data.get_weapon) == Supplies.pendingForge.newWeapId) {
         Supplies.update(Supplies.pendingForge.items);
         delete Supplies.pendingForge;
     }
