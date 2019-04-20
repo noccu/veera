@@ -305,6 +305,9 @@ function evhGlobalClick (e) {
             case "toggleRaid":
                 UI.raids.evhToggle(e.target.parentElement);
                 break;
+            case "navigate":
+                BackgroundPage.send("navigateTo", e.target.dataset.value);
+                break;
         }
     }
 }

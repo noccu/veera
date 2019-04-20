@@ -479,3 +479,17 @@ button {
     white-space: pre-line;
     text-align: center;
 }
+
+.place-link {
+    padding: 0.1em;
+}
+
+.place-link:hover {
+    background-color: var(--selection-color);
+}
+
+#places .panel-content > * {
+    display: inline-block;
+    margin: 0.2em;
+    vertical-align: top;
+}

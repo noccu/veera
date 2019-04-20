@@ -192,6 +192,10 @@ function hear (msg) {
             break;
         case "hostRaid":
             Raids.start(msg.data.raidId, msg.data.matId);
+            break;
+        case "navigateTo":
+            State.game.navigateTo(GAME_URL.baseGame + msg.data);
+            break;
     }
 }
 

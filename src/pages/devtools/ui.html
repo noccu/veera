@@ -95,6 +95,7 @@
                 <li class="nav-tab" data-navpage="supplies">Inventory</li>
                 <li class="nav-tab" data-navpage="battle">Battle</li>
                 <li class="nav-tab" data-navpage="unf">UNF</li>
+                <li class="nav-tab" data-navpage="places">Places</li>
             </ul>
             <div id="dailies" class="tab active">
                 <div id="pendants-panel" class="panel">
@@ -102,16 +103,16 @@
                     <ul class="panel-content">
                         <div id="renown">
                             <span class="panel-div-title">Renown</span>
-                            <li>Daily: <span id="panel-renown-daily">500</span>/<span id="panel-renown-daily-max">500</span></li>
-                            <li>Weekly: <span id="panel-renown-weekly">500</span>/<span id="panel-renown-weekly-max">500</span></li>
-                            <li>SR: <span id="panel-renown-sr">500</span>/<span id="panel-renown-sr-max">500</span></li>
-                            <li>R: <span id="panel-renown-r">500</span>/<span id="panel-renown-r-max">500</span></li>
+                            <li>Daily: <span id="panel-renown-daily">0</span>/<span id="panel-renown-daily-max">0</span></li>
+                            <li>Weekly: <span id="panel-renown-weekly">0</span>/<span id="panel-renown-weekly-max">0</span></li>
+                            <li>SR: <span id="panel-renown-sr">0</span>/<span id="panel-renown-sr-max">0</span></li>
+                            <li>R: <span id="panel-renown-r">0</span>/<span id="panel-renown-r-max">0</span></li>
                         </div>
                         <div class="spacer"></div>
                         <div id="prestige">
                             <span class="panel-div-title">Prestige</span>
-                            <li>Weekly: <span id="panel-prestige-weekly">500</span>/<span id="panel-prestige-weekly-max">500</span></li>
-                            <li>Crew: <span id="panel-prestige-crew">500</span>/<span id="panel-prestige-crew-max">500</span></li>
+                            <li>Weekly: <span id="panel-prestige-weekly">0</span>/<span id="panel-prestige-weekly-max">0</span></li>
+                            <li>Crew: <span id="panel-prestige-crew">0</span>/<span id="panel-prestige-crew-max">0</span></li>
                         </div>
                     </ul>
                 </div>
@@ -340,6 +341,32 @@
                         <button id="unf-graph-load">Load</button>
                         <div class="canvas-container">
                             <canvas id="unf-area-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="places" class="tab">
+                <div id="raids-current" class="panel">
+                    <span class="panel-header" data-event="collapse">Where to?</span>
+                    <div class="panel-content">
+                        <div class="place-group">
+                            <div class="place-link" data-event="navigate" data-value="#shop">Shop</div>
+                            <div class="place-link" data-event="navigate" data-value="#shop/exchange/trajectory">Journey drops</div>
+                            <div class="place-link" data-event="navigate" data-value="#shop/exchange/list">Trade</div>
+                        </div>
+                        <div class="place-group">
+                            <div class="place-link" data-event="navigate" data-value="#party/index/0/npc/0">Party</div>
+                            <div class="place-link" data-event="navigate" data-value="#casino">Casino</div>
+                            <div class="place-link" data-event="navigate" data-value="#gacha">Draw</div>
+                        </div>
+                        <div class="place-group">
+                            <div class="place-link" data-event="navigate" data-value="#quest/assist">Raids</div>
+                            <div class="place-link" data-event="navigate" data-value="#quest/assist/unclaimed">Pending</div>
+                        </div>
+                        <div class="place-group">
+                            <div class="place-link" data-event="navigate" data-value="#arcarum2">Arcarum</div>
+                            <div class="place-link" data-event="navigate" data-value="#trial_battle">Trial battles</div>
+                            <div class="place-link" data-event="navigate" data-value="#sidestory">Side stories</div>
                         </div>
                     </div>
                 </div>
