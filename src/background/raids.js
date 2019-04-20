@@ -80,15 +80,7 @@ window.Raids = {
         Storage.set({raid_list: this.list});
     },
     get: function(input) {
-        let id = input instanceof RaidData ? input.id : input;
-        let raid = this.list[id];
-        if (raid) {
-            return new RaidEntry(input, raid);
-        }
-        else {
-            return new RaidEntry(input);
-        }
-//        return this.list[id];
+        return new RaidEntry(input, this.list[input.id || input]);
     },
     /** Returns the list of raids, optionally filtered and sorted.
         @arg {this.SOORT_METHODS} sort
@@ -104,7 +96,6 @@ window.Raids = {
 
         let output = [];
         for (let rd of RaidList) {
-//            let entry = new RaidEntry(rd);
             output.push(this.get(rd));
         }
 
@@ -152,12 +143,64 @@ window.Raids = {
         updateUI("updRaid", raidEntry);
     },
     start: function (id, hostMat) {
-        let raid = this.get(id);
-        if (!hostMat && raid.data.matCost) { hostMat = raid.data.matCost[0].id || raid.data.matCost[0][0].id; } //Use default mat.
-        let url = raid.data.urls[hostMat || this.NO_HOST_MAT];
-        if (url) {
+        function filterUsedMats(costs) {
+            let data = [];
+            for (let mat of costs) {
+                if (Array.isArray(mat)) {
+                    for (let subMat of mat) {
+                        if (hostMat.includes(subMat.id)) {
+                            data.push(subMat);
+                        }
+                    }
+                }
+                else if (hostMat.includes(mat.id)) {
+                    data.push(mat);
+                }
+            }
+            return data;
+        }
+
+        let raid = this.get(id),
+            sufficientMats = true,
+            hostMatId, usedMats,
+            matIds = [], matTypes = [], matNums = [];
+        if (raid.data.matCost) { //Need mats?
+            if (!hostMat) {
+                //Use default mat.
+                hostMat = raid.data.matCost[0].id || raid.data.matCost[0].map(x => x.id);
+            }
+            if (!Array.isArray(hostMat)) { //Normalise to array
+                hostMat = [hostMat];
+            }
+            usedMats = filterUsedMats(raid.data.matCost);
+            if (usedMats.length) { //should always trigger
+                hostMatId = usedMats[0].id;
+                sufficientMats = usedMats.every(mat => {
+                    //Cheat in some data gathering.
+                    matIds.push(mat.id);
+                    matTypes.push(mat.supplyData.type);
+                    matNums.push(mat.num);
+                    //What we came for
+                    return mat.num <= mat.supplyData.count;});
+                //Every can be in lookup since we go through the array anyway. optimize TODO
+            }
+            else {
+                throw "[raid start] can't find hostmats";
+            }
+        }
+        let url = raid.data.urls[hostMatId || this.NO_HOST_MAT];
+        if (url && sufficientMats) {
             State.game.navigateTo(url);
-//            devlog(url);
+            if (hostMatId) {
+                storePendingRaidsTreasure({quest_id: id,
+                                           treasure_id: matIds,
+                                           treasure_kind: matTypes,
+                                           consume: matNums});
+            }
+        }
+        else {
+            updateUI("updRaid", raid); //update the hostmat display
+            deverror(`Can't start raid ${id}. Sufficient mats: ${sufficientMats}, url: ${url}`);
         }
     },
     reset: function() {
