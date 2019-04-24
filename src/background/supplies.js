@@ -416,7 +416,8 @@ window.Supplies = {
             }
 
             if (this.index[item.type] && this.index[item.type][item.id]) { //Update
-                item.count = this.index[item.type][item.id].count += item.count;
+                item.delta = item.count; //Save change
+                item.count = this.index[item.type][item.id].count += item.delta;
             }
             else { //Add new
                 this.set(item);
