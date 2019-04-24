@@ -1,5 +1,7 @@
 const ELEMENTS = { fire: 0, water: 1, earth: 2, wind: 3, light: 4, dark: 5, noEle: 6};
 const RAID_TIER = {A: 1, B: 2, Magna: 4, Ancient: 5, Epic: 6, Nightmare: 7, Primarch: 8, Genesis: 9, Ultimate: 10, Rapture: 11}; //These aren't exactly corresponding, just ease of use. whatever
+//map item ids to raids that use them
+const IDX_ITEM_TO_RAIDS = new Map(); //jshint ignore:line
 
 function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNums, ele, thumb) {
     let mats;
@@ -17,6 +19,13 @@ function RaidData(name, id, tier, minHostRank, dailyHosts, apCost, matIDs, matNu
                 else {
                     store.push({id: mId, num: mNum});
                     this.urls[mId] = `${GAME_URL.baseGame}#quest/supporter/${id}/1/0/${mId}`;
+
+                    //This construtor is only used once per run, so build the map here.
+                    if (!IDX_ITEM_TO_RAIDS.has(mId)) {
+                        IDX_ITEM_TO_RAIDS.set(mId, []);
+                    }
+                    let itemMap = IDX_ITEM_TO_RAIDS.get(mId);
+                    itemMap.push(id);
                 }
             }
         }

@@ -10,7 +10,7 @@ window.DevTools = {
         DevTools.devToolsConnection = port;
         port.onMessage.addListener(DevTools.listen);
         port.onDisconnect.addListener(DevTools.deafen);
-        window.dispatchEvent(EVENTS.connected);
+        window.dispatchEvent(new Event(EVENTS.connected));
     },
     listen: function(data) {
         devlog("[background] Heard:", data);

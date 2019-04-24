@@ -30,6 +30,11 @@
         //Constants
         "SUPPLYTYPE": false,
         "ITEM_KIND": false,
-        "GAME_URL": false
+        "GAME_URL": false,
+        "EVENTS": false,
+        "IDX_ITEM_TO_RAIDS": false,
+        
+        //Events
+        "evhCheckRaidSupplyData": false
     }
 }

@@ -1,10 +1,11 @@
 const UPDATED = false;
-const EVENTS = {
-    connected: new Event("veeraConnected"),
+const EVENTS = { //jshint ignore:line
+    connected: "veeraConnected",
+    suppliesUpdated: "suppliesUpdated"
 //    newBattle: new Event("newBattle")
 };
 
-window.addEventListener("veeraConnected", MainInit);
+window.addEventListener(EVENTS.connected, MainInit);
 //window.addEventListener("newBattle", );
 
 DevTools.wait(); //Listen for devtools conn
@@ -37,12 +38,15 @@ function MainInit() {
             updateUI("updArca", Profile.arcarum);
             console.groupEnd();
         })
-        .then(checkReset)//jshint ignore:line
+        .then(() => {
+            checkReset();//jshint ignore:line
+            window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
+        })
         .catch(e => {
             DevTools.disconnect();
             console.error(e);
         });
-    }
+}
 
 //Old function, kept for now due to ease of reading intended use.
 function updateUI (type, value) {

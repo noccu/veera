@@ -436,6 +436,8 @@ window.Supplies = {
         updateUI("updSupplies", updArr);
         if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
         this.save();
+//        let newData = updArr.map(i => this.get(i.type, i.id));
+        window.dispatchEvent(new CustomEvent(EVENTS.suppliesUpdated, {detail: updArr}));
     },
     save: function() {
         Storage.set({sup_idx: this.index});

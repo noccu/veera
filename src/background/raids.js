@@ -245,9 +245,17 @@ function checkReset () {
      setTimeout(checkReset, newReset - now);
 }
 
-//import("/src/background/data/raidlist.js").then(o => Raids.List = o.raidInfo);
-//console.log(Raids.List);
-
+function evhCheckRaidSupplyData (upd) {
+    for (let item of upd.detail) {
+        if (IDX_ITEM_TO_RAIDS.has(item.id)) {
+            for (let raidId of IDX_ITEM_TO_RAIDS.get(item.id)) {
+                //Auto fetches new supply data.
+//                Raids.update({action: "supUpd", id: raidId});
+                updateUI("updRaid", Raids.get(raidId));
+            }
+        }
+    }
+}
 
 //NM Triggers etc
 function checkNextQuest(data) {
