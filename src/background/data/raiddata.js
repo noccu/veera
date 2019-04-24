@@ -147,6 +147,7 @@ window.RaidList = [
     new RaidData("Bahamut (HL)", 301061, RAID_TIER.Nightmare, 101, 1, 90, [59], [1], ELEMENTS.dark, "2040128000_hell.png"),
     new RaidData("Huanglong & Qilin (HL)", 303231, RAID_TIER.Nightmare, 120, 1, 90, [6005], [2], ELEMENTS.light, "2040157000_high.png"),
     new RaidData("Akasha", 303251, RAID_TIER.Nightmare, 150, 1, 90, [533], [3], ELEMENTS.light, "2040308000_high.png"),
+    new RaidData("The Four Primarchs", 303291, RAID_TIER.Primarch, 120, 1, 80, [[5311, 5321, 5331, 5341]], [[1, 1, 1, 1]], ELEMENTS.noEle, "30329.png"),
 
     new RaidData("Rose Queen (HL)", 300471, RAID_TIER.Ancient, 101, 1, 50, [1204], [10], ELEMENTS.wind, "2040105000_high.png"),
 
