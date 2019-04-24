@@ -100,6 +100,12 @@ const ITEM_KIND = {//jshint ignore:line
         class: "Event\\Temporary",
         path: "item/event/temporary"
     },
+    27: {
+        name: "ROTB Battle Badges",
+        class: "ROTB",
+        path: "item/event/defeat/silver",
+        manual: true
+    },
     31: {
         name: "Casino Chip",
         class: "Medal",
