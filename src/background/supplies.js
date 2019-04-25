@@ -100,10 +100,22 @@ const ITEM_KIND = {//jshint ignore:line
         class: "Event\\Temporary",
         path: "item/event/temporary"
     },
+    26: {
+        name: "ROTB Xuanwu Badges",
+        class: "ROTB",
+        path: "item/event/defeat/copper",
+        manual: true
+    },
     27: {
-        name: "ROTB Battle Badges",
+        name: "ROTB Qinglong Badges",
         class: "ROTB",
         path: "item/event/defeat/silver",
+        manual: true
+    },
+    28: {
+        name: "ROTB Baihu Badges",
+        class: "ROTB",
+        path: "item/event/defeat/gold",
         manual: true
     },
     31: {
@@ -158,7 +170,12 @@ const ITEM_KIND = {//jshint ignore:line
         name: "ROTB pendants",
         class: "ROTB",
         path: "item/event/article",
-        manual: true
+        manual: true,
+        convert (item) {
+            item.count = item.count * parseInt(item.id);
+            item.type = 10;
+            item.id = 90001;
+        }
     },
     50: {
         name: "Class Outfit",
@@ -185,8 +202,8 @@ const ITEM_KIND = {//jshint ignore:line
         class: "Stamp",
         path: "item/stamp"
     },
-    63: { //manual entry
-        name: "ROTB badges",
+    63: {
+        name: "ROTB Zhuque Badges",
         class: "ROTB",
         path: "item/event/defeat/platinum",
         manual: true
@@ -265,6 +282,10 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
         }
         else {
             this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${data.path}/${data.noSize ? "" : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
+        }
+        //Redirect some special cases to be more user-friendly.
+        if (data.convert) {
+            data.convert(this);
         }
     }
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
@@ -412,8 +433,12 @@ window.Supplies = {
         let currenciesUpdated = false;
 
         function _upd(item) {
-            if (!ITEM_KIND[item.type] || ITEM_KIND[item.type].manual) {
-                devwarn("Uncertain item type, errors may occur.", JSON.parse(JSON.stringify(item)));
+            let typeData = ITEM_KIND[item.type];
+            if (!typeData || typeData.manual) {
+                devwarn("Uncertain item type, errors may occur.", item);
+            }
+            if (typeData.convert) {
+                devlog("Converting item: ", item);
             }
 
             if (this.index[item.type] && this.index[item.type][item.id]) { //Update
