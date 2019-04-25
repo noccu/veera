@@ -356,6 +356,7 @@ window.Supplies = {
         this.set(upd);
         this.save();
         updateUI("updSupplies", upd);
+        window.dispatchEvent(new CustomEvent(EVENTS.suppliesUpdated, {detail: upd}));
     },
     /**Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
