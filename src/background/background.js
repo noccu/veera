@@ -82,3 +82,15 @@ function parseDom(data, {decode = true, mime = "text/html"} = {}) {
     if (decode) { data = decodeURIComponent(data); }
     return DOM_PARSER.parseFromString(data, mime);
 }
+
+function showNotif(text, desc) {
+    if (Notification.permission == "granted") {
+        let n = new Notification(text, {body: desc});
+        setTimeout(() => n.close(), 6000);//TODO: add to State.settings
+    }
+    else if (Notification.permission == "default"){
+        Notification.requestPermission().then(p => {
+            if (p == "granted") { showNotif(text, desc); }
+        });
+    }
+}

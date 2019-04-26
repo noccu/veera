@@ -26,6 +26,7 @@
         "updateUI": false,
         "parseDom": false,
         "getEnumNamedValue": false,
+        "showNotif": false,
 
         //Constants
         "SUPPLYTYPE": false,

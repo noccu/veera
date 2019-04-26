@@ -58,16 +58,6 @@ window.UI = {
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
         document.getElementById("raids-panel").addEventListener("filter", evhRaidsFilter);
     },
-    showNotif(text) {
-        if (Notification.permission == "granted") {
-            this.lastNotif = new Notification(text);
-        }
-        else if (Notification.permission == "default"){
-            Notification.requestPermission().then(p => {
-                if (p == "granted") { this.showNotif(text) };
-            });
-        }
-    },
 
     time: {
         display: {},
