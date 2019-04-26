@@ -13,7 +13,6 @@ window.DevTools = {
         window.dispatchEvent(new Event(EVENTS.connected));
     },
     listen: function(data) {
-        devlog("[background] Heard:", data);
         hear(data);
     },
     deafen: function() {
@@ -44,6 +43,7 @@ window.DevTools = {
 String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
 
 function hear (msg) {
+    devlog("[background] Heard:", msg, msg.action == "request" ? msg.data.url.match(/jp\/([^?]+)/)[1] : "");
     switch (msg.action) {
         case "request":
             var url = msg.data.url;
