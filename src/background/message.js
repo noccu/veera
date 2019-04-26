@@ -161,6 +161,8 @@ function hear (msg) {
                 //There is a confirm for _all which triggers if not checking end of path, hence split.
                 case url.ismatch("present/receive?"):
                 case url.ismatch("present/receive_all?"):
+                case url.ismatch("present/term_receive?"):
+                case url.ismatch("present/term_receive_all?"):
                     //is  normally followed by article list but that only shows treasure. There's more to pick up than that...
                     cratePickup(msg.data.json);
                     break;
