@@ -175,6 +175,7 @@ const ITEM_KIND = {//jshint ignore:line
             item.count = item.count * parseInt(item.id);
             item.type = 10;
             item.id = 90001;
+            item.name = "Four Symbols Pendant";
         }
     },
     50: {
@@ -253,7 +254,7 @@ const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
 
-function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unknown", uniqueId = undefined) {
+function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, uniqueId = undefined) {
     this.type = parseInt(type);
     this.id = parseInt(id);
     this.count = parseInt(count);
@@ -261,17 +262,8 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
         throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
     let data = ITEM_KIND[type];
-    this.name = name;
-    this.typeName = data ? data.name : "Unknown";
-    if (uniqueId) { this.uniqueId = uniqueId; }
-
-    for (let t in SUPPLYTYPE) {
-        if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
-            this.metaType = t;
-            break;
-        }
-    }
     if (data) {
+        this.typeName = data.name;
         let fname = id;
         if (data.specialId && data.specialId[id]) {
             fname = data.specialId[id];
@@ -288,6 +280,21 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
             data.convert(this);
         }
     }
+    else {
+        this.typeName = "Unknown";
+    }
+
+    //name can already be set when converted
+    this.name = this.name || name || (Supplies.has(type, id) ? Supplies.index[type][id].name : "Unknown");
+    if (uniqueId) { this.uniqueId = uniqueId; }
+
+    for (let t in SUPPLYTYPE) {
+        if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
+            this.metaType = t;
+            break;
+        }
+    }
+
     if (type == SUPPLYTYPE.treasure && TREASURE_SOURCES[id]) {
         this.location = TREASURE_SOURCES[id].name;
     }
@@ -296,6 +303,9 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = "Unkn
 //TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
 window.Supplies = {
     index: {},
+    has (type, id) {
+        return this.index[type] && this.index[type][id];
+    },
     /** Look up information on a specific supply item or list of items.
     @arg {(number=10|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
     @arg {number} id - The id to look up.
