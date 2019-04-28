@@ -13,6 +13,7 @@
         "Profile": true,
         "PlannerData": false,
         "RaidList": false,
+        "Time": false,
 
         //Constructors
         "RaidData": false,

@@ -1,7 +1,8 @@
 const UPDATED = false;
 const EVENTS = { //jshint ignore:line
     connected: "veeraConnected",
-    suppliesUpdated: "suppliesUpdated"
+    suppliesUpdated: "suppliesUpdated",
+    dailyReset: "dailyReset"
 //    newBattle: new Event("newBattle")
 };
 
@@ -39,8 +40,11 @@ function MainInit() {
             console.groupEnd();
         })
         .then(() => {
-            checkReset();//jshint ignore:line
+            window.addEventListener(EVENTS.dailyReset, () => Raids.reset());
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
+        
+            Time.keep();
+            Time.checkReset();
         })
         .catch(e => {
             DevTools.disconnect();

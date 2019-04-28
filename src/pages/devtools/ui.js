@@ -61,88 +61,40 @@ window.UI = {
 
     time: {
         display: {},
-        timers: {},
-        jst: {}, //Current time
-        int: {},
-
-        keep: function() {
-            function tick() {
-                updateTimer(UI.time.jst, 1);
-                updateTimerDisplay("jst", UI.time.jst);
+        times: [],
+        init: function() {
+            for (let timer of this.times) {
+                timer.time = new Date(timer.time);
+                this.display[timer.name] = {
+                    d: document.getElementById(`${timer.name}-d`),
+                    h: document.getElementById(`${timer.name}-h`),
+                    m: document.getElementById(`${timer.name}-m`),
+                    s: document.getElementById(`${timer.name}-s`)
+                };
             }
-
-            this.display.jst = {
-                h: document.getElementById("jst-h"),
-                m: document.getElementById("jst-m"),
-                s: document.getElementById("jst-s")
-            };
-
-            this.jst = new Date();
-            translateDate(this.jst, "toJST");
-            updateTimerDisplay("jst", this.jst);
-            this.int.jst = setInterval(tick, 1000);
         },
-        initTimers: function () {
-            if (this.int.resets) { clearInterval(this.int.resets); }
-            this.setTimers();
-            for (let timer of Object.keys(this.timers)) {
-                this.display[timer] = {d: document.getElementById(`${timer}-d`),
-                                       h: document.getElementById(`${timer}-h`),
-                                       m: document.getElementById(`${timer}-m`),
-                                       s: document.getElementById(`${timer}-s`)};
-                updateTimerDisplay(timer, UI.time.timers[timer]);
+        tick() {
+            for (let time of UI.time.times) {
+                UI.time.update(time, time.delta);
+                UI.time.updateDisplay(time);
             }
-            this.int.resets = setInterval(this.updateTimers, 1000);
         },
-        setStrike: function() {
-
+        update (timer, delta) {
+            timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
         },
-        setTimers: function () {
-            var current = this.jst;
-//            translateDate(current, "toJST");
-
-            var daily = new Date(current);
-            daily.setUTCHours(5);
-            daily.setUTCMinutes(0);
-            daily.setUTCSeconds(0);
-            var weekly = new Date(daily);
-            var monthly = new Date(daily);
-
-            //Daily
-            if (current.getUTCHours() >= 5) {
-                daily.setUTCDate(daily.getUTCDate() + 1);
+        updateDisplay (timer) {            
+            if (this.display[timer.name].d) {
+                this.display[timer.name].d.textContent = timer.time.getUTCDate() - 1;
             }
-            //Weekly
-            if (current.getUTCDay() === 0) {
-                weekly.setUTCDate(current.getUTCDay() + 1);
-            }
-            else if (current.getUTCDay() != 1 || current.getUTCHours() >= 5) {
-                weekly.setUTCDate(current.getUTCDate() + (8 - current.getUTCDay()));
-            }
-            //Monthly
-            if (current.getUTCDate() > 1 || current.getUTCHours() >= 5) {
-                monthly.setUTCDate(1);
-                monthly.setUTCMonth(current.getUTCMonth() + 1);
-            }
-
-            this.timers.daily = new Date(daily - current);
-            this.timers.weekly = new Date(weekly - current);
-            this.timers.monthly = new Date(monthly - current);
-//            this.timers.strike = new Date(daily - current);
+            this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
+            this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
+            this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
         },
-        updateTimers: function() {
-            for (let timer of Object.keys(UI.time.timers)) {
-                if (UI.time.timers[timer].getTime() <= 0) {
-                    if (timer == "maint") {
-                        endMaintTimer();
-                        continue;
-                    }
-                    UI.time.setTimers();
-                }
-
-                updateTimer(UI.time.timers[timer], -1);
-                updateTimerDisplay(timer, UI.time.timers[timer]);
-            }
+        sync (times) {
+            this.times = times;
+            if (this.int) { clearInterval(this.int); }
+            this.init();
+            this.int = setInterval(this.tick, 1000);
         }
     },
     planner: {
@@ -421,16 +373,6 @@ function syncPlanner(index) {
     }
 }
 
-//Timing functions
-function updateTimer (timer, delta) {
-    timer.setUTCSeconds(timer.getUTCSeconds() + delta);
-}
-function updateTimerDisplay (name, timer) {
-    if (UI.time.display[name].d) {UI.time.display[name].d.textContent = timer.getUTCDate() - 1;}
-    UI.time.display[name].h.textContent = ('0' + timer.getUTCHours()).slice(-2);
-    UI.time.display[name].m.textContent = ('0' + timer.getUTCMinutes()).slice(-2);
-    UI.time.display[name].s.textContent = ('0' + timer.getUTCSeconds()).slice(-2);
-}
     //Maintenance
 function startMaintTimer(html) {
     document.getElementById("timer-maint").classList.remove("hidden");

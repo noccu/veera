@@ -212,45 +212,12 @@ window.Raids = {
     }
 };
 
-//Temporary until proper timing functions
-function checkReset () {
-    function setResetTime(time) {
-        if (time.getUTCHours() < 20) {
-            time.setUTCDate(time.getUTCDate() - 1);
-        }
-        time.setUTCHours(20, 0, 0, 0);
-    }
-    function setLastReset(time) {
-        setResetTime(time);
-        State.store.lastReset = time.getTime();
-        State.save();
-        return time;
-    }
-
-    let now = new Date();
-    let lastReset = State.store.lastReset;
-    if (!lastReset) { //init a new date
-        lastReset = setLastReset(new Date());
-    }
-    else {
-        lastReset = new Date(lastReset); //create date obj from timestamp
-    }
-
-    if (now - lastReset > 86400000) {
-        devlog("Resetting raids...");
-        Raids.reset();
-        lastReset = setLastReset(new Date(now));
-    }
-    let newReset = new Date(lastReset.getTime() + 86401000);
-     setTimeout(checkReset, newReset - now);
-}
 
 function evhCheckRaidSupplyData (upd) {
     for (let item of upd.detail) {
         if (IDX_ITEM_TO_RAIDS.has(item.id)) {
             for (let raidId of IDX_ITEM_TO_RAIDS.get(item.id)) {
                 //Auto fetches new supply data.
-//                Raids.update({action: "supUpd", id: raidId});
                 updateUI("updRaid", Raids.get(raidId));
             }
         }

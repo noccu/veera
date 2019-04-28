@@ -22,6 +22,7 @@
 
    "background": {
      "scripts": ["src/background/message.js",
+                 "src/background/time.js",
                  "src/background/background.js",
                  "src/background/storage.js",
                  "src/background/state.js",

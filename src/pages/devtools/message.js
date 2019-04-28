@@ -71,6 +71,8 @@ window.BackgroundPage = {
             case "updRaid":
                 UI.raids.update(msg.data);
                 break;
+            case "syncTime":
+                UI.time.sync(msg.data);
             default:
                 window.dispatchEvent(new Event(msg.action), msg.data);
         }

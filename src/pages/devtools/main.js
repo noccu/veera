@@ -17,8 +17,8 @@ function initialize(data) {
     UI.planner.init(data.planner);
 
     UI.initButtons();
-    UI.time.keep();
-    UI.time.initTimers();
+//    UI.time.keep();
+//    UI.time.initTimers();
     Unf.areaInfo.init();
 
     Network.listen();
