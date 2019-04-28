@@ -384,10 +384,7 @@ window.Supplies = {
             upd.push( new SupplyItem(SUPPLYTYPE.treasure, item.item_id, parseInt(item.number), item.name));
         }
 
-        this.set(upd);
-        this.save();
-        updateUI("updSupplies", upd);
-        window.dispatchEvent(new CustomEvent(EVENTS.suppliesUpdated, {detail: upd}));
+        this.update(upd, true);
     },
     /**Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
@@ -420,9 +417,7 @@ window.Supplies = {
             parse(data[type], type);
         }
 
-        this.set(upd);
-        this.save();
-        updateUI("updSupplies", upd);
+        this.update(upd, true);
     },
     setTickets (json) {
         if (json) {
@@ -432,17 +427,17 @@ window.Supplies = {
                     upd.push( new SupplyItem(SUPPLYTYPE.drawTickets, item.item_id, item.number, item.name) );
                 }
             }
-            this.set(upd);
-            this.save();
-            updateUI("updSupplies", upd);
+            this.update(upd, true);
         }
     },
     /**Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
     @arg {SupplyItem[]]} updArr - Array of items to update. Uses count prop as delta.**/
-    update: function(updArr) {
+    update: function(updArr, overwrite) {
         let currenciesUpdated = false;
-
-        function _upd(item) {
+        if (!Array.isArray(updArr)) { updArr = [updArr]; }
+        
+        updArr = updArr.filter(item => item.track);
+        for (let item of updArr) {
             let typeData = ITEM_KIND[item.type];
             if (!typeData || typeData.manual) {
                 devwarn("Uncertain item type, errors may occur.", item);
@@ -451,12 +446,17 @@ window.Supplies = {
                 devlog("Converting item: ", item);
             }
 
-            if (this.index[item.type] && this.index[item.type][item.id]) { //Update
-                item.delta = item.count; //Save change
-                item.count = this.index[item.type][item.id].count += item.delta;
-            }
-            else { //Add new
+            if (overwrite) {
                 this.set(item);
+            }
+            else {
+                if (this.index[item.type] && this.index[item.type][item.id]) { //Update
+                    item.delta = item.count; //Save change
+                    item.count = this.index[item.type][item.id].count += item.delta;
+                }
+                else { //Add new
+                    this.set(item);
+                }
             }
 
             if (item.metaType == "Currencies") {
@@ -464,16 +464,10 @@ window.Supplies = {
             }
         }
 
-        updArr = updArr.filter(item => item.track);
-        for (let item of updArr) {
-            _upd.call(this, item);
-        }
-
-        updateUI("updSupplies", updArr);
-        if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
         this.save();
-//        let newData = updArr.map(i => this.get(i.type, i.id));
         window.dispatchEvent(new CustomEvent(EVENTS.suppliesUpdated, {detail: updArr}));
+        if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
+        updateUI("updSupplies", updArr);
     },
     save: function() {
         Storage.set({sup_idx: this.index});
