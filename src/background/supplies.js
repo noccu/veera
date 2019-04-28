@@ -739,3 +739,17 @@ function consumePendingForgeCCW (data) {
         delete Supplies.pendingForge;
     }
 }
+
+//Events. Temp I guess
+
+function setRotbPendants (json) {
+    let dom = parseDom(json.data),
+        pts;
+    if (dom.getElementById("title").value == "Rise of the Beasts") {
+        pts = dom.querySelector("#cnt-event .prt-point");
+        if (pts) {
+            pts = parseInt(pts.textContent.slice(0,pts.textContent.indexOf("/")));
+        }
+    }
+    Supplies.update(new SupplyItem(SUPPLYTYPE.treasure, 90001, pts, "Four Symbols Pendant"), true);
+}

@@ -168,6 +168,10 @@ function hear (msg) {
                     break;
                 case url.ismatch("rest/title/par_claim"): //trophy pickup
                     trophyPickup(msg.data.json);
+                    break;
+                case url.ismatch("advent/top/content/newindex"):
+                    setRotbPendants(msg.data.json);
+                    break;
             }
             break;
         case "plannerSeriesChange":
