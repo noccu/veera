@@ -72,6 +72,7 @@ window.UI = {
                     s: document.getElementById(`${timer.name}-s`)
                 };
             }
+            this.display.st = document.getElementById("timer-st-time");
         },
         tick() {
             for (let time of UI.time.times) {
@@ -89,6 +90,15 @@ window.UI = {
             this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
             this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
             this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
+            
+            if (timer.name == "st1" || timer.name == "st2") {
+                if (timer.time.getUTCHours() == 23) {
+                    this.display.st.classList.add("highlight");
+                }
+                else {
+                    this.display.st.classList.remove("highlight");
+                }
+            }
         },
         sync (times) {
             this.times = times;

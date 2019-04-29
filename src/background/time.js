@@ -20,11 +20,17 @@ window.Time = {
     tick () {
         Time.update(Time.currentJst, 1);
 
-        for (let timer in Time.timers) {
-            if (Time.timers[timer].getTime() <= 0) {
-                if (timer == "maint") {
+        for (let timerName in Time.timers) {
+            let timer = Time.timers[timerName];
+            if (timer.getTime() <= 0) {
+                if (timerName == "maint") {
 //                    endMaintTimer();
                     continue; //check other timers
+                }
+                else if (timerName == "st1" || timerName == "st2") {
+                    devlog("Syncing for ST.");
+                    showNotif("Strike time!", `For the next hour.`);
+                    Time.sync();
                 }
                 else {
                     devlog("Resetting based on " + timer);
@@ -34,7 +40,7 @@ window.Time = {
                     break; //only reset once
                 }
             }
-            Time.update(Time.timers[timer], -1);
+            Time.update(timer, -1);
         }
 
         for (let buff of Time.crewBuffs) {
@@ -45,6 +51,7 @@ window.Time = {
         this.currentJst = new Date();
         this.currentJst.convertToJst();
         this.setTimers();
+        this.setStrikeTime();
         this.tock = setInterval(this.tick, 1000);
         setTimeout(this.sync, this.SYNC_INTERVAL);
         updateUI("syncTime", this.pack());
@@ -92,9 +99,23 @@ window.Time = {
         this.timers.weekly = new Date(weekly - current);
         this.timers.monthly = new Date(monthly - current);
     },
-    setStrikeTime(time) {
-        //            this.timers.strike.a = new Date(time[0] - current);
-        //            this.timers.strike.b = new Date(time[1] - current);
+    setStrikeTime() {
+        if (State.store.strikeTime[1]) {
+            let time, hour;
+            for (let schedule in State.store.strikeTime) {
+                hour = State.store.strikeTime[schedule];
+                time = new Date(this.currentJst);
+                
+                time.setUTCHours(hour, 0, 0, 0);    
+                if (hour <= this.currentJst.getUTCHours()) { //Had or having this ST
+                    time.setUTCDate(time.getUTCDate() + 1);                    
+                }
+                if (hour == this.currentJst.getUTCHours()) { //Currently in ST.
+                    showNotif("Strike time!", `For the next ${60 - this.currentJst.getUTCMinutes()} minute(s).`);
+                }
+                this.timers["st" + schedule] = new Date(time - this.currentJst);
+            }
+        }
     },
     getLastReset() {
         let time = new Date(this.currentJst);
@@ -130,6 +151,12 @@ window.Time = {
             }
         }
     },
+    convert24 (time, ampm) {
+        if (ampm.slice(0,1) == "p") {
+            time += 12;
+        }
+        return time;
+    },
     format (time) {
         return time.getTime();
 //        return {
@@ -164,3 +191,17 @@ window.Time = {
         return times;
     }
 };
+
+function updStrikeTime (json) {
+    let dom = parseDom(json.data);
+    let schedule = dom.querySelectorAll(".prt-assault-guildinfo");
+    
+    for (let time, num = 0; num < schedule.length; num++) {
+        time = schedule[num].getElementsByClassName("prt-item-status")[0];
+        time = time.textContent.match(/^(\d) (a|p)/); //Assuming EN game...
+        State.store.strikeTime[num + 1] = Time.convert24(parseInt(time[1]), time[2]);
+    }
+    
+    State.save();
+    Time.sync();
+}

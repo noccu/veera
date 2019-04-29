@@ -93,6 +93,11 @@ html {
     font-size: 2em;
 }
 
+#timer-st-time .timer-display{
+    font-size: inherit; /*It's like a px smaller smh*/
+    margin-bottom: 0.5px; /*Hence this*/
+}
+
 .div-hor {
     display: inline-block;
 }

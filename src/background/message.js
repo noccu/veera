@@ -172,6 +172,9 @@ function hear (msg) {
                 case url.ismatch("advent/top/content/newindex"):
                     setRotbPendants(msg.data.json);
                     break;
+                case url.ismatch("guild_main/content/index"):
+                    updStrikeTime(msg.data.json);
+                    break;
             }
             break;
         case "plannerSeriesChange":
