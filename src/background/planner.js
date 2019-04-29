@@ -1,31 +1,45 @@
 window.Planner = {
     createPlan: function (series, wtype, element, start, end) {
-        console.group(`Creating plan for ${series}`);
+        console.groupCollapsed(`Creating plan for ${series}`);
         var plan = [];
 
         function addToPlan(item, templateKey) {
-            function addById(id) {
+            function addById(id, needed) {
                 let plannedItem = plan.find(p => p.id == id);
                 if (plannedItem) {
-                    plannedItem.needed += item.needed;
+                    plannedItem.needed += needed;
                 }
                 else {
                     let newItem = Supplies.get(item.type, id) || new SupplyItem(item.type, id);
-                    newItem.needed = item.needed;
+                    newItem.needed = needed;
                     plan.push(newItem);
                 }
             }
 
+            let id = item.id;
             //Dealing with templates
-            let id = item.isTemplate ? item.id[templateKey] : item.id;
-            //Dealing with multi-item teplates
+            if (item.isTemplate) {
+                //Multi-mapped typeNames
+                if (Array.isArray(templateKey)) {
+                    for (let key of templateKey) {
+                        if (item.id[key]) {
+                            templateKey = key;
+                            break;
+                        }
+                    }
+                }
+                id = item.id[templateKey];
+            }
+            //Multi-item teplates
+            let needed = item.needed;
             if (Array.isArray(id)) {
+                needed /= id.length;
                 for (let itemId of id) {
-                    addById(itemId);
+                    addById(itemId, needed);
                 }
             }
             else {
-                addById(id);
+                addById(id, needed);
             }
         }
 

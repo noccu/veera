@@ -163,6 +163,53 @@ const PLANNER_TEMPLATES = {
         Harp: 5691,
         Katana: 5681
     },
+    showdowns: {
+        items: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 20611,
+            Water: 20621,
+            Earth: 20631,
+            Wind: 20641,
+            Light: 20651,
+            Dark: 20661
+        },
+        anima: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 10018,
+            Water: 10005,
+            Earth: 10011,
+            Wind: 10027,
+            Light: 10046,
+            Dark: 10065
+        },
+        omegaAnima: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 10019,
+            Water: 10006,
+            Earth: 10012,
+            Wind: 10028,
+            Light: 10047,
+            Dark: 10066
+        }
+    },
+    grimoires: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 20711,
+        Water: 20721,
+        Earth: 20731,
+        Wind: 20741,
+        Light: [20711, 20741],
+        Dark: [20721, 20731]
+    },
+    primarchAnima: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 506,
+        Water: 507,
+        Earth: 508,
+        Wind: 509,
+        Light: [506, 509],
+        Dark: [507, 508]
+    }
 };
 
 const PLANNER_ITEMS = {
@@ -174,6 +221,7 @@ const PLANNER_ITEMS = {
     rainbowPrism: new PlannerItem(SUPPLYTYPE.treasure, 1204),
     antiqueCloth: new PlannerItem(SUPPLYTYPE.treasure, 54),
     flawedPrism: new PlannerItem(SUPPLYTYPE.treasure, 1202),
+    prismChip: new PlannerItem(SUPPLYTYPE.treasure, 1201),
     bahaHorn: new PlannerItem(SUPPLYTYPE.treasure, 59),
     silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107)
 };
@@ -249,296 +297,191 @@ window.PlannerData = {
 
     Class: {
         core: [ //Items needed for every craft
-             new PlannerItem(1, SUPPLYTYPE.treasure, 54, 40),
-             new PlannerItem(1, SUPPLYTYPE.treasure, 1201, 200),
-             new PlannerItem(1, SUPPLYTYPE.treasure, 1, 5),
+             new PlannerItem(1, SUPPLYTYPE.treasure, 54, 20),
+             new PlannerItem(1, PLANNER_ITEMS.prismChip, 50),
+             new PlannerItem(1, PLANNER_ITEMS.blueSkyCrystal, 5),
              //Rebuild
-             new PlannerItem(2, SUPPLYTYPE.treasure, 1201, 120),
-             new PlannerItem(2, SUPPLYTYPE.treasure, 2001, 30),
-             new PlannerItem(2, SUPPLYTYPE.evolution, 20003, 2),
-             new PlannerItem(2, SUPPLYTYPE.treasure, 1, 5),
+             new PlannerItem(2, PLANNER_ITEMS.prismChip, 120),
+             new PlannerItem(2, PLANNER_ITEMS.championMerit, 30),
+             new PlannerItem(2, SUPPLYTYPE.evolution, 20003, 2), //steel brick
+             new PlannerItem(2, PLANNER_ITEMS.blueSkyCrystal, 5),
              //Elechange
-             new PlannerItem(3, SUPPLYTYPE.treasure, 107, 3),
-             new PlannerItem(3, SUPPLYTYPE.treasure, 1, 15),
+             new PlannerItem(3, PLANNER_ITEMS.silverCentrum, 3),
+             new PlannerItem(3, PLANNER_ITEMS.blueSkyCrystal, 15),
 
              new PlannerItem(4, SUPPLYTYPE.treasure, 20771, 3),
              new PlannerItem(4, SUPPLYTYPE.treasure, 79, 1),
-             new PlannerItem(4, SUPPLYTYPE.treasure, 1, 20),
-             new PlannerItem(4, SUPPLYTYPE.treasure, 107, 3),
+             new PlannerItem(4, PLANNER_ITEMS.blueSkyCrystal, 20),
+             new PlannerItem(4, PLANNER_ITEMS.silverCentrum, 3)
         ],
         wtype: { //Weapon type specific items
-            Avenger: [new PlannerItem(1, SUPPLYTYPE.treasure, 20611, 70),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 1311, 70),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 30),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20411, 10),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 4041, 256),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 5011, 50),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 20411, 30),
-//                      createItem(3, SUPPLYTYPE.treasure, 4041, 512),
-//                      templateItem(3, PLANNER_TEMPLATES.stones, "axe", 512),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 4041, 255),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Avenger: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20411, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20411, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Skofnung: [new PlannerItem(1, SUPPLYTYPE.treasure, 20621, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 1321, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 30),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20421, 10),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 4011, 256),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 5021, 50),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 20421, 30),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 4011, 512),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 4011, 255),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Skofnung: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20421, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20421, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Ipetam: [new PlannerItem(1, SUPPLYTYPE.treasure, 20661, 70),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 1361, 70),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 15),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 20131, 15),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 20461, 10),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 4021, 256),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 5061, 50),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                     new PlannerItem(3, SUPPLYTYPE.treasure, 20461, 30),
-                     new PlannerItem(3, SUPPLYTYPE.treasure, 4021, 512),
-                     new PlannerItem(4, SUPPLYTYPE.treasure, 4021, 255),
-                     new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Ipetam: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20461, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20461, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Aschallon: [new PlannerItem(1, SUPPLYTYPE.treasure, 20611, 70),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 1311, 70),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 30),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 20691, 10),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 4011, 256),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 5011, 50),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                        new PlannerItem(3, SUPPLYTYPE.treasure, 20691, 30),
-                        new PlannerItem(3, SUPPLYTYPE.treasure, 4011, 512),
-                        new PlannerItem(4, SUPPLYTYPE.treasure, 4011, 255),
-                        new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Aschallon: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20691, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20691, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Keraunos: [new PlannerItem(1, SUPPLYTYPE.treasure, 20631, 80),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 1331, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20131, 30),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20441, 10),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 4051, 256),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 5031, 50),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 20441, 30),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 4051, 512),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 4051, 255),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Keraunos: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20441, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20441, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Rosenbogen: [new PlannerItem(1, SUPPLYTYPE.treasure, 20641, 80),
-                         new PlannerItem(1, SUPPLYTYPE.treasure, 1341, 70),
-                         new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                         new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 30),
-                         new PlannerItem(2, SUPPLYTYPE.treasure, 20481, 10),
-                         new PlannerItem(2, SUPPLYTYPE.treasure, 4081, 256),
-                         new PlannerItem(2, SUPPLYTYPE.treasure, 5041, 50),
-                         new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                         new PlannerItem(3, SUPPLYTYPE.treasure, 20481, 30),
-                         new PlannerItem(3, SUPPLYTYPE.treasure, 4081, 512),
-                         new PlannerItem(4, SUPPLYTYPE.treasure, 4081, 255),
-                         new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Rosenbogen: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20481, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20481, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Langeleik: [new PlannerItem(1, SUPPLYTYPE.treasure, 20621, 80),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 1321, 70),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                        new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 30),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 20491, 10),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 4091, 256),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 5021, 50),
-                        new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                        new PlannerItem(3, SUPPLYTYPE.treasure, 20491, 30),
-                        new PlannerItem(3, SUPPLYTYPE.treasure, 4091, 512),
-                        new PlannerItem(4, SUPPLYTYPE.treasure, 4091, 255),
-                        new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Langeleik: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20491, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20491, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Romulus: [new PlannerItem(1, SUPPLYTYPE.treasure, 20651, 80),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 1351, 70),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 15),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 15),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20501, 10),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 4031, 256),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 5051, 50),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 20501, 30),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 4031, 512),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 4031, 255),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            "Romulus Spear": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20501, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20501, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Faust: [new PlannerItem(1, SUPPLYTYPE.treasure, 20631, 80),
-                    new PlannerItem(1, SUPPLYTYPE.treasure, 1331, 70),
-                    new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                    new PlannerItem(1, SUPPLYTYPE.treasure, 20131, 30),
-                    new PlannerItem(2, SUPPLYTYPE.treasure, 20511, 10),
-                    new PlannerItem(2, SUPPLYTYPE.treasure, 4021, 256),
-                    new PlannerItem(2, SUPPLYTYPE.treasure, 5031, 50),
-                    new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 20511, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 4021, 512),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 4021, 255),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Faust: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20511, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20511, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Murakumo: [new PlannerItem(1, SUPPLYTYPE.treasure, 20651, 80),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 1351, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 15),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 15),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20671, 10),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 4101, 256),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 5051, 50),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 20671, 30),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 4101, 512),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 4101, 255),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Murakumo: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20671, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20671, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Kapilavastu: [new PlannerItem(1, SUPPLYTYPE.treasure, 20621, 80),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 1321, 70),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 30),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 20751, 10),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 4051, 256),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 5021, 50),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                          new PlannerItem(3, SUPPLYTYPE.treasure, 20751, 30),
-                          new PlannerItem(3, SUPPLYTYPE.treasure, 4051, 512),
-                          new PlannerItem(4, SUPPLYTYPE.treasure, 4051, 255),
-                          new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Kapilavastu: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20751, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20751, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Nirvana: [new PlannerItem(1, SUPPLYTYPE.treasure, 20651, 90),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 1351, 70),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 15),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 15),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20431, 10),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 4051, 256),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 5051, 50),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 20431, 30),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 4051, 512),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 4051, 255),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Nirvana: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20431, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20431, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Oliver: [new PlannerItem(1, SUPPLYTYPE.treasure, 20641, 90),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 1341, 70),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                     new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 30),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 20451, 10),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 4061, 256),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 5041, 50),
-                     new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                     new PlannerItem(3, SUPPLYTYPE.treasure, 20451, 30),
-                     new PlannerItem(3, SUPPLYTYPE.treasure, 4061, 512),
-                     new PlannerItem(4, SUPPLYTYPE.treasure, 4061, 255),
-                     new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Oliver: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20451, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20451, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Hellion: [new PlannerItem(1, SUPPLYTYPE.treasure, 20611, 90),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 1311, 70),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                      new PlannerItem(1, SUPPLYTYPE.treasure, 20111, 30),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20471, 10),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 4071, 256),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 5011, 50),
-                      new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 20471, 30),
-                      new PlannerItem(3, SUPPLYTYPE.treasure, 4071, 512),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 4071, 255),
-                      new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            "Hellion Gauntlet": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20471, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20471, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
             ],
-            Muramasa: [new PlannerItem(1, SUPPLYTYPE.treasure, 20661, 90),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 1361, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 15),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20131, 15),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20681, 10),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 4101, 256),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 5061, 50),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 20681, 30),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 4101, 512),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 4101, 255),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Muramasa: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20681, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20681, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Nebuchad: [new PlannerItem(1, SUPPLYTYPE.treasure, 20661, 90),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 1361, 70),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20121, 15),
-                       new PlannerItem(1, SUPPLYTYPE.treasure, 20131, 15),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20701, 10),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 4061, 256),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 5061, 50),
-                       new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 20701, 30),
-                       new PlannerItem(3, SUPPLYTYPE.treasure, 4061, 512),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 4061, 255),
-                       new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
+            Nebuchad: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20221, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20701, 10),
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20221, 25),
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20701, 30),
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
-            Misericorde: [new PlannerItem(1, SUPPLYTYPE.treasure, 20641, 90),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 1341, 70),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
-                          new PlannerItem(1, SUPPLYTYPE.treasure, 20141, 30),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 20761, 10),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 4021, 256),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 5041, 50),
-                          new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25),
-                          new PlannerItem(3, SUPPLYTYPE.treasure, 20761, 30),
-                          new PlannerItem(3, SUPPLYTYPE.treasure, 4021, 512),
-                          new PlannerItem(4, SUPPLYTYPE.treasure, 4021, 255),
-                          new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10)
+            Misericorde: [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10), //creeds
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20761, 10), //dists
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25), //creeds
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20761, 30), //dists
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10) //esteems
             ],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.showdowns.items, 50),
+                new PlannerItem(1, PLANNER_TEMPLATES.tomes, 70),
+                
+                new PlannerItem(2, PLANNER_TEMPLATES.stones, 256),
+                new PlannerItem(2, PLANNER_TEMPLATES.quartz, 50),
+                
+                new PlannerItem(3, PLANNER_TEMPLATES.stones, 512),
+                
+                new PlannerItem(4, PLANNER_TEMPLATES.stones, 255),
+            ]
         },
         element: {
-            Fire: [new PlannerItem(3, SUPPLYTYPE.treasure, 101, 30),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 20711, 30),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 10018, 200),
-                   new PlannerItem(4, SUPPLYTYPE.treasure, 101, 30),
-                   new PlannerItem(4, SUPPLYTYPE.treasure, 506, 6)
-            ],
-            Water: [new PlannerItem(3, SUPPLYTYPE.treasure, 102, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 20721, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 10005, 200),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 102, 30),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 507, 6)
-            ],
-            Earth: [new PlannerItem(3, SUPPLYTYPE.treasure, 103, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 20731, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 10011, 200),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 103, 30),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 508, 6)
-            ],
-            Wind: [new PlannerItem(3, SUPPLYTYPE.treasure, 104, 30),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 20741, 30),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 10027, 200),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 104, 30),
-                   new PlannerItem(4, SUPPLYTYPE.treasure, 509, 6)
-            ],
-            Light: [new PlannerItem(3, SUPPLYTYPE.treasure, 105, 30),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 20711, 15),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 20741, 15),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 10046, 200),
-                    new PlannerItem(3, SUPPLYTYPE.treasure, 105, 30),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 506, 6),
-                    new PlannerItem(4, SUPPLYTYPE.treasure, 509, 6)
-            ],
-            Dark: [new PlannerItem(3, SUPPLYTYPE.treasure, 106, 30),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 20721, 15),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 20731, 15),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 10065, 200),
-                   new PlannerItem(3, SUPPLYTYPE.treasure, 106, 30),
-                   new PlannerItem(4, SUPPLYTYPE.treasure, 507, 6),
-                   new PlannerItem(4, SUPPLYTYPE.treasure, 508, 6)
-            ],
+            Fire: null,
+            Water: null,
+            Earth: null,
+            Wind: null,
+            Light: null,
+            Dark: null,
+            templates: [
+                new PlannerItem(3, PLANNER_TEMPLATES.centrums, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.grimoires, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.showdowns.anima, 100),
+                
+                new PlannerItem(4, PLANNER_TEMPLATES.centrums, 30),
+                new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6),
+            ]
         },
-        stepNames: ["Replica", "Forge", "Rebuild", "Elechange", "FLB"]
+        stepNames: ["Replica", "Forge", "Rebuild", "Elechange", "FLB"],
+        typeNames: {
+            "Avenger": ["Fire", "Axe"],
+            "Skofnung": ["Water", "Sword"],
+            "Ipetam": ["Dark", "Dagger"],
+            "Aschallon": ["Fire", "Sword"],
+            "Keraunos": ["Earth", "Staff"],
+            "Rosenbogen": ["Wind", "Bow"],
+            "Langeleik": ["Water", "Harp"],
+            "Romulus Spear": ["Light", "Spear"],
+            "Faust": ["Earth", "Dagger"],
+            "Murakumo": ["Light", "Katana"],
+            "Kapilavastu": ["Water", "Staff"],
+            "Nirvana": ["Light", "Staff"],
+            "Oliver": ["Wind", "Gun"],
+            "Hellion Gauntlet": ["Fire", "Fist"],
+            "Muramasa": ["Dark", "Katana"],
+            "Nebuchad": ["Dark", "Gun"],
+            "Misericorde": ["Wind", "Dagger"]
+        }
     },
 
     Revenant:{
@@ -724,7 +667,7 @@ window.PlannerData = {
             "Siete (sword)": "Sword",
             "Okto (katana)": "Katana",
             "Nio (harp)": "Harp",
-            "Esser (gun)": "Gun",
+            "Esser (gun)": "Gun"
         }
     },
 
