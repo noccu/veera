@@ -4,13 +4,13 @@ An entirely new and rewritten Granblue companion based on the Ancheera concept.
 
 **Current features:**
 
-- Track, search, and filter supplies.
-- Track, filter, and insta-host raids.
+- JST and countdown timers.
+- Track and filter supplies and raids, with quick-hosting.
 - Plan & follow up on weapon crafts.
 - Real-time battle statistics for team and characters.
 - Analyze GW area honors for betting. (RIP)
-- Show quest/raid drops and nightmare triggers for faster navigation/repeating.
-- Display and track currencies, tickets, pendants, etc. ~~A little shaky right now.~~
+- Show immediate quest/raid drops and nightmare triggers.
+- Display and track currencies, tickets, pendants, etc.
 - Tooltips with farm locations for commonly used craft items.
 
 # Disclaimer

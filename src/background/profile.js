@@ -31,8 +31,8 @@ window.Profile = {
         }
     },
     arcarum: {
-        tickets: {},
-        points: {}
+        tickets: {current: 0, max: 0},
+        points: {current: 0, max: 0}
     },
 
     setPendants (pendants) {

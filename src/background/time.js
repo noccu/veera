@@ -53,7 +53,10 @@ window.Time = {
         time.setUTCSeconds(time.getUTCSeconds() + (deltaSeconds || 1));
     },
     sync () {
-        clearInterval(Time.tock);
+        console.log("Syncing time.");
+        if (Time.tock) {
+            clearInterval(Time.tock);
+        }
         Time.keep();
     },
     triggerReset (lastReset, detail) {
@@ -111,6 +114,7 @@ window.Time = {
     },
     //Check if resets happened while inactive
     checkReset () {
+        console.log("Checking time since reset.");
         let lastReset = State.store.lastReset;
         if (!lastReset) { //init & save a new date
             //Need to set this here in case reset is never triggered normally. i.e. Veera is never active at 5 JST

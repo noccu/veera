@@ -27,7 +27,8 @@ function MainInit() {
         .then(Profile.load)
         .then(() => {
             console.groupEnd();
-            console.groupCollapsed("Initiliaze UI");
+            console.group("Setting up");
+            console.log("Initializing UI.");
             updateUI("init", {theme: State.theme.current,
                               planner: Planner.listSeries(),
                               unfEdition: State.unfEdition,
@@ -37,14 +38,15 @@ function MainInit() {
             updateUI("updCurrencies", Profile.currencies);
             updateUI("updPendants", Profile.pendants);
             updateUI("updArca", Profile.arcarum);
-            console.groupEnd();
-        })
-        .then(() => {
+        
+            console.log("Setting up listeners.");
             window.addEventListener(EVENTS.dailyReset, () => Raids.reset());
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
         
-            Time.keep();
+            
+            Time.sync();
             Time.checkReset();
+            console.groupEnd();
         })
         .catch(e => {
             DevTools.disconnect();
