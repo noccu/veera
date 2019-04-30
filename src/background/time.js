@@ -29,7 +29,6 @@ window.Time = {
                 }
                 else if (timerName == "st1" || timerName == "st2") {
                     devlog("Syncing for ST.");
-                    showNotif("Strike time!", `For the next hour.`);
                     Time.sync();
                 }
                 else {
@@ -101,19 +100,26 @@ window.Time = {
     },
     setStrikeTime() {
         if (State.store.strikeTime[1]) {
-            let time, hour;
+            let nextSt, hour;
             for (let schedule in State.store.strikeTime) {
                 hour = State.store.strikeTime[schedule];
-                time = new Date(this.currentJst);
-                
-                time.setUTCHours(hour, 0, 0, 0);    
+                nextSt = new Date(this.currentJst);
+
+                nextSt.setUTCHours(hour, 0, 0, 0);
                 if (hour <= this.currentJst.getUTCHours()) { //Had or having this ST
-                    time.setUTCDate(time.getUTCDate() + 1);                    
+                    nextSt.setUTCDate(nextSt.getUTCDate() + 1);
                 }
-                if (hour == this.currentJst.getUTCHours()) { //Currently in ST.
-                    showNotif("Strike time!", `For the next ${60 - this.currentJst.getUTCMinutes()} minute(s).`);
+                if (hour == this.currentJst.getUTCHours() && !this._stEnd) { //Currently in ST.
+                    //Prevent notifying more than once per ST, per boot of Veera.
+                    let end = new Date(this.currentJst);
+                    end.setUTCHours(end.getUTCHours() + 1, 0, 0);
+                    end.setTime(end - this.currentJst);
+                    this._stEnd = setTimeout(() => Time._stEnd = false, end.valueOf);
+
+                    showNotif("Strike time!", `For the next ${end.getUTCMinutes()} minute(s), ${end.getUTCSeconds()} seconds.`);
                 }
-                this.timers["st" + schedule] = new Date(time - this.currentJst);
+                nextSt.setTime(nextSt - this.currentJst);
+                this.timers["st" + schedule] = nextSt;
             }
         }
     },
@@ -168,7 +174,7 @@ window.Time = {
     },
     pack () {
         let times = [];
-        
+
         let jst = {type: "jst", name: "jst", delta: 1};
         jst.time = this.format(this.currentJst);
         times.push(jst);
@@ -195,13 +201,13 @@ window.Time = {
 function updStrikeTime (json) {
     let dom = parseDom(json.data);
     let schedule = dom.querySelectorAll(".prt-assault-guildinfo");
-    
+
     for (let time, num = 0; num < schedule.length; num++) {
         time = schedule[num].getElementsByClassName("prt-item-status")[0];
         time = time.textContent.match(/^(\d) (a|p)/); //Assuming EN game...
         State.store.strikeTime[num + 1] = Time.convert24(parseInt(time[1]), time[2]);
     }
-    
+
     State.save();
     Time.sync();
 }
