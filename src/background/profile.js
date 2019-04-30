@@ -57,7 +57,12 @@ window.Profile = {
     },
     updatePendants (updArr) { //[ { pendantType, limitType, delta }]
         for (let item of updArr) {
-            this.pendants[item.pendantType][item.limitType].current += item.delta;
+            if (item.delta) {
+                this.pendants[item.pendantType][item.limitType].current += item.delta;
+            }
+            else if (item.total) {
+                this.pendants[item.pendantType][item.limitType].current = item.total;
+            }
         }
         updateUI("updPendants", this.pendants);
         this.save();
@@ -182,14 +187,15 @@ function getPendantsRaid (json) {
                     {pendantType: "renown", limitType: "weekly", delta: added['10100'].add_point},
                     {pendantType: "renown", limitType: "sr", delta: added['20200'].add_point},
                     {pendantType: "renown", limitType: "r", delta: added['20100'].add_point},
-                    {pendantType: "renown", limitType: "total", delta: parseInt(json.mbp_info.article_remain['92001'].number) + json.mbp_info.number} //Using given number to deal with multibox
+                    //Could add to total, but instead we set using the provided numbers (before raid + from raid) so we update desyncs.
+                    {pendantType: "renown", limitType: "total", total: parseInt(json.mbp_info.article_remain['92001'].number) + json.mbp_info.number}
                 ]);
                 break;
             case "92002": //prestige
                 Profile.updatePendants([
                     {pendantType: "prestige", limitType: "weekly", delta: added['10100'].add_point},
                     {pendantType: "prestige", limitType: "crew", delta: added['20300'].add_point},
-                    {pendantType: "prestige", limitType: "total", delta: parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number} //Using given number to deal with multibox
+                    {pendantType: "prestige", limitType: "total", total: parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number} //Same here
                 ]);
                 break;
         }
