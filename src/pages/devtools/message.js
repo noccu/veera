@@ -73,6 +73,10 @@ window.BackgroundPage = {
                 break;
             case "syncTime":
                 UI.time.sync(msg.data);
+                break;
+            case "updGuild":
+                setGuildLink(msg.data);
+                break;
             default:
                 window.dispatchEvent(new Event(msg.action), msg.data);
         }

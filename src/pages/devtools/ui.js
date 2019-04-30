@@ -83,14 +83,14 @@ window.UI = {
         update (timer, delta) {
             timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
         },
-        updateDisplay (timer) {            
+        updateDisplay (timer) {
             if (this.display[timer.name].d) {
                 this.display[timer.name].d.textContent = timer.time.getUTCDate() - 1;
             }
             this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
             this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
             this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
-            
+
             if (timer.name == "st1" || timer.name == "st2") {
                 if (timer.time.getUTCHours() == 23) {
                     this.display.st.classList.add("highlight");
@@ -120,7 +120,7 @@ window.UI = {
             this.dom.plan = this.dom.list.getElementsByClassName("collection-item");
 
             UI.planner.populateSelection("series", seriesList);
-            
+
             var dummy = document.createElement("option");
             dummy.value = "";//empty value !important
             dummy.textContent = "Select...";
@@ -431,3 +431,6 @@ function clearGraph(graph) {
     graph.update();
 }
 
+function setGuildLink(path) {
+    document.getElementById("guild-link").dataset.value = path;
+}

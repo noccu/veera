@@ -38,14 +38,18 @@ function MainInit() {
             updateUI("updCurrencies", Profile.currencies);
             updateUI("updPendants", Profile.pendants);
             updateUI("updArca", Profile.arcarum);
-        
+
             console.log("Setting up listeners.");
             window.addEventListener(EVENTS.dailyReset, () => Raids.reset());
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
-        
-            
+
             Time.sync();
             Time.checkReset();
+
+            if (State.store.guild) {
+                updateUI("updGuild", `#guild/detail/${State.store.guild}`);
+            }
+
             console.groupEnd();
         })
         .catch(e => {

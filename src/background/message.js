@@ -175,6 +175,9 @@ function hear (msg) {
                 case url.ismatch("guild_main/content/index"):
                     updStrikeTime(msg.data.json);
                     break;
+                case url.ismatch("rest/guild/main/guild_info"):
+                    updateGuildInfo(msg.data.json);
+                    break;
             }
             break;
         case "plannerSeriesChange":
@@ -203,7 +206,9 @@ function hear (msg) {
             Raids.start(msg.data.raidId, msg.data.matId);
             break;
         case "navigateTo":
-            State.game.navigateTo(GAME_URL.baseGame + msg.data);
+            if (msg.data) {
+                State.game.navigateTo(GAME_URL.baseGame + msg.data);
+            }
             break;
     }
 }
