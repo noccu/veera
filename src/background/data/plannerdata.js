@@ -437,12 +437,12 @@ window.PlannerData = {
             templates: [
                 new PlannerItem(1, PLANNER_TEMPLATES.showdowns.items, 50),
                 new PlannerItem(1, PLANNER_TEMPLATES.tomes, 70),
-                
+
                 new PlannerItem(2, PLANNER_TEMPLATES.stones, 256),
                 new PlannerItem(2, PLANNER_TEMPLATES.quartz, 50),
-                
+
                 new PlannerItem(3, PLANNER_TEMPLATES.stones, 512),
-                
+
                 new PlannerItem(4, PLANNER_TEMPLATES.stones, 255),
             ]
         },
@@ -457,7 +457,7 @@ window.PlannerData = {
                 new PlannerItem(3, PLANNER_TEMPLATES.centrums, 30),
                 new PlannerItem(3, PLANNER_TEMPLATES.grimoires, 30),
                 new PlannerItem(3, PLANNER_TEMPLATES.showdowns.anima, 100),
-                
+
                 new PlannerItem(4, PLANNER_TEMPLATES.centrums, 30),
                 new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6),
             ]

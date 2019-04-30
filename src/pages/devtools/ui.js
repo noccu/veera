@@ -359,14 +359,14 @@ function stylePlanItem(el, item) {
     }
 
     if (item.count >= el.plannerData.needed) {
-        el.classList.add("done");
+        el.classList.add("fade");
     }
     else if(item.count < Math.ceil(el.plannerData.needed/10)) {
         el.classList.add("low");
-        el.classList.remove("done");
+        el.classList.remove("fade");
     }
     else {
-        el.classList.remove("done", "low");
+        el.classList.remove("fade", "low");
     }
 }
 

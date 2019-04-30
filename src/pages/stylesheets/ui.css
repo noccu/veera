@@ -80,12 +80,10 @@ html {
 /*    margin-bottom: 2em;*/
 }
 
-.div {
-/*
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid var(--line-color);
-*/
+.group {
+    display: inline-block;
+    margin: 0.2em;
+    vertical-align: top;
 }
 
 .timer-display {
@@ -263,23 +261,16 @@ select, option {
     border-color: var(--diff-color-a)
 }
 
-.plannerItem-done {
-    opacity: 0.25;
-}
-
 .planner-current {
     font-size: 1.4em
 }
-
 .planner-needed {
     opacity: 0.5;
 }
 
-.collection-item.done {
-    opacity: 0.25;
-/*    background-color: var(--diff-color-b)*/
+.fade {
+    opacity: 0.3;
 }
-
 .collection-item.low {
     background-color: var(--diff-color-b)
 }
@@ -366,10 +357,6 @@ select, option {
     font-size: 1.2em;
     color: var(--diff-color-c);
 }
-.host-limit {
-    opacity: 0.4;
-}
-
 
 .canvas-container {
     width: 100%;
@@ -411,23 +398,9 @@ button {
     text-align: left;
 */
 }
-.battle-stats-group {
-    display: inline-block;
-/*
-    margin-right: 2em;
-    max-width: 20%
-*/
-}
-.battle-stats-group .battle-stats {
+.group .battle-stats {
     display: block;
 /*    margin-right: 0;*/
-}
-
-.battle-stats-group.chara {
-/*
-    max-width: 49%;
-    margin-right: 1em
-*/
 }
 
 .battle-char-name {

@@ -28,6 +28,7 @@
         "parseDom": false,
         "getEnumNamedValue": false,
         "showNotif": false,
+        "fireEvent": false,
 
         //Constants
         "SUPPLYTYPE": false,
@@ -35,7 +36,7 @@
         "GAME_URL": false,
         "EVENTS": false,
         "IDX_ITEM_TO_RAIDS": false,
-        
+
         //Events
         "evhCheckRaidSupplyData": false
     }

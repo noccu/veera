@@ -78,7 +78,7 @@ window.BackgroundPage = {
                 setGuildLink(msg.data);
                 break;
             default:
-                window.dispatchEvent(new Event(msg.action), msg.data);
+                fireEvent(msg.action, msg.data);
         }
     }
 };

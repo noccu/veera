@@ -435,7 +435,7 @@ window.Supplies = {
     update: function(updArr, overwrite) {
         let currenciesUpdated = false;
         if (!Array.isArray(updArr)) { updArr = [updArr]; }
-        
+
         updArr = updArr.filter(item => item.track);
         for (let item of updArr) {
             let typeData = ITEM_KIND[item.type];
@@ -465,7 +465,7 @@ window.Supplies = {
         }
 
         this.save();
-        window.dispatchEvent(new CustomEvent(EVENTS.suppliesUpdated, {detail: updArr}));
+        fireEvent(EVENTS.suppliesUpdated, updArr);
         if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
         updateUI("updSupplies", updArr);
     },
@@ -551,6 +551,7 @@ function gotQuestLoot(data) {
         }
         devlog(`[Loot] Got ${loot.length} items from arcarum chest.`);
     }
+    fireEvent(EVENTS.gotLoot, upd);
     Supplies.update(upd);
     DevTools.send("updRaidLoot", {loot: upd});
 }
@@ -564,6 +565,7 @@ function purchaseItem(data) {
         let nBought = parseInt(data.purchase_number);
         item = new SupplyItem(data.article.item_kind[0], data.article.item_ids[0], nBought, data.article.name_en);
         upd.push(item);
+        fireEvent(EVENTS.shopPurchase, item);
 
         //The items we trade in. Max 4, 1-indexed
         for (let i = 1; i < 5; i++) {
@@ -576,6 +578,7 @@ function purchaseItem(data) {
             else { break; } //assuming ordered list
         }
 
+//        fireEvent(EVENTS.shopPurchase, upd);
         Supplies.update(upd);
     }
 }

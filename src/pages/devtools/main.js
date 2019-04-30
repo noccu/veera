@@ -113,7 +113,6 @@ function updateSupplies (idx) {
         }
     }
 }
-
 function createSupplyItem (data, idPrefix) {
     if (data.id === undefined) { //id = 0 is a thing
         console.warn("No id for item: ", data);
@@ -141,18 +140,15 @@ function createPlannerItem (item) {
         li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
         return li;
 }
-
 function changeSeries(ev) { //Event handler, updates type and element list when series changes
     BackgroundPage.send("plannerSeriesChange", {newValue: ev.target.value});
 }
-
 function updateSeriesOptions (data) { //receives list of each option type.
     UI.planner.populateSelection("type", data.types);
     UI.planner.populateSelection("element", data.elements);
     UI.planner.populateSelection("start", data.steps);
     UI.planner.populateSelection("end", data.steps);
 }
-
 function updatePlan () {  //Event handler
     var plan = {series: UI.planner.dom.series.value,
                 type: UI.planner.dom.type.value,
@@ -185,7 +181,6 @@ function updCurrentRaidInfo (data) {
     }
     UI.setValue({id: "raid-next-quest", value: data.nextQuest || ""});
 }
-
 function createRaid(raidEntry) {
     var newRaid = document.getElementById("template-raid");
     var newRaidMat = document.getElementById("template-raid-material");
@@ -233,7 +228,6 @@ function createRaid(raidEntry) {
 
     return newRaid;
 }
-
 function updateRaidTrackingDisplay(raidEle) {
     let raidEntry = raidEle.entryObj;
 
@@ -265,13 +259,12 @@ function updateRaidTrackingDisplay(raidEle) {
     }
 
     if (hostsLeft == 0 || outOfMats) {
-        raidEle.classList.add("host-limit");
+        raidEle.classList.add("fade");
     }
     else {
-        raidEle.classList.remove("host-limit");
+        raidEle.classList.remove("fade");
     }
 }
-
 function populateRaids (raids) {
     let list = document.getElementById("raids-list");
     UI.setList(list, raids, createRaid);

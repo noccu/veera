@@ -270,20 +270,20 @@
                         <div class="canvas-container">
                             <canvas id="battle-overview-graph"></canvas>
                         </div>
-                        <div class="battle-stats-group">
+                        <div class="group">
                             <div class="battle-stats" data-stat="totalDmg">Total Damage: <span>0</span></div>
                             <div class="battle-stats" data-stat="avgTurnDmg">Avg Damage: <span>0</span></div>
                         </div>
                         <div class="battle-stats" data-stat="avgCritRate">Crit rate: <span data-deci="true">0</span>%</div>
-                         <div class="battle-stats-group">
+                         <div class="group">
                             <div class="battle-stats" data-stat="totalHonor">Total Honor: <span>0</span></div>
                             <div class="battle-stats" data-stat="avgTurnHonor">Avg Honor: <span>0</span></div>
                         </div>
-                         <div class="battle-stats-group">
+                         <div class="group">
                             <div class="battle-stats" data-stat="avgDaRate">DA rate: <span data-deci="true">0</span>%</div>
                             <div class="battle-stats" data-stat="avgTaRate">TA rate: <span data-deci="true">0</span>%</div>
                         </div>
-                    </div>                
+                    </div>
                 </div>
                 <div class="panel centered" id="battle-characters">
                     <span class="panel-header" data-event="collapse">Characters</span>
@@ -295,31 +295,31 @@
                                     <canvas class="battle-char-graph"></canvas>
                                 </div>
                                 <div class="battle-stats-container">
-                                    <div class="battle-stats-group chara">
+                                    <div class="group chara">
                                         <div class="battle-stats" data-stat="totalDmg">Total dmg: <span>0</span></div>
                                         <div class="battle-stats" data-stat="avgDmg">Avg dmg: <span>0</span></div>
                                     </div>
-                                    <div class="battle-stats-group chara">
+                                    <div class="group chara">
                                         <div class="battle-stats" data-stat="daRate">DA: <span data-deci="true">0</span>%</div>
                                         <div class="battle-stats" data-stat="taRate">TA: <span data-deci="true">0</span>%</div>
                                     </div>
                                     <div class="battle-stats" data-stat="critRate">Crit rate: <span data-deci="true">0</span>%</div>
                                     <div class="battle-stats" data-stat="ougiRate">Ougi rate: <span data-deci="true">0</span>%</div>
-                                    
+
                                     <div class="sep" data-event="collapse" data-in="panel" data-id="cStatDmgB"></div>
                                     <div class="battle-stats-container">
-                                        <div class="battle-stats-group chara">
+                                        <div class="group chara">
                                             <div class="battle-stats" data-stat="skillDmg">Skill dmg: <span>0</span></div>
                                             <div class="battle-stats" data-stat="echoDmg">Echo dmg: <span>0</span></div>
                                         </div>
-                                        <div class="battle-stats-group chara">
+                                        <div class="group chara">
                                             <div class="battle-stats" data-stat="skillDmgPerc">Skill %: <span>0</span></div>
                                             <div class="battle-stats" data-stat="echoDmgPerc">Echo %: <span>0</span></div>
                                         </div>
                                         <div class="battle-stats" data-stat="ougiDmg">Ougi dmg: <span>0</span></div>
                                         <div class="battle-stats" data-stat="ougiDmgPerc">Ougi %: <span>0</span>%</div>
                                     </div>
-                                    
+
                                     <div class="sep" data-event="collapse" data-in="panel" data-id="cStatHeal"></div>
                                     <div class="battle-stats-container">
                                         <div class="battle-stats" data-stat="selfHealing">Heal (self): <span>0</span></div>
@@ -350,22 +350,22 @@
                 <div class="panel">
                     <span class="panel-header" data-event="collapse">Where to?</span>
                     <div class="panel-content">
-                        <div class="place-group">
+                        <div class="group">
                             <div class="place-link" data-event="navigate" data-value="#shop">Shop</div>
                             <div class="place-link" data-event="navigate" data-value="#shop/exchange/trajectory">Journey drops</div>
                             <div class="place-link" data-event="navigate" data-value="#shop/exchange/list">Trade</div>
                         </div>
-                        <div class="place-group">
+                        <div class="group">
                             <div class="place-link" data-event="navigate" data-value="#party/index/0/npc/0">Party</div>
                             <div class="place-link" data-event="navigate" data-value="#casino">Casino</div>
                             <div class="place-link" data-event="navigate" data-value="#gacha">Draw</div>
                             <div id="guild-link" class="place-link" data-event="navigate" data-value="">Crew (external view)</div>
                         </div>
-                        <div class="place-group">
+                        <div class="group">
                             <div class="place-link" data-event="navigate" data-value="#quest/assist">Raids</div>
                             <div class="place-link" data-event="navigate" data-value="#quest/assist/unclaimed">Pending</div>
                         </div>
-                        <div class="place-group">
+                        <div class="group">
                             <div class="place-link" data-event="navigate" data-value="#arcarum2">Arcarum</div>
                             <div class="place-link" data-event="navigate" data-value="#trial_battle">Trial battles</div>
                             <div class="place-link" data-event="navigate" data-value="#sidestory">Side stories</div>
