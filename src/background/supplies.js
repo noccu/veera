@@ -57,7 +57,7 @@ const ITEM_KIND = {//jshint ignore:line
         name: "Draw Ticket",
         class: "Ticket",
         path: "item/ticket",
-        noSize: true
+        size: ""
     },
     9: {
         name: "Crystal",
@@ -235,8 +235,21 @@ const ITEM_KIND = {//jshint ignore:line
         path: "item/event/newdefeat",
         manual: true,
         specialId: {
+            rename (id) {
+                id = id.toString().slice(-2,-1);
+                if (id === "0") {
+                    return "gold";
+                }
+                else if (id == "1") {
+                    return "silver";
+                }
+                else {
+                    return false;
+                }
+            },
             304401: "gold"
-        }
+        },
+        size: "m/"
     }
 };
 const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming. TODO: add IDs also move these 2 consts to own file.
@@ -265,15 +278,20 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
     if (data) {
         this.typeName = data.name;
         let fname = id;
-        if (data.specialId && data.specialId[id]) {
-            fname = data.specialId[id];
+        if (data.specialId) {
+            if (data.specialId.rename) { //try dynamic rename
+                fname = data.specialId.rename(id) || id;
+            }
+            if (fname == id && data.specialId[id]) { //fall back to static or leave unchanged
+                fname = data.specialId[id];
+            }
         }
         if (!fname) { //don't want any undefined.jpg in their server logs lmao
             devwarn("[SupplyItem] Invalid path, nuking: ", this);
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${data.path}/${data.noSize ? "" : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
         }
         //Redirect some special cases to be more user-friendly.
         if (data.convert) {
