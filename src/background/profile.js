@@ -203,7 +203,9 @@ function getPendantsRaid (json) {
 }
 
 function updateGuildInfo (json) {
-    State.store.guild = json.is_guild_in;
-    State.save();
-    updateUI("updGuild", `#guild/detail/${json.is_guild_in}`);
+    if (State.store.guild != json.is_guild_in) {
+        State.store.guild = json.is_guild_in;
+        State.save();
+        updateUI("updGuild", `#guild/detail/${json.is_guild_in}`);
+    }
 }

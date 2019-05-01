@@ -129,12 +129,22 @@ Object.defineProperty(Object.prototype, "pack", {
     value: function () {
         let o = {};
         for (let prop in this) {
-            let type = typeof this[prop];
-            if (type == "object") {
-                o[prop] = this[prop].pack();
+            let val = this[prop];
+            if (Array.isArray(val)) {
+                let a = [];
+                for (let entry of val) {
+                    a.push(entry.pack());
+                }
+                o[prop] = a;
             }
-            else if (type != "function"){
-                o[prop] = this[prop];
+            else {
+                let type = typeof val;
+                if (type == "object") {
+                    o[prop] = val.pack();
+                }
+                else if (type != "function"){
+                    o[prop] = val;
+                }
             }
         }
         return o;
