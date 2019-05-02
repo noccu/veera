@@ -19,6 +19,7 @@ function BattleData(id, chars) {
     this.turn = 1;
     this.id = id;
     this.log = [];
+    this.startTime = Date.now();
 
     this.stats = {
         //TODO: This SHOULD be optimized like Object.create(), hopefully...
@@ -141,10 +142,10 @@ const battleStatsShared = {
 
 window.Battle = {
     MAX_STORED: 30,
-    archive: {},
+    archive: new Map(),
     get current() {
         if (this._currentId) {
-            return this.archive[this._currentId];
+            return this.archive.get(this._currentId);
         }
         else {
             return null;
@@ -170,16 +171,15 @@ window.Battle = {
     reset(json) { //Called on every battle entry (incl refresh)
         if (json) {
             let id = json.multi ? json.twitter.battle_id : json.raid_id;
-            let logged = id in this.archive;
+            let logged = this.archive.has(id);
             this.current = id;
             //Unlogged raid, or new host/join of logged raid
-            if (!logged || logged && json.turn < this.archive[id].turn) {
-                this.archive[id] = new BattleData(id, json.player.param);
+            if (!logged || logged && json.turn < this.archive.get(id).turn) {
+                this.archive.set(id, new BattleData(id, json.player.param));
 
                 //Limit number of archived raids. TODO: find better way cause this sux
-                let stored = Object.keys(this.archive);
-                if (stored.length > this.MAX_STORED) {
-                    delete this.archive[stored[0]];
+                if (this.archive.size > this.MAX_STORED) {
+                    this.archive.delete(this.archive.keys().next().value);
                 }
 
                 updateUI("updBattleNewRaid", this.packageData());
