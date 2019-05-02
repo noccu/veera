@@ -62,6 +62,7 @@ window.UI = {
     time: {
         display: {},
         times: [],
+        activeSt: 0,
         init: function() {
             for (let timer of this.times) {
                 timer.time = new Date(timer.time);
@@ -91,13 +92,28 @@ window.UI = {
             this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
             this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
 
-            if (timer.name == "st1" || timer.name == "st2") {
+            //Could use an object for clarity but since this fires every second, this is prob much faster.
+            if (timer.name == "st1") {
                 if (timer.time.getUTCHours() == 23) {
-                    this.display.st.classList.add("highlight");
+                    this.activeSt |= 1;
                 }
                 else {
-                    this.display.st.classList.remove("highlight");
+                    this.activeSt &= 2;
                 }
+            }
+            else if (timer.name == "st2") {
+                if (timer.time.getUTCHours() == 23) {
+                    this.activeSt |= 2;
+                }
+                else {
+                    this.activeSt &= 1;
+                }
+            }
+            if (this.activeSt) {
+                this.display.st.classList.add("highlight");
+            }
+            else {
+                this.display.st.classList.remove("highlight");
             }
         },
         sync (times) {
