@@ -63,7 +63,6 @@ html {
 }
 
 
-
 .display {
     display: inline-block;
     border: 2px solid var(--diff-color-a);
@@ -76,13 +75,9 @@ html {
     text-align: center;
 }
 
-#top-display {
-/*    margin-bottom: 2em;*/
-}
-
-.group {
+.group, #places .panel-content > * {
     display: inline-block;
-    margin: 0.2em;
+    margin-right: 0.3em;
     vertical-align: top;
 }
 
@@ -393,14 +388,9 @@ button {
 }
 .battle-stats {
     display: inline-block;
-/*
-    margin-right: 2em;
-    text-align: left;
-*/
 }
 .group .battle-stats {
     display: block;
-/*    margin-right: 0;*/
 }
 
 .battle-char-name {
@@ -464,10 +454,4 @@ button {
 
 .place-link:hover {
     background-color: var(--selection-color);
-}
-
-#places .panel-content > * {
-    display: inline-block;
-    margin: 0.2em;
-    vertical-align: top;
 }
