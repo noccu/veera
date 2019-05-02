@@ -3,16 +3,6 @@ const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
 SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
-const GAME_URL = {//jshint ignore:line
-    baseGame: "http://game.granbluefantasy.jp/",
-    assets: "assets_en/img/sp/assets/",
-    assets_light: "assets_en/img_light/sp/assets/",
-    size: {
-        small: "s/",
-        medium: "m/",
-        questMedium: "qm/"
-    }
-};
 //const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
 //const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
 //item_kind, kind, and type are used interchangeably here.

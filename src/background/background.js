@@ -1,6 +1,7 @@
 const UPDATED = false;
 const EVENTS = { //jshint ignore:line
     connected: "veeraConnected",
+    pageChanged: "pageChanged",
     suppliesUpdated: "suppliesUpdated",
     dailyReset: "dailyReset",
     weeklyReset: "weeklyReset",
@@ -9,6 +10,17 @@ const EVENTS = { //jshint ignore:line
     shopPurchase: "shopPurchase",
 //    newBattle: new Event("newBattle")
 };
+const GAME_URL = {//jshint ignore:line
+    baseGame: "http://game.granbluefantasy.jp/",
+    assets: "assets_en/img/sp/assets/",
+    assets_light: "assets_en/img_light/sp/assets/",
+    size: {
+        small: "s/",
+        medium: "m/",
+        questMedium: "qm/"
+    },
+    questStart: "#quest/supporter/"
+};
 
 window.addEventListener(EVENTS.connected, MainInit);
 //window.addEventListener("newBattle", );
@@ -16,8 +28,13 @@ window.addEventListener(EVENTS.connected, MainInit);
 DevTools.wait(); //Listen for devtools conn
 
 function MainInit() {
-    DevTools.query("tabId").then(id => {
-            State.game.linkToTab(id).then(() => console.group("Loading data"));
+    DevTools.query("tabId")
+        .then(id => {
+            State.game.linkToTab(id)
+                .then(() => {
+                    chrome.tabs.onUpdated.addListener(State.evhTabUpdated);
+                    console.group("Loading data");
+                });
         })
         .then(State.load)
         .then(Supplies.load)
@@ -111,6 +128,9 @@ function parseDom(data, {decode = true, mime = "text/html"} = {}) {
     if (decode) { data = decodeURIComponent(data); }
     return DOM_PARSER.parseFromString(data, mime);
 }
+
+//Add a simple fast boolean return match macro just cause it's nicer and clearer.
+String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
 
 //Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {

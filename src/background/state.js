@@ -25,7 +25,7 @@ window.State = {
     },
     game: {
         tabId: null,
-        linkToTab: function (id) {
+        linkToTab (id) {
             return new Promise ((r,x) => {
                 chrome.tabs.get(id, t => {
                     if (/game\.granbluefantasy\.jp|gbf\.game\.mbga\.jp/.test(t.url)) {
@@ -38,9 +38,16 @@ window.State = {
                 });
             });
         },
-        navigateTo: function (url) {
+        navigateTo (url) {
             if (this.tabId && url) {
                 chrome.tabs.update(this.tabId, {url: url}, () => devlog("Navigated to " + url));
+            }
+        },
+        evhTabUpdated (id, changes) {
+            if (id == State.game.tabId) {
+                if (changes.hasOwnProperty("url")) {
+                    fireEvent(EVENTS.pageChanged, changes.url);
+                }
             }
         }
     },
@@ -102,15 +109,12 @@ function setVeeraDefaults() {
 function toggleDebug() {
     State.settings.debug = !State.settings.debug;
 }
-
 function devlog() {
     if (State.settings.debug) { console.debug(... arguments); }
 }
-
 function devwarn() {
     if (State.settings.debug) { console.warn(... arguments); }
 }
-
 function deverror() {
     console.error(... arguments);
 }

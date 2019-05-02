@@ -39,9 +39,6 @@ window.DevTools = {
     }
 };
 
-//Add a simple fast boolean return match function just cause I like it better :>
-String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
-
 function hear (msg) {
     //Convert to util object. Makes it easier to deal with and is in the end likely faster since we can check much smaller strings.
     let path = "";
