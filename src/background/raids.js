@@ -205,6 +205,9 @@ window.Raids = {
             deverror(`Can't start raid ${id}. Sufficient mats: ${sufficientMats}, url: ${url}`);
         }
     },
+    createUrl(id, type, hostmat) {
+        return `${GAME_URL.baseGame}${GAME_URL.questStart}${id}/${type}${hostmat ? "/0/" + hostmat : ""}`;
+    },
     setPendingHost(data) {
         devlog("pending", data);
         //They are set separately anyway.
@@ -224,6 +227,11 @@ window.Raids = {
     repeatLast() {
         if (this.lastHost.url) {
             State.game.navigateTo(this.lastHost.url);
+        }
+    },
+    playTriggered() {
+        if (Raids.triggeredQuest) {
+            State.game.navigateTo(Raids.createUrl(Raids.triggeredQuest.id, Raids.triggeredQuest.type));
         }
     },
     reset: function() {
@@ -253,23 +261,12 @@ function evhCheckRaidSupplyData (upd) {
 }
 
 //NM Triggers etc
-function checkNextQuest(data) {
-    if (data.appearance) {
-        DevTools.send("nextQuestTriggered", {nextQuest: data.appearance.quest_name});
+function checkNextQuest(json) {
+    if (json.appearance && json.appearance.is_quest) {
+        let data = json.appearance;
+        //Triggered quests never cost hostmats afaik.
+        Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
+        showNotif("Triggered quest!", {text: data.quest_name, onclick: Raids.playTriggered});
+        updateUI("nextQuestTriggered", {nextQuest: data.quest_name});
     }
-
-    /* data dump
-        appearance:
-            chapter_id: "51005"
-        group_id: "100"
-        is_normal_hell: {
-            type: true
-        }
-        is_quest: true
-        location_id: "10000"
-        open_chapter_id: "51005"
-        quest_id: "510051"
-        quest_name: "Dimension Halo"
-        quest_type: "5"
-    */
 }

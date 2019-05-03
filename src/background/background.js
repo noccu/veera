@@ -101,7 +101,7 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
             let clickHandler = function () {
                 onclick();
                 n.close();
-                n.removeEventListener(clickHandler);
+                n.removeEventListener("click", clickHandler);
             };
             n.addEventListener("click", clickHandler);
         }

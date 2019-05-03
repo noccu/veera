@@ -221,6 +221,8 @@ function hear (msg) {
         case "repeatQuest":
             Raids.repeatLast();
             break;
+        case "playTriggeredQuest":
+            Raids.playTriggered();
     }
 }
 

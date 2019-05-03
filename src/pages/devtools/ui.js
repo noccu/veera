@@ -279,6 +279,8 @@ function evhGlobalClick (e) {
             case "repeatQuest":
                 BackgroundPage.send("repeatQuest");
                 break;
+            case "playTriggeredQuest":
+                BackgroundPage.send("playTriggeredQuest");
         }
     }
 }
