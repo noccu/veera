@@ -54,6 +54,8 @@ window.Raids = {
     SORT_METHODS: {elements: 0, difficulty: 1},
     NO_HOST_MAT: "noMat",
     list: {},
+    pendingHost: {},
+    lastHost: {},
     load: function() {
         return new Promise ( (r,x) => {
             function parse (idx) {
@@ -203,12 +205,38 @@ window.Raids = {
             deverror(`Can't start raid ${id}. Sufficient mats: ${sufficientMats}, url: ${url}`);
         }
     },
+    setPendingHost(data) {
+        devlog("pending", data);
+        //They are set separately anyway.
+        if (data.url) {
+            this.pendingHost.url = data.url;
+        }
+        else if (data.name) {
+            this.pendingHost.name = data.name;
+        }
+    },
+    setLastHost(json) {
+        devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
+        this.lastHost.url = this.pendingHost.url;
+        this.lastHost.name = this.pendingHost.name;
+        updateUI("setLastHosted", this.lastHost.name);
+    },
+    repeatLast() {
+        if (this.lastHost.url) {
+            State.game.navigateTo(this.lastHost.url);
+        }
+    },
     reset: function() {
         for (let id in this.list) {
             this.list[id].hosts.today = 0;
         }
         updateUI("updRaid", this.getList());
         this.save();
+    },
+    evhPageChanged (url) {
+        if (url.ismatch("#quest/supporter")) {
+            this.setPendingHost({url});
+        }
     }
 };
 

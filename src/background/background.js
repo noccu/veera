@@ -32,7 +32,7 @@ function MainInit() {
         .then(id => {
             State.game.linkToTab(id)
                 .then(() => {
-                    chrome.tabs.onUpdated.addListener(State.evhTabUpdated);
+                    chrome.tabs.onUpdated.addListener(State.game.evhTabUpdated);
                     console.group("Loading data");
                 });
         })
@@ -57,6 +57,11 @@ function MainInit() {
             console.log("Setting up listeners.");
             window.addEventListener(EVENTS.dailyReset, () => Raids.reset());
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
+            window.addEventListener(EVENTS.pageChanged, ev => {
+                devlog(`Page changed to ${ev.detail}`);
+                Raids.evhPageChanged(ev.detail);
+                //Others here.
+            });
 
             Time.sync();
             Time.checkReset();

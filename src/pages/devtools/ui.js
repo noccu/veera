@@ -276,6 +276,9 @@ function evhGlobalClick (e) {
             case "navigate":
                 BackgroundPage.send("navigateTo", e.target.dataset.value);
                 break;
+            case "repeatQuest":
+                BackgroundPage.send("repeatQuest");
+                break;
         }
     }
 }

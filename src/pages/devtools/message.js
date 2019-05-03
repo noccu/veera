@@ -77,8 +77,11 @@ window.BackgroundPage = {
             case "updGuild":
                 setGuildLink(msg.data);
                 break;
+            case "setLastHosted":
+                UI.setValue({id: "last-hosted-quest", value: msg.data});
+                break;
             default:
-                fireEvent(msg.action, msg.data);
+                window.dispatchEvent(new CustomEvent(msg.action, msg.data));
         }
     }
 };

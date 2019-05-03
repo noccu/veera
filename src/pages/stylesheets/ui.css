@@ -432,7 +432,7 @@ button {
 }
 #raid-next-quest {
     background-color: var(--diff-color-b);
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 #inactive {
@@ -454,4 +454,10 @@ button {
 
 .place-link:hover {
     background-color: var(--selection-color);
+}
+
+#last-hosted-quest:not(:empty)::after {
+    content: " \21BB";
+    /* content: " \27F3"; */
+    font-size: 1.2em;
 }

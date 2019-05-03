@@ -105,6 +105,23 @@ function hear (msg) {
                     case path.ismatch("rest/multiraid/summon_result"):
                         battleUseSummon(msg.data.json);
                         break;
+                    case path.ismatch("quest/treasure_raid"):
+                    case /treasureraid\d+\/top\/content\/newindex/.test(path):
+                        storePendingRaidsTreasure(msg.data.json);
+                        break;
+                    case path.ismatch("quest/create_quest"):
+                        if (msg.data.json.result == "ok" && msg.data.json.is_host) {
+                            consumePendingRaidsTreasure(msg.data);
+                            Raids.update({
+                                action: "hosted",
+                                id: msg.data.postData.quest_id
+                            });
+                            Raids.setLastHost();
+                        }
+                        break;
+                    case path.ismatch("quest/quest_data"):
+                        Raids.setPendingHost({name: msg.data.json.chapter_name});
+                        break;
                     case path.ismatch("rest/raid/start"):
                     case path.ismatch("rest/multiraid/start"):
                         Battle.reset(msg.data.json);
@@ -132,19 +149,6 @@ function hear (msg) {
                             action_point: "40"
                             chapter_name: "Belial Impossible"
                         */
-                    case path.ismatch("quest/treasure_raid"):
-                    case /treasureraid\d+\/top\/content\/newindex/.test(path):
-                        storePendingRaidsTreasure(msg.data.json);
-                        break;
-                    case path.ismatch("quest/create_quest"):
-                        if (msg.data.json.result == "ok") {
-                            consumePendingRaidsTreasure(msg.data);
-                            Raids.update({
-                                action: "hosted",
-                                id: msg.data.postData.quest_id
-                            });
-                        }
-                        break;
                     case path.ismatch("disabled_job/"):
                         storePendingJobUnlock(msg.data.json);
                         break;
@@ -213,6 +217,9 @@ function hear (msg) {
             if (msg.data) {
                 State.game.navigateTo(GAME_URL.baseGame + msg.data);
             }
+            break;
+        case "repeatQuest":
+            Raids.repeatLast();
             break;
     }
 }
