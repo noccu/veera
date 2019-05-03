@@ -89,17 +89,24 @@ window.Profile = {
         updateUI("updArca", this.arcarum);
     },
     setStatus (status) {
-        this.status.ap = {
-            current: status.now_action_point,
-            max: parseInt(status.max_action_point)
-        };
-        this.status.bp = {
-            current: status.now_battle_point,
-            max: status.max_battle_point
-        };
+        let currentAp = status.now_action_point || status.action_point;
+        if (currentAp) {
+            this.status.ap = {
+                current: currentAp,
+                max: parseInt(status.max_action_point)
+            };
+        }
+        if (status.now_battle_point) {
+            this.status.bp = {
+                current: status.now_battle_point,
+                max: status.max_battle_point
+            };
+        }
 
-        this.status.level = parseInt(status.level);
-        this.status.levelPerc = parseInt(status.levelGauge.slice(0, -1));
+        if (status.level) {
+            this.status.level = parseInt(status.level);
+            this.status.levelPerc = parseInt(status.levelGauge.slice(0, -1));
+        }
 
         updateUI("updStatus", this.status);
     },
@@ -124,7 +131,10 @@ window.Profile = {
         }
 
         let status = json.status;
-        if (json.option) {
+        if (json.action_point) {
+            status = json;
+        }
+        else if (json.option) {
             if (!status && json.option.mydata_assets && json.option.mydata_assets.mydata) {
                 status = json.option.mydata_assets.mydata.status;
             }
@@ -139,7 +149,6 @@ window.Profile = {
         if (status) {
             this.setStatus(status);
         }
-        Profile.save();
     },
     save () {
         Storage.set({
@@ -208,4 +217,14 @@ function updateGuildInfo (json) {
         State.save();
         updateUI("updGuild", `#guild/detail/${json.is_guild_in}`);
     }
+}
+
+function useRecoveryItem(json) {
+    if (json.recovery_str == "AP") {
+        Profile.status.ap.current = json.after;
+    }
+    else if (json.recovery_str == "BP") { //Assuming
+        Profile.status.bp.current = json.after;
+    }
+    updateUI("updStatus", Profile.status);
 }

@@ -120,7 +120,13 @@ function hear (msg) {
                         }
                         break;
                     case path.ismatch("quest/quest_data"):
-                        Raids.setPendingHost({name: msg.data.json.chapter_name});
+                        Raids.setPendingHost({json: msg.data.json});
+                        break;
+                    case path.ismatch("quest/user_action_point"):
+                        Profile.update(msg.data.json);
+                        break;
+                    case path.ismatch("quest/user_item"):
+                        useRecoveryItem(msg.data.json);
                         break;
                     case path.ismatch("rest/raid/start"):
                     case path.ismatch("rest/multiraid/start"):

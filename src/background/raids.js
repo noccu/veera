@@ -214,14 +214,16 @@ window.Raids = {
         if (data.url) {
             this.pendingHost.url = data.url;
         }
-        else if (data.name) {
-            this.pendingHost.name = data.name;
+        else if (data.json) {
+            this.pendingHost.name = data.json.chapter_name;
+            this.pendingHost.ap = parseInt(data.json.action_point);
         }
     },
     setLastHost(json) {
         devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
         this.lastHost.url = this.pendingHost.url;
         this.lastHost.name = this.pendingHost.name;
+        Profile.status.ap.current -= this.pendingHost.ap;
         updateUI("setLastHosted", this.lastHost.name);
     },
     repeatLast() {
