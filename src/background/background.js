@@ -118,6 +118,13 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
     }
 }
 
+//Very simple, mostly here in case I need to change the way it works easily.
+function openTab(url) {
+    //This seems to just open a tab so I guess it's fine?
+    //If problems, replace with chrome.tabs I guess.
+    window.open(url);
+}
+
 //Utils
 /*function Enum(...names) { //eh it's neat but can't auto-complete and not JSON
     let idx = 1;

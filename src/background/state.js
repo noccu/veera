@@ -1,19 +1,16 @@
 window.State = {
     store: {
         unfEdition: "",
-        config: {version: 1, updDelta: 0},
-        strikeTime: {}
-    },
-    update: {
-        url: {
-            manifest: "https://raw.githubusercontent.com/noccu/orchees/Veera/manifest.json",
-            commits: "https://api.github.com/repos/noccu/orchees/commits?sha=Veera&per_page=3"
-        },
+        config: {version: 2, updDelta: 1},
+        strikeTime: {},
         lastReset: 0,
-        lastCheck: 0,
+        lastUpdate: 0,
         lastCommit: "Veera",
-        interval: 259200000 //ms - 3 days
     },
+    URL_HOMEPAGE: "https://github.com/noccu/orchees",
+    URL_MANIFEST: "https://raw.githubusercontent.com/noccu/orchees/Veera/manifest.json",
+    URL_COMMITS: "https://api.github.com/repos/noccu/orchees/commits?sha=Veera&per_page=3",
+    UPDATE_INTERVAL: 259200000, //ms - 3 days
     settings: {
         debug: true,
         theme: 0,
@@ -62,7 +59,7 @@ window.State = {
     },
 
     save: function() {
-        let o = {store: this.store, settings: this.settings, update: this.update};
+        let o = {store: this.store, settings: this.settings};
         Storage.set({state: o});
         devlog("State saved.");
     },
@@ -105,10 +102,9 @@ window.State = {
         });
     },
     checkUpdate() {
-        let lastCheck = this.update.lastCheck;
-        if (Date.now() - lastCheck > this.update.interval) {
-            this.update.lastCheck = Date.now();
-            return fetch(this.update.url.manifest, {cache: "no-cache"})
+        if (Date.now() - this.store.lastUpdate > this.UPDATE_INTERVAL) {
+            this.store.lastUpdate = Date.now();
+            return fetch(this.URL_MANIFEST, {cache: "no-cache"})
                 .then(resp => {
                     if (resp.ok) {
                         return resp.json();
@@ -118,7 +114,7 @@ window.State = {
                     let localVersion = chrome.runtime.getManifest().version;
                     if (json.version != localVersion) {
                         console.log("Updates found");
-                        showNotif("Update available.", {text: `New version: ${json.version}\nYour version: ${localVersion}`});
+                        showNotif("Update available.", {text: `New version: ${json.version}\nYour version: ${localVersion}`, onclick: () => openTab(this.URL_HOMEPAGE)});
                     }
                     else {
                         console.log("No (larger) updates. Checking for commits...");
@@ -133,7 +129,7 @@ window.State = {
         }
     },
     checkCommits() {
-        return fetch(this.update.url.commits, {cache: "no-store"})
+        return fetch(this.URL_COMMITS, {cache: "no-store"})
             .then(r => {
                 if (r.ok) {
                     return r.json();
@@ -141,14 +137,14 @@ window.State = {
             })
             .then(json => {
                 //We only notify once, for various reasons but we can't check what commit a user is on anyway or if they have local modifications.
-                if (this.update.lastCommit != json[0].sha) {
-                    this.update.lastCommit = json[0].sha;
+                if (this.store.lastCommit != json[0].sha) {
+                    this.store.lastCommit = json[0].sha;
                     let list = [];
                     for (let entry of json) {
                         list.push("- " + entry.commit.message.slice(0, entry.commit.message.indexOf("\n")));
                     }
                     console.log("There were new commits since last check.");
-                    showNotif("New commits:", {text: list.join("\n")});
+                    showNotif("New commits:", {text: list.join("\n"), onclick: () => openTab(this.URL_HOMEPAGE)});
                 }
                 else {
                     console.log("No new commits since last check.");

@@ -29,6 +29,7 @@
         "getEnumNamedValue": false,
         "showNotif": false,
         "fireEvent": false,
+        "openTab": false,
 
         //Constants
         "SUPPLYTYPE": false,
