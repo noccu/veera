@@ -212,19 +212,31 @@ window.Raids = {
         devlog("pending", data);
         //They are set separately anyway.
         if (data.url) {
-            this.pendingHost.url = data.url;
+            let id = data.url.match(/supporter\/(\d+)/)[1];
+            //Don't update triggers.
+            if (this.triggeredQuest && id == this.triggeredQuest.id) {
+                this.pendingHost.skip = true;
+            }
+            else {
+                this.pendingHost.skip = false;
+                this.pendingHost.url = data.url;
+            }
         }
-        else if (data.json) {
+        //Luckily updates after url.
+        else if (data.json && !this.pendingHost.skip) {
             this.pendingHost.name = data.json.chapter_name;
-            this.pendingHost.ap = parseInt(data.json.action_point);
+            this.pendingHost.ap = parseInt(data.json.action_point); //Triggers never use AP afaik so we can leave this. Same in setLastHost below.
         }
     },
     setLastHost(json) {
-        devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
-        this.lastHost.url = this.pendingHost.url;
-        this.lastHost.name = this.pendingHost.name;
-        Profile.status.ap.current -= this.pendingHost.ap;
-        updateUI("setLastHosted", this.lastHost.name);
+        if (!this.pendingHost.skip) {
+            devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
+            this.lastHost.url = this.pendingHost.url;
+            this.lastHost.name = this.pendingHost.name;
+            Profile.status.ap.current -= this.pendingHost.ap;
+            updateUI("setLastHosted", this.lastHost.name);
+            updateUI("updStatus", Profile.status);
+        }
     },
     repeatLast() {
         if (this.lastHost.url) {
@@ -270,5 +282,9 @@ function checkNextQuest(json) {
         Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
         showNotif("Triggered quest!", {text: data.quest_name, onclick: Raids.playTriggered});
         updateUI("nextQuestTriggered", {nextQuest: data.quest_name});
+    }
+    else { //This would happen when raidLoot updates the UI but it's good to be explicit.
+        Raids.triggeredQuest = null;
+        updateUI("nextQuestTriggered", {nextQuest: false});
     }
 }

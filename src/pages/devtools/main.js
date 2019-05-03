@@ -179,7 +179,9 @@ function updCurrentRaidInfo (data) {
             list.appendChild(document.importNode(temp.content, true));
         }
     }
-    UI.setValue({id: "raid-next-quest", value: data.nextQuest || ""});
+    else if (data.hasOwnProperty("nextQuest")) {
+        UI.setValue({id: "raid-next-quest", value: data.nextQuest || ""});
+    }
 }
 function createRaid(raidEntry) {
     var newRaid = document.getElementById("template-raid");
