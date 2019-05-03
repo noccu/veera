@@ -437,7 +437,7 @@ function battleParseDamage(input, actionData, type) {
 }
 
 function battleUseAbility (json) {
-    if (!json || json.scenario[0].cmd == "finished") { return;} //Battle over
+    if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return;} //Battle over
 
     Battle.current.turn = json.status.turn;
 //    Battle.log.checkReset();
@@ -492,7 +492,7 @@ function battleUseAbility (json) {
 }
 
 function battleAttack(json) {
-    if (!json || json.scenario[0].cmd == "finished") { return;} //Battle over
+    if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return;} //Battle over
 
     Battle.current.turn = json.status.turn - 1; //json shows status after attack, so counting the data for prev turn.
     //Active turns is increased after all the stat calcs
@@ -640,7 +640,7 @@ function battleAttack(json) {
 }
 
 function battleUseSummon(json) {
-     if (!json || json.scenario[0].cmd == "finished") { return;} //Battle over
+     if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return;} //Battle over
 
     Battle.current.turn = json.status.turn; //still same turn after summon
 //    var actions = [],
