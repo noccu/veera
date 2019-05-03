@@ -12,7 +12,6 @@
    },
    "browser_action": {
       "default_icon": "src/assets/images/icon128.png"
-      //"default_popup": "src/pages/popup/popup.html"
    },
 
    "options_ui": {

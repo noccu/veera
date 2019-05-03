@@ -72,6 +72,10 @@ function MainInit() {
 
             console.groupEnd();
         })
+        .then(() => {
+            console.group("Checking for updates...");
+            State.checkUpdate().then(() => console.groupEnd()); //Errors caught internally, chain restored.
+        })
         .catch(e => {
             DevTools.disconnect();
             console.error(e);
