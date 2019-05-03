@@ -92,14 +92,24 @@ function fireEvent(name, data) {
     }
 }
 
-function showNotif(text, desc) {
+function showNotif(title, {text: body, img: icon, onclick} = {}) {
     if (Notification.permission == "granted") {
-        let n = new Notification(text, {body: desc});
+        let n = new Notification(title, {body, icon});
         setTimeout(() => n.close(), 6000);//TODO: add to State.settings
+
+        if (onclick && typeof onclick == "function") {
+            let clickHandler = function () {
+                onclick();
+                n.close();
+                n.removeEventListener(clickHandler);
+            };
+            n.addEventListener("click", clickHandler);
+        }
+        return n;
     }
     else if (Notification.permission == "default"){
         Notification.requestPermission().then(p => {
-            if (p == "granted") { showNotif(text, desc); }
+            if (p == "granted") { showNotif(title, {body, icon}); }
         });
     }
 }

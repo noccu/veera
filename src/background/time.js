@@ -71,7 +71,7 @@ window.Time = {
         State.store.lastReset = lastReset.getTime();
         State.save();
 
-        showNotif("Daily reset.", detail);
+        showNotif("Daily reset.", {text: detail});
         window.dispatchEvent(new Event(EVENTS.dailyReset));
     },
     setTimers () {
@@ -116,7 +116,7 @@ window.Time = {
                     end.setTime(end - this.currentJst);
                     this._stEnd = setTimeout(() => Time._stEnd = false, end.valueOf);
 
-                    showNotif("Strike time!", `For the next ${end.getUTCMinutes()} minute(s), ${end.getUTCSeconds()} seconds.`);
+                    showNotif("Strike time!", {text: `For the next ${end.getUTCMinutes()} minute(s), ${end.getUTCSeconds()} seconds.`});
                 }
                 nextSt.setTime(nextSt - this.currentJst);
                 this.timers["st" + schedule] = nextSt;
