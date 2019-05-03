@@ -9,6 +9,7 @@ window.State = {
             manifest: "https://raw.githubusercontent.com/noccu/orchees/Veera/manifest.json",
             commits: "https://api.github.com/repos/noccu/orchees/commits?sha=Veera&per_page=3"
         },
+        lastReset: 0,
         lastCheck: 0,
         lastCommit: "Veera",
         interval: 259200000 //ms - 3 days
@@ -75,15 +76,18 @@ window.State = {
                 }
                 else if (data.state.store && data.state.store.config) {
                     if (data.state.store.config.version == State.store.config.version) {
-                        State.settings = data.state.settings;
-                        State.store = data.state.store;
+                        for (let key in data.state) {
+                            State[key] = data.state[key];
+                        }
                         console.info("State loaded.");
                     }
-                    else if (State.store.config.version - data.state.store.config.version <= this.store.config.updDelta) {
-                        devlog("Attempting state update from older version.");
+                    else if (State.store.config.version - data.state.store.config.version <= State.store.config.updDelta) {
+                        console.log("Attempting state update from older version.");
                         for (let obj of ["store", "settings"]) {
-                            for (let key in State[obj]) {
-                                State[obj][key] = data.state[obj][key];
+                            for (let key in data.state[obj]) {
+                                if (State[obj].hasOwnProperty(key) && key != "config") {
+                                    State[obj][key] = data.state[obj][key];
+                                }
                             }
                         }
                         State.save();

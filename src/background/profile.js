@@ -167,6 +167,7 @@ window.Profile = {
                     for (let key in data.profile) {
                         Profile[key] = data.profile[key];
                     }
+                    console.log("Profile loaded.");
                 }
                 else {
                     console.warn("Could not load Profile data. Visit home page to initialize most of it.");
