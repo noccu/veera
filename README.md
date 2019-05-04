@@ -4,12 +4,13 @@ An entirely new and rewritten Granblue companion based on the Ancheera concept.
 
 **Current features:**
 
-- JST and countdown timers.
+- JST and countdown timers with ST notifications.
 - Track and filter supplies and raids, with quick-hosting.
 - Plan & follow up on weapon crafts.
 - Real-time battle statistics for team and characters.
 - Analyze GW area honors for betting. (RIP)
 - Show immediate quest/raid drops and nightmare triggers.
+- Quickly repeat last quest or play triggered ones.
 - Display and track currencies, tickets, pendants, etc.
 - Tooltips with farm locations for commonly used craft items.
 
@@ -52,9 +53,11 @@ If this doesn't help you solve it yourself, please include (at least) any errors
 
 1. Download or clone the repo into a folder.
    * Cloning allows easy updating during this early phase.
-2. In your Chrome extensions page, click "Load unpacked extension..." and point to the repo folder.
+   * Since v1.3.2 it will notify about updates; once for commits, every startup for releases.
+2. In your Chrome extensions page, click "Load unpacked" and point to the repo folder.
    * Make sure developer mode is enabled if you don't see the button.
    * To recompile after changes, hit the reload button beneath the extension.
+   * If you don't want the developer notification when you start Chrome, use the "pack extension" button on this page and use that. You will have to repeat this for every update.
 1. Load granblue and hit F12 to bring up the Chrome devtools.
 2. Navigate to the Veera tab.
 3. On first install it is recommended to visit the supplies page in-game once to load its data.
