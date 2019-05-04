@@ -151,14 +151,19 @@ window.UI = {
         },
         //String, Array
         populateSelection: function(name, list) {
-            if (!list) {return;}
             var display = this.dom[name];
-            clearDropdown(display);
-            for (let option of list) {
-                var el = document.createElement("option");
-                el.value = el.textContent = option;
-//                console.log(option);
-                display.options.add(el);
+            if (list && list.length > 1) {
+                display.classList.remove("hidden");
+                clearDropdown(display);
+                for (let option of list) {
+                    var el = document.createElement("option");
+                    el.value = el.textContent = option;
+    //                console.log(option);
+                    display.options.add(el);
+                }
+            }
+            else {
+                display.classList.add("hidden");
             }
         },
         displayPlan: function(plan) {
