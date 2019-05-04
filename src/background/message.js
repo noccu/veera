@@ -78,7 +78,13 @@ function hear (msg) {
                         checkNextQuest(msg.data.json);
                         break;
                     case path.ismatch("rest/arcarum/stage"):
-                        gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
+                        if (msg.data.json.notice_effect) {
+                            gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
+                        }
+                        break;
+                    case path.ismatch("rest/arcarum/start_stage"):
+                        Profile.arcarum.tickets.current = msg.data.json.passport_num;
+                        updateUI("updArca", Profile.arcarum);
                         break;
                     case path.ismatch("weapon/evolution_materials"):
                         weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao

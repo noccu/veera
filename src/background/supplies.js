@@ -511,65 +511,67 @@ window.Supplies = {
 };
 
 function gotQuestLoot(json) {
-    var upd = [];
-    function addUpdItem(entry) {
-        let type = entry.item_kind || entry.kind,
-            id = entry.id || entry.item_id,
-            count = entry.count || entry.num,
-            name = entry.name || entry.item_name;
+    if (json) {
+        var upd = [];
+        function addUpdItem(entry) {
+            let type = entry.item_kind || entry.kind,
+                id = entry.id || entry.item_id,
+                count = entry.count || entry.num,
+                name = entry.name || entry.item_name;
 
-        let item = new SupplyItem(type, id, count, name);
-        if (entry.rarity) {
-            item.rarity = parseInt(entry.rarity);
-        }
-        upd.push(item);
-        return item;
-    }
-
-    //Non-box, side-scrolling
-    if (json.rewards) {
-        let loot = json.rewards.article_list,
-            content;
-        if (loot.length == undefined) { //It's an array when empty apparently...
-            content = Object.keys(loot);
-            for (let key of content) {
-                let entry = loot[key];
-                addUpdItem(entry);
+            let item = new SupplyItem(type, id, count, name);
+            if (entry.rarity) {
+                item.rarity = parseInt(entry.rarity);
             }
-            devlog(`[Loot] Got ${content.length} items from side-scroll.`);
+            upd.push(item);
+            return item;
         }
 
-        //Box drops
-        loot = json.rewards.reward_list;
-        if (loot.length == undefined) { //An object when not
-            let numItems = 0;
-            for (let key of Object.keys(loot)) {
-                let boxType = loot[key];
-                //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
-                for (let entry of Object.keys(boxType)) {
-                    addUpdItem(boxType[entry]);
-                    numItems++;
+        //Non-box, side-scrolling
+        if (json.rewards) {
+            let loot = json.rewards.article_list,
+                content;
+            if (loot.length == undefined) { //It's an array when empty apparently...
+                content = Object.keys(loot);
+                for (let key of content) {
+                    let entry = loot[key];
+                    addUpdItem(entry);
                 }
+                devlog(`[Loot] Got ${content.length} items from side-scroll.`);
             }
-            devlog(`[Loot] Got ${numItems} items from boxes.`);
-        }
-    }
-    else if (json.result) {
-        //Arcarum chests
-        loot = json.result.contents;
-        if (loot) { //Is actually an array or undef/missing.
-            for (let item of loot) {
-                let si = addUpdItem(item);
-                si.chestType = json.result.chest_type;
-                si.chestColor = json.result.chest_color;
+
+            //Box drops
+            loot = json.rewards.reward_list;
+            if (loot.length == undefined) { //An object when not
+                let numItems = 0;
+                for (let key of Object.keys(loot)) {
+                    let boxType = loot[key];
+                    //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
+                    for (let entry of Object.keys(boxType)) {
+                        addUpdItem(boxType[entry]);
+                        numItems++;
+                    }
+                }
+                devlog(`[Loot] Got ${numItems} items from boxes.`);
             }
-            devlog(`[Loot] Got ${loot.length} items from arcarum chest.`);
         }
-    }
-    if (upd.length > 0) {
-        fireEvent(EVENTS.gotLoot, upd);
-        Supplies.update(upd);
-        DevTools.send("updRaidLoot", {loot: upd});
+        else if (json.result) {
+            //Arcarum chests
+            loot = json.result.contents;
+            if (loot) { //Is actually an array or undef/missing.
+                for (let item of loot) {
+                    let si = addUpdItem(item);
+                    si.chestType = json.result.chest_type;
+                    si.chestColor = json.result.chest_color;
+                }
+                devlog(`[Loot] Got ${loot.length} items from arcarum chest.`);
+            }
+        }
+        if (upd.length > 0) {
+            fireEvent(EVENTS.gotLoot, upd);
+            Supplies.update(upd);
+            DevTools.send("updRaidLoot", {loot: upd});
+        }
     }
 }
 
