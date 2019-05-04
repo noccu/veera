@@ -77,6 +77,9 @@ function hear (msg) {
                         getPendantsRaid(msg.data.json);
                         checkNextQuest(msg.data.json);
                         break;
+                    case path.ismatch("rest/arcarum/stage"):
+                        gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
+                        break;
                     case path.ismatch("weapon/evolution_materials"):
                         weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao
                         break;
