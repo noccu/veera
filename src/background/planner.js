@@ -55,7 +55,7 @@ window.Planner = {
                      if (PlannerData[series].wtype.templates) {
                          itemArray = itemArray.concat(PlannerData[series].wtype.templates);
                      }
-                     templateKey = PlannerData[series].typeNames ? PlannerData[series].typeNames[wtype] : wtype;
+                     templateKey = PlannerData[series].typeNames ? [wtype].concat(PlannerData[series].typeNames[wtype]) : wtype;
                      break;
                  case "element":
                      itemArray = PlannerData[series].element[element] || [];

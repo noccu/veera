@@ -209,6 +209,15 @@ const PLANNER_TEMPLATES = {
         Wind: 509,
         Light: [506, 509],
         Dark: [507, 508]
+    },
+    genesisAnima: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 511,
+        Water: 513,
+        Earth: 515,
+        Wind: 517,
+        Light: 519,
+        Dark: 521
     }
 };
 
@@ -223,7 +232,8 @@ const PLANNER_ITEMS = {
     flawedPrism: new PlannerItem(SUPPLYTYPE.treasure, 1202),
     prismChip: new PlannerItem(SUPPLYTYPE.treasure, 1201),
     bahaHorn: new PlannerItem(SUPPLYTYPE.treasure, 59),
-    silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107)
+    silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107),
+    goldBrick: new PlannerItem(17, 20004)
 };
 
 /** Creates an item for the planner from any accepted input.
@@ -716,6 +726,56 @@ window.PlannerData = {
             ]
         },
         stepNames: ["Rusted", "Relic", "Atma", "Ultima"]
+    },
+
+    Opus: {
+        core: [
+            new PlannerItem(1, SUPPLYTYPE.treasure, 537, 5),
+
+            new PlannerItem(2, SUPPLYTYPE.treasure, 537, 5),
+            new PlannerItem(2, PLANNER_ITEMS.silverCentrum, 5),
+            new PlannerItem(2, PLANNER_ITEMS.legendaryMerit, 10),
+            new PlannerItem(2, PLANNER_ITEMS.supremeMerit, 100),
+
+            new PlannerItem(3, PLANNER_ITEMS.goldBrick, 1),
+            new PlannerItem(3, SUPPLYTYPE.treasure, 538, 5), //tears
+            new PlannerItem(3, SUPPLYTYPE.treasure, 79, 50), //horn
+            new PlannerItem(3, SUPPLYTYPE.treasure, 534, 50), //key
+            new PlannerItem(3, SUPPLYTYPE.treasure, 138, 50), //unit
+            new PlannerItem(3, SUPPLYTYPE.treasure, 20781, 30) //anima
+        ],
+        wtype: {
+            Sword: [new PlannerItem(3, SUPPLYTYPE.treasure, 543, 1)], //tidings
+            Spear: [new PlannerItem(3, SUPPLYTYPE.treasure, 542, 1)],
+            Axe: [new PlannerItem(3, SUPPLYTYPE.treasure, 539, 1)],
+            Staff: [new PlannerItem(3, SUPPLYTYPE.treasure, 540, 1)],
+            Harp: [new PlannerItem(3, SUPPLYTYPE.treasure, 541, 1)],
+            Katana: [new PlannerItem(3, SUPPLYTYPE.treasure, 544, 1)],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.quartz, 500),
+                new PlannerItem(1, PLANNER_TEMPLATES.stones, 255),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.urns, 30),
+                new PlannerItem(2, PLANNER_TEMPLATES.genesisAnima, 10)
+            ]
+        },
+        element: {
+            Fire: null,
+            Water: null,
+            Earth: null,
+            Wind: null,
+            Light: null,
+            Dark: null
+        },
+        stepNames: ["None", "Trade", "4*", "5*"],
+        typeNames: {
+            "Sword": "Light",
+            "Spear": "Wind",
+            "Axe": "Fire",
+            "Staff": "Water",
+            "Harp": "Earth",
+            "Katana": "Dark",
+        }
     }
 };
 
