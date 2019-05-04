@@ -481,6 +481,12 @@ window.PlannerData = {
                 new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6),
             ]
         },
+        options: {
+            "First time": [
+                new PlannerItem(2, PLANNER_TEMPLATES.stones, -206, "wtype"),
+                new PlannerItem(3, PLANNER_TEMPLATES.stones, -362, "wtype")
+            ]
+        },
         stepNames: ["Replica", "Forge", "Rebuild", "Elechange", "FLB"],
         typeNames: {
             "Avenger": ["Fire", "Axe"],
@@ -734,6 +740,13 @@ window.PlannerData = {
                 new PlannerItem(3, PLANNER_TEMPLATES.urns, 30)
             ]
         },
+        options: {
+            "Gauph key": [new PlannerItem(false, SUPPLYTYPE.treasure, 137, 5)],
+            "Ultima key": [
+                new PlannerItem(false, SUPPLYTYPE.treasure, 138, 7),
+                new PlannerItem(false, PLANNER_ITEMS.legendaryMerit, 2)
+            ]
+        },
         stepNames: ["Rusted", "Relic", "Atma", "Ultima"]
     },
 
@@ -775,6 +788,13 @@ window.PlannerData = {
             Wind: null,
             Light: null,
             Dark: null
+        },
+        options: {
+            "Revelation Pendulum" : [new PlannerItem(false, SUPPLYTYPE.treasure, 537, 5)],
+            "Gospel Pendulum": [
+                new PlannerItem(false, SUPPLYTYPE.treasure, 538, 5),
+                new PlannerItem(false, SUPPLYTYPE.treasure, 535, 30)
+            ]
         },
         stepNames: ["None", "Trade", "4*", "5*"],
         typeNames: {
