@@ -148,13 +148,34 @@ function updateSeriesOptions (data) { //receives list of each option type.
     UI.planner.populateSelection("element", data.elements);
     UI.planner.populateSelection("start", data.steps);
     UI.planner.populateSelection("end", data.steps);
+
+    //TODO: template maybe? Or write an optimized function
+    UI.planner.dom.options.innerHTML = "";
+    if (data.options) {
+        for (let option of data.options) {
+            let el = document.createElement("input"),
+                label = document.createElement("label");
+            el.type = "checkbox";
+            el.value = el.name = label.for = label.textContent = option;
+            UI.planner.dom.options.appendChild(el);
+            UI.planner.dom.options.appendChild(label);
+        }
+    }
 }
 function updatePlan () {  //Event handler
-    var plan = {series: UI.planner.dom.series.value,
-                type: UI.planner.dom.type.value,
-                element: UI.planner.dom.element.value,
-                start: UI.planner.dom.start.selectedIndex,
-                end: UI.planner.dom.end.selectedIndex};
+    var plan = {
+        series: UI.planner.dom.series.value,
+        wtype: UI.planner.dom.type.value,
+        element: UI.planner.dom.element.value,
+        start: UI.planner.dom.start.selectedIndex,
+        end: UI.planner.dom.end.selectedIndex,
+        options: []
+    };
+    for (let option of UI.planner.dom.options.children) {
+        if (option.checked) {
+            plan.options.push(option.value);
+        }
+    }
     BackgroundPage.send("newPlanRequest", plan);
 }
 

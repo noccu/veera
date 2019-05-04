@@ -201,11 +201,7 @@ function hear (msg) {
             DevTools.send("newPlannerSeriesOptions", Planner.getSeriesOptions(msg.data.newValue));
             break;
         case "newPlanRequest":
-            DevTools.send("newPlanCreated", Planner.createPlan(msg.data.series,
-                                                               msg.data.type,
-                                                               msg.data.element,
-                                                               msg.data.start,
-                                                               msg.data.end));
+            DevTools.send("newPlanCreated", Planner.createPlan(msg.data));
             break;
         case "saveData":
             Storage.set(msg.data);

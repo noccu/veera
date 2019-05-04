@@ -132,6 +132,7 @@ window.UI = {
             this.dom.element = document.getElementById("planner-craftElement");
             this.dom.start = document.getElementById("planner-craftStart");
             this.dom.end = document.getElementById("planner-craftEnd");
+            this.dom.options = document.getElementById("planner-craftOptions");
             this.dom.list = document.getElementById("planner-list");
             this.dom.plan = this.dom.list.getElementsByClassName("collection-item");
 
@@ -148,6 +149,7 @@ window.UI = {
             this.dom.element.onchange = updatePlan;
             this.dom.start.onchange = updatePlan;
             this.dom.end.onchange = updatePlan;
+            this.dom.options.addEventListener("change", updatePlan);
         },
         //String, Array
         populateSelection: function(name, list) {
@@ -415,7 +417,6 @@ function startMaintTimer(html) {
     UI.time.timers.maint = new Date(getMaintEnd(html) - UI.time.jst);
     UI.time.initTimers();
 }
-
 function getMaintEnd(html) {
     var doc = document.implementation.createHTMLDocument("");
     doc.documentElement.innerHTML = html;

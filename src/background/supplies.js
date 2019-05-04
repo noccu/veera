@@ -262,6 +262,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
     this.id = parseInt(id);
     this.count = parseInt(count);
     if (Number.isNaN(this.type) || Number.isNaN(this.id) || Number.isNaN(this.count)) {
+        console.error("Given: ", type, id, count);
         throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
     let data = ITEM_KIND[type];

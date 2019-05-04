@@ -239,29 +239,38 @@ const PLANNER_ITEMS = {
 /** Creates an item for the planner from any accepted input.
     @arg {Number|Object|PlannerItem} type
 **/
-function PlannerItem (step, type, id, needed) {
-    if (arguments.length == 2) {
-        this.type = arguments[0];
-        this.id = arguments[1];
+function PlannerItem (...args) {
+    let step = args[0], type, id, needed;
+    //Dealing with input
+    if (args.length == 2) {
+        type = args[0];
+        id = args[1];
+    }
+    else if (Number.isInteger(args[1])) { //normal items
+        type = args[1];
+        id = args[2];
+        needed = args[3];
+    }
+    else if (args[1] instanceof PlannerItem) { //shorthands
+        let item = args[1];
+        type = item.type;
+        id = item.id;
+        needed = args[2];
+    }
+    else if (args[1].type) { //templates
+        let item = args[1];
+        type = item.type;
+        id = item;
+        needed = args[2];
+        this.isTemplate = true;
+        this.templateKey = args[3];
+    }
+    else {
+        deverror("Invalid planner item, check data.", type);
         return;
     }
-    else if (arguments.length == 3) {
-        let item = arguments[1];
-        needed = arguments[2];
-        if (item instanceof PlannerItem) {
-            id = item.id;
-            type = item.type;
-        }
-        else if (item.type) { //templates
-            id = item;
-            type = item.type;
-            this.isTemplate = true;
-        }
-        else {
-            deverror("Invalid planner item, check data.", type);
-        }
-    }
 
+    //Actual object assigning.
     this.step = step;
     this.type = type;
     this.id = id;

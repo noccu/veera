@@ -1,5 +1,5 @@
 window.Planner = {
-    createPlan: function (series, wtype, element, start, end) {
+    createPlan: function ({series, wtype, element, start, end, options}) {
         console.groupCollapsed(`Creating plan for ${series}`);
         var plan = [];
 
@@ -19,8 +19,21 @@ window.Planner = {
             let id = item.id;
             //Dealing with templates
             if (item.isTemplate) {
+                //Item-specific keys, used in options.
+                if (!templateKey && item.templateKey) {
+                    switch (item.templateKey) {
+                        case "wtype":
+                            templateKey = PlannerData[series].typeNames ? PlannerData[series].typeNames[wtype] : wtype;
+                            break;
+                        case "element":
+                            templateKey = element;
+                            break;
+                        default:
+                            templateKey = item.templateKey;
+                    }
+                }
                 //Multi-mapped typeNames
-                if (Array.isArray(templateKey)) {
+                if (Array.isArray(templateKey)) { //item keys can be arrows too!
                     for (let key of templateKey) {
                         if (item.id[key]) {
                             templateKey = key;
@@ -43,41 +56,55 @@ window.Planner = {
             }
         }
 
-        for (let category of Object.keys(PlannerData[series])) {
-             let itemArray,
-                 templateKey;
-             switch (category) {
-                 case "core":
-                     itemArray = PlannerData[series].core;
-                     break;
-                 case "wtype":
-                     itemArray = PlannerData[series].wtype[wtype] || [];
-                     if (PlannerData[series].wtype.templates) {
-                         itemArray = itemArray.concat(PlannerData[series].wtype.templates);
-                     }
-                     templateKey = PlannerData[series].typeNames ? [wtype].concat(PlannerData[series].typeNames[wtype]) : wtype;
-                     break;
-                 case "element":
-                     itemArray = PlannerData[series].element[element] || [];
-                     itemArray = itemArray.concat(PlannerData[series].element.templates);
-                     templateKey = element;
-                     break;
-                 case "typeNames":
-                 case "stepNames":
-                     continue;
-                 default:
-                     deverror("[Planner] Invalid plan category: ", category);
-                     return;
-             }
+        try {
+            for (let category of Object.keys(PlannerData[series])) {
+                 let itemArray,
+                     templateKey;
+                switch (category) {
+                    case "core":
+                        itemArray = PlannerData[series].core;
+                        break;
+                    case "wtype":
+                        itemArray = PlannerData[series].wtype[wtype] || [];
+                        if (PlannerData[series].wtype.templates) {
+                            itemArray = itemArray.concat(PlannerData[series].wtype.templates);
+                        }
+                        templateKey = PlannerData[series].typeNames ? [wtype].concat(PlannerData[series].typeNames[wtype]) : wtype;
+                        break;
+                    case "element":
+                        itemArray = PlannerData[series].element[element] || [];
+                        itemArray = itemArray.concat(PlannerData[series].element.templates);
+                        templateKey = element;
+                        break;
+                    case "options":
+                        itemArray = [];
+                        for (let option of options) {
+                            for (let item of PlannerData[series].options[option]) {
+                                itemArray.push(item);
+                            }
+                        }
+                        break;
+                    case "typeNames":
+                    case "stepNames":
+                        continue;
+                    default:
+                        deverror("[Planner] Invalid plan category: ", category);
+                        return;
+                }
 
-            if (itemArray) {
-                for (let item of itemArray) {
-                    if (item == null) { continue; }
-                    if (start < item.step && item.step <= end) { //start is exclusive (we already have it!)
-                        addToPlan(item, templateKey);
+                if (itemArray) {
+                    for (let item of itemArray) {
+                        if (item == null) { continue; }
+                        if (!item.step || (start < item.step && item.step <= end)) { //start is exclusive (we already have it!)
+                            addToPlan(item, templateKey);
+                        }
                     }
                 }
             }
+        }
+        catch (e) {
+            console.error("Failed to generate plan");
+            console.groupEnd();
         }
 
         console.groupEnd();
@@ -101,10 +128,18 @@ window.Planner = {
             return PlannerData[series].stepNames;
         }
     },
+    listOptions: function(series) {
+        if (PlannerData[series] && PlannerData[series].options) {
+            return Object.keys(PlannerData[series].options);
+        }
+    },
     getSeriesOptions: function (series) {
-        return {types: this.listTypes(series),
-                elements: this.listElements(series),
-                steps: this.listSteps(series)};
+        return {
+            types: this.listTypes(series),
+            elements: this.listElements(series),
+            steps: this.listSteps(series),
+            options: this.listOptions(series)
+        };
     }
 };
 
