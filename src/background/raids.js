@@ -256,7 +256,7 @@ window.Raids = {
         this.save();
     },
     evhPageChanged (url) {
-        if (url.ismatch("#quest/supporter")) {
+        if (url.ismatch("#quest/supporter/")) {
             this.setPendingHost({url});
         }
     }
