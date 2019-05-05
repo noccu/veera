@@ -48,7 +48,7 @@ window.Time = {
             if (buff.time.getTime() <= 0) {
                 Time.crewBuffs.splice(i, 1);
                 i--;
-                updateUI("syncTime", this.pack());
+                Time.sync();
             }
             else {
                 Time.update(buff.time, -1);
@@ -60,7 +60,7 @@ window.Time = {
             if (buff.time.getTime() <= 0) {
                 Time.jdBuffs.splice(i, 1);
                 i--;
-                updateUI("syncTime", this.pack());
+                Time.sync();
             }
             else {
                 Time.update(buff.time, -1);

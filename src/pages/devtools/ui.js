@@ -132,7 +132,7 @@ window.UI = {
                 this.display.st.classList.remove("highlight");
             }
 
-            if (timer.type == "buff" && timer.time.getUTCMinutes() < 10) {
+            if (timer.type == "buff" && timer.time.getTime() < 600000) { //10m
                 this.display[timer.name].element.classList.add("warn");
             }
             else if (timer.type == "buff"){
