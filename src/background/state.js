@@ -10,7 +10,7 @@ window.State = {
     URL_HOMEPAGE: "https://github.com/noccu/orchees",
     URL_MANIFEST: "https://raw.githubusercontent.com/noccu/orchees/Veera/manifest.json",
     URL_COMMITS: "https://api.github.com/repos/noccu/orchees/commits?sha=Veera&per_page=3",
-    UPDATE_INTERVAL: 259200000, //ms - 3 days
+    UPDATE_INTERVAL: 86400000, //ms - 1 day
     settings: {
         debug: true,
         theme: 0,
