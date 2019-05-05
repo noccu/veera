@@ -10,10 +10,10 @@ window.Profile = {
     },
     get currencies() {
         return {
-            rupie: Supplies.get(SUPPLYTYPE.rupie, 0),
-            cp: Supplies.get(19, 0),
-            crystals: Supplies.get(SUPPLYTYPE.crystals, 0),
-            casinoChips: Supplies.get(31, 0)
+            rupie: Supplies.get(SUPPLYTYPE.rupie, 0) || new SupplyItem(SUPPLYTYPE.rupie, 0, 0),
+            cp: Supplies.get(19, 0) || new SupplyItem(19, 0, 0),
+            crystals: Supplies.get(SUPPLYTYPE.crystals, 0) || new SupplyItem(SUPPLYTYPE.crystals, 0, 0),
+            casinoChips: Supplies.get(31, 0) || new SupplyItem(31, 0, 0)
         };
     },
     pendants: {

@@ -277,7 +277,13 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
                 fname = data.specialId[id];
             }
         }
-        if (!fname) { //don't want any undefined.jpg in their server logs lmao
+        if (fname === 0) { //id 0 and not a special id
+            console.warn("Invalid item, removing from data: ", this);
+            delete Supplies.index[type][id];
+            Supplies.save();
+            return {invalid: true};
+        }
+        else if (!fname) { //don't want any undefined.jpg in their server logs lmao
             devwarn("[SupplyItem] Invalid path, nuking: ", this);
             this.path = "";
         }
@@ -324,7 +330,10 @@ window.Supplies = {
         if (Array.isArray(arguments[0])) {
             let ret = [];
             for (let entry of arguments[0]) {
-                ret.push( this.get(entry.type, entry.id) );
+                let item = this.get(entry.type, entry.id);
+                if (item) {
+                    ret.push(item);
+                }
             }
             return ret;
         }
@@ -333,9 +342,13 @@ window.Supplies = {
                 console.warn("[Supplies] No such type: " + type);
                 return;
             }
+
             let item = this.index[type][id];
             if (item) {
-                return new SupplyItem(type, id, item.count, item.name);
+                item = new SupplyItem(type, id, item.count, item.name);
+                if (!item.invalid) { //is instanceof faster? somehow doubt it
+                    return item;
+                }
             }
         }
     },
@@ -350,7 +363,7 @@ window.Supplies = {
             }
         }
         else {
-            if (data.track) {
+            if (data.track) { //if invalid, that's the only prop so this is undef
                 if (!this.index.hasOwnProperty(data.type)) {
                     this.index[data.type] = {};
                     devlog("Created new type index: " + data.type);
@@ -376,7 +389,10 @@ window.Supplies = {
         else {
             if (SUPPLYTYPE.Untracked.includes(parseInt(type))) { return; } //TODO: temp quiet currently awkward data
             for (let id in this.index[type]) {
-                ret.push(this.get(type, id));
+                let item = this.get(type, id);
+                if (item) {
+                    ret.push(item);
+                }
             }
         }
         return ret;
@@ -511,26 +527,27 @@ window.Supplies = {
 };
 
 function gotQuestLoot(json) {
-    if (json) {
-        var upd = [];
-        function addUpdItem(entry) {
-            let type = entry.item_kind || entry.kind,
-                id = entry.id || entry.item_id,
-                count = entry.count || entry.num,
-                name = entry.name || entry.item_name;
+    let upd = [],
+        loot;
+    function addUpdItem(entry) {
+        let type = entry.item_kind || entry.kind,
+            id = entry.id || entry.item_id,
+            count = entry.count || entry.num,
+            name = entry.name || entry.item_name;
 
-            let item = new SupplyItem(type, id, count, name);
-            if (entry.rarity) {
-                item.rarity = parseInt(entry.rarity);
-            }
-            upd.push(item);
-            return item;
+        let item = new SupplyItem(type, id, count, name);
+        if (entry.rarity) {
+            item.rarity = parseInt(entry.rarity);
         }
+        upd.push(item);
+        return item;
+    }
 
+    if (json) {
         //Non-box, side-scrolling
         if (json.rewards) {
-            let loot = json.rewards.article_list,
-                content;
+            loot = json.rewards.article_list;
+            let content;
             if (loot.length == undefined) { //It's an array when empty apparently...
                 content = Object.keys(loot);
                 for (let key of content) {
