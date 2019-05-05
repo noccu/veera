@@ -8,7 +8,9 @@ const EVENTS = { //jshint ignore:line
     monthlyReset: "monthlyReset",
     gotLoot: "gotLoot",
     shopPurchase: "shopPurchase",
-//    newBattle: new Event("newBattle")
+    newBattle: "newBattle",
+    battleOver: "battleOver",
+    questOver: "questOver"
 };
 const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",

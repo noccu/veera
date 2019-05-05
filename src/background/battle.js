@@ -182,6 +182,7 @@ window.Battle = {
                     this.archive.delete(this.archive.keys().next().value);
                 }
 
+                fireEvent(EVENTS.newBattle);
                 updateUI("updBattleNewRaid", this.packageData());
             }
         }
@@ -478,6 +479,13 @@ function battleUseAbility (json) {
                 if (actions[0]) { //Assuming only 1 damaging ability per call, seems to work so far. TODO: replace array if this remains true
                     actions[0].honor = action.amount;
                 }
+                break;
+            case "win":
+                fireEvent(EVENTS.battleOver);
+                if (action.is_last_raid) {
+                    fireEvent(EVENTS.questOver, {id: action.raid_id});
+                }
+                break;
         }
     }
 
@@ -623,6 +631,13 @@ function battleAttack(json) {
                 break;
             case "contribution":
                 Battle.current.currentTurn.honor += action.amount; //Honors only given for whole turn so can't add to any action
+                break;
+            case "win":
+                fireEvent(EVENTS.battleOver);
+                if (action.is_last_raid) {
+                    fireEvent(EVENTS.questOver, {id: action.raid_id});
+                }
+                break;
         }
     }
 
@@ -651,6 +666,12 @@ function battleUseSummon(json) {
             case "replace": //Chara swap. Used for Resurection (like Europa), possibly other calls that change ally position.
                 if (action.voice) { //Only do it on actual replace. Prevents having to parseInt for the same action. I think this is marginally faster? Either way game is dumb.
                     Battle.current.characters.swap(action.pos, action.npc);
+                }
+                break;
+            case "win":
+                fireEvent(EVENTS.battleOver);
+                if (action.is_last_raid) {
+                    fireEvent(EVENTS.questOver, {id: action.raid_id});
                 }
                 break;
         }
