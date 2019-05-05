@@ -200,6 +200,16 @@ function hear (msg) {
                     case path.ismatch("rest/guild/main/guild_info"):
                         updateGuildInfo(msg.data.json);
                         break;
+                    case path.ismatch("guild_main/support_all_info/"):
+                        Time.setCrewBuffs(msg.data.json);
+                        break;
+                    case path.ismatch("shop_exchange/activated_personal_supports"):
+                        Time.setJdBuffs(msg.data.json);
+                        break;
+                    case path.ismatch("shop_exchange/personal_support"):
+                    case path.ismatch("shop_exchange/activate_personal_support"):
+                        Time.addJdBuff(msg.data);
+                        break;
                 }
             }
             break;

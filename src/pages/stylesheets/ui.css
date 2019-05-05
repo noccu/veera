@@ -266,7 +266,7 @@ select, option {
 .fade {
     opacity: 0.3;
 }
-.collection-item.low {
+.warn {
     background-color: var(--diff-color-b)
 }
 
@@ -460,4 +460,13 @@ button {
     content: " \21BB";
     /* content: " \27F3"; */
     font-size: 1.2em;
+}
+
+.buffTimer {
+    margin-right: 0.2em;
+    font-size: 0.8em;
+}
+
+.buffTimer img {
+    height: 22px;
 }

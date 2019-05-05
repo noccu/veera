@@ -17,6 +17,7 @@ window.Time = {
 //    lastReset: null,
     timers: {},
     crewBuffs: [],
+    jdBuffs: [],
     tick () {
         Time.update(Time.currentJst, 1);
 
@@ -42,8 +43,28 @@ window.Time = {
             Time.update(timer, -1);
         }
 
-        for (let buff of Time.crewBuffs) {
-            Time.update(buff.time, -1);
+        for (let i = 0; i < Time.crewBuffs.length; i++) {
+            let buff = Time.crewBuffs[i];
+            if (buff.time.getTime() <= 0) {
+                Time.crewBuffs.splice(i, 1);
+                i--;
+                updateUI("syncTime", this.pack());
+            }
+            else {
+                Time.update(buff.time, -1);
+            }
+        }
+        
+        for (let i = 0; i < Time.jdBuffs.length; i++) {
+            let buff = Time.jdBuffs[i];
+            if (buff.time.getTime() <= 0) {
+                Time.jdBuffs.splice(i, 1);
+                i--;
+                updateUI("syncTime", this.pack());
+            }
+            else {
+                Time.update(buff.time, -1);
+            }
         }
     },
     keep () {
@@ -123,6 +144,66 @@ window.Time = {
             }
         }
     },
+    setCrewBuffs(json) {
+        let h, m, match, timer;
+        this.crewBuffs = [];
+        for (let buff of json) {
+            match = buff.time.match(/(\d+) hr (\d+) min/);
+            if (match) {
+                h = match[1];
+                m = match[2];
+                timer = {
+                    name: buff.name,
+                    time: new Date(0),
+                    img: `${GAME_URL.baseGame}${GAME_URL.assets_light}item/support/support_${buff.image}_${buff.level}.png`
+                };
+                timer.time.setUTCHours(h, m, 0, 0);
+                this.crewBuffs.push(timer);
+            }
+        }
+        updateUI("syncTime", this.pack());
+    },
+    setJdBuffs(json) {
+        let h, m, match, timer, buff;
+        this.jdBuffs = [];
+        for (let idx in json) {
+            buff = json[idx];
+            match = buff.remain_time.match(/(\d+) hr (\d+) min/);
+            if (match) {
+                h = match[1];
+                m = match[2];
+                timer = {
+                    name: buff.name,
+                    time: new Date(0),
+                    img: `${GAME_URL.baseGame}${GAME_URL.assets_light}item/support/${buff.image_path}_${buff.level}.png`
+                };
+                timer.time.setUTCHours(h, m, 0, 0);
+                this.jdBuffs.push(timer);
+            }
+        }
+        updateUI("syncTime", this.pack());
+    },
+    addJdBuff(data) {
+        if (data.postData) { //activate
+            let pending = this.pendingJdBuff;
+            if (data.postData.support_id == pending.id) {
+                pending.time = new Date(0);
+                pending.time.setUTCHours(parseInt(data.postData.support_time));
+                pending.level = data.postData.support_level;
+                pending.img = `${GAME_URL.baseGame}${GAME_URL.assets_light}item/support/${pending.img}_${pending.level}.png`;
+                this.jdBuffs.push(pending);
+                updateUI("syncTime", this.pack());
+            }
+        }
+        else if (data.json) { //pending
+            this.pendingJdBuff = {
+                type: "buff",
+                name: data.json.name, 
+                id: data.json.support_id,
+                img: data.json.support_image
+            };
+        }
+    },
     getLastReset() {
         let time = new Date(this.currentJst);
         if (time.getUTCHours() < 5) {
@@ -186,11 +267,12 @@ window.Time = {
                 delta: -1
             });
         }
-        for (let b of this.crewBuffs) {
+        for (let b of this.crewBuffs.concat(this.jdBuffs)) {
             times.push({
                 type: "buff",
                 name: b.name,
-                time: this.format(b),
+                time: this.format(b.time),
+                img: b.img,
                 delta: -1
             });
         }

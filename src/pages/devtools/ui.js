@@ -64,9 +64,21 @@ window.UI = {
         times: [],
         activeSt: 0,
         init: function() {
+            let buffList = document.getElementById("buffTimers"),
+                buffTemplate = document.getElementById("t-buffTimers");
+            buffList.innerHTML = "";
             for (let timer of this.times) {
                 timer.time = new Date(timer.time);
+                if (timer.type == "buff") {
+                    buffTemplate.content.firstElementChild.title = timer.name;
+                    buffTemplate.content.firstElementChild.id = timer.name;
+                    buffTemplate.content.querySelector("img").src = timer.img;
+                    buffTemplate.content.querySelector(".buff-h").id = timer.name + "-h";
+                    buffTemplate.content.querySelector(".buff-m").id = timer.name + "-m";
+                    buffList.appendChild(document.importNode(buffTemplate.content, true));
+                }
                 this.display[timer.name] = {
+                    element: document.getElementById(timer.name),
                     d: document.getElementById(`${timer.name}-d`),
                     h: document.getElementById(`${timer.name}-h`),
                     m: document.getElementById(`${timer.name}-m`),
@@ -82,7 +94,9 @@ window.UI = {
             }
         },
         update (timer, delta) {
-            timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
+            if (timer.time.getTime() != 0) { //we don't init or tick in ms precision, so we should get exactly 0
+                timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
+            }
         },
         updateDisplay (timer) {
             if (this.display[timer.name].d) {
@@ -90,7 +104,9 @@ window.UI = {
             }
             this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
             this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
-            this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
+            if (this.display[timer.name].s) {
+                this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
+            }
 
             //Could use an object for clarity but since this fires every second, this is prob much faster.
             if (timer.name == "st1") {
@@ -114,6 +130,13 @@ window.UI = {
             }
             else {
                 this.display.st.classList.remove("highlight");
+            }
+
+            if (timer.type == "buff" && timer.time.getUTCMinutes() < 10) {
+                this.display[timer.name].element.classList.add("warn");
+            }
+            else if (timer.type == "buff"){
+                this.display[timer.name].element.classList.remove("warn");
             }
         },
         sync (times) {
@@ -390,8 +413,8 @@ function stylePlanItem(el, item) {
         el.classList.add("fade");
     }
     else if(item.count < Math.ceil(el.plannerData.needed/10)) {
-        el.classList.add("low");
-        el.classList.remove("fade");
+        el.classList.add("warn");
+        el.classList.remove("warn");
     }
     else {
         el.classList.remove("fade", "low");
