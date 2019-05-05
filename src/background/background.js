@@ -57,7 +57,12 @@ function MainInit() {
             updateUI("updArca", Profile.arcarum);
 
             console.log("Setting up listeners.");
-            window.addEventListener(EVENTS.dailyReset, () => Raids.reset());
+            window.addEventListener(EVENTS.dailyReset, ev => {
+                Raids.reset();
+                Profile.reset(ev);
+            });
+            window.addEventListener(EVENTS.weeklyReset, ev => Profile.reset(ev));
+            window.addEventListener(EVENTS.monthlyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
             window.addEventListener(EVENTS.pageChanged, ev => {
                 devlog(`Page changed to ${ev.detail}`);
@@ -75,8 +80,7 @@ function MainInit() {
             console.groupEnd();
         })
         .then(() => {
-            console.group("Checking for updates...");
-            State.checkUpdate().then(() => console.groupEnd()); //Errors caught internally, chain restored.
+            State.checkUpdate(); //Errors caught internally, chain restored.
         })
         .catch(e => {
             DevTools.disconnect();

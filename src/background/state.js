@@ -103,6 +103,7 @@ window.State = {
     },
     checkUpdate() {
         if (Date.now() - this.store.lastUpdate > this.UPDATE_INTERVAL) {
+            console.group("Checking for updates...");
             this.store.lastUpdate = Date.now();
             return fetch(this.URL_MANIFEST, {cache: "no-cache"})
                 .then(resp => {
@@ -121,7 +122,10 @@ window.State = {
                         return this.checkCommits();
                     }
                 })
-                .then(() => this.save())
+                .then(() => {
+                    console.groupEnd();
+                    this.save();
+                })
                 .catch(e => console.error("Failed update check: ", e));
         }
         else {

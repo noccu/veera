@@ -150,6 +150,28 @@ window.Profile = {
             this.setStatus(status);
         }
     },
+    reset (event){
+        switch (event.type) {
+            case EVENTS.dailyReset:
+                this.pendants.renown.daily.current = 0;
+                if (this.arcarum.tickets.current < this.arcarum.tickets.max) {
+                    this.arcarum.tickets.current += 1;
+                }
+                break;
+            case EVENTS.weeklyReset:
+                this.pendants.renown.weekly.current = 0;
+                this.pendants.renown.sr.current = 0;
+                this.pendants.renown.r.current = 0;
+                this.pendants.prestige.weekly.current = 0;
+                this.pendants.prestige.crew.current = 0;
+                break;
+//            case EVENTS.monthlyReset:
+//                break;
+//            default:
+        }
+        updateUI("updPendants", this.pendants);
+        updateUI("updArca", this.arcarum);
+    },
     save () {
         Storage.set({
             profile: {

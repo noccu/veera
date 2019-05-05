@@ -21,26 +21,37 @@ window.Time = {
     tick () {
         Time.update(Time.currentJst, 1);
 
+        let reset = false; //only reset once but continue to check other timers
         for (let timerName in Time.timers) {
             let timer = Time.timers[timerName];
             if (timer.getTime() <= 0) {
-                if (timerName == "maint") {
-//                    endMaintTimer();
-                    continue; //check other timers
-                }
-                else if (timerName == "st1" || timerName == "st2") {
-                    devlog("Syncing for ST.");
-                    Time.sync();
-                }
-                else {
-                    devlog("Resetting based on " + timer);
-                    Time.triggerReset(Time.getLastReset()); //either daily or == daily
-//                    Time.setTimers();
-                    Time.sync();
-                    break; //only reset once
+                devlog(`Timer ${timerName} has ended.`);
+                switch (timerName) {
+                    case "maint":
+    //                    endMaintTimer();
+                        break;
+                    case "st1":
+                    case "st2":
+                        devlog("Syncing for ST.");
+                        Time.sync();
+                        break;
+                    case "weekly":
+                        fireEvent(EVENTS.weeklyReset);
+//                        reset = true;
+                        break;
+                    case "monthly":
+                        fireEvent(EVENTS.monthlyReset);
+//                        reset = true;
+                        break;
+                    default: //daily. When other resets happen, daily happens too. So we only need to actually reset here, but delayed for loop order.
+                        reset = true;
                 }
             }
             Time.update(timer, -1);
+        }
+        if (reset) {
+            Time.triggerReset(Time.getLastReset()); //either daily or == daily
+            Time.sync();
         }
 
         for (let i = 0; i < Time.crewBuffs.length; i++) {
@@ -54,7 +65,7 @@ window.Time = {
                 Time.update(buff.time, -1);
             }
         }
-        
+
         for (let i = 0; i < Time.jdBuffs.length; i++) {
             let buff = Time.jdBuffs[i];
             if (buff.time.getTime() <= 0) {
@@ -93,7 +104,7 @@ window.Time = {
         State.save();
 
         showNotif("Daily reset.", {text: detail});
-        window.dispatchEvent(new Event(EVENTS.dailyReset));
+        fireEvent(EVENTS.dailyReset);
     },
     setTimers () {
         let current = this.currentJst;
@@ -198,7 +209,7 @@ window.Time = {
         else if (data.json) { //pending
             this.pendingJdBuff = {
                 type: "buff",
-                name: data.json.name, 
+                name: data.json.name,
                 id: data.json.support_id,
                 img: data.json.support_image
             };
