@@ -54,12 +54,13 @@ window.Time = {
             Time.sync();
         }
 
+        reset = false; //Same but check for buffs running out
         for (let i = 0; i < Time.crewBuffs.length; i++) {
             let buff = Time.crewBuffs[i];
             if (buff.time.getTime() <= 0) {
                 Time.crewBuffs.splice(i, 1);
+                reset = true;
                 i--;
-                Time.sync();
             }
             else {
                 Time.update(buff.time, -1);
@@ -70,12 +71,15 @@ window.Time = {
             let buff = Time.jdBuffs[i];
             if (buff.time.getTime() <= 0) {
                 Time.jdBuffs.splice(i, 1);
+                reset = true;
                 i--;
-                Time.sync();
             }
             else {
                 Time.update(buff.time, -1);
             }
+        }
+        if (reset) {
+            updateUI("syncTime", Time.pack());
         }
     },
     keep () {

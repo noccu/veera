@@ -140,8 +140,8 @@ window.UI = {
             }
         },
         sync (times) {
-            this.times = times;
             if (this.int) { clearInterval(this.int); }
+            this.times = times;
             this.init();
             this.int = setInterval(this.tick, 1000);
         }
