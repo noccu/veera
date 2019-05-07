@@ -392,9 +392,11 @@ function battleParseDamage(input, actionData, type) {
                     else {
                         switch(actionData.action) {
                             case BATTLE_ACTIONS.skill:
+                            case BATTLE_ACTIONS.triggerSkill:
                                 actionData.skillDmg += dmg;
                                 break;
                             case BATTLE_ACTIONS.ougi:
+                            case BATTLE_ACTIONS.ougiEcho:
                                 actionData.ougiDmg += dmg;
                                 break;
                             default: //normal atk
@@ -617,8 +619,13 @@ function battleAttack(json) {
                 break;
             case "heal":
                 if (action.to == "player") {
-                    //If heal comes from ougi or atk (drain) actionData is pushed to actions already, add it to that.
-                    if (actionData.action != BATTLE_ACTIONS.ougi && actionData.action != BATTLE_ACTIONS.attack) {
+                    //Doctor support skill & co, add under their correct action and keep attributed.
+                    if (actionData.action == BATTLE_ACTIONS.triggerSkill) {
+                        actions.push(actionData);
+                    }
+                    //Heal from ougi and atk (drain) are pushed already and can be attributed.
+                    else if (actionData.action != BATTLE_ACTIONS.ougi && actionData.action != BATTLE_ACTIONS.attack) {
+                        //Fallback to generic heal action. 
                         //refresh, etc. Just kinda activates, no char, and no way to tell unless we try to store and track buffs, dealing with overwrites and stacking...
                         actionData = new BattleActionData(BATTLE_ACTIONS.healFffect);
                         actions.push(actionData);
