@@ -141,9 +141,10 @@ function hear (msg) {
                     case path.ismatch("rest/multiraid/start"):
                         Battle.reset(msg.data.json);
                         break;
+                    case path.ismatch("casino/exchange"):
                     case path.ismatch("shop_exchange/purchase"):
-                        purchaseItem(msg.data.json);
-                        //TODO: May need to ignore the next item/article_list request cause some items go to crate, causing the data in the response to not be updated...
+                        purchaseItem(msg.data);
+                        //Some items go to crate, and the game checks supplies after purchase, so items won't always be updated.
                         break;
                     case path.ismatch("summon/decompose_multi"):
                     case path.ismatch("weapon/decompose_multi"):

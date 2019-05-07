@@ -593,25 +593,33 @@ function gotQuestLoot(json) {
 }
 
 function purchaseItem(data) {
-    let upd = [],
+    let json = data.json,
+        upd = [],
         item; //Supply update func expects array.
     //Only ever buy 1 (type of) item at once... I think?
-    if (data.article.item_ids) {
+    if (json.article.item_ids) {
         //The item we get.
-        let nBought = parseInt(data.purchase_number);
-        item = new SupplyItem(data.article.item_kind[0], data.article.item_ids[0], nBought, data.article.name_en);
+        let nBought = parseInt(json.purchase_number) || parseInt(data.postData.num);
+        item = new SupplyItem(json.article.item_kind[0], json.article.item_ids[0], nBought, json.article.name_en);
         upd.push(item);
         fireEvent(EVENTS.shopPurchase, item);
 
-        //The items we trade in. Max 4, 1-indexed
-        for (let i = 1; i < 5; i++) {
-            let ingr = data.article["article" + i];
-            if (ingr) {
-                let nReq = parseInt(data.article["article" + i + "_number"]);
-                item = new SupplyItem(ingr.master.item_kind, ingr.master.id, -(nReq * nBought), ingr.master.name_en);
-                upd.push (item);
+        let nReq = json.article.use_coin_number; //Casino
+        if (nReq) {
+            item = new SupplyItem(31, 0, - (parseInt(nReq) * nBought));
+            upd.push(item);
+        }
+        else { //Normal shops
+            //The items we trade in. Max 4, 1-indexed
+            for (let i = 1; i < 5; i++) {
+                let ingr = json.article["article" + i];
+                if (ingr) {
+                    nReq = parseInt(json.article["article" + i + "_number"]);
+                    item = new SupplyItem(ingr.master.item_kind, ingr.master.id, -(nReq * nBought), ingr.master.name_en);
+                    upd.push (item);
+                }
+                else { break; } //assuming ordered list
             }
-            else { break; } //assuming ordered list
         }
 
 //        fireEvent(EVENTS.shopPurchase, upd);
