@@ -23,7 +23,7 @@ html {
 .panel {
     border: 1px solid var(--line-color);
     border-top: 0;
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
 }
 
 .panel-header {
@@ -47,15 +47,14 @@ html {
 
 
 .tablist {
-    margin-top: 0.5em;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     padding: 0;
 }
 
 .nav-tab {
     display: inline-block;
     margin-top: 0.25em;
-    padding: 0.5em;
+    padding: 0.3em;
     background-color: var(--diff-color-a);
     font-size: 1.2em;
     font-weight: bold;
@@ -65,10 +64,10 @@ html {
 
 .display {
     display: inline-block;
-    border: 2px solid var(--diff-color-a);
-    padding: 0.5em;
+    border: 1.7px solid var(--diff-color-a);
+    padding: 0.3em;
     vertical-align: top;
-    margin: 0.2em 0;
+    margin: 0.1em 0;
 }
 
 #time .display {
@@ -83,12 +82,14 @@ html {
 
 .timer-display {
     display: block;
-    font-size: 2em;
+    font-size: 1.7em;
+    line-height: 0.9em;
 }
 
-#timer-st-time .timer-display{
-    font-size: inherit; /*It's like a px smaller smh*/
-    margin-bottom: 0.5px; /*Hence this*/
+#timer-st-time .timer-display {
+    font-size: 1em;
+    line-height: 0.7em;
+    margin-bottom: 0.5px;
 }
 
 .div-hor {
@@ -186,7 +187,7 @@ li {
 }
 
 .spacer {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
 .sep {
     margin-bottom: 0.5em;
@@ -201,7 +202,7 @@ li {
 }
 
 .panel-content {
-    margin: 0.5em;
+    margin: 0.3em;
 }
 
 .panel-content > span{
@@ -209,8 +210,8 @@ li {
 }
 
 .panel-filter {
-    margin: 0.5em;
-    margin-bottom: 1em;
+/*    margin: 0.5em;*/
+    margin-bottom: 0.5em;
 }
 
 .panel-filter li {
@@ -247,7 +248,7 @@ li {
 
 .time-s {
     opacity: 0.6;
-    font-size: 0.5em;
+    font-size: 0.6em;
 }
 
 select, option {
