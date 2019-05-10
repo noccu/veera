@@ -720,7 +720,7 @@ function consumePendingRaidsTreasure (data) {
 }
 
 function weaponUncapStart(data) {
-    var update = { id: data.url.match(/materials\/(\d+)/)[1],
+    var update = { id: data.url.pathname.match(/materials\/(\d+)/)[1],
                    items: [] };
 
     for (let key of Object.keys(data.json)) {
@@ -736,10 +736,9 @@ function weaponUncapStart(data) {
 }
 
 function npcUncapStart(data) {
-    var update = { id: data.url.match(/materials\/(\d+)/)[1],
+    var update = { id: data.url.pathname.match(/materials\/(\d+)/)[1],
                    items: [] };
 
-//    update.id = data.url.match(/materials\/(\d+)\?/)[1];
     for (let item of data.json.requirements) {
         let si = new SupplyItem(item.item_kind.id, item.item_id, - parseInt(item.item_number));
         update.items.push(si);
