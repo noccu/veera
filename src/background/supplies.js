@@ -202,7 +202,10 @@ const ITEM_KIND = {//jshint ignore:line
     65: {
         name: "Arcarum Items",
         class: "Arcarum",
-        path: "item/arcarum"
+        path: "item/arcarum",
+        specialId: {
+            1002: "item_1002" //1000 pts from event shop
+        }
     },
     67: { //manual entry
         name: "Gauph Keys",
