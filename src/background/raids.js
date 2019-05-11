@@ -214,7 +214,7 @@ window.Raids = {
         if (data.url) {
             let id = data.url.match(/supporter\/(\d+)/)[1];
             //Don't update triggers.
-            if (this.triggeredQuest && id == this.triggeredQuest.id) {
+            if (this.triggeredQuest && (id == this.triggeredQuest.id || this.triggeredQuest.isGroup)) {
                 this.pendingHost.skip = true;
             }
             else {
@@ -243,9 +243,9 @@ window.Raids = {
             State.game.navigateTo(this.lastHost.url);
         }
     },
-    playTriggered() {
+    playTriggered() { //called directly
         if (Raids.triggeredQuest) {
-            State.game.navigateTo(Raids.createUrl(Raids.triggeredQuest.id, Raids.triggeredQuest.type));
+            State.game.navigateTo(Raids.triggeredQuest.isGroup ? Raids.triggeredQuest.url : Raids.createUrl(Raids.triggeredQuest.id, Raids.triggeredQuest.type));
         }
     },
     reset: function() {
@@ -277,11 +277,18 @@ function evhCheckRaidSupplyData (upd) {
 //NM Triggers etc
 function checkNextQuest(json) {
     if (json.appearance && json.appearance.is_quest) {
-        let data = json.appearance;
+        let data = json.appearance,
+            name = data.quest_name;
         //Triggered quests never cost hostmats afaik.
         Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
-        showNotif("Triggered quest!", {text: data.quest_name, onclick: Raids.playTriggered});
-        updateUI("nextQuestTriggered", {nextQuest: data.quest_name});
+        
+        if (data.group_id && json.url) { //Events with multiple nm quests.
+            Raids.triggeredQuest.url = `${GAME_URL.baseGame}#${json.url}`;
+            Raids.triggeredQuest.isGroup = true;
+            name = data.title;
+        }
+        showNotif("Triggered quest!", {text: name, onclick: Raids.playTriggered});
+        updateUI("nextQuestTriggered", {nextQuest: name});
     }
     else { //This would happen when raidLoot updates the UI but it's good to be explicit.
         Raids.triggeredQuest = null;
