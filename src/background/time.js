@@ -13,6 +13,7 @@ Date.prototype.convertFromJst = function () {
 
 window.Time = {
     SYNC_INTERVAL: 43200000, //12h
+    BUFF_TIMEOUT_MARGIN: 10000, //10s
     currentJst: null,
 //    lastReset: null,
     timers: {},
@@ -54,12 +55,13 @@ window.Time = {
             Time.sync();
         }
 
-        reset = false; //Same but check for buffs running out
+        reset = []; //Same but check for buffs running out
         for (let i = 0; i < Time.crewBuffs.length; i++) {
-            let buff = Time.crewBuffs[i];
-            if (buff.time.getTime() <= 0) {
+            let buff = Time.crewBuffs[i],
+                margin = reset.length > 0 ? this.BUFF_TIMEOUT_MARGIN : 0;
+            if (buff.time.getTime() <= margin) {
                 Time.crewBuffs.splice(i, 1);
-                reset = true;
+                reset.push(buff.name);
                 i--;
             }
             else {
@@ -68,17 +70,22 @@ window.Time = {
         }
 
         for (let i = 0; i < Time.jdBuffs.length; i++) {
-            let buff = Time.jdBuffs[i];
-            if (buff.time.getTime() <= 0) {
+            let buff = Time.jdBuffs[i],
+                margin = reset.length > 0 ? this.BUFF_TIMEOUT_MARGIN : 0;
+            if (buff.time.getTime() <= margin) {
                 Time.jdBuffs.splice(i, 1);
-                reset = true;
+                reset.push(buff.name);
                 i--;
             }
             else {
                 Time.update(buff.time, -1);
             }
         }
-        if (reset) {
+        if (reset.length > 0) {
+            showNotif("Buffs running out", {
+                text: reset.join(",\n"),
+                onclick: () => State.game.navigateTo(GAME_URL.baseGame + "#shop/exchange/trajectory")
+            });
             updateUI("syncTime", Time.pack());
         }
     },
@@ -177,6 +184,7 @@ window.Time = {
             }
         }
         updateUI("syncTime", this.pack());
+        this.orderBuffs(this.crewBuffs);
     },
     setJdBuffs(json) {
         let h, m, match, timer, buff;
@@ -188,7 +196,9 @@ window.Time = {
                 h = match[1];
                 m = match[2];
                 timer = {
+                    type: "buff",
                     name: buff.name,
+                    level: buff.level,
                     time: new Date(0),
                     img: `${GAME_URL.baseGame}${GAME_URL.assets_light}item/support/${buff.image_path}_${buff.level}.png`
                 };
@@ -197,6 +207,7 @@ window.Time = {
             }
         }
         updateUI("syncTime", this.pack());
+        this.orderBuffs(this.jdBuffs);
     },
     addJdBuff(data) {
         if (data.postData) { //activate
@@ -208,6 +219,7 @@ window.Time = {
                 pending.img = `${GAME_URL.baseGame}${GAME_URL.assets_light}item/support/${pending.img}_${pending.level}.png`;
                 this.jdBuffs.push(pending);
                 updateUI("syncTime", this.pack());
+                this.orderBuffs(this.jdBuffs);
             }
         }
         else if (data.json) { //pending
@@ -218,6 +230,9 @@ window.Time = {
                 img: data.json.support_image
             };
         }
+    },
+    orderBuffs(buffs) {
+        buffs.sort((a, b) => a.time.getTime() - b.time.getTime());
     },
     getLastReset() {
         let time = new Date(this.currentJst);

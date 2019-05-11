@@ -105,7 +105,7 @@ function fireEvent(name, data) {
 function showNotif(title, {text: body, img: icon, onclick} = {}) {
     if (Notification.permission == "granted") {
         let n = new Notification(title, {body, icon});
-        setTimeout(() => n.close(), 6000);//TODO: add to State.settings
+        setTimeout(() => n.close(), 8000);//TODO: add to State.settings
 
         if (onclick && typeof onclick == "function") {
             let clickHandler = function () {
