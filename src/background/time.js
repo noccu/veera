@@ -269,7 +269,8 @@ window.Time = {
         }
     },
     convert24 (time, ampm) {
-        if (ampm.slice(0,1) == "p") {
+      ampm = ampm.slice(0,1);
+        if (ampm == "p" || ampm == "m") {
             time += 12;
         }
         return time;
@@ -316,7 +317,7 @@ function updStrikeTime (json) {
 
     for (let time, num = 0; num < schedule.length; num++) {
         time = schedule[num].getElementsByClassName("prt-item-status")[0];
-        time = time.textContent.match(/^(\d) (a|p)/); //Assuming EN game...
+        time = time.textContent.match(/^(\d*) (a|p|m|n)/); //Assuming EN game...
         State.store.strikeTime[num + 1] = Time.convert24(parseInt(time[1]), time[2]);
     }
 
