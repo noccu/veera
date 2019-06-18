@@ -268,7 +268,7 @@ function evhGlobalClick (e) {
                         filter.classList.remove("active");
                     }
                     e.target.classList.add("active");
-                    activeFilters.push(e.target.dataset.value);
+                    activeFilters.push(e.target.dataset);
                 }
                 else {
                     let list,
@@ -287,11 +287,11 @@ function evhGlobalClick (e) {
                     }
 
                     for (let entry of list.getElementsByClassName("active")) {
-                        activeFilters.push(entry.dataset.value);
+                        activeFilters.push(entry.dataset);
                     }
                     if (activeFilters.length === 0) {
                         defaultFilter.classList.add("active");
-                        activeFilters.push(defaultFilter.dataset.value);
+                        activeFilters.push(defaultFilter.dataset);
                     }
 //                    else {
 //                        defaultFilter.classList.remove("active");
@@ -332,7 +332,7 @@ function evhSuppliesFilter (e) {
     let filters = e.detail;
     function filter (item){
         return filters.some(f => {
-            switch (f) {
+            switch (f.value) {
                 case "ALL":
                 case item.dataset.type:
                 case item.dataset.metaType:
@@ -351,41 +351,33 @@ function evhSuppliesFilter (e) {
 }
 function evhRaidsFilter (e) {
     let filters = e.detail;
-    let filterables = ["elementName", "tierName"];
-
-    let check = {hl: {do: false},
-                 inactive: {do: false},
-                 active: {do: true}};
     function filter (raid) {
-        let specialCasesFound = 0; //Allow Special cases to AND each other when they are the only filters.
-        check.active.val = raid.entryObj.active == true;
-
-        let ret = filters.some(f => { //This requires special case filters to be before general ones. If unwanted then update to do a full loop.
-            switch (f) {
-                case "ALL": //Actually more like ACTIVE
-                    return true;
-                case "INACTIVE":
-                    //Delay actual checking so we can AND with other filters if needed.
-                    check.inactive.do = true;
-                    check.active.do = false;
-                    check.inactive.val = !check.active.val;
-                    specialCasesFound++;
-                    if (filters.length == specialCasesFound) {return true;} //Allow to check other filters if they exist, return if not.
-                    break;
-                case "HL":
-                    check.hl.do = true;
-                    check.hl.val = raid.entryObj.data.isHl;
-                    specialCasesFound++;
-                    if (filters.length == specialCasesFound) {return true;}
-                    break;
-                default:
-                    return filterables.some(k => raid.entryObj.data[k] == f);
+        let check = {elementName: [false, false],
+                    tierName: [false, false]};
+        let ret = raid.entryObj.active == true;
+        filters.forEach(f => {
+            if (f.group == "special") { //Always checked first
+                switch (f.value) {
+                    case "ALL": //Actually more like ACTIVE
+                        ret = raid.entryObj.active == true;
+                        break;
+                    case "INACTIVE":
+                        ret = raid.entryObj.active == false;
+                        break;
+                    case "HL":
+                        ret &= raid.entryObj.data.isHl;
+                        break;
+                }
+            }
+            else {
+                check[f.group][0] = true;
+                check[f.group][1] |= raid.entryObj.data[f.group] == f.value;
             }
         });
-        if (ret) { //AND special cases
+        if (ret) {
             for (let c in check) {
-                if (check[c].do) {
-                    ret = ret && check[c].val;
+                if (check[c][0]) {
+                    ret &= check[c][1];
                 }
             }
         }
