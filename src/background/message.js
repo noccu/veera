@@ -83,8 +83,10 @@ function hear (msg) {
                         }
                         break;
                     case path.ismatch("rest/arcarum/start_stage"):
-                        Profile.arcarum.tickets.current = msg.data.json.passport_num;
-                        updateUI("updArca", Profile.arcarum);
+                        startAcra(msg.data.json);
+                        break;
+                    case path.ismatch("/arcarum/content/skip"):
+                        skipArca(msg.data.json.option.arcarum_skip);
                         break;
                     case path.ismatch("weapon/evolution_materials"):
                         weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao

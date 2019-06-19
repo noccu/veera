@@ -76,17 +76,34 @@ window.Profile = {
         Supplies.save();
         updateUI("updCurrencies", this.currencies);
     },
-    setArca (dom) {
+    parseArca (dom) {
         //TODO: check if arca gives us this in easier fashion
         let info = dom.querySelector("#arcarum-status");
         let text = info.children[0].textContent.split("/");
-        this.arcarum.tickets.current = text[0];
-        this.arcarum.tickets.max = text[1];
+        let current = {}, max = {};
+        current.tickets = parseInt(text[0]);
+        max.tickets = parseInt(text[1]);
         text = info.children[1].textContent.split("/");
-        this.arcarum.points.current = text[0];
-        this.arcarum.points.max = text[1];
+        current.points = parseInt(text[0]);
+        max.points = parseInt(text[1]);
 
+        this.setArca(current, max);
+    },
+    setArca(current, max) {
+        this.arcarum.tickets.current = current.tickets || this.arcarum.tickets.current;
+        this.arcarum.points.current = current.points || this.arcarum.points.current;
+        if (max) {
+            this.arcarum.tickets.max = max.tickets || this.arcarum.tickets.max;
+            this.arcarum.points.max = max.points || this.arcarum.points.max;
+        }
         updateUI("updArca", this.arcarum);
+        this.save();
+    },
+    updArca(tickets, points) {
+        this.arcarum.tickets.current += tickets;
+        this.arcarum.points.current += points;
+        updateUI("updArca", this.arcarum);
+        this.save();
     },
     setStatus (status) {
         let currentAp = status.now_action_point || status.action_point;
@@ -127,7 +144,7 @@ window.Profile = {
         if (json.data) { //Currencies & arca
             let dom = parseDom(json.data);
             this.setCurrencies(dom);
-            this.setArca(dom);
+            this.parseArca(dom);
         }
 
         let status = json.status;

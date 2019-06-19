@@ -547,8 +547,13 @@ function gotQuestLoot(json) {
     }
 
     if (json) {
-        //Non-box, side-scrolling
+        //Arcarum pts;
+        if (json.arcarum_info) {
+            Profile.updArca(0, json.arcarum_info.point);
+        }
+        //Drops
         if (json.rewards) {
+            //Non-box, side-scrolling
             loot = json.rewards.article_list;
             let content;
             if (loot.length == undefined) { //It's an array when empty apparently...
@@ -593,6 +598,19 @@ function gotQuestLoot(json) {
             DevTools.send("updRaidLoot", {loot: upd});
         }
     }
+}
+
+function startAcra (json) {
+    Profile.setArca({current: parseInt(json.passport_num)}, {current: parseInt(json.point)});
+}
+function skipArca(data) {
+    let upd = [];
+    for (item of data.reward_list) {
+        upd.push(new SupplyItem(item.item_kind, item.item_id, item.item_num));
+    }
+
+    Profile.updArca(0, data.point_info.reward_point);
+    Supplies.update(upd);
 }
 
 function purchaseItem(data) {
