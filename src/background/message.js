@@ -41,12 +41,13 @@ window.DevTools = {
 
 function hear (msg) {
     //Convert to util object. Makes it easier to deal with and is in the end likely faster since we can check much smaller strings.
-    let path = "";
+    let path = "", isData;
     if (msg.action == "request") {
         msg.data.url = new URL(msg.data.url);
         path = msg.data.url.pathname;
+        isData = msg.data.url.protocol == "data:";
     }
-    devlog("[background] Heard:", msg, path);
+    devlog("[background] Heard:", msg, isData ? "Data URI" : path);
     switch (msg.action) {
         case "request":
             //JSON
