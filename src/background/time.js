@@ -12,7 +12,6 @@ Date.prototype.convertFromJst = function () {
 };
 
 window.Time = {
-    SYNC_INTERVAL: 43200000, //12h
     BUFF_TIMEOUT_MARGIN: 10000, //10s
     currentJst: null,
 //    lastReset: null,
@@ -34,7 +33,7 @@ window.Time = {
                     case "st1":
                     case "st2":
                         devlog("Syncing for ST.");
-                        Time.sync();
+                        Time.sync(); //ST should be looped last... usually?
                         break;
                     case "weekly":
                         fireEvent(EVENTS.weeklyReset);
@@ -58,7 +57,7 @@ window.Time = {
         reset = []; //Same but check for buffs running out
         for (let i = 0; i < Time.crewBuffs.length; i++) {
             let buff = Time.crewBuffs[i],
-                margin = reset.length > 0 ? this.BUFF_TIMEOUT_MARGIN : 0;
+                margin = reset.length > 0 ? Time.BUFF_TIMEOUT_MARGIN : 0;
             if (buff.time.getTime() <= margin) {
                 Time.crewBuffs.splice(i, 1);
                 reset.push(buff.name);
@@ -71,7 +70,7 @@ window.Time = {
 
         for (let i = 0; i < Time.jdBuffs.length; i++) {
             let buff = Time.jdBuffs[i],
-                margin = reset.length > 0 ? this.BUFF_TIMEOUT_MARGIN : 0;
+                margin = reset.length > 0 ? Time.BUFF_TIMEOUT_MARGIN : 0;
             if (buff.time.getTime() <= margin) {
                 Time.jdBuffs.splice(i, 1);
                 reset.push(buff.name);
@@ -95,7 +94,6 @@ window.Time = {
         this.setTimers();
         this.setStrikeTime();
         this.tock = setInterval(this.tick, 1000);
-        setTimeout(this.sync, this.SYNC_INTERVAL);
         updateUI("syncTime", this.pack());
     },
     update (time, deltaSeconds) {
@@ -111,6 +109,7 @@ window.Time = {
     triggerReset (lastReset, detail) {
 //        this.lastReset = lastReset.getTime();
 //        this.save();
+        devlog("Reset triggered: " + detail);
         State.store.lastReset = lastReset.getTime();
         State.save();
 
@@ -262,7 +261,7 @@ window.Time = {
         else {
             lastReset = new Date(lastReset); //create date obj from timestamp
             if (this.currentJst - lastReset > 86400000) {
-                devlog("Reset happened while Veera sleeping...");
+                devlog("Correcting for missed last reset.");
                 lastReset = this.getLastReset();
                 this.triggerReset(lastReset, "Happened while inactive.");
             }
