@@ -73,8 +73,9 @@ window.UI = {
                     buffTemplate.content.firstElementChild.title = timer.name;
                     buffTemplate.content.firstElementChild.id = timer.name;
                     buffTemplate.content.querySelector("img").src = timer.img;
-                    buffTemplate.content.querySelector(".buff-h").id = timer.name + "-h";
-                    buffTemplate.content.querySelector(".buff-m").id = timer.name + "-m";
+                    buffTemplate.content.querySelector(".buff-d").id = `${timer.name}-d`;
+                    buffTemplate.content.querySelector(".buff-h").id = `${timer.name}-h`;
+                    buffTemplate.content.querySelector(".buff-m").id = `${timer.name}-m`;
                     buffList.appendChild(document.importNode(buffTemplate.content, true));
                 }
                 this.display[timer.name] = {
@@ -94,13 +95,23 @@ window.UI = {
             }
         },
         update (timer, delta) {
-            if (timer.time.getTime() != 0) { //we don't init or tick in ms precision, so we should get exactly 0
+            if (timer.time.getTime() > 0) {
                 timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
             }
         },
         updateDisplay (timer) {
             if (this.display[timer.name].d) {
-                this.display[timer.name].d.textContent = timer.time.getUTCDate() - 1;
+                let d = timer.time.getUTCDate() - 1
+                if (d > 0) {
+                    this.display[timer.name].d.textContent = d;
+                    this.display[timer.name].d.nextSibling.textContent = "d ";
+                    this.display[timer.name].d.classList.remove("hidden");
+                }
+                else {
+                    this.display[timer.name].d.nextSibling.textContent = ""; //Text part
+                    this.display[timer.name].d.classList.add("hidden");
+                    this.display[timer.name].d = undefined; //Don't re-check until re-exposed during sync.
+                }
             }
             this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
             this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
