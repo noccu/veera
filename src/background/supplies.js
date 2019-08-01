@@ -291,7 +291,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.baseGame}${GAME_URL.assets_light}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
         }
         //Redirect some special cases to be more user-friendly.
         if (data.convert) {
