@@ -332,6 +332,10 @@ window.Supplies = {
     has (type, id) {
         return this.index[type] && this.index[type][id];
     },
+    find (name, type) {
+        let list = type ? this.getType(type) : this.getAll();
+        return list.find(x => x.name.match(name));
+    },
     /** Look up information on a specific supply item or list of items.
     @arg {(number=10|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
     @arg {number} id - The id to look up.
@@ -687,12 +691,24 @@ function cratePickup(data) { //single item pick up TODO: check multi
 
     Supplies.update(upd);
 }
-function trophyPickup(data) {
+function rewardsPickup(json) {
     let upd = [],
         si, id;
-    for (let item in data.reward) {
-        id = item.slice(item.lastIndexOf("_") + 1);
-        item = data.reward[item];
+    for (let key in json.reward) {
+        let item = json.reward[key];
+        let check = key.lastIndexOf("_");
+        if (check) {
+            id = key.slice(check + 1);
+        }
+        else {
+            let data = Supplies.find(item.item, item.item_kind);
+            if (data) {
+                id = data.id;
+            }
+            else {
+                continue;
+            }
+        }
         si = new SupplyItem(item.item_kind, id, item.number, item.item);
         upd.push(si);
     }

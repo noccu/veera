@@ -194,7 +194,9 @@ function hear (msg) {
                         cratePickup(msg.data.json);
                         break;
                     case path.ismatch("rest/title/par_claim"): //trophy pickup
-                        trophyPickup(msg.data.json);
+                    case path.ismatch("rest/top/par_claim/"): //event pickup
+                    case path.ismatch("rest/top/all_claim/"): //event pickup
+                        rewardsPickup(msg.data.json);
                         break;
                     case path.ismatch("advent/top/content/newindex"):
                         setRotbPendants(msg.data.json);
