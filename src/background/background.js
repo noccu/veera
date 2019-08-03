@@ -10,7 +10,8 @@ const EVENTS = { //jshint ignore:line
     shopPurchase: "shopPurchase",
     newBattle: "newBattle",
     battleOver: "battleOver",
-    questOver: "questOver"
+    questOver: "questOver",
+    evMissionDone: "evMissionDone"
 };
 const GAME_URL = {//jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
@@ -64,6 +65,9 @@ function MainInit() {
             window.addEventListener(EVENTS.weeklyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.monthlyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
+            window.addEventListener(EVENTS.evMissionDone, ev => {
+                showNotif("Mission complete!", {text: ev.detail.map(x => `${x.count}x ${x.name}`).join("\n")})
+            });
             window.addEventListener(EVENTS.pageChanged, ev => {
                 devlog(`Page changed to ${ev.detail}`);
                 Raids.evhPageChanged(ev.detail);

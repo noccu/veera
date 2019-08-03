@@ -262,7 +262,7 @@ const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming
 
 function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, uniqueId = undefined) {
     this.type = parseInt(type);
-    this.id = parseInt(id);
+    this.id = id = id === "" ? 0 : parseInt(id);
     this.count = parseInt(count);
     if (Number.isNaN(this.type) || Number.isNaN(this.id) || Number.isNaN(this.count)) {
         console.error("Given: ", type, id, count);
@@ -287,7 +287,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
             return {invalid: true};
         }
         else if (!fname) { //don't want any undefined.jpg in their server logs lmao
-            devwarn("[SupplyItem] Invalid path, nuking: ", this);
+            devwarn("[SupplyItem] Invalid path, nuking: ", fname, this);
             this.path = "";
         }
         else {
@@ -534,7 +534,7 @@ function gotQuestLoot(json) {
     function addUpdItem(entry) {
         let type = entry.item_kind || entry.kind,
             id = entry.id || entry.item_id,
-            count = entry.count || entry.num,
+            count = entry.count || entry.num || entry.item_num,
             name = entry.name || entry.item_name;
 
         let item = new SupplyItem(type, id, count, name);
@@ -549,6 +549,18 @@ function gotQuestLoot(json) {
         //Arcarum pts;
         if (json.arcarum_info) {
             Profile.updArca(0, json.arcarum_info.point);
+        }
+        //Event rewards
+        if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
+            //Non-box, side-scrolling
+            loot = json.popup_data.daily_mission.item_list;
+            if (loot.length) {
+                for (let item of loot) {
+                    addUpdItem(item);
+                }
+                devlog(`[Loot] Got ${loot.length} items from event mission reward.`);
+                fireEvent(EVENTS.evMissionDone, upd);
+            }
         }
         //Drops
         if (json.rewards) {
