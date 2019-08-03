@@ -543,6 +543,9 @@ function gotQuestLoot(json) {
             count = entry.count || entry.num || entry.item_num,
             name = entry.name || entry.item_name;
 
+        if (entry.item_image) {
+            item.path = item.path.replace(/\/\d+\./, `/${entry.item_image}.`);
+        }
         let item = new SupplyItem(type, id, count, name);
         if (entry.rarity) {
             item.rarity = parseInt(entry.rarity);
