@@ -77,6 +77,7 @@ function hear (msg) {
                         gotQuestLoot(msg.data.json);
                         getPendantsRaid(msg.data.json);
                         checkNextQuest(msg.data.json);
+                        logSupportUser(msg.data.json);
                         break;
                     case path.ismatch("rest/arcarum/stage"):
                         if (msg.data.json.notice_effect) {

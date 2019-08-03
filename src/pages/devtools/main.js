@@ -293,3 +293,11 @@ function populateRaids (raids) {
     UI.setList(list, raids, createRaid);
     UI.raids.list = list.children;
 }
+
+
+function updLastSupport(data) {
+    UI.setValue({id: "last-sup-sum", value: data.summon});
+    let u = document.getElementById("last-sup-usr");
+    u.dataset.value = data.url;
+    u.textContent = data.user;
+}

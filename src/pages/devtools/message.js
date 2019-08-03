@@ -80,6 +80,9 @@ window.BackgroundPage = {
             case "setLastHosted":
                 UI.setValue({id: "last-hosted-quest", value: msg.data});
                 break;
+            case "logSupport":
+                updLastSupport(msg.data);
+                break;
             default:
                 window.dispatchEvent(new CustomEvent(msg.action, msg.data));
         }
