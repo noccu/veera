@@ -1,5 +1,5 @@
 //commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
-const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1,2,37,38,39,50,82]}; //jshint ignore:line
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1,2,22,37,38,39,50,82]}; //jshint ignore:line
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
 SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
@@ -79,6 +79,12 @@ const ITEM_KIND = {//jshint ignore:line
         specialId: {
             0: "jp"
         }
+    },
+    22: {
+        name: "Token",
+        class: "Tickets",
+        path: "item/ticket",
+        manual: true
     },
     23: {
         name: "Pick Ticket",
