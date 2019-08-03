@@ -295,7 +295,9 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
         }
         //Redirect some special cases to be more user-friendly.
         if (data.convert) {
+            devlog("Converting item: ", this);
             data.convert(this);
+            devlog("Converted item: ", this);
         }
     }
     else {
@@ -469,9 +471,6 @@ window.Supplies = {
             let typeData = ITEM_KIND[item.type];
             if (!typeData || typeData.manual) {
                 devwarn("Uncertain item type, errors may occur.", item);
-            }
-            if (typeData.convert) {
-                devlog("Converting item: ", item);
             }
 
             if (overwrite) {

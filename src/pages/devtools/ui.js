@@ -461,20 +461,6 @@ function endMaintTimer() {
     UI.time.initTimers();
 }
 
-    //Helpers
-function translateDate(date, tz) { //lucky JST doesn't observe DST
-    switch (tz) {
-        case "toJST":
-            date.setUTCHours(date.getUTCHours() + 9);
-            break;
-        case "fromJST":
-            date.setUTCHours(date.getUTCHours() - 9);
-            break;
-    }
-    return date;
-}
-
-
 //Charts, Graphs
 function clearGraph(graph) {
     graph.config.data.labels = [];

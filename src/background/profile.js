@@ -140,6 +140,10 @@ window.Profile = {
         }
     },
     update (json) {
+        //Check if own profile.
+        if (json.option && json.option.greet_num && json.option.greet_num.url != "profile/greet") {
+            return;
+        }
         //Sometimes returns no info, like on gacha banners or other redirects.
         if (json.data) { //Currencies & arca
             let dom = parseDom(json.data);
