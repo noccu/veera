@@ -75,12 +75,14 @@ function hear (msg) {
                     case path.ismatch("result/data"): //Quest loot screen
                     case path.ismatch("arcarum/open_chest"):
                     case path.ismatch("result/stage_only_data/"):
+                    case path.ismatch("rest/board/open_chest"):
                         gotQuestLoot(msg.data.json);
                         getPendantsRaid(msg.data.json);
                         checkNextQuest(msg.data.json);
                         logSupportUser(msg.data.json);
                         break;
                     case path.ismatch("rest/arcarum/stage"):
+                    case path.ismatch("rest/board/stage"):
                         if (msg.data.json.notice_effect) {
                             gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
                         }
@@ -88,8 +90,11 @@ function hear (msg) {
                     case path.ismatch("rest/arcarum/start_stage"):
                         startAcra(msg.data.json);
                         break;
-                    case path.ismatch("/arcarum/content/skip"):
+                    case path.ismatch("arcarum/content/skip"):
                         skipArca(msg.data.json.option.arcarum_skip);
+                        break;
+                    case path.ismatch("rest/board/tutorial/complete_tutorial"): //Arca-style event games
+                        skipArca(msg.data.json); //Same format.
                         break;
                     case path.ismatch("weapon/evolution_materials"):
                         weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao

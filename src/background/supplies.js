@@ -611,8 +611,8 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${numItems} items from boxes.`);
             }
         }
+        //Arcarum chests
         else if (json.result) {
-            //Arcarum chests
             loot = json.result.contents;
             if (loot) { //Is actually an array or undef/missing.
                 for (let item of loot) {
@@ -640,7 +640,9 @@ function skipArca(data) {
         upd.push(new SupplyItem(item.item_kind, item.item_id, item.item_num));
     }
 
-    Profile.updArca(0, data.point_info.reward_point);
+    if (data.point_info && data.point_info.reward_point) {
+        Profile.updArca(0, data.point_info.reward_point);
+    }
     Supplies.update(upd);
 }
 
