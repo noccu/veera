@@ -74,6 +74,7 @@ function hear (msg) {
                     case path.ismatch("resultmulti/data")://Raid loot screen
                     case path.ismatch("result/data"): //Quest loot screen
                     case path.ismatch("arcarum/open_chest"):
+                    case path.ismatch("result/stage_only_data/"):
                         gotQuestLoot(msg.data.json);
                         getPendantsRaid(msg.data.json);
                         checkNextQuest(msg.data.json);

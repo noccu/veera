@@ -544,7 +544,7 @@ function gotQuestLoot(json) {
     function addUpdItem(entry) {
         let type = entry.item_kind || entry.kind,
             id = entry.id || entry.item_id,
-            count = entry.count || entry.num || entry.item_num,
+            count = entry.count || entry.num || entry.item_num || entry.amount,
             name = entry.name || entry.item_name;
 
         if (entry.item_image) {
@@ -575,13 +575,20 @@ function gotQuestLoot(json) {
                 fireEvent(EVENTS.evMissionDone, upd);
             }
         }
+        //Stage clear rewards
+        if (json.popup_data.clear_reward && json.popup_data.clear_reward.item) {
+            let item = json.popup_data.clear_reward.item;
+            let sd = Supplies.find(item.name);
+            if (sd) {
+                upd.push(new SupplyItem(sd.type, sd.id, item.amount, item.name));
+            }
+        }
         //Drops
         if (json.rewards) {
             //Non-box, side-scrolling
             loot = json.rewards.article_list;
-            let content;
             if (loot.length == undefined) { //It's an array when empty apparently...
-                content = Object.keys(loot);
+                let content = Object.keys(loot);
                 for (let key of content) {
                     let entry = loot[key];
                     addUpdItem(entry);
