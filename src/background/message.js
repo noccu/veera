@@ -129,12 +129,18 @@ function hear (msg) {
                         storePendingRaidsTreasure(msg.data.json);
                         break;
                     case path.ismatch("quest/create_quest"):
+                    case path.ismatch("quest/init_quest"):
+                        //Raids, mostly
                         if (msg.data.json.result == "ok" && msg.data.json.is_host) {
                             consumePendingRaidsTreasure(msg.data);
                             Raids.update({
                                 action: "hosted",
                                 id: msg.data.postData.quest_id
                             });
+                            Raids.setLastHost();
+                        }
+                        //Quests (with stages?)
+                        else if (msg.data.json.quest_id == Raids.pendingHost.id) {
                             Raids.setLastHost();
                         }
                         break;

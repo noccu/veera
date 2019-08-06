@@ -212,7 +212,7 @@ window.Raids = {
         devlog("pending", data);
         //They are set separately anyway.
         if (data.url) {
-            let id = data.url.match(/supporter\/(\d+)/)[1];
+            let id = data.url.match(/supporter\/(?:.+_treasure\/)?(\d+)/)[1];
             //Don't update triggers.
             if (this.triggeredQuest && (id == this.triggeredQuest.id || this.triggeredQuest.isGroup)) {
                 this.pendingHost.skip = true;
@@ -220,6 +220,7 @@ window.Raids = {
             else {
                 this.pendingHost.skip = false;
                 this.pendingHost.url = data.url;
+                this.pendingHost.id = id;
             }
         }
         //Luckily updates after url.
@@ -233,6 +234,7 @@ window.Raids = {
             devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
             this.lastHost.url = this.pendingHost.url;
             this.lastHost.name = this.pendingHost.name;
+            this.lastHost.id = this.pendingHost.id;
             Profile.status.ap.current -= this.pendingHost.ap;
             updateUI("setLastHosted", this.lastHost.name);
             updateUI("updStatus", Profile.status);
@@ -281,7 +283,7 @@ function checkNextQuest(json) {
             name = data.quest_name;
         //Triggered quests never cost hostmats afaik.
         Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
-        
+
         if (data.group_id && json.url) { //Events with multiple nm quests.
             Raids.triggeredQuest.url = `${GAME_URL.baseGame}#${json.url}`;
             Raids.triggeredQuest.isGroup = true;
