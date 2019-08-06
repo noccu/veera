@@ -1,40 +1,40 @@
 window.DevTools = {
-    devToolsConnection: null,
-    wait: function() {
+    connection: null,
+    wait() {
         console.log("Onee-sama?");
         chrome.runtime.onConnect.addListener(this.connected);
         chrome.runtime.onMessage.addListener(hearQuery);
     },
-    connected: function(port) {
+    connected(port) {
         console.log("Onee-sama!", port);
-        DevTools.devToolsConnection = port;
+        DevTools.connection = port;
         port.onMessage.addListener(DevTools.listen);
         port.onDisconnect.addListener(DevTools.deafen);
         window.dispatchEvent(new Event(EVENTS.connected));
     },
-    listen: function(data) {
+    listen(data) {
         hear(data);
     },
-    deafen: function() {
+    deafen(error) {
+        devlog("Disconnected.");
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
-        //Apparently devToolsConnection is already null at this point. Thanks chrome? Nice docs.
+        if (DevTools.connection) {
+            DevTools.connection.onMessage.removeListener(this.listen);
+            chrome.runtime.onMessage.removeListener(hearQuery);
+            DevTools.connection.disconnect();
+            DevTools.connection = null;
+        }
     },
-    disconnect () {
-        DevTools.devToolsConnection.onMessage.removeListener(this.listen);
-        chrome.runtime.onMessage.removeListener(hearQuery);
-        DevTools.devToolsConnection.disconnect();
-        DevTools.devToolsConnection = null;
-    },
-    send: function(action, data) {
-        if (!this.devToolsConnection) {
-            console.error("No active connection to DevTools.");
+    send(action, data) {
+        if (!this.connection) {
+            deverror("No active connection to DevTools.");
             return;
         }
-        this.devToolsConnection.postMessage({action, data});
+        this.connection.postMessage({action, data});
     },
-    query: function(key) {
+    query(key) {
         return new Promise(r => chrome.runtime.sendMessage({source: "bg", query: key}, ret => r(ret.value)));
     }
 };

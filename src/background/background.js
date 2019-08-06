@@ -83,7 +83,7 @@ function MainInit() {
             State.checkUpdate(); //Errors caught internally, chain restored.
         })
         .catch(e => {
-            DevTools.disconnect();
+            DevTools.connection.disconnect();
             console.error(e);
         });
 }
