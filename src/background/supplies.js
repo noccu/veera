@@ -626,8 +626,8 @@ function gotQuestLoot(json) {
         if (upd.length > 0) {
             fireEvent(EVENTS.gotLoot, upd);
             Supplies.update(upd);
-            DevTools.send("updRaidLoot", {loot: upd});
         }
+        DevTools.send("updRaidLoot", {loot: upd});
     }
 }
 
