@@ -284,7 +284,7 @@ function checkNextQuest(json) {
         //Triggered quests never cost hostmats afaik.
         Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
 
-        if (data.group_id && json.url) { //Events with multiple nm quests.
+        if (data.title && json.url) { //Events with multiple nm quests.
             Raids.triggeredQuest.url = `${GAME_URL.baseGame}#${json.url}`;
             Raids.triggeredQuest.isGroup = true;
             name = data.title;
