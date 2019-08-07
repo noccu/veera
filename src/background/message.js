@@ -91,7 +91,8 @@ function hear (msg) {
                         startAcra(msg.data.json);
                         break;
                     case path.ismatch("arcarum/content/skip"):
-                        skipArca(msg.data.json.option.arcarum_skip);
+                    case path.ismatch("board/content/skip"):
+                        skipArca(msg.data.json.option.arcarum_skip || msg.data.json.option.board_skip);
                         break;
                     case path.ismatch("rest/board/tutorial/complete_tutorial"): //Arca-style event games
                         skipArca(msg.data.json); //Same format.
