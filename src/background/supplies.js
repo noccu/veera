@@ -564,23 +564,25 @@ function gotQuestLoot(json) {
             Profile.updArca(0, json.arcarum_info.point);
         }
         //Event rewards
-        if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
-            //Non-box, side-scrolling
-            loot = json.popup_data.daily_mission.item_list;
-            if (loot.length) {
-                for (let item of loot) {
-                    addUpdItem(item);
+        if (json.popup_data) {
+            if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
+                //Non-box, side-scrolling
+                loot = json.popup_data.daily_mission.item_list;
+                if (loot.length) {
+                    for (let item of loot) {
+                        addUpdItem(item);
+                    }
+                    devlog(`[Loot] Got ${loot.length} items from event mission reward.`);
+                    fireEvent(EVENTS.evMissionDone, upd);
                 }
-                devlog(`[Loot] Got ${loot.length} items from event mission reward.`);
-                fireEvent(EVENTS.evMissionDone, upd);
             }
-        }
-        //Stage clear rewards
-        if (json.popup_data.clear_reward && json.popup_data.clear_reward.item) {
-            let item = json.popup_data.clear_reward.item;
-            let sd = Supplies.find(item.name);
-            if (sd) {
-                upd.push(new SupplyItem(sd.type, sd.id, item.amount, item.name));
+            //Stage clear rewards
+            if (json.popup_data.clear_reward && json.popup_data.clear_reward.item) {
+                let item = json.popup_data.clear_reward.item;
+                let sd = Supplies.find(item.name);
+                if (sd) {
+                    upd.push(new SupplyItem(sd.type, sd.id, item.amount, item.name));
+                }
             }
         }
         //Drops

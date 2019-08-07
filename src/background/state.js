@@ -5,7 +5,7 @@ window.State = {
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
-        lastCommit: "Veera",
+        lastCommit: "Veera"
     },
     URL_HOMEPAGE: "https://github.com/noccu/veera",
     URL_MANIFEST: "https://raw.githubusercontent.com/noccu/veera/master/manifest.json",
