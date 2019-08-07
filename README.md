@@ -5,66 +5,66 @@ An entirely new and rewritten Granblue companion based on the Ancheera concept.
 **Current features:**
 
 - JST and countdown timers with ST notifications.
-- Track and filter supplies and raids, with quick-hosting.
-- Plan & follow up on weapon crafts.
+- Track and filter supplies and raids, with quick-hosting and easy requirement checking.
+- Plan & follow up on weapon, summon and other crafts.
 - Real-time battle statistics for team and characters.
-- Analyze GW area honors for betting. (RIP)
+- ~~Analyze GW area honors for betting. (RIP)~~
 - Show immediate quest/raid drops and nightmare triggers.
 - Quickly repeat last quest or play triggered ones.
 - Display and track currencies, tickets, pendants, etc.
 - Tooltips with farm locations for commonly used craft items.
+- Quick navigation to common screens.
+- Check last used support summon and go to user's profile.
+- More tools coming...
 
 # Disclaimer
 
+__WARNING: Regardless of how low the risk is, Veera is still an unofficial tool and thus against TOS.__
+
+Veera is a WIP which means bugs, inefficiencies, regular changes, and the occasional DIY.
+
 Veera is a QoL extension. It does not modify anything about the game, its data, browser page, UI, requests, nor overlays anything.  
-All it does is read and display game traffic for ease of use, or loads it from its own local storage.  
+It only reads and displays game traffic for ease of use, or loads it from its own local storage.
 
-It tries to be as passive as possible, minimizing requests to the server, or anything out of the ordinary.  
-For some features, this may not be possible. In such cases the feature is determined to be useful enough and the load/risk minimal, and/or initiated explicitly by the user.  
-Even so Veera will usually not behave much different from bookmarks, for example.
+Veera tries to be passive, minimizing traffic and odd behaviour.  
+Where not possible, the load/risk is minimal and/or initiated explicitly by the user.  
+Even then Veera will usually not behave much different from bookmarks, for example.
 
-The UI tries to be modular and adaptive. This can cause some weird behaviour at times.  
-It also hasn't been a priority, excuse the mess.
-
-Note that Veera is currently a WIP.
-
-__WARNING: Regardless of how low the risk is, it is still an unofficial tool and thus technically against TOS.__
-
-# Development
-
-I am doing this in large part as an educational experience, please don't expect too much.
-
-* Still a WIP so parts don't work, features are missing. Help is appreciated.
-  * It will eventually be a normal, updatable extension. Probably. Maybe.
-* Check the Issues page for things to work on, file bug reports, PRs, etc.
-  * Feature requests are alright but they'll take a while as core functionality is the current priority.
-* The wiki is (should be) open for anyone to edit. Feel free to document usage, code, or whatever there.
-* ~~Also I'm lazy so updates are slow.~~
-* It's not forked from Ancheera or Orcheed because I wasn't aware of their github back then. My bad.
-  * I guess it doesn't really matter, especially now that Veera is its own thing but I wanted to clarify anyway.
-  
-Data is initialized from specific pages and afterwards updated whenever a change is detected.  
-File an issue if a change to something that is tracked is not detected.
-
-If you have any issues, the background page (accessible through chrome's extension page) is the first place to look.  
-If this doesn't help you solve it yourself, please include (at least) any errors and warnings there in your issue submission.
+The UI tries to be modular and adaptive. Excuse the occasional weird behaviour as it hasn't been a priority.
 
 # Installation & Usage
 
 1. Download or clone the repo into a folder.
-   * Cloning allows easy updating during this early phase.
-   * Since v1.3.2 it will notify about updates; once for commits, every startup for releases.
+   * If using ZIP download, extract and overwrite your current folder to update.
+   * Since v1.3.2 Veera will notify about updates; once for commits, every startup for releases.
 2. In your Chrome extensions page, click "Load unpacked" and point to the repo folder.
    * Make sure developer mode is enabled if you don't see the button.
    * To recompile after changes, hit the reload button beneath the extension.
-   * If you don't want the developer notification when you start Chrome, use the "pack extension" button on this page and use that. You will have to repeat this for every update.
-1. Load granblue and hit F12 to bring up the Chrome devtools.
+   * If you don't want the developer notification when you start Chrome, use the "pack extension" button on said page and use the result. You will have to repeat this for every update.
+1. Load Granblue and hit F12 to bring up the Chrome devtools.
 2. Navigate to the Veera tab.
-3. On first install it is recommended to visit the supplies page in-game once to load its data.
+   * You can re-order the tabs here if you wish.
+3. NEW USERS: On first install it is recommended to visit the supplies page in-game once to load its data and restart Veera.
    * As Veera is passive this is true for any used page but supplies are common and things will get funky with them missing.
 
 Note that Veera can't track things if it is not active (the UI must be loaded).
 If any desync happens it can be fixed by visiting the relevant in-game page in most cases.
+
+# Development & Contributing
+
+I am doing this in large part as an educational experience, please don't expect too much.
+
+* The dev side is always in flux and rather unstable.
+* Pull Requests are very welcome. Open one straight up or inquire on the Issues page first.
+* Check the Issues page for things to work on, file bug reports, or ask questions.
+  * Feature requests will tend to be low priority as I focus on other things for the moment.
+* The wiki should be open for anyone to edit. Feel free to document usage, code, or whatever there.
+  
+Data is initialized from specific pages and afterwards updated whenever a change is detected.  
+File an issue if a change to something that is tracked is not detected.
+
+If you have any problems, the background page (accessible through chrome's extension page) is the first place to look.  
+If this doesn't help you solve it yourself, please include (at least) any errors and warnings there in your issue submission or better yet `right-click, save as` and attach the log to your post.
 
 # Thanks to
 
