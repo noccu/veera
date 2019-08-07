@@ -7,9 +7,9 @@ window.State = {
         lastUpdate: 0,
         lastCommit: "Veera",
     },
-    URL_HOMEPAGE: "https://github.com/noccu/orchees",
-    URL_MANIFEST: "https://raw.githubusercontent.com/noccu/orchees/Veera/manifest.json",
-    URL_COMMITS: "https://api.github.com/repos/noccu/orchees/commits?sha=Veera&per_page=3",
+    URL_HOMEPAGE: "https://github.com/noccu/veera",
+    URL_MANIFEST: "https://raw.githubusercontent.com/noccu/veera/master/manifest.json",
+    URL_COMMITS: "https://api.github.com/repos/noccu/veera/commits?sha=master&per_page=3",
     UPDATE_INTERVAL: 86400000, //ms - 1 day
     settings: {
         debug: true,
