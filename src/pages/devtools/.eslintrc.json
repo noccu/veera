@@ -1,0 +1,22 @@
+{
+  "globals": {
+    "NUMBER_FORMAT": "readonly",
+    "DEBUG": "readonly",
+    
+    "UI": "readonly",
+    "Unf": "readonly",
+    "BackgroundPage": "readonly",
+    "Network": "readonly",
+      
+    "devlog": "readonly",
+    "changeSeries": "readonly",
+    "updatePlan": "readonly",
+    "createPlannerItem": "readonly",
+    "updateRaidTrackingDisplay": "readonly",
+    "clearGraph": "readonly",
+    "clearDropdown": "readonly",
+    "populateDropdown": "readonly",
+
+    "Chart": "readonly"
+  }
+}

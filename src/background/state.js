@@ -10,18 +10,18 @@ window.State = {
     URL_HOMEPAGE: "https://github.com/noccu/veera",
     URL_MANIFEST: "https://raw.githubusercontent.com/noccu/veera/master/manifest.json",
     URL_COMMITS: "https://api.github.com/repos/noccu/veera/commits?sha=master&per_page=3",
-    UPDATE_INTERVAL: 86400000, //ms - 1 day
+    UPDATE_INTERVAL: 86400000, // ms - 1 day
     settings: {
         debug: true,
         theme: 0,
-        raids: {
-            sortByDiff: true
-        }
+        raids: {sortByDiff: true}
     },
 
     theme: {
-        list: [{name: "Tiamat Night", fname: "night"},
-               {name: "Anichra Day", fname: "day"}],
+        list: [
+            {name: "Tiamat Night", fname: "night"},
+            {name: "Anichra Day", fname: "day"}
+        ],
         get current() {
             return this.list[State.settings.theme];
         },
@@ -32,13 +32,14 @@ window.State = {
     game: {
         tabId: null,
         linkToTab (id) {
-            return new Promise ((r,x) => {
+            return new Promise ((r, x) => {
                 chrome.tabs.get(id, t => {
                     if (/game\.granbluefantasy\.jp|gbf\.game\.mbga\.jp/.test(t.url)) {
                         devlog(`Ufufu... onee-sama ha tab ${id} wo mite imasu ne.`);
                         this.tabId = id;
                         r();
-                    } else {
+                    }
+                    else {
                         x("Onee-sama wo damasu to ha ii dokyou desu wa!");
                     }
                 });
@@ -63,7 +64,7 @@ window.State = {
         Storage.set({state: o});
         devlog("State saved.");
     },
-    load: function () { //Called out of context
+    load: function () { // Called out of context
         return new Promise((r, x) => {
             function _load(data) {
                 if (!data.state) {
@@ -140,7 +141,7 @@ window.State = {
                 }
             })
             .then(json => {
-                //We only notify once, for various reasons but we can't check what commit a user is on anyway or if they have local modifications.
+                // We only notify once, for various reasons but we can't check what commit a user is on anyway or if they have local modifications.
                 if (this.store.lastCommit != json[0].sha) {
                     this.store.lastCommit = json[0].sha;
                     let list = [];
@@ -176,10 +177,10 @@ function toggleDebug() {
     State.settings.debug = !State.settings.debug;
 }
 function devlog() {
-    if (State.settings.debug) { console.debug(... arguments); }
+    if (State.settings.debug) { console.debug(... arguments) }
 }
 function devwarn() {
-    if (State.settings.debug) { console.warn(... arguments); }
+    if (State.settings.debug) { console.warn(... arguments) }
 }
 function deverror() {
     console.error(... arguments);

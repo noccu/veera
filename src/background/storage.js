@@ -16,11 +16,11 @@ window.Storage = {
 
         if (result) {
             devlog("Data loaded: ", ...Object.keys(result));
-            if (cb) { cb(result); }
+            if (cb) { cb(result) }
         }
         else {
             devlog("Data saved: ", ...Object.keys(v));
-            if (cb) { cb(); }
+            if (cb) { cb() }
         }
     },
     clear() {

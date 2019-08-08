@@ -3,12 +3,12 @@ const NUMBER_FORMAT = new Intl.NumberFormat(navigator.language, {maximumFraction
 window.UI = {
     setTheme: function (theme) {
         var sheet = document.getElementById("theme");
-        if (!theme.fname) {console.log("No theme file given, using default."); theme.fname = "night";}
+        if (!theme.fname) { console.log("No theme file given, using default."); theme.fname = "night" }
         sheet.href = `../stylesheets/${theme.fname}.css`;
     },
 
-    //Input: {id, value} optionally in Array
-    //Updates every id in upd with the given value.
+    // Input: {id, value} optionally in Array
+    // Updates every id in upd with the given value.
     setValue: function (upd, format) {
         if (Array.isArray(upd)) {
             for (let entry of upd) {
@@ -22,7 +22,7 @@ window.UI = {
             }
         }
     },
-    /**(re)Creates a DOM list, adding each entry in entryArray to list, optionally passed through the function f
+    /** (re)Creates a DOM list, adding each entry in entryArray to list, optionally passed through the function f
     @arg {HTMLElement} list - A DOM element to serve as list root.
     @arg {Array} - Array of items to add to list.
     @arg {function} f - Defines transform of each entryArray item, given item.
@@ -37,7 +37,7 @@ window.UI = {
     },
 
     switchNav: function (ev) {
-        if (!ev.target.dataset.navpage) {return;}
+        if (!ev.target.dataset.navpage) { return }
         var oldNav = this.getElementsByClassName("active")[0];
         oldNav.classList.remove("active");
         var oldTab = document.getElementById(oldNav.dataset.navpage);
@@ -51,10 +51,10 @@ window.UI = {
         for (let nav of nl) {
             nav.addEventListener("click", this.switchNav);
         }
-        //Global filters
+        // Global filters
         document.getElementById("tabs").addEventListener("click", evhGlobalClick);
         document.getElementById("supplies-search").addEventListener("change", evhSuppliesSearch);
-        //Specific filters
+        // Specific filters
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
         document.getElementById("raids-panel").addEventListener("filter", evhRaidsFilter);
     },
@@ -101,25 +101,25 @@ window.UI = {
         },
         updateDisplay (timer) {
             if (this.display[timer.name].d) {
-                let d = timer.time.getUTCDate() - 1
+                let d = timer.time.getUTCDate() - 1;
                 if (d > 0) {
                     this.display[timer.name].d.textContent = d;
                     this.display[timer.name].d.nextSibling.textContent = "d ";
                     this.display[timer.name].d.classList.remove("hidden");
                 }
                 else {
-                    this.display[timer.name].d.nextSibling.textContent = ""; //Text part
+                    this.display[timer.name].d.nextSibling.textContent = ""; // Text part
                     this.display[timer.name].d.classList.add("hidden");
-                    this.display[timer.name].d = undefined; //Don't re-check until re-exposed during sync.
+                    this.display[timer.name].d = undefined; // Don't re-check until re-exposed during sync.
                 }
             }
-            this.display[timer.name].h.textContent = ('0' + timer.time.getUTCHours()).slice(-2);
-            this.display[timer.name].m.textContent = ('0' + timer.time.getUTCMinutes()).slice(-2);
+            this.display[timer.name].h.textContent = ("0" + timer.time.getUTCHours()).slice(-2);
+            this.display[timer.name].m.textContent = ("0" + timer.time.getUTCMinutes()).slice(-2);
             if (this.display[timer.name].s) {
-                this.display[timer.name].s.textContent = ('0' + timer.time.getUTCSeconds()).slice(-2);
+                this.display[timer.name].s.textContent = ("0" + timer.time.getUTCSeconds()).slice(-2);
             }
 
-            //Could use an object for clarity but since this fires every second, this is prob much faster.
+            // Could use an object for clarity but since this fires every second, this is prob much faster.
             if (timer.name == "st1") {
                 if (timer.time.getUTCHours() == 23) {
                     this.activeSt |= 1;
@@ -143,23 +143,22 @@ window.UI = {
                 this.display.st.classList.remove("highlight");
             }
 
-            if (timer.type == "buff" && timer.time.getTime() < 600000) { //10m
+            if (timer.type == "buff" && timer.time.getTime() < 600000) { // 10m
                 this.display[timer.name].element.classList.add("warn");
             }
-            else if (timer.type == "buff"){
+            else if (timer.type == "buff") {
                 this.display[timer.name].element.classList.remove("warn");
             }
         },
         sync (times) {
-            if (this.int) { clearInterval(this.int); }
+            if (this.int) { clearInterval(this.int) }
             this.times = times;
             this.init();
             this.int = setInterval(this.tick, 1000);
         }
     },
     planner: {
-        dom: {
-        },
+        dom: {},
         init: function(seriesList) {
             this.dom.series = document.getElementById("planner-craftSeries");
             this.dom.type = document.getElementById("planner-craftType");
@@ -173,7 +172,7 @@ window.UI = {
             UI.planner.populateSelection("series", seriesList);
 
             var dummy = document.createElement("option");
-            dummy.value = "";//empty value !important
+            dummy.value = "";// empty value !important
             dummy.textContent = "Select...";
             this.dom.series.options.add(dummy, 0);
             dummy.selected = true;
@@ -185,7 +184,7 @@ window.UI = {
             this.dom.end.onchange = updatePlan;
             this.dom.options.addEventListener("change", updatePlan);
         },
-        //String, Array
+        // String, Array
         populateSelection: function(name, list) {
             var display = this.dom[name];
             if (list && list.length > 1) {
@@ -194,7 +193,7 @@ window.UI = {
                 for (let option of list) {
                     var el = document.createElement("option");
                     el.value = el.textContent = option;
-    //                console.log(option);
+                    // console.log(option);
                     display.options.add(el);
                 }
             }
@@ -203,7 +202,7 @@ window.UI = {
             }
         },
         displayPlan: function(plan) {
-//            this.display.list.innerHTML = "";
+            // this.display.list.innerHTML = "";
             this.dom.list.createdPlan = plan;
 
             UI.setList(this.dom.list, plan, item => {
@@ -219,14 +218,16 @@ window.UI = {
         evhStartRaid (ev) {
             if (!ev.target.dataset.event && ev.currentTarget.entryObj) {
                 let raidId = ev.currentTarget.entryObj.data.id,
-                    matId = ev.target.dataset.matId; //undef is handled in the bg page function
+                    matId = ev.target.dataset.matId; // undef is handled in the bg page function
                 BackgroundPage.send("hostRaid", {raidId, matId});
             }
         },
         evhToggle (raid) {
-//            raid.classList.toggle("hidden");
-            BackgroundPage.send("updRaid", {action: "toggleActive",
-                                            raidEntry: raid.entryObj});
+            // raid.classList.toggle("hidden");
+            BackgroundPage.send("updRaid", {
+                action: "toggleActive",
+                raidEntry: raid.entryObj
+            });
         },
         update (raidEntry) {
             if (Array.isArray(raidEntry)) {
@@ -251,29 +252,29 @@ function clearDropdown(el) {
     }
 }
 
-//UI functionality
+// UI functionality
 function evhGlobalClick (e) {
-    if (e.target.dataset.event) { //dataset is always accesible
+    if (e.target.dataset.event) { // dataset is always accesible
         switch (e.target.dataset.event) {
             case "collapse":
-                //collapse all in <parent> for <id>
-                if (e.target.dataset.in && e.path) { //chrome only but so is gbf (technically)
+                // collapse all in <parent> for <id>
+                if (e.target.dataset.in && e.path) { // chrome only but so is gbf (technically)
                     let cId = e.target.dataset.id;
                     for (let parent of e.path) {
                         if (parent.classList && parent.classList.contains(e.target.dataset.in)) {
                             let cList = parent.querySelectorAll(`[data-id='${cId}']`);
                             for (let node of cList) {
-                                node.nextElementSibling.classList.toggle('hidden');
+                                node.nextElementSibling.classList.toggle("hidden");
                             }
                         }
                     }
                 }
                 else {
-                    e.target.nextElementSibling.classList.toggle('hidden');
+                    e.target.nextElementSibling.classList.toggle("hidden");
                 }
                 break;
             case "filter":
-                let activeFilters = [];
+                var activeFilters = [];
                 if (e.target.dataset.value == "ALL") {
                     for (let filter of e.target.parentElement.children) {
                         filter.classList.remove("active");
@@ -284,13 +285,13 @@ function evhGlobalClick (e) {
                 else {
                     let list,
                         defaultFilter;
-                    //Special action on the list parent to trigger filter with same values.
+                    // Special action on the list parent to trigger filter with same values.
                     if (e.target.dataset.value == "REFILTER") {
                         list = e.target;
                         defaultFilter = list.firstElementChild;
                     }
                     else {
-                        //Special casing the "all" filter
+                        // Special casing the "all" filter
                         list = e.target.parentElement;
                         e.target.classList.toggle("active");
                         defaultFilter = list.firstElementChild;
@@ -304,9 +305,9 @@ function evhGlobalClick (e) {
                         defaultFilter.classList.add("active");
                         activeFilters.push(defaultFilter.dataset);
                     }
-//                    else {
-//                        defaultFilter.classList.remove("active");
-//                    }
+                    // else {
+                    // defaultFilter.classList.remove("active");
+                    // }
                 }
 
                 e.target.dispatchEvent( new CustomEvent("filter", {bubbles: true, detail: activeFilters}) );
@@ -325,23 +326,24 @@ function evhGlobalClick (e) {
         }
     }
 }
-function evhSuppliesSearch (e) { //just treasure for now
+function evhSuppliesSearch (e) { // just treasure for now
     var list = document.getElementById("supplies-list");
 
-    var r = new RegExp(e.target.value, "i"); //Faster
+    var r = new RegExp(e.target.value, "i"); // Faster
     for (let item of list.children) {
         if (r.test(item.title)) {
             item.classList.remove("hidden");
-        } else {
+        }
+        else {
             item.classList.add("hidden");
         }
     }
 }
 function evhSuppliesFilter (e) {
     var list = document.getElementById("supplies-list");
-//    var r = new RegExp(e.target.dataset.value, "i"); //Faster
+    // var r = new RegExp(e.target.dataset.value, "i"); //Faster
     let filters = e.detail;
-    function filter (item){
+    function filter (item) {
         return filters.some(f => {
             switch (f.value) {
                 case "ALL":
@@ -363,13 +365,15 @@ function evhSuppliesFilter (e) {
 function evhRaidsFilter (e) {
     let filters = e.detail;
     function filter (raid) {
-        let check = {elementName: [false, false],
-                    tierName: [false, false]};
+        let check = {
+            elementName: [false, false],
+            tierName: [false, false]
+        };
         let ret = raid.entryObj.active == true;
         filters.forEach(f => {
-            if (f.group == "special") { //Always checked first
+            if (f.group == "special") { // Always checked first
                 switch (f.value) {
-                    case "ALL": //Actually more like ACTIVE
+                    case "ALL": // Actually more like ACTIVE
                         ret = raid.entryObj.active == true;
                         break;
                     case "INACTIVE":
@@ -397,16 +401,16 @@ function evhRaidsFilter (e) {
     }
 
     for (let raid of UI.raids.list) {
-            if (filter(raid)) {
-                raid.classList.remove("hidden");
-            }
-            else {
-                raid.classList.add("hidden");
-            }
+        if (filter(raid)) {
+            raid.classList.remove("hidden");
+        }
+        else {
+            raid.classList.add("hidden");
+        }
     }
 }
 
-//Planner
+// Planner
 function stylePlanItem(el, item) {
     if(el.nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
         el = el.firstElementChild;
@@ -437,7 +441,7 @@ function syncPlanner(index) {
     }
 }
 
-    //Maintenance
+// Maintenance
 function startMaintTimer(html) {
     document.getElementById("timer-maint").classList.remove("hidden");
     UI.time.timers.maint = new Date(getMaintEnd(html) - UI.time.jst);
@@ -461,7 +465,7 @@ function endMaintTimer() {
     UI.time.initTimers();
 }
 
-//Charts, Graphs
+// Charts, Graphs
 function clearGraph(graph) {
     graph.config.data.labels = [];
     for (let set of graph.config.data.datasets) {

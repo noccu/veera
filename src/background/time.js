@@ -12,49 +12,49 @@ Date.prototype.convertFromJst = function () {
 };
 
 window.Time = {
-    BUFF_TIMEOUT_MARGIN: 10000, //10s
+    BUFF_TIMEOUT_MARGIN: 10000, // 10s
     currentJst: null,
-//    lastReset: null,
+    // lastReset: null,
     timers: {},
     crewBuffs: [],
     jdBuffs: [],
     tick () {
         Time.update(Time.currentJst, 1);
 
-        let reset = false; //only reset once but continue to check other timers
+        let reset = false; // only reset once but continue to check other timers
         for (let timerName in Time.timers) {
             let timer = Time.timers[timerName];
             if (timer.getTime() <= 0) {
                 devlog(`Timer ${timerName} has ended.`);
                 switch (timerName) {
                     case "maint":
-    //                    endMaintTimer();
+                        // endMaintTimer();
                         break;
                     case "st1":
                     case "st2":
                         devlog("Syncing for ST.");
-                        Time.sync(); //ST should be looped last... usually?
+                        Time.sync(); // ST should be looped last... usually?
                         break;
                     case "weekly":
                         fireEvent(EVENTS.weeklyReset);
-//                        reset = true;
+                        // reset = true;
                         break;
                     case "monthly":
                         fireEvent(EVENTS.monthlyReset);
-//                        reset = true;
+                        // reset = true;
                         break;
-                    default: //daily. When other resets happen, daily happens too. So we only need to actually reset here, but delayed for loop order.
+                    default: // daily. When other resets happen, daily happens too. So we only need to actually reset here, but delayed for loop order.
                         reset = true;
                 }
             }
             Time.update(timer, -1);
         }
         if (reset) {
-            Time.triggerReset(Time.getLastReset()); //either daily or == daily
+            Time.triggerReset(Time.getLastReset()); // either daily or == daily
             Time.sync();
         }
 
-        reset = []; //Same but check for buffs running out
+        reset = []; // Same but check for buffs running out
         for (let i = 0; i < Time.crewBuffs.length; i++) {
             let buff = Time.crewBuffs[i],
                 margin = reset.length > 0 ? Time.BUFF_TIMEOUT_MARGIN : 0;
@@ -107,8 +107,8 @@ window.Time = {
         Time.keep();
     },
     triggerReset (lastReset, detail) {
-//        this.lastReset = lastReset.getTime();
-//        this.save();
+        // this.lastReset = lastReset.getTime();
+        // this.save();
         devlog("Reset triggered: " + detail);
         State.store.lastReset = lastReset.getTime();
         State.save();
@@ -123,18 +123,18 @@ window.Time = {
         let weekly = new Date(daily);
         let monthly = new Date(daily);
 
-        //Weekly
-        if (current.getUTCDay() === 0) { //sunday
+        // Weekly
+        if (current.getUTCDay() === 0) { // sunday
             weekly.setUTCDate(current.getUTCDate() + 1);
         }
         else if (current.getUTCDay() != 1 || current.getUTCHours() >= 5) {
             weekly.setUTCDate(current.getUTCDate() + (8 - current.getUTCDay()));
-        } //Else weekly == daily
-        //Monthly
+        } // Else weekly == daily
+        // Monthly
         if (current.getUTCDate() > 1 || current.getUTCHours() >= 5) {
             monthly.setUTCDate(1);
             monthly.setUTCMonth(current.getUTCMonth() + 1);
-        } //Else monthly == daily
+        } // Else monthly == daily
 
         this.timers.daily = new Date(daily - current);
         this.timers.weekly = new Date(weekly - current);
@@ -148,11 +148,11 @@ window.Time = {
                 nextSt = new Date(this.currentJst);
 
                 nextSt.setUTCHours(hour, 0, 0, 0);
-                if (hour <= this.currentJst.getUTCHours()) { //Had or having this ST
+                if (hour <= this.currentJst.getUTCHours()) { // Had or having this ST
                     nextSt.setUTCDate(nextSt.getUTCDate() + 1);
                 }
-                if (hour == this.currentJst.getUTCHours() && !this._stEnd) { //Currently in ST.
-                    //Prevent notifying more than once per ST, per boot of Veera.
+                if (hour == this.currentJst.getUTCHours() && !this._stEnd) { // Currently in ST.
+                    // Prevent notifying more than once per ST, per boot of Veera.
                     let end = new Date(this.currentJst);
                     end.setUTCHours(end.getUTCHours() + 1, 0, 0);
                     end.setTime(end - this.currentJst);
@@ -209,7 +209,7 @@ window.Time = {
         this.orderBuffs(this.jdBuffs);
     },
     addJdBuff(data) {
-        if (data.postData) { //activate
+        if (data.postData) { // activate
             let pending = this.pendingJdBuff;
             if (data.postData.support_id == pending.id) {
                 pending.time = new Date(0);
@@ -221,7 +221,7 @@ window.Time = {
                 this.orderBuffs(this.jdBuffs);
             }
         }
-        else if (data.json) { //pending
+        else if (data.json) { // pending
             this.pendingJdBuff = {
                 type: "buff",
                 name: data.json.name,
@@ -249,17 +249,17 @@ window.Time = {
         time.setUTCHours(5, 0, 0, 0);
         return time;
     },
-    //Check if resets happened while inactive
+    // Check if resets happened while inactive
     checkReset () {
         console.log("Checking time since reset.");
         let lastReset = State.store.lastReset;
-        if (!lastReset) { //init & save a new date
-            //Need to set this here in case reset is never triggered normally. i.e. Veera is never active at 5 JST
+        if (!lastReset) { // init & save a new date
+            // Need to set this here in case reset is never triggered normally. i.e. Veera is never active at 5 JST
             lastReset = this.getLastReset();
             this.triggerReset(lastReset, "First run initialization: creating a reference point.\nThis shouldn't show again.");
         }
         else {
-            lastReset = new Date(lastReset); //create date obj from timestamp
+            lastReset = new Date(lastReset); // create date obj from timestamp
             if (this.currentJst - lastReset > 86400000) {
                 devlog("Correcting for missed last reset.");
                 lastReset = this.getLastReset();
@@ -268,7 +268,7 @@ window.Time = {
         }
     },
     convert24 (time, ampm) {
-      ampm = ampm.slice(0,1);
+        ampm = ampm.slice(0, 1);
         if (ampm == "p" || ampm == "m") {
             time += 12;
         }
@@ -276,12 +276,12 @@ window.Time = {
     },
     format (time) {
         return time.getTime();
-//        return {
-//            d: time.getUTCDate() - 1,
-//            h: ('0' + time.getUTCHours()).slice(-2),
-//            m: ('0' + time.getUTCMinutes()).slice(-2),
-//            s: ('0' + time.getUTCSeconds()).slice(-2)
-//        };
+        // return {
+        // d: time.getUTCDate() - 1,
+        // h: ('0' + time.getUTCHours()).slice(-2),
+        // m: ('0' + time.getUTCMinutes()).slice(-2),
+        // s: ('0' + time.getUTCSeconds()).slice(-2)
+        // };
     },
     pack () {
         let times = [];
@@ -316,7 +316,7 @@ function updStrikeTime (json) {
 
     for (let time, num = 0; num < schedule.length; num++) {
         time = schedule[num].getElementsByClassName("prt-item-status")[0];
-        time = time.textContent.match(/^(\d*) (a|p|m|n)/); //Assuming EN game...
+        time = time.textContent.match(/^(\d*) (a|p|m|n)/); // Assuming EN game...
         State.store.strikeTime[num + 1] = Time.convert24(parseInt(time[1]), time[2]);
     }
 

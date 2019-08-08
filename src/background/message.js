@@ -1,3 +1,4 @@
+/* eslint no-undef: "off"*/
 window.DevTools = {
     connection: null,
     wait() {
@@ -15,7 +16,7 @@ window.DevTools = {
     listen(data) {
         hear(data);
     },
-    deafen(error) {
+    deafen() {
         devlog("Disconnected.");
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
@@ -40,7 +41,7 @@ window.DevTools = {
 };
 
 function hear (msg) {
-    //Convert to util object. Makes it easier to deal with and is in the end likely faster since we can check much smaller strings.
+    // Convert to util object. Makes it easier to deal with and is in the end likely faster since we can check much smaller strings.
     let path = "", isData;
     if (msg.action == "request") {
         msg.data.url = new URL(msg.data.url);
@@ -50,11 +51,11 @@ function hear (msg) {
     devlog("[background] Heard:", msg, isData ? "Data URI" : path);
     switch (msg.action) {
         case "request":
-            //JSON
+            // JSON
             if (msg.data.hasOwnProperty("json")) {
                 switch (true) {
-                    case path.ismatch("user/content/index"): //Homepage
-                    case path.ismatch("profile/content/index"): //Profile
+                    case path.ismatch("user/content/index"): // Homepage
+                    case path.ismatch("profile/content/index"): // Profile
                     case path.ismatch("user/status"):
                         Profile.update(msg.data.json);
                         break;
@@ -62,17 +63,17 @@ function hear (msg) {
                     case path.ismatch("casino/content/list"):
                         Profile.setCasino(msg.data.json);
                         break;
-                    case path.ismatch("item/article_list")://Treasure list
+                    case path.ismatch("item/article_list"):// Treasure list
                         Supplies.setTreasure(msg.data.json);
                         break;
-                    case path.ismatch("item/recovery_and_evolution_list")://Consumables list
+                    case path.ismatch("item/recovery_and_evolution_list"):// Consumables list
                         Supplies.setConsumables(msg.data.json);
                         break;
                     case path.ismatch("item/gacha_ticket_and_others_list_by_filter_mode"):
                         Supplies.setTickets(msg.data.json);
                         break;
-                    case path.ismatch("resultmulti/data")://Raid loot screen
-                    case path.ismatch("result/data"): //Quest loot screen
+                    case path.ismatch("resultmulti/data"):// Raid loot screen
+                    case path.ismatch("result/data"): // Quest loot screen
                     case path.ismatch("arcarum/open_chest"):
                     case path.ismatch("result/stage_only_data/"):
                     case path.ismatch("rest/board/open_chest"):
@@ -94,14 +95,14 @@ function hear (msg) {
                     case path.ismatch("board/content/skip"):
                         skipArca(msg.data.json.option.arcarum_skip || msg.data.json.option.board_skip);
                         break;
-                    case path.ismatch("rest/board/tutorial/complete_tutorial"): //Arca-style event games
-                        skipArca(msg.data.json); //Same format.
+                    case path.ismatch("rest/board/tutorial/complete_tutorial"): // Arca-style event games
+                        skipArca(msg.data.json); // Same format.
                         break;
                     case path.ismatch("weapon/evolution_materials"):
-                        weaponUncapStart(msg.data);//TBH Just xhr the supplies lmao
+                        weaponUncapStart(msg.data);// TBH Just xhr the supplies lmao
                         break;
                     case path.ismatch("npc/evolution_materials"):
-                        npcUncapStart(msg.data);//TBH Just xhr the supplies lmao
+                        npcUncapStart(msg.data);// TBH Just xhr the supplies lmao
                         break;
                     case path.ismatch("evolution_weapon/item_evolution"):
                     case path.ismatch("evolution_npc/item_evolution"):
@@ -110,7 +111,7 @@ function hear (msg) {
                     case /teamraid\d+\//.test(path):
                         DevTools.send("updUnfEdition", msg.data.url.href);
                         break;
-                    case path.ismatch("/bookmaker/content/top"): //bookmaker is only in unf r-right?
+                    case path.ismatch("/bookmaker/content/top"): // bookmaker is only in unf r-right?
                         DevTools.send("updUnfAreas", msg.data.json);
                         break;
                     case path.ismatch("rest/raid/ability_result.json"):
@@ -131,7 +132,7 @@ function hear (msg) {
                         break;
                     case path.ismatch("quest/create_quest"):
                     case path.ismatch("quest/init_quest"):
-                        //Raids, mostly
+                        // Raids, mostly
                         if (msg.data.json.result == "ok" && msg.data.json.is_host) {
                             consumePendingRaidsTreasure(msg.data);
                             Raids.update({
@@ -140,7 +141,7 @@ function hear (msg) {
                             });
                             Raids.setLastHost();
                         }
-                        //Quests (with stages?)
+                        // Quests (with stages?)
                         else if (msg.data.json.quest_id == Raids.pendingHost.id) {
                             Raids.setLastHost();
                         }
@@ -161,13 +162,13 @@ function hear (msg) {
                     case path.ismatch("casino/exchange"):
                     case path.ismatch("shop_exchange/purchase"):
                         purchaseItem(msg.data);
-                        //Some items go to crate, and the game checks supplies after purchase, so items won't always be updated.
+                        // Some items go to crate, and the game checks supplies after purchase, so items won't always be updated.
                         break;
                     case path.ismatch("summon/decompose_multi"):
                     case path.ismatch("weapon/decompose_multi"):
                         reduce(msg.data.json);
                         break;
-                        //quest/user_action_point  ==> before usage
+                        // quest/user_action_point  ==> before usage
                         /*
                         json:
                             action_point: 141
@@ -176,7 +177,7 @@ function hear (msg) {
                             elixir_recover_value: 113
                             max_action_point: "113"
                         */
-                        //quest/quest_data ==> info
+                        // quest/quest_data ==> info
                         /*
                         json:
                             action_point: "40"
@@ -198,17 +199,17 @@ function hear (msg) {
                     case path.ismatch("archaic/job/rebuilt_exchange_result"):
                         consumePendingForgeCCW(msg.data.postData);
                         break;
-                    //There is a confirm for _all which triggers if not checking end of path, hence split.
+                    // There is a confirm for _all which triggers if not checking end of path, hence split.
                     case path.ismatch("present/receive?"):
                     case path.ismatch("present/receive_all?"):
                     case path.ismatch("present/term_receive?"):
                     case path.ismatch("present/term_receive_all?"):
-                        //is  normally followed by article list but that only shows treasure. There's more to pick up than that...
+                        // is  normally followed by article list but that only shows treasure. There's more to pick up than that...
                         cratePickup(msg.data.json);
                         break;
-                    case path.ismatch("rest/title/par_claim"): //trophy pickup
-                    case path.ismatch("rest/top/par_claim/"): //event pickup
-                    case path.ismatch("rest/top/all_claim/"): //event pickup
+                    case path.ismatch("rest/title/par_claim"): // trophy pickup
+                    case path.ismatch("rest/top/par_claim/"): // event pickup
+                    case path.ismatch("rest/top/all_claim/"): // event pickup
                         rewardsPickup(msg.data.json);
                         break;
                     case path.ismatch("advent/top/content/newindex"):
@@ -271,10 +272,12 @@ function hearQuery (data, sender, respond) {
     if (data.source == "dt") {
         var retValue;
         switch (data.query) {
-            //Nothing so far since change.
+            // Nothing so far since change.
         }
 
-        respond({query: data.query,
-                 value: retValue});
+        respond({
+            query: data.query,
+            value: retValue
+        });
     }
 }

@@ -22,7 +22,7 @@ window.Profile = {
             daily: {current: 0, max: 0},
             weekly: {current: 0, max: 0},
             sr: {current: 0, max: 0},
-            r: {current: 0, max: 0},
+            r: {current: 0, max: 0}
         },
         prestige: {
             total: {current: 0, max: 0},
@@ -36,26 +36,26 @@ window.Profile = {
     },
 
     setPendants (pendants) {
-        var renown = pendants['92001'];
-        var prestige = pendants['92002'];
+        var renown = pendants["92001"];
+        var prestige = pendants["92002"];
         this.pendants = {
             renown: {
                 total: {current: parseInt(renown.article.number), max: parseInt(renown.article.limit)},
-                weekly: {current: parseInt(renown.limit_info['10100'].data.weekly.get_number), max: parseInt(renown.limit_info['10100'].data.weekly.get_limit)},
-                daily: {current: parseInt(renown.limit_info['10100'].data.daily.get_number), max: parseInt(renown.limit_info['10100'].data.daily.get_limit)},
-                sr: {current: parseInt(renown.limit_info['20200'].data.weekly.get_number), max: parseInt(renown.limit_info['20200'].data.weekly.get_limit)},
-                r: {current: parseInt(renown.limit_info['20100'].data.weekly.get_number), max: parseInt(renown.limit_info['20100'].data.weekly.get_limit)}
+                weekly: {current: parseInt(renown.limit_info["10100"].data.weekly.get_number), max: parseInt(renown.limit_info["10100"].data.weekly.get_limit)},
+                daily: {current: parseInt(renown.limit_info["10100"].data.daily.get_number), max: parseInt(renown.limit_info["10100"].data.daily.get_limit)},
+                sr: {current: parseInt(renown.limit_info["20200"].data.weekly.get_number), max: parseInt(renown.limit_info["20200"].data.weekly.get_limit)},
+                r: {current: parseInt(renown.limit_info["20100"].data.weekly.get_number), max: parseInt(renown.limit_info["20100"].data.weekly.get_limit)}
             },
 
             prestige: {
                 total: {current: parseInt(prestige.article.number), max: parseInt(prestige.article.limit)},
-                weekly: {current: parseInt(prestige.limit_info['10100'].data.weekly.get_number), max: parseInt(prestige.limit_info['10100'].data.weekly.get_limit)},
-                crew: {current: parseInt(prestige.limit_info['20300'].data.weekly.get_number), max:  parseInt(prestige.limit_info['20300'].data.weekly.get_limit)}
+                weekly: {current: parseInt(prestige.limit_info["10100"].data.weekly.get_number), max: parseInt(prestige.limit_info["10100"].data.weekly.get_limit)},
+                crew: {current: parseInt(prestige.limit_info["20300"].data.weekly.get_number), max: parseInt(prestige.limit_info["20300"].data.weekly.get_limit)}
             }
         };
         updateUI("updPendants", this.pendants);
     },
-    updatePendants (updArr) { //[ { pendantType, limitType, delta }]
+    updatePendants (updArr) { // [ { pendantType, limitType, delta }]
         for (let item of updArr) {
             if (item.delta) {
                 this.pendants[item.pendantType][item.limitType].current += item.delta;
@@ -77,7 +77,7 @@ window.Profile = {
         updateUI("updCurrencies", this.currencies);
     },
     parseArca (dom) {
-        //TODO: check if arca gives us this in easier fashion
+        // TODO: check if arca gives us this in easier fashion
         let info = dom.querySelector("#arcarum-status");
         let text = info.children[0].textContent.split("/");
         let current = {}, max = {};
@@ -127,7 +127,7 @@ window.Profile = {
 
         updateUI("updStatus", this.status);
     },
-    setCasino(json){
+    setCasino(json) {
         if (json.data) {
             let dom = parseDom(json.data);
             let ele = dom.querySelector(".prt-having-medal .txt-value");
@@ -140,12 +140,12 @@ window.Profile = {
         }
     },
     update (json) {
-        //Check if own profile.
+        // Check if own profile.
         if (json.option && json.option.greet_num && json.option.greet_num.url != "profile/greet") {
             return;
         }
-        //Sometimes returns no info, like on gacha banners or other redirects.
-        if (json.data) { //Currencies & arca
+        // Sometimes returns no info, like on gacha banners or other redirects.
+        if (json.data) { // Currencies & arca
             let dom = parseDom(json.data);
             this.setCurrencies(dom);
             this.parseArca(dom);
@@ -160,18 +160,18 @@ window.Profile = {
                 status = json.option.mydata_assets.mydata.status;
             }
 
-            //Pendants
+            // Pendants
             if (json.option.mbp_limit_info) {
                 this.setPendants(json.option.mbp_limit_info);
             }
         }
 
-        //Status
+        // Status
         if (status) {
             this.setStatus(status);
         }
     },
-    reset (event){
+    reset (event) {
         switch (event.type) {
             case EVENTS.dailyReset:
                 this.pendants.renown.daily.current = 0;
@@ -186,9 +186,9 @@ window.Profile = {
                 this.pendants.prestige.weekly.current = 0;
                 this.pendants.prestige.crew.current = 0;
                 break;
-//            case EVENTS.monthlyReset:
-//                break;
-//            default:
+                // case EVENTS.monthlyReset:
+                // break;
+                // default:
         }
         updateUI("updPendants", this.pendants);
         updateUI("updArca", this.arcarum);
@@ -196,7 +196,7 @@ window.Profile = {
     save () {
         Storage.set({
             profile: {
-//                status: this.status,
+                // status: this.status,
                 pendants: this.pendants,
                 arcarum: this.arcarum
             }
@@ -204,7 +204,7 @@ window.Profile = {
         devlog("Profile saved.");
     },
     load () {
-        return new Promise((r,x) => {
+        return new Promise((r, x) => {
             function _load(data) {
                 if (data.profile) {
                     for (let key in data.profile) {
@@ -229,26 +229,26 @@ window.Profile = {
 };
 
 function getPendantsRaid (json) {
-    //TODO: uhh might need more cases?
+    // TODO: uhh might need more cases?
     if (json.mbp_info && json.mbp_info.add_result) {
         var added = json.mbp_info.add_result;
         switch (json.mbp_info.item_id) {
-            case "92001": //renown
-                //It only gives a total number, taking into account daily and weekly, but we still have to add them.
+            case "92001": // renown
+                // It only gives a total number, taking into account daily and weekly, but we still have to add them.
                 Profile.updatePendants([
-                    {pendantType: "renown", limitType: "daily", delta: added['10100'].add_point},
-                    {pendantType: "renown", limitType: "weekly", delta: added['10100'].add_point},
-                    {pendantType: "renown", limitType: "sr", delta: added['20200'].add_point},
-                    {pendantType: "renown", limitType: "r", delta: added['20100'].add_point},
-                    //Could add to total, but instead we set using the provided numbers (before raid + from raid) so we update desyncs.
-                    {pendantType: "renown", limitType: "total", total: parseInt(json.mbp_info.article_remain['92001'].number) + json.mbp_info.number}
+                    {pendantType: "renown", limitType: "daily", delta: added["10100"].add_point},
+                    {pendantType: "renown", limitType: "weekly", delta: added["10100"].add_point},
+                    {pendantType: "renown", limitType: "sr", delta: added["20200"].add_point},
+                    {pendantType: "renown", limitType: "r", delta: added["20100"].add_point},
+                    // Could add to total, but instead we set using the provided numbers (before raid + from raid) so we update desyncs.
+                    {pendantType: "renown", limitType: "total", total: parseInt(json.mbp_info.article_remain["92001"].number) + json.mbp_info.number}
                 ]);
                 break;
-            case "92002": //prestige
+            case "92002": // prestige
                 Profile.updatePendants([
-                    {pendantType: "prestige", limitType: "weekly", delta: added['10100'].add_point},
-                    {pendantType: "prestige", limitType: "crew", delta: added['20300'].add_point},
-                    {pendantType: "prestige", limitType: "total", total: parseInt(json.mbp_info.article_remain['92002'].number) + json.mbp_info.number} //Same here
+                    {pendantType: "prestige", limitType: "weekly", delta: added["10100"].add_point},
+                    {pendantType: "prestige", limitType: "crew", delta: added["20300"].add_point},
+                    {pendantType: "prestige", limitType: "total", total: parseInt(json.mbp_info.article_remain["92002"].number) + json.mbp_info.number} // Same here
                 ]);
                 break;
         }
@@ -267,7 +267,7 @@ function useRecoveryItem(json) {
     if (json.recovery_str == "AP") {
         Profile.status.ap.current = json.after;
     }
-    else if (json.recovery_str == "BP") { //Assuming
+    else if (json.recovery_str == "BP") { // Assuming
         Profile.status.bp.current = json.after;
     }
     updateUI("updStatus", Profile.status);

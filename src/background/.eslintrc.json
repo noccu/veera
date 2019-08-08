@@ -1,0 +1,38 @@
+{
+    "globals": {
+        //Objects
+        "Supplies": "writable",
+        "Storage": "writable",
+        "DevTools": "writable",
+        "State": "writable",
+        "Battle": "writable",
+        "Raids": "writable",
+        "Planner": "writable",
+        "Profile": "writable",
+        "PlannerData": "readonly",
+        "RaidList": "readonly",
+        "Time": "readonly",
+        //Constructors
+        "RaidData": "readonly",
+        "SupplyItem": "readonly",
+        "BattleData": "readonly",
+        //Functions
+        "devlog": "readonly",
+        "deverror": "readonly",
+        "devwarn": "readonly",
+        "updateUI": "readonly",
+        "parseDom": "readonly",
+        "getEnumNamedValue": "readonly",
+        "showNotif": "readonly",
+        "fireEvent": "readonly",
+        "openTab": "readonly",
+        //Constants
+        "SUPPLYTYPE": "readonly",
+        "ITEM_KIND": "readonly",
+        "GAME_URL": "readonly",
+        "EVENTS": "readonly",
+        "IDX_ITEM_TO_RAIDS": "readonly",
+        //Events
+        "evhCheckRaidSupplyData": "readonly"
+    }
+}

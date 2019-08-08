@@ -1,14 +1,14 @@
-//commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
-const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1,2,22,37,38,39,50,82]}; //jshint ignore:line
-SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; //types that make up "consumables" I think skill = 10000 sometimes?
+// commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1, 2, 22, 37, 38, 39, 50, 82]}; // jshint ignore:line
+SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; // types that make up "consumables" I think skill = 10000 sometimes?
 SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
-//const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
-//const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
-//item_kind, kind, and type are used interchangeably here.
-//TODO: split off data to different file
-//ITEM KIND gotten from game response in crate, but incomplete. Manual entries marked.
-const ITEM_KIND = {//jshint ignore:line
+// const treasureCategory = {primal: 0, world: 1, uncap: 2, coop: 3, event: 4, showdown: 5, other: 6};
+// const consCategory = {recovery: 0, evolution: 1, skill: 2, augment: 3};
+// item_kind, kind, and type are used interchangeably here.
+// TODO: split off data to different file
+// ITEM KIND gotten from game response in crate, but incomplete. Manual entries marked.
+const ITEM_KIND = {// jshint ignore:line
     1: {
         name: "Weapon",
         class: "Weapon",
@@ -39,9 +39,7 @@ const ITEM_KIND = {//jshint ignore:line
         name: "Rupie",
         class: "Money",
         path: "item/normal",
-        specialId: {
-            0: "lupi"
-        }
+        specialId: {0: "lupi"}
     },
     8: {
         name: "Draw Ticket",
@@ -53,9 +51,7 @@ const ITEM_KIND = {//jshint ignore:line
         name: "Crystal",
         class: "Stone",
         path: "item/normal",
-        specialId: {
-            0: "gem"
-        }
+        specialId: {0: "gem"}
     },
     10: {
         name: "Treasure",
@@ -76,9 +72,7 @@ const ITEM_KIND = {//jshint ignore:line
         name: "CP",
         class: "JobPoint",
         path: "item/normal",
-        specialId: {
-            0: "jp"
-        }
+        specialId: {0: "jp"}
     },
     22: {
         name: "Token",
@@ -118,9 +112,7 @@ const ITEM_KIND = {//jshint ignore:line
         name: "Casino Chip",
         class: "Medal",
         path: "item/normal",
-        specialId: {
-            0: "casino_medal"
-        }
+        specialId: {0: "casino_medal"}
     },
     32: {
         name: "Origin Crystal",
@@ -162,7 +154,7 @@ const ITEM_KIND = {//jshint ignore:line
         class: "Specialitem",
         path: "item/specialitem"
     },
-    49: { //manual
+    49: {
         name: "ROTB pendants",
         class: "ROTB",
         path: "item/event/article",
@@ -210,10 +202,10 @@ const ITEM_KIND = {//jshint ignore:line
         class: "Arcarum",
         path: "item/arcarum",
         specialId: {
-            1002: "item_1002" //1000 pts from event shop
+            1002: "item_1002" // 1000 pts from event shop
         }
     },
-    67: { //manual entry
+    67: {
         name: "Gauph Keys",
         class: "Keys",
         path: "item/skillplus",
@@ -235,7 +227,7 @@ const ITEM_KIND = {//jshint ignore:line
         manual: true,
         specialId: {
             rename (id) {
-                id = id.toString().slice(-2,-1);
+                id = id.toString().slice(-2, -1);
                 if (id === "0") {
                     return "gold";
                 }
@@ -251,7 +243,8 @@ const ITEM_KIND = {//jshint ignore:line
         size: "m/"
     }
 };
-const TREASURE_SOURCES = { //list of item id -> quest id, quest name for farming. TODO: add IDs also move these 2 consts to own file.
+// list of item id -> quest id, quest name for farming. TODO: add IDs also move these 2 consts to own file.
+const TREASURE_SOURCES = {
     2: {id: -1, name: "Scattered Cargo (1/115)"},
     3: {id: -1, name: "Scattered Cargo (1/115)"},
     5: {id: -1, name: "Special Op's Request (8) or Lucky Charm Hunt (6)"},
@@ -279,27 +272,27 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
         this.typeName = data.name;
         let fname = id;
         if (data.specialId) {
-            if (data.specialId.rename) { //try dynamic rename
+            if (data.specialId.rename) { // try dynamic rename
                 fname = data.specialId.rename(id) || id;
             }
-            if (fname == id && data.specialId[id]) { //fall back to static or leave unchanged
+            if (fname == id && data.specialId[id]) { // fall back to static or leave unchanged
                 fname = data.specialId[id];
             }
         }
-        if (fname === 0) { //id 0 and not a special id
+        if (fname === 0) { // id 0 and not a special id
             console.warn("Invalid item, removing from data: ", this);
             delete Supplies.index[type][id];
             Supplies.save();
             return {invalid: true};
         }
-        else if (!fname) { //don't want any undefined.jpg in their server logs lmao
+        else if (!fname) { // don't want any undefined.jpg in their server logs lmao
             devwarn("[SupplyItem] Invalid path, nuking: ", fname, this);
             this.path = "";
         }
         else {
             this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
         }
-        //Redirect some special cases to be more user-friendly.
+        // Redirect some special cases to be more user-friendly.
         if (data.convert) {
             devlog("Converting item: ", this);
             data.convert(this);
@@ -310,9 +303,9 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
         this.typeName = "Unknown";
     }
 
-    //name can already be set when converted
+    // name can already be set when converted
     this.name = this.name || name || (Supplies.has(type, id) ? Supplies.index[type][id].name : "Unknown");
-    if (uniqueId) { this.uniqueId = uniqueId; }
+    if (uniqueId) { this.uniqueId = uniqueId }
 
     for (let t in SUPPLYTYPE) {
         if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
@@ -326,7 +319,7 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
     }
     this.track = !SUPPLYTYPE.Untracked.includes(this.type);
 }
-//TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
+// TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
 window.Supplies = {
     index: {},
     has (type, id) {
@@ -361,7 +354,7 @@ window.Supplies = {
             let item = this.index[type][id];
             if (item) {
                 item = new SupplyItem(type, id, item.count, item.name);
-                if (!item.invalid) { //is instanceof faster? somehow doubt it
+                if (!item.invalid) { // is instanceof faster? somehow doubt it
                     return item;
                 }
             }
@@ -378,7 +371,7 @@ window.Supplies = {
             }
         }
         else {
-            if (data.track) { //if invalid, that's the only prop so this is undef
+            if (data.track) { // if invalid, that's the only prop so this is undef
                 if (!this.index.hasOwnProperty(data.type)) {
                     this.index[data.type] = {};
                     devlog("Created new type index: " + data.type);
@@ -390,7 +383,7 @@ window.Supplies = {
             }
         }
     },
-    /**Gets the list of items belonging to a specific {@link SUPPLY_TYPES}.
+    /** Gets the list of items belonging to a specific {@link SUPPLY_TYPES}.
     @arg {SUPPLY_TYPES} type
     @returns {Object[]}
     */
@@ -402,7 +395,7 @@ window.Supplies = {
             }
         }
         else {
-            if (SUPPLYTYPE.Untracked.includes(parseInt(type))) { return; } //TODO: temp quiet currently awkward data
+            if (SUPPLYTYPE.Untracked.includes(parseInt(type))) { return } // TODO: temp quiet currently awkward data
             for (let id in this.index[type]) {
                 let item = this.get(type, id);
                 if (item) {
@@ -415,9 +408,9 @@ window.Supplies = {
     getAll() {
         return this.getType(Object.keys(this.index));
     },
-    /**Set the full treasure index, for use with game's supplies page.*/
+    /** Set the full treasure index, for use with game's supplies page.*/
     setTreasure: function (json) {
-        if (!json) {return;}
+        if (!json) { return }
 
         let upd = [];
         for (let item of json) {
@@ -426,17 +419,17 @@ window.Supplies = {
 
         this.update(upd, true);
     },
-    /**Set the full consumables index, for use with game's supplies page.*/
+    /** Set the full consumables index, for use with game's supplies page.*/
     setConsumables: function (json) {
-        if (!json) {return;}
+        if (!json) { return }
 
         let data = {},
             upd = [];
-        data[SUPPLYTYPE.recovery] = json[0]; //AP/EP
-        data[SUPPLYTYPE.evolution] = json[1]; //Bars, etc
-        data[SUPPLYTYPE.skill] = json[2]; //Atma keys
-        data[SUPPLYTYPE.augment] = json[3]; //Rings
-        data[SUPPLYTYPE.vessels] = json[4]; //EXP vessels
+        data[SUPPLYTYPE.recovery] = json[0]; // AP/EP
+        data[SUPPLYTYPE.evolution] = json[1]; // Bars, etc
+        data[SUPPLYTYPE.skill] = json[2]; // Atma keys
+        data[SUPPLYTYPE.augment] = json[3]; // Rings
+        data[SUPPLYTYPE.vessels] = json[4]; // EXP vessels
 
         /** Parses list into index
         @arg {Object[]} list
@@ -470,11 +463,11 @@ window.Supplies = {
             this.update(upd, true);
         }
     },
-    /**Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
+    /** Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
     @arg {SupplyItem[]]} updArr - Array of items to update. Uses count prop as delta.**/
     update: function(updArr, overwrite) {
         let currenciesUpdated = false;
-        if (!Array.isArray(updArr)) { updArr = [updArr]; }
+        if (!Array.isArray(updArr)) { updArr = [updArr] }
 
         updArr = updArr.filter(item => item.track);
         for (let item of updArr) {
@@ -487,11 +480,11 @@ window.Supplies = {
                 this.set(item);
             }
             else {
-                if (this.index[item.type] && this.index[item.type][item.id]) { //Update
-                    item.delta = item.count; //Save change
+                if (this.index[item.type] && this.index[item.type][item.id]) { // Update
+                    item.delta = item.count; // Save change
                     item.count = this.index[item.type][item.id].count += item.delta;
                 }
-                else { //Add new
+                else { // Add new
                     this.set(item);
                 }
             }
@@ -503,15 +496,15 @@ window.Supplies = {
 
         this.save();
         fireEvent(EVENTS.suppliesUpdated, updArr);
-        if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies); }
+        if (currenciesUpdated) { updateUI("updCurrencies", Profile.currencies) }
         updateUI("updSupplies", updArr);
     },
     save: function() {
         Storage.set({sup_idx: this.index});
         devlog("Supply index saved.");
     },
-    load: function() { //Called out of context
-        return new Promise((r,x) => {
+    load: function() { // Called out of context
+        return new Promise((r, x) => {
             function _load(data) {
                 if (data.sup_idx) {
                     Supplies.index = data.sup_idx;
@@ -519,7 +512,7 @@ window.Supplies = {
                     console.info("Supply index loaded.");
                 }
                 else {
-                    //TODO: Load basic store or consider xhr
+                    // TODO: Load basic store or consider xhr
                     console.warn("Supply index not found, some functionality will be dodgy until you visit game supplies page and reload Veera.");
                 }
                 r();
@@ -559,14 +552,14 @@ function gotQuestLoot(json) {
     }
 
     if (json) {
-        //Arcarum pts;
+        // Arcarum pts;
         if (json.arcarum_info) {
             Profile.updArca(0, json.arcarum_info.point);
         }
-        //Event rewards
+        // Event rewards
         if (json.popup_data) {
             if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
-                //Non-box, side-scrolling
+                // Non-box, side-scrolling
                 loot = json.popup_data.daily_mission.item_list;
                 if (loot.length) {
                     for (let item of loot) {
@@ -576,7 +569,7 @@ function gotQuestLoot(json) {
                     fireEvent(EVENTS.evMissionDone, upd);
                 }
             }
-            //Stage clear rewards
+            // Stage clear rewards
             if (json.popup_data.clear_reward && json.popup_data.clear_reward.item) {
                 let item = json.popup_data.clear_reward.item;
                 let sd = Supplies.find(item.name);
@@ -585,11 +578,11 @@ function gotQuestLoot(json) {
                 }
             }
         }
-        //Drops
+        // Drops
         if (json.rewards) {
-            //Non-box, side-scrolling
+            // Non-box, side-scrolling
             loot = json.rewards.article_list;
-            if (loot.length == undefined) { //It's an array when empty apparently...
+            if (loot.length == undefined) { // It's an array when empty apparently...
                 let content = Object.keys(loot);
                 for (let key of content) {
                     let entry = loot[key];
@@ -598,13 +591,13 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${content.length} items from side-scroll.`);
             }
 
-            //Box drops
+            // Box drops
             loot = json.rewards.reward_list;
-            if (loot.length == undefined) { //An object when not
+            if (loot.length == undefined) { // An object when not
                 let numItems = 0;
                 for (let key of Object.keys(loot)) {
                     let boxType = loot[key];
-                    //BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
+                    // BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
                     for (let entry of Object.keys(boxType)) {
                         addUpdItem(boxType[entry]);
                         numItems++;
@@ -613,10 +606,10 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${numItems} items from boxes.`);
             }
         }
-        //Arcarum chests
+        // Arcarum chests
         else if (json.result) {
             loot = json.result.contents;
-            if (loot) { //Is actually an array or undef/missing.
+            if (loot) { // Is actually an array or undef/missing.
                 for (let item of loot) {
                     let si = addUpdItem(item);
                     si.chestType = json.result.chest_type;
@@ -638,7 +631,7 @@ function startAcra (json) {
 }
 function skipArca(data) {
     let upd = [];
-    for (item of data.reward_list) {
+    for (let item of data.reward_list) {
         upd.push(new SupplyItem(item.item_kind, item.item_id, item.item_num));
     }
 
@@ -651,22 +644,22 @@ function skipArca(data) {
 function purchaseItem(data) {
     let json = data.json,
         upd = [],
-        item; //Supply update func expects array.
-    //Only ever buy 1 (type of) item at once... I think?
+        item; // Supply update func expects array.
+    // Only ever buy 1 (type of) item at once... I think?
     if (json.article.item_ids) {
-        //The item we get.
+        // The item we get.
         let nBought = parseInt(json.purchase_number) || parseInt(data.postData.num);
         item = new SupplyItem(json.article.item_kind[0], json.article.item_ids[0], nBought, json.article.name_en);
         upd.push(item);
         fireEvent(EVENTS.shopPurchase, item);
 
-        let nReq = json.article.use_coin_number; //Casino
+        let nReq = json.article.use_coin_number; // Casino
         if (nReq) {
             item = new SupplyItem(31, 0, - (parseInt(nReq) * nBought));
             upd.push(item);
         }
-        else { //Normal shops
-            //The items we trade in. Max 4, 1-indexed
+        else { // Normal shops
+            // The items we trade in. Max 4, 1-indexed
             for (let i = 1; i < 5; i++) {
                 let ingr = json.article["article" + i];
                 if (ingr) {
@@ -674,29 +667,29 @@ function purchaseItem(data) {
                     item = new SupplyItem(ingr.master.item_kind, ingr.master.id, -(nReq * nBought), ingr.master.name_en);
                     upd.push (item);
                 }
-                else { break; } //assuming ordered list
+                else { break } // assuming ordered list
             }
         }
 
-//        fireEvent(EVENTS.shopPurchase, upd);
+        // fireEvent(EVENTS.shopPurchase, upd);
         Supplies.update(upd);
     }
 }
 
-function cratePickup(data) { //single item pick up TODO: check multi
+function cratePickup(data) { // single item pick up TODO: check multi
     let upd = [];
     function parse(entry) {
         let si = new SupplyItem(entry.item_kind_id, entry.regular_id || entry.item_id, entry.number, entry.item_name);
-        if (entry.regular_id) { si.uniqueId = entry.item_id; }
+        if (entry.regular_id) { si.uniqueId = entry.item_id }
         upd.push(si);
     }
 
-    if (Array.isArray(data.presents)) { //Pickup all
+    if (Array.isArray(data.presents)) { // Pickup all
         for (let item of data.presents) {
             parse(item);
         }
     }
-    else { //pickup single
+    else { // pickup single
         parse(data.presents);
     }
 
@@ -743,15 +736,15 @@ function reduce (data) {
 function storePendingRaidsTreasure (data) {
     let store = {items: []};
 
-    //normal raids
+    // normal raids
     if (data.quest_id) {
         for (let i = 0; i < data.treasure_id.length; i++) {
             store.id = data.quest_id;
-            if (data.action_point) { store.ap = - parseInt(data.action_point); }
+            if (data.action_point) { store.ap = - parseInt(data.action_point) }
             store.items.push( new SupplyItem(data.treasure_kind[i], data.treasure_id[i], - parseInt(data.consume[i]), data.treasure_name) );
         }
     }
-    //event raids
+    // event raids
     else if (data.option) {
         data = parseDom(data.option.quest.list);
         let list = data.querySelectorAll("[id*=raid]");
@@ -773,7 +766,7 @@ function storePendingRaidsTreasure (data) {
 function consumePendingRaidsTreasure (data) {
     if (Supplies.pendingRaidHost && Supplies.pendingRaidHost.id == data.postData.quest_id) {
         let consumedItems;
-        if (Array.isArray(data.postData.use_item_id)) { //This is an assumption. I don't want to host Luci just to check rn.
+        if (Array.isArray(data.postData.use_item_id)) { // This is an assumption. I don't want to host Luci just to check rn.
             consumedItems = Supplies.pendingRaidHost.items.filter(item => data.postData.use_item_id.includes(item.id));
         }
         else {
@@ -785,11 +778,13 @@ function consumePendingRaidsTreasure (data) {
 }
 
 function weaponUncapStart(data) {
-    var update = { id: data.url.pathname.match(/materials\/(\d+)/)[1],
-                   items: [] };
+    var update = {
+        id: data.url.pathname.match(/materials\/(\d+)/)[1],
+        items: []
+    };
 
     for (let key of Object.keys(data.json)) {
-        if (key == "options") { continue; }
+        if (key == "options") { continue }
 
         let item = data.json[key],
             si;
@@ -801,8 +796,10 @@ function weaponUncapStart(data) {
 }
 
 function npcUncapStart(data) {
-    var update = { id: data.url.pathname.match(/materials\/(\d+)/)[1],
-                   items: [] };
+    var update = {
+        id: data.url.pathname.match(/materials\/(\d+)/)[1],
+        items: []
+    };
 
     for (let item of data.json.requirements) {
         let si = new SupplyItem(item.item_kind.id, item.item_id, - parseInt(item.item_number));
@@ -827,9 +824,11 @@ function storePendingJobUnlock(data) {
         items.push(si);
     }
 
-    Supplies.pendingJob = {id: data.master.id,
-                           cp: parseInt(data.job.use_job_point),
-                           items};
+    Supplies.pendingJob = {
+        id: data.master.id,
+        cp: parseInt(data.job.use_job_point),
+        items
+    };
 }
 
 function consumePendingJobUnlock(data) {
@@ -840,10 +839,12 @@ function consumePendingJobUnlock(data) {
 }
 
 function storePendingForgeCCW (data) {
-    Supplies.pendingForge = {newWeapId: data.weapon_new.weapon_id,
-                            items: []};
+    Supplies.pendingForge = {
+        newWeapId: data.weapon_new.weapon_id,
+        items: []
+    };
     for (let item of data.list) {
-        let si = new SupplyItem(item.kind, item.id,  - parseInt(item.article_num), item.item_name);
+        let si = new SupplyItem(item.kind, item.id, - parseInt(item.article_num), item.item_name);
         Supplies.pendingForge.items.push(si);
     }
 }
@@ -854,7 +855,7 @@ function consumePendingForgeCCW (data) {
     }
 }
 
-//Events. Temp I guess
+// Events. Temp I guess
 
 function setRotbPendants (json) {
     let dom = parseDom(json.data),
@@ -862,7 +863,7 @@ function setRotbPendants (json) {
     if (dom.getElementById("title").value == "Rise of the Beasts") {
         pts = dom.querySelector("#cnt-event .prt-point");
         if (pts) {
-            pts = parseInt(pts.textContent.slice(0,pts.textContent.indexOf("/")));
+            pts = parseInt(pts.textContent.slice(0, pts.textContent.indexOf("/")));
         }
     }
     Supplies.update(new SupplyItem(SUPPLYTYPE.treasure, 90001, pts, "Four Symbols Pendant"), true);

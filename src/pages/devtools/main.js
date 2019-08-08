@@ -1,9 +1,11 @@
-window.DEBUG = true; //TODO: remove/replace with proper thing
+window.DEBUG = true; // TODO: remove/replace with proper thing
 
-//Adding a last item in array macro
-Object.defineProperty(Array.prototype, "last", {get: function(){
-    return this.length === 0 ? 0 : this[this.length - 1];
-}});
+// Adding a last item in array macro
+Object.defineProperty(Array.prototype, "last", {
+    get: function() {
+        return this.length === 0 ? 0 : this[this.length - 1];
+    }
+});
 
 if (chrome.runtime) {
     BackgroundPage.connect();
@@ -17,14 +19,12 @@ function initialize(data) {
     UI.planner.init(data.planner);
 
     UI.initButtons();
-//    UI.time.keep();
-//    UI.time.initTimers();
     Unf.areaInfo.init();
 
     Network.listen();
 }
 
-function devLog() {
+function devlog() {
     if (DEBUG) {
         console.log(...arguments);
     }
@@ -58,11 +58,11 @@ function updateStatus (data) {
         {id: "bp-current", value: data.bp.current},
         {id: "ap-max", value: data.ap.max},
         {id: "rank", value: data.level}
-        /*,{
+        /* ,{
             id: "",
             value: data.lvlP
             }*/
-        //TODO: level bar
+        // TODO: level bar
     ], true);
 
     var d = document.getElementById("ap-bp-display");
@@ -99,12 +99,12 @@ function updateSupplies (idx) {
 
         for (let item of idx) {
             let entry = document.getElementById(`${item.type}_${item.id}`);
-            if (entry) { //update
+            if (entry) { // update
                 entry.title = item.name;
                 entry.getElementsByClassName("collection-data")[0].textContent = item.count;
             }
-            else { //add new
-                if (!newItems) { newItems = document.createElement("template"); }
+            else { // add new
+                if (!newItems) { newItems = document.createElement("template") }
                 newItems.content.appendChild(createSupplyItem(item));
             }
         }
@@ -114,7 +114,7 @@ function updateSupplies (idx) {
     }
 }
 function createSupplyItem (data, idPrefix) {
-    if (data.id === undefined) { //id = 0 is a thing
+    if (data.id === undefined) { // id = 0 is a thing
         console.warn("No id for item: ", data);
         return;
     }
@@ -134,22 +134,22 @@ function createSupplyItem (data, idPrefix) {
     return newEle;
 }
 
-//Planner functions
+// Planner functions
 function createPlannerItem (item) {
-        let li = createSupplyItem(item, "p");
-        li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
-        return li;
+    let li = createSupplyItem(item, "p");
+    li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
+    return li;
 }
-function changeSeries(ev) { //Event handler, updates type and element list when series changes
+function changeSeries(ev) { // Event handler, updates type and element list when series changes
     BackgroundPage.send("plannerSeriesChange", {newValue: ev.target.value});
 }
-function updateSeriesOptions (data) { //receives list of each option type.
+function updateSeriesOptions (data) { // receives list of each option type.
     UI.planner.populateSelection("type", data.types);
     UI.planner.populateSelection("element", data.elements);
     UI.planner.populateSelection("start", data.steps);
     UI.planner.populateSelection("end", data.steps);
 
-    //TODO: template maybe? Or write an optimized function
+    // TODO: template maybe? Or write an optimized function
     UI.planner.dom.options.innerHTML = "";
     if (data.options) {
         for (let option of data.options) {
@@ -162,7 +162,7 @@ function updateSeriesOptions (data) { //receives list of each option type.
         }
     }
 }
-function updatePlan () {  //Event handler
+function updatePlan () { // Event handler
     var plan = {
         series: UI.planner.dom.series.value,
         wtype: UI.planner.dom.type.value,
@@ -179,9 +179,9 @@ function updatePlan () {  //Event handler
     BackgroundPage.send("newPlanRequest", plan);
 }
 
-//Raids
+// Raids
 function updCurrentRaidInfo (data) {
-    //Just drops for now.
+    // Just drops for now.
     if (data.hasOwnProperty("loot")) {
         let list = document.getElementById("raid-current-drop-list"),
             temp = document.getElementById("t-raid-current-drop"),
@@ -189,7 +189,7 @@ function updCurrentRaidInfo (data) {
 
         list.innerHTML = "";
         for (let item of data.loot) {
-            if (ssr_only && item.rarity < 4) { continue; }
+            if (ssr_only && item.rarity < 4) { continue }
 
             let disp = temp.content.firstElementChild,
                 name = disp.getElementsByTagName("span")[0];
@@ -211,11 +211,11 @@ function createRaid(raidEntry) {
     newRaid.content.querySelector(".raid").id = raidEntry.data.id;
     newRaid.content.querySelector(".raid-name").textContent = raidEntry.data.name;
     newRaid.content.querySelector(".raid-icon").src = raidEntry.data.img;
-//    newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
-//    devLog(raidEntry.data.img);
+    // newRaid.content.querySelector(".raid-icon").src = "../../assets/images/quests/"+raidEntry.data.img.split('/').pop();
+    // devLog(raidEntry.data.img);
     newRaid.content.querySelector(".raid-cost").textContent = raidEntry.data.apCost;
 
-//    newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
+    // newRaid.content.querySelector(".raid-hosts .current-value").textContent = raidEntry.data.dailyHosts - raidEntry.hosts.today;
     newRaid.content.querySelector(".raid-hosts .max-value").textContent = raidEntry.data.dailyHosts;
 
     newRaid = document.importNode(newRaid.content, true);
@@ -273,7 +273,7 @@ function updateRaidTrackingDisplay(raidEle) {
         updMats(raidEntry.data.matCost);
     }
 
-    //CSS
+    // CSS
     if (raidEntry.active) {
         raidEle.classList.remove("hidden");
     }
@@ -293,7 +293,6 @@ function populateRaids (raids) {
     UI.setList(list, raids, createRaid);
     UI.raids.list = list.children;
 }
-
 
 function updLastSupport(data) {
     UI.setValue({id: "last-sup-sum", value: data.summon});

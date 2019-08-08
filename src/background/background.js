@@ -47,12 +47,14 @@ function MainInit() {
             console.groupEnd();
             console.group("Setting up");
             console.log("Initializing UI.");
-            updateUI("init", {theme: State.theme.current,
-                              planner: Planner.listSeries(),
-                              unfEdition: State.unfEdition,
-                              raids: Raids.getList()});
+            updateUI("init", {
+                theme: State.theme.current,
+                planner: Planner.listSeries(),
+                unfEdition: State.unfEdition,
+                raids: Raids.getList()
+            });
             updateUI("updSupplies", Supplies.getAll());
-//            updateUI("updStatus", Profile.status);
+            // updateUI("updStatus", Profile.status);
             updateUI("updCurrencies", Profile.currencies);
             updateUI("updPendants", Profile.pendants);
             updateUI("updArca", Profile.arcarum);
@@ -65,9 +67,7 @@ function MainInit() {
             window.addEventListener(EVENTS.weeklyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.monthlyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
-            window.addEventListener(EVENTS.evMissionDone, ev => {
-                showNotif("Mission complete!", {text: ev.detail.map(x => `${x.count}x ${x.name}`).join("\n")})
-            });
+            window.addEventListener(EVENTS.evMissionDone, ev => showNotif("Mission complete!", {text: ev.detail.map(x => `${x.count}x ${x.name}`).join("\n")}));
             window.addEventListener(EVENTS.pageChanged, ev => {
                 devlog(`Page changed to ${ev.detail}`);
                 Raids.evhPageChanged(ev.detail);
@@ -123,7 +123,7 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
     }
     else if (Notification.permission == "default"){
         Notification.requestPermission().then(p => {
-            if (p == "granted") { showNotif(title, {body, icon}); }
+            if (p == "granted") { showNotif(title, {body, icon}) }
         });
     }
 }
@@ -161,12 +161,12 @@ function getEnumNamedValue(list, val) { //for the simple plain obj enum actually
 
 const DOM_PARSER = new DOMParser();
 function parseDom(data, {decode = true, mime = "text/html"} = {}) {
-    if (decode) { data = decodeURIComponent(data); }
+    if (decode) { data = decodeURIComponent(data) }
     return DOM_PARSER.parseFromString(data, mime);
 }
 
 //Add a simple fast boolean return match macro just cause it's nicer and clearer.
-String.prototype.ismatch = function(s){ return this.indexOf(s) != -1;};
+String.prototype.ismatch = function(s){ return this.indexOf(s) != -1};
 
 //Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {

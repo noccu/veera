@@ -7,6 +7,7 @@ function logSupportUser (json) {
             user: d.name || "Unknown",
             id: d.request_user_id,
             url: `#profile/${d.request_user_id}`,
-            viewer: d.viewer_id});
+            viewer: d.viewer_id
+        });
     }
 }

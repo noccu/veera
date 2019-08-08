@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 window.BackgroundPage = {
     query: function(key) {
         return new Promise(r => chrome.runtime.sendMessage({source: "dt", query: key}, ret => r(ret.value)));
@@ -5,9 +6,7 @@ window.BackgroundPage = {
     connection: null,
     connect: function() {
         chrome.runtime.onMessage.addListener(hearQuery);
-        this.connection = chrome.runtime.connect({
-            name: "devtools-page"
-        });
+        this.connection = chrome.runtime.connect({name: "devtools-page"});
         this.connection.onMessage.addListener(this.hear);
     },
     send: function(action, data) {
@@ -17,11 +16,11 @@ window.BackgroundPage = {
         }
         this.connection.postMessage({action, data});
     },
-    hear: function(msg){
-        if (DEBUG) { console.debug("[devtools] Heard:", msg); }
-        switch (msg.action){
+    hear: function(msg) {
+        if (DEBUG) { console.debug("[devtools] Heard:", msg) }
+        switch (msg.action) {
             case "sayHi":
-                console.log("Onee-sama gokigenyou! 	(´ ∀ ` *)");
+                console.log("Onee-sama gokigenyou! (´ ∀ ` *)");
                 break;
             case "sayBye":
                 console.log("Iya da onee-sama!! ＼(º □ º l|l)");
@@ -97,7 +96,9 @@ function hearQuery (data, sender, respond) {
                 retValue = chrome.devtools.inspectedWindow.tabId;
         }
 
-        respond({query: data.query,
-                 value: retValue});
+        respond({
+            query: data.query,
+            value: retValue
+        });
     }
 }

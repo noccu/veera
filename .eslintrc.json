@@ -1,0 +1,52 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es6": true,
+        "webextensions": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": [
+            "warn",
+            4,
+            {"SwitchCase": 1}
+        ],
+        "linebreak-style": [
+            "warn",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always",
+            {"omitLastInOneLineBlock": true}
+        ],
+        "semi-spacing": "error",
+        "no-prototype-builtins": "off",
+        "no-redeclare": ["error", {"builtinGlobals": false}],
+        "no-trailing-spaces": "error",
+        "no-tabs": "error",
+        "no-unused-vars": ["error", {"vars": "local"}],
+        "no-multi-spaces": ["warn", { "ignoreEOLComments": false }],
+        "space-before-blocks": "warn",
+        "key-spacing": "warn",
+        "block-spacing": "warn",
+        "array-bracket-spacing": "warn",
+        "object-curly-spacing": "warn",
+        "comma-spacing": "warn",
+        "spaced-comment": "warn",
+        "array-bracket-newline": ["warn", { "multiline": true }],
+        "object-curly-newline": ["warn", { "multiline": true }],
+        "object-property-newline": ["warn", { "allowAllPropertiesOnSameLine": true }],
+        "comma-dangle": "warn",
+        "comma-style": "error",
+        "brace-style": ["error", "stroustrup", { "allowSingleLine": true }]
+    }
+}

@@ -12,10 +12,10 @@ window.Network = {
     },
     logRequest: async function(entry) {
         if (entry.request.url.indexOf("game.granbluefantasy.jp") != -1) {
-            let data = { url: entry.request.url };
+            let data = {url: entry.request.url};
             let success = false,
                 content;
-            
+
             try {
                 data.postData = entry.request.postData ? JSON.parse(entry.request.postData.text) : null;
                 switch (entry.response.content.mimeType) {
@@ -32,9 +32,9 @@ window.Network = {
                             data.body = content;
                             success = true;
                         }
-                        
-                        if (entry.request.url.indexOf("maintenance") != -1) { //TODO: move to bg
-                            startMaintTimer(data.body);
+
+                        if (entry.request.url.indexOf("maintenance") != -1) { // TODO: move to bg
+                            // startMaintTimer(data.body);
                             return;
                         }
                         break;
@@ -44,7 +44,7 @@ window.Network = {
                 success = false;
                 console.error(e);
             }
-            
+
             if (success) {
                 BackgroundPage.send("request", data);
             }
@@ -62,7 +62,7 @@ window.Network = {
             }
         );
     },
-    toggle: function(){
+    toggle: function() {
         if (Network.logging) {
             Network.deafen();
         }

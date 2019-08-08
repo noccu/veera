@@ -17,9 +17,9 @@ window.Planner = {
             }
 
             let id = item.id;
-            //Dealing with templates
+            // Dealing with templates
             if (item.isTemplate) {
-                //Item-specific keys, used in options.
+                // Item-specific keys, used in options.
                 if (!templateKey && item.templateKey) {
                     switch (item.templateKey) {
                         case "wtype":
@@ -32,8 +32,8 @@ window.Planner = {
                             templateKey = item.templateKey;
                     }
                 }
-                //Multi-mapped typeNames
-                if (Array.isArray(templateKey)) { //item keys can be arrows too!
+                // Multi-mapped typeNames
+                if (Array.isArray(templateKey)) { // item keys can be arrows too!
                     for (let key of templateKey) {
                         if (item.id[key]) {
                             templateKey = key;
@@ -43,7 +43,7 @@ window.Planner = {
                 }
                 id = item.id[templateKey];
             }
-            //Multi-item teplates
+            // Multi-item teplates
             let needed = item.needed;
             if (Array.isArray(id)) {
                 needed /= id.length;
@@ -58,8 +58,8 @@ window.Planner = {
 
         try {
             for (let category of Object.keys(PlannerData[series])) {
-                 let itemArray,
-                     templateKey;
+                let itemArray,
+                    templateKey;
                 switch (category) {
                     case "core":
                         itemArray = PlannerData[series].core;
@@ -94,8 +94,8 @@ window.Planner = {
 
                 if (itemArray) {
                     for (let item of itemArray) {
-                        if (item == null) { continue; }
-                        if (!item.step || (start < item.step && item.step <= end)) { //start is exclusive (we already have it!)
+                        if (item == null) { continue }
+                        if (!item.step || (start < item.step && item.step <= end)) { // start is exclusive (we already have it!)
                             addToPlan(item, templateKey);
                         }
                     }
@@ -119,7 +119,7 @@ window.Planner = {
         }
     },
     listElements: function(series) {
-        if (PlannerData[series]){
+        if (PlannerData[series]) {
             return Object.keys(PlannerData[series].element);
         }
     },
@@ -144,8 +144,8 @@ window.Planner = {
 };
 
 
-//DBG/Build data: Find by name, use with Supply
-function fi(s){
+// DBG/Build data: Find by name, use with Supply
+function fi(s) {
     var search = new RegExp(s, "i");
     var ret = [];
 
@@ -156,7 +156,7 @@ function fi(s){
                 let kind = ITEM_KIND[type] ? `${ITEM_KIND[type].name}/${ITEM_KIND[type].class}` : "Unknown!";
                 ret.push(`${item.name} from ${kind} (type: ${type}) is ${key}`);
             }
-            else if (typeof item == "object"){
+            else if (typeof item == "object") {
                 f(item, key);
             }
         }
