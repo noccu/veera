@@ -468,7 +468,7 @@ function clearDropdown(el) {
         el.options.remove(i);
     }
 }
-function populateDropdown(list, data) {
+function populateDropdown(list, data, f) {
     for (let option of data) {
         let el = document.createElement("option");
         if (option.val) {
@@ -477,6 +477,10 @@ function populateDropdown(list, data) {
         }
         else {
             el.value = el.textContent = option;
+        }
+
+        if (f) { // post-process
+            f(el, option);
         }
         list.options.add(el);
     }

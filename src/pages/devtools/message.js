@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 window.BackgroundPage = {
-    query: function(key) {
-        return new Promise(r => chrome.runtime.sendMessage({source: "dt", query: key}, ret => r(ret.value)));
+    query: function(key, val) {
+        return new Promise(r => chrome.runtime.sendMessage({source: "ui", query: key, val}, ret => r(ret.value)));
     },
     connection: null,
     connect: function() {
@@ -63,6 +63,9 @@ window.BackgroundPage = {
                 UI.battle.reset();
                 UI.battle.setPartyNames(msg.data.characters.list);
                 break;
+            case "updBattleArchive":
+                UI.battle.updArchive(msg.data);
+                break;
             case "updRaidLoot":
             case "nextQuestTriggered":
                 updCurrentRaidInfo(msg.data);
@@ -89,6 +92,7 @@ window.BackgroundPage = {
 };
 
 function hearQuery (data, sender, respond) {
+    devlog("Query rcv: ", data);
     if (data.source == "bg") {
         var retValue;
         switch (data.query) {

@@ -19,9 +19,10 @@ const BATTLE_ACTIONS = {
     bossSkill: {name: "Boss skill"}
 }; // As objects for faster/easier(??) comparison while keeping a name string.
 
-function BattleData(id, chars) {
-    this.turn = 1;
+function BattleData(id, name, turn, chars) {
+    this.turn = turn;
     this.id = id;
+    this.name = name;
     this.log = [];
     this.startTime = Date.now();
 
@@ -64,12 +65,16 @@ function BattleData(id, chars) {
     };
 
     // Init chars
-    chars.forEach((entry, idx) => this.characters.list[idx] = new BattleCharData(idx, entry.name));
+    chars.forEach((entry, idx) => this.characters.list[idx] = new BattleCharData(this, idx, entry.name));
 }
 Object.defineProperties(BattleData.prototype, {
     addTurn: {
-        value: function() {
-            this.log.push(new BattleTurnData());
+        value: function(jsonTurn) {
+            devlog("Start turn ", jsonTurn);
+            this.turn = jsonTurn;
+            this.log.push(new BattleTurnData(jsonTurn));
+            return this.log.last;
+
         }
     },
     getTotalDamage: {// don't think this is actually used, in favour of stats.totalDmg
@@ -84,22 +89,23 @@ Object.defineProperties(BattleData.prototype, {
     },
     currentTurn: {
         get() {
-            if (!this.log.length) {
-                this.addTurn();
+            return this.getTurn(this.turn);
+        }
+    },
+    getTurn: {
+        value: function(turn) {
+            if (turn == this.log.last.turn) { // shortcut
+                return this.log.last;
             }
-            return this.log.last;
-
-            // let turn = this.turn - 1; //0-indexed array, 1-indexed turns
-            // if (!this.log[turn]) {
-            // this.log[turn] = new BattleTurnData();
-            // }
-            // return this.log[turn];
+            else {
+                return this.log.find(t => t.turn == turn) || this.addTurn(turn);
+            }
         }
     },
     activeTurns: {
         get() {
             return this.log.length || 1;
-            // return this.log.filter(() => true).length || 1;
+            // return this.log.reduce(x => x + 1, 0);
         }
     }
 });
@@ -152,33 +158,44 @@ window.Battle = {
             return this.archive.get(this._currentId);
         }
         else {
-            return null;
+            return undefined;
         }
     },
     set current(id) {
         this._currentId = id;
     },
-    packageData: function () { // TODO: check if everything copies
-        let data = JSON.parse(JSON.stringify(this.current));
+    packageData: function (target) { // TODO: check if everything copies
+        if (!target) { target = this.current }
+        let data = JSON.parse(JSON.stringify(target));
 
-        for (let stat in this.current.stats) {
-            data.stats[stat] = this.current.stats[stat];
+        for (let stat in target.stats) {
+            data.stats[stat] = target.stats[stat];
         }
-        for (let char of Object.keys(this.current.characters.list)) {
-            for (let stat in this.current.characters.list[char].stats) {
-                data.characters.list[char].stats[stat] = this.current.characters.list[char].stats[stat];
+        for (let char of Object.keys(target.characters.list)) {
+            for (let stat in target.characters.list[char].stats) {
+                data.characters.list[char].stats[stat] = target.characters.list[char].stats[stat];
             }
         }
         return data;
     },
     reset(json) { // Called on every battle entry (incl refresh)
         if (json) {
-            let id = json.multi ? json.twitter.battle_id : json.raid_id;
+            let id, name;
+            if (json.multi) {
+                id = json.twitter.battle_id;
+                name =json.twitter.monster;
+            }
+            else {
+                // raid id changes between stages
+                // also need string for archive selection (select->option returns strings)
+                id = (json.battle && json.battle.total > 1) ? json.quest_id : json.raid_id.toString();
+                name = Raids.lastHost.name || json.boss.param[0].monster;
+            }
             let logged = this.archive.has(id);
             this.current = id;
             // Unlogged raid, or new host/join of logged raid
             if (!logged || logged && json.turn < this.archive.get(id).turn) {
-                this.archive.set(id, new BattleData(id, json.player.param));
+                this.archive.set(id, new BattleData(id, name, json.turn, json.player.param));
 
                 // Limit number of archived raids. TODO: find better way cause this sux
                 if (this.archive.size > this.MAX_STORED) {
@@ -187,8 +204,29 @@ window.Battle = {
 
                 fireEvent(EVENTS.newBattle);
                 updateUI("updBattleNewRaid", this.packageData());
+                let archList = [];
+                for (let v of this.archive.values()) {
+                    let b = {val: v.id, name: v.name};
+                    if (v.id == id) { b.current = true }
+                    archList.push(b);
+                }
+                // Array.from(Battle.archive.values()).map(cur => { return {id: cur.id, name: cur.name} });
+                updateUI("updBattleArchive", archList);
             }
         }
+    },
+    load (id) {
+        // TODO: This is very inefficient but requires big changes to improve.
+        let archivedBattle = this.archive.get(id),
+            lastTurn = archivedBattle.turn;
+        let fullArch = [];
+        for (let turnData of archivedBattle.log) {
+            archivedBattle.turn = turnData.turn;
+            fullArch.push(this.packageData(archivedBattle));
+        }
+        archivedBattle.turn = lastTurn;
+
+        return fullArch;
     }
 };
 
@@ -226,77 +264,95 @@ Object.defineProperties(BattleActionData.prototype, {
     }
 });
 
-function BattleTurnData() {
+function BattleTurnData(turn) {
     this.actions = [];
     this.honor = 0;
+    this.turn = turn;
 }
-BattleTurnData.prototype.getTotalHits = function (char) {
-    let total = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            total += action.totalHits;
-        }
-    }
-    return total;
-};
-BattleTurnData.prototype.getTotalDmg = function (char) {
-    let total = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            total += action.totalDmg;
-        }
-    }
-    return total;
-};
-BattleTurnData.prototype.getDmg = function (char) {
-    let total = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            total += action.dmg;
-        }
-    }
-    return total;
-};
-BattleTurnData.prototype.getEchoDmg = function (char) {
-    let total = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            total += action.echoDmg;
-        }
-    }
-    return total;
-};
-BattleTurnData.prototype.getCritRate = function(char) {
-    let crits = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            crits += action.crits;
-        }
-    }
-    return safeDivide(crits, this.getTotalHits(char)) * 100;
-};
-BattleTurnData.prototype.getCritDmg = function(char) {
-    let total = 0;
-    for (let action of this.actions) {
-        if (char === undefined || action.char == char) {
-            total += action.critDmg;
-        }
-    }
-    return total;
-};
-BattleTurnData.prototype.getDamageTaken = function(char) {
-    let dmg = 0;
-    for (let action of this.actions) {
-        for (let charHit in action.dmgTaken) {
-            if (char === undefined || charHit == char) {
-                dmg += action.dmgTaken[charHit];
-            }
-        }
-    }
-    return dmg;
-};
 
-function BattleCharData(id, name = "") {
+Object.defineProperties(BattleTurnData.prototype, {
+    getTotalHits: {
+        value: function (char) {
+            let total = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    total += action.totalHits;
+                }
+            }
+            return total;
+        }
+    },
+    getTotalDmg: {
+        value: function (char) {
+            let total = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    total += action.totalDmg;
+                }
+            }
+            return total;
+        }
+    },
+    getDmg: {
+        value: function (char) {
+            let total = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    total += action.dmg;
+                }
+            }
+            return total;
+        }
+    },
+    getEchoDmg: {
+        value: function (char) {
+            let total = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    total += action.echoDmg;
+                }
+            }
+            return total;
+        }
+    },
+    getCritRate: {
+        value: function(char) {
+            let crits = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    crits += action.crits;
+                }
+            }
+            return safeDivide(crits, this.getTotalHits(char)) * 100;
+        }
+    },
+    getCritDmg: {
+        value: function(char) {
+            let total = 0;
+            for (let action of this.actions) {
+                if (char === undefined || action.char == char) {
+                    total += action.critDmg;
+                }
+            }
+            return total;
+        }
+    },
+    getDamageTaken: {
+        value: function(char) {
+            let dmg = 0;
+            for (let action of this.actions) {
+                for (let charHit in action.dmgTaken) {
+                    if (char === undefined || charHit == char) {
+                        dmg += action.dmgTaken[charHit];
+                    }
+                }
+            }
+            return dmg;
+        }
+    }
+});
+
+function BattleCharData(battle, id, name = "") {
     this.char = id;
     this.name = name;
     this.activeTurns = 0;
@@ -308,6 +364,7 @@ function BattleCharData(id, name = "") {
         echoDmg: 0,
         echoHits: 0,
         skillDmg: 0,
+        skillDetails: {},
         ougiDmg: 0,
         crits: 0,
         da: 0,
@@ -321,6 +378,11 @@ function BattleCharData(id, name = "") {
         enumerable: false,
         writable: false,
         value: this
+    });
+    Object.defineProperty(this, "battleInstance", {
+        enumerable: false,
+        writable: false,
+        value: battle
     });
 }
 
@@ -359,16 +421,16 @@ const battleCharStatsShared = {
         return Math.floor(safeDivide(this.totalDmg, this.instance.activeTurns));
     },
     get turnDmg() {
-        return Battle.current.currentTurn.getTotalDmg(this.instance.char);
+        return this.instance.battleInstance.currentTurn.getTotalDmg(this.instance.char);
     },
     get turnCritRate() {
-        return Battle.current.currentTurn.getCritRate(this.instance.char);
+        return this.instance.battleInstance.currentTurn.getCritRate(this.instance.char);
     },
     get turnDmgTaken() {
-        return Battle.current.currentTurn.getDamageTaken(this.instance.char);
+        return this.instance.battleInstance.currentTurn.getDamageTaken(this.instance.char);
     },
     get turnCritDmg() {
-        return Battle.current.currentTurn.getCritDmg(this.instance.char);
+        return this.instance.battleInstance.currentTurn.getCritDmg(this.instance.char);
     }
 };
 
@@ -441,8 +503,7 @@ function battleParseDamage(input, actionData, type) {
         deverror(e, input, actionData);
     }
 }
-
-function battleUseAbility (json) {
+function battleUseAbility (json, postData) {
     if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return } // Battle over
 
     Battle.current.turn = json.status.turn;
@@ -456,6 +517,7 @@ function battleUseAbility (json) {
                 actionData = new BattleActionData(BATTLE_ACTIONS.skill);
                 actionData.name = action.name;
                 actionData.char = Battle.current.characters.getAtPos(action.pos).char;
+                if (postData && postData.ability_id) { actionData.id = parseInt(postData.ability_id) }
                 break;
             case "damage":
             case "loop_damage":
@@ -470,7 +532,7 @@ function battleUseAbility (json) {
             case "attack": // No-turn attack abilities like Tag team, GS
                 battleAttack({
                     scenario: [action],
-                    status: {turn: Battle.current.turn + 1} // cause of the way it parses things
+                    status: {turn: Battle.current.turn}
                 });
                 break;
             case "heal":
@@ -505,13 +567,10 @@ function battleUseAbility (json) {
         updateUI("updBattleData", Battle.packageData());
     }
 }
-
 function battleAttack(json) {
     if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return } // Battle over
 
-    Battle.current.turn = json.status.turn - 1; // json shows status after attack, so counting the data for prev turn.
     // Active turns is increased after all the stat calcs
-    // Battle.log.checkReset();
     var actions = [],
         actionData,
         isPlayerTurn = true;
@@ -662,10 +721,10 @@ function battleAttack(json) {
         updateUI("updBattleData", Battle.packageData());
         // Battle.activeTurns += 1;
     }
-    Battle.current.addTurn();
-    devlog("Start turn ", json.status.turn);
+    Battle.current.turn = json.status.turn;
+    // Battle.current.addTurn(json.status.turn);
+    // devlog("Start turn ", json.status.turn);
 }
-
 function battleUseSummon(json) {
     if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return } // Battle over
 
@@ -722,6 +781,15 @@ function updateBattleStats(actionData) {
             charStats.ta += ta ? 1 : 0;
             Battle.current.stats.totalDa += da ? 1 : 0;
             Battle.current.stats.totalTa += ta ? 1 : 0;
+        }
+        else if (actionData.action == BATTLE_ACTIONS.skill || actionData.action == BATTLE_ACTIONS.triggerSkill) {
+            // Add per-skill values.
+            let skill = charStats.skillDetails[actionData.name];
+            if (!skill) {
+                skill = charStats.skillDetails[actionData.name] = {dmg: 0, heal: 0};
+            }
+            skill.dmg += actionData.skillDmg;
+            skill.heal += actionData.selfHealing + actionData.teamHealing;
         }
         charStats.selfHealing += actionData.selfHealing;
         charStats.teamHealing += actionData.teamHealing;

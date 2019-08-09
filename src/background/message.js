@@ -116,7 +116,7 @@ function hear (msg) {
                         break;
                     case path.ismatch("rest/raid/ability_result.json"):
                     case path.ismatch("rest/multiraid/ability_result.json"):
-                        battleUseAbility(msg.data.json);
+                        battleUseAbility(msg.data.json, msg.data.postData);
                         break;
                     case path.ismatch("rest/raid/normal_attack_result.json"):
                     case path.ismatch("rest/multiraid/normal_attack_result.json"):
@@ -265,16 +265,20 @@ function hear (msg) {
             break;
         case "playTriggeredQuest":
             Raids.playTriggered();
+            break;
     }
 }
 
 function hearQuery (data, sender, respond) {
-    if (data.source == "dt") {
+    devlog("Query rcv: ", data);
+    if (data.source == "ui") {
         var retValue;
         switch (data.query) {
-            // Nothing so far since change.
+            case "archivedBattle":
+                retValue = Battle.load(data.val);
         }
 
+        devlog("Responding with: ", retValue);
         respond({
             query: data.query,
             value: retValue

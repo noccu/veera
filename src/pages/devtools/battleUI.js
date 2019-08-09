@@ -41,6 +41,10 @@ window.UI.battle = {
             return title;*/
             return `Turn: ${tooltipItemArr[0].xLabel}`;
         };
+        // Archive
+        this.display.arch = document.getElementById("battle-select");
+        this.display.arch.addEventListener("change", showArchBattle);
+
         // Overview
         var store = document.querySelectorAll("#battle-overview .battle-stats");
         for (let statEle of store) {
@@ -73,10 +77,11 @@ window.UI.battle = {
 
         this.isInit = true;
     },
-    update: function(battle) {
-        for (let stat of Object.keys(battle.stats)) {
-            this.updateOverview(battle.turn, stat, battle.stats[stat]);
-        }
+    update: function(battle, requestArchive) {
+        // don't update when displaying old battles.
+        if(!requestArchive && !this.display.arch.selectedOptions[0].current) { return }
+
+        this.updateOverview(battle);
         this.graph.overview.update();
 
         this.updateCharacters(battle.turn, battle.characters.list);
@@ -96,22 +101,48 @@ window.UI.battle = {
             }
             clearGraph(this.graph.chars[char]);
         }
-    },
-    updateOverview: function(turn, stat, statValue) {
+
         // Readouts
-        if (this.display.overview[stat]) {
-            this.display.overview[stat].textContent = NUMBER_FORMAT.format(statValue);
+        for (let stat of Object.keys(this.display.overview)) {
+            stat = this.display.overview[stat];
+            stat.textContent = stat.classList.contains("text") ? "" : "0";
+        }
+        for (let char of Object.keys(this.display.chars)) {
+            for (let stat of Object.keys(this.display.chars[char])) {
+                stat = this.display.chars[char][stat];
+                stat.textContent = stat.classList.contains("text") ? "" : "0";
+            }
+        }
+    },
+    updArchive(data) {
+        clearDropdown(this.display.arch);
+        populateDropdown(this.display.arch, data, (el, opt) => {
+            if (opt.current) {
+                el.current = true;
+                el.selected = true;
+            }
+        });
+        // this.display.arch.options[this.display.arch.options.length - 1].selected = true;
+    },
+    updateOverview: function(battle) {
+        // Readouts
+        for (let stat of Object.keys(this.display.overview)) {
+            if (battle.stats[stat] !== undefined) {
+                this.display.overview[stat].textContent = NUMBER_FORMAT.format(battle.stats[stat]);
+            }
         }
 
         // GraphData
-        let statID = this.graphStats.overview[stat];
-        if (!this.offset) { this.offset = 0 }
-        if (statID < this.graphData.overview.datasets.length) { // TODO: make it not rely on order of graphStats
-            if (turn > this.graphData.overview.labels.last) {
-                this.graphData.overview.labels.push(turn);
-                this.offset = turn - 1 - this.graphData.overview.datasets[statID].data.length; // dealing with missing turn data
+        for (let stat of Object.keys(this.graphStats.overview)) {
+            let statID = this.graphStats.overview[stat];
+            if (battle.stats[stat] !== undefined) {
+                if (!this.offset) { this.offset = 0 }
+                if (battle.turn > this.graphData.overview.labels.last) {
+                    this.graphData.overview.labels.push(battle.turn);
+                    this.offset = battle.turn - 1 - this.graphData.overview.datasets[statID].data.length; // dealing with missing turn data
+                }
+                this.graphData.overview.datasets[statID].data[battle.turn - 1 - this.offset] = battle.stats[stat];
             }
-            this.graphData.overview.datasets[statID].data[turn - 1 - this.offset] = statValue;
         }
     },
     updateCharacters: function (turn, characters) {
@@ -120,21 +151,30 @@ window.UI.battle = {
             charData = characters[id];
             charGraphData = this.graphData.chars[charData.char];
             // Readouts
-            /* for (let stat of Object.keys(charData.stats)) {
-                disp = this.display.chars[charData.char][stat];
-                if (disp) {
-                    try {
-                        disp.textContent = NUMBER_FORMAT.format(charData.stats[stat]);
-                    }
-                    catch (e) {
-                        devLog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
-                    }
-                }
-            }*/
             for (let stat of Object.keys(this.display.chars[charData.char])) {
-                if (charData.stats[stat] != undefined) { // stats can be 0 :V
+                if (charData.stats[stat] !== undefined) { // stats can be 0 :V
                     try {
-                        this.display.chars[charData.char][stat].textContent = NUMBER_FORMAT.format(charData.stats[stat]);
+                        // Simple numbers
+                        if (typeof charData.stats[stat] == "number") {
+                            this.display.chars[charData.char][stat].textContent = NUMBER_FORMAT.format(charData.stats[stat]);
+                        }
+                        // Detailed objects
+                        else {
+                            let content = "";
+                            for (let name in charData.stats[stat]) {
+                                let entry = charData.stats[stat][name],
+                                    exp = `${name}: `,
+                                    first = true;
+                                for (let label in entry) {
+                                    if (entry[label] != 0) {
+                                        exp += `${first ? "" : ", "}${NUMBER_FORMAT.format(entry[label])} ${label}`;
+                                        first = false;
+                                    }
+                                }
+                                content += exp + "\n";
+                            }
+                            this.display.chars[charData.char][stat].textContent = content;
+                        }
                     }
                     catch (e) {
                         devlog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
@@ -247,4 +287,18 @@ function createBattleDataset (stat, color, bgColor, axisID) {
         fill: false,
         yAxisID: axisID
     };
+}
+
+function showArchBattle (ev) {
+    // BackgroundPage.send("requestArchBattle", ev.target.value);
+    BackgroundPage.query("archivedBattle", ev.target.value)
+        .then(allTurns => {
+            if (allTurns.length) {
+                UI.battle.reset();
+                UI.battle.setPartyNames(allTurns[0].characters.list);
+                for (let turn of allTurns) {
+                    UI.battle.update(turn, true);
+                }
+            }
+        });
 }

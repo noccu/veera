@@ -468,3 +468,11 @@ button {
 .buffTimer img {
     height: 22px;
 }
+
+.small-log {
+    font-size: 0.75em;
+    background-color: black;
+    opacity: 0.5;
+    white-space: pre-line;
+    grid-template-columns: 1fr;
+}

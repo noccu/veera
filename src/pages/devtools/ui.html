@@ -270,6 +270,12 @@
                 </div>
             </div>
             <div id="battle" class="tab">
+                <div class="panel" id="battle-management">
+                    <span class="panel-header" data-event="collapse">Selection</span>
+                    <div class="panel-content hidden">
+                        <select id="battle-select"></select>
+                    </div>
+                </div>
                 <div class="panel" id="battle-overview">
                     <span class="panel-header" data-event="collapse">Overview</span>
                     <div class="panel-content">
@@ -330,6 +336,11 @@
                                     <div class="battle-stats-container">
                                         <div class="battle-stats" data-stat="selfHealing">Heal (self): <span>0</span></div>
                                         <div class="battle-stats" data-stat="teamHealing">Heal (team): <span>0</span></div>
+                                    </div>
+
+                                    <div class="sep" data-event="collapse" data-in="panel" data-id="cStatSkillExpand"></div>
+                                    <div class="battle-stats-container hidden small-log">
+                                        <div class="battle-stats" data-stat="skillDetails"><div class="text"></div></div>
                                     </div>
                                 </div>
                             </div>
