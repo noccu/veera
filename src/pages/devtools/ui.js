@@ -190,12 +190,7 @@ window.UI = {
             if (list && list.length > 1) {
                 display.classList.remove("hidden");
                 clearDropdown(display);
-                for (let option of list) {
-                    var el = document.createElement("option");
-                    el.value = el.textContent = option;
-                    // console.log(option);
-                    display.options.add(el);
-                }
+                populateDropdown(display, list);
             }
             else {
                 display.classList.add("hidden");
@@ -245,12 +240,6 @@ window.UI = {
         }
     }
 };
-
-function clearDropdown(el) {
-    for (let i = el.options.length -1; i >= 0; i--) {
-        el.options.remove(i);
-    }
-}
 
 // UI functionality
 function evhGlobalClick (e) {
@@ -427,7 +416,6 @@ function stylePlanItem(el, item) {
         el.classList.remove("fade", "low");
     }
 }
-
 function syncPlanner(index) {
     if (UI.planner.dom.list.createdPlan) {
         let ele;
@@ -474,6 +462,27 @@ function clearGraph(graph) {
     graph.update();
 }
 
+// Helpers
+function clearDropdown(el) {
+    for (let i = el.options.length -1; i >= 0; i--) {
+        el.options.remove(i);
+    }
+}
+function populateDropdown(list, data) {
+    for (let option of data) {
+        let el = document.createElement("option");
+        if (option.val) {
+            el.value = option.val;
+            el.textContent = option.name;
+        }
+        else {
+            el.value = el.textContent = option;
+        }
+        list.options.add(el);
+    }
+}
+
+// Misc
 function setGuildLink(path) {
     document.getElementById("guild-link").dataset.value = path;
 }
