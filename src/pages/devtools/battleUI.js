@@ -215,6 +215,7 @@ window.UI.battle = {
                 ]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [
                         {
@@ -247,6 +248,7 @@ window.UI.battle = {
                 ]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [
                         {

@@ -275,7 +275,7 @@ select, option {
 }
 .raid {
     display: grid;
-    grid-template-columns: 60px auto;
+    /* grid-template-columns: 60px auto; */
     grid-template-rows: 1fr;
     grid-template-areas: "thumb data toggle";
     align-items: center;
@@ -288,21 +288,22 @@ select, option {
 .raid-icon {
     height: 3em;
     grid-area: thumb;
+    margin-right: 0.5em;
 /*    width: calc(20% - 2em);*/
 }
 .raid-data {
-    display: inline-block;
+    display: grid;
     grid-area: data;
     align-items: center;
-    grid-template-columns: 1fr 50px 80px 2fr;
+    /* grid-template-columns: 1fr 50px 80px 2fr; */
+    grid-template-columns: 1fr 1fr 1fr 2fr;
     grid-template-rows: 100%;
     grid-template-areas: "name cost mat hosts";
-    display: grid;
 }
 .raid-name {
     grid-area: name;
     min-width: 125px;
-    line-height: 2em;
+    /* line-height: 2em; */
     cursor: pointer;
 }
 .raid-name:hover {
@@ -316,6 +317,7 @@ select, option {
 }
 .raid-host-mats {
     grid-area: mat;
+    min-width: 80px;
 }
 .raid-mat-icon {
     height: 1.5em;
@@ -354,6 +356,13 @@ select, option {
 .canvas-container {
     width: 100%;
     position: relative;
+    /* Required when not forcing AR in chart.js */
+    max-height: 40vh;
+    min-height: 20vh;
+    height: 40vw;
+}
+.canvas-container.chara-graph {
+    max-height: 25vh;
 }
 
 button {
@@ -475,4 +484,23 @@ button {
     opacity: 0.5;
     white-space: pre-line;
     grid-template-columns: 1fr;
+}
+
+@media (max-width: 450px) {
+    .battle-char-container {
+        width: 48%;
+        margin: 0.2em 2px;
+    }
+
+    .raid-data {
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-areas: "cost mat hosts";
+    }
+    .raid-name {
+        display: none;
+    }
+    .raid-icon {
+        height: 6em;
+        margin-right: 0.5em;
+    }
 }
