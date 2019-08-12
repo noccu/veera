@@ -148,48 +148,23 @@ window.Raids = {
         this.save();
         updateUI("updRaid", raidEntry);
     },
-    start: function (id, hostMat) {
-        function filterUsedMats(costs) {
-            let data = [];
-            for (let mat of costs) {
-                if (Array.isArray(mat)) {
-                    for (let subMat of mat) {
-                        if (hostMat.includes(subMat.id)) {
-                            data.push(subMat);
-                        }
-                    }
-                }
-                else if (hostMat.includes(mat.id)) {
-                    data.push(mat);
-                }
-            }
-            return data;
-        }
-
+    start: function (id, hostMats) {
         let raid = this.get(id),
             sufficientMats = true,
-            hostMatId, usedMats,
-            matIds = [], matTypes = [], matNums = [];
+            hostMatId, usedMats;
         if (raid.data.matCost) { // Need mats?
-            if (!hostMat) {
+            if (!hostMats) {
                 // Use default mat.
-                hostMat = raid.data.matCost[0].id || raid.data.matCost[0].map(x => x.id);
+                hostMats = raid.data.matCost[0].id || raid.data.matCost[0].map(x => x.id);
             }
-            if (!Array.isArray(hostMat)) { // Normalise to array
-                hostMat = [hostMat];
+            if (!Array.isArray(hostMats)) { // Normalise to array
+                hostMats = [hostMats];
             }
-            usedMats = filterUsedMats(raid.data.matCost);
-            if (usedMats.length) { // should always trigger
-                hostMatId = usedMats[0].id;
-                sufficientMats = usedMats.every(mat => {
-                    // Cheat in some data gathering.
-                    matIds.push(mat.id);
-                    matTypes.push(mat.supplyData.type);
-                    matNums.push(mat.num);
-                    // What we came for
-                    return mat.num <= mat.supplyData.count;
-                });
-                // Every can be in lookup since we go through the array anyway. optimize TODO
+            hostMats.forEach((val, idx) => hostMats[idx] = parseInt(val)); // Strings from html dataset, generally.
+            usedMats = this.checkUsedMats(hostMats, raid.data.matCost);
+            if (usedMats) {
+                hostMatId = usedMats.ids[0]; // Only used for visual cue in game.
+                sufficientMats = usedMats.ids.length == hostMats.length;
             }
             else {
                 throw "[raid start] can't find hostmats";
@@ -199,11 +174,12 @@ window.Raids = {
         if (url && sufficientMats) {
             State.game.navigateTo(url);
             if (hostMatId) {
+                // eslint-disable-next-line no-undef
                 storePendingRaidsTreasure({
                     quest_id: id,
-                    treasure_id: matIds,
-                    treasure_kind: matTypes,
-                    consume: matNums
+                    treasure_id: usedMats.ids,
+                    treasure_kind: usedMats.types,
+                    consume: usedMats.nums
                 });
             }
         }
@@ -211,6 +187,21 @@ window.Raids = {
             updateUI("updRaid", raid); // update the hostmat display
             deverror(`Can't start raid ${id}. Sufficient mats: ${sufficientMats}, url: ${url}`);
         }
+    },
+    checkUsedMats(used, costs) {
+        let data = {ids: [], types: [], nums: []};
+        // Go through cost array once instead of looping through it for every used mat.
+        for (let mat of costs) {
+            if (Array.isArray(mat)) {
+                data = this.checkUsedMats(used, mat);
+            }
+            else if (used.includes(mat.id) && mat.num <= mat.supplyData.count) {
+                data.ids.push(mat.id);
+                data.types.push(mat.supplyData.type);
+                data.nums.push(mat.num);
+            }
+        }
+        return data;
     },
     createUrl(id, type, hostmat) {
         return `${GAME_URL.baseGame}${GAME_URL.questStart}${id}/${type}${hostmat ? "/0/" + hostmat : ""}`;
@@ -236,7 +227,7 @@ window.Raids = {
             this.pendingHost.ap = parseInt(data.json.action_point); // Triggers never use AP afaik so we can leave this. Same in setLastHost below.
         }
     },
-    setLastHost(json) {
+    setLastHost() {
         if (!this.pendingHost.skip) {
             devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
             this.lastHost.url = this.pendingHost.url;
@@ -252,12 +243,33 @@ window.Raids = {
             State.game.navigateTo(this.lastHost.url);
         }
     },
+    // NM Triggers etc
+    checkNextQuest(json) {
+        if (json.appearance && json.appearance.is_quest) {
+            let data = json.appearance,
+                name = data.quest_name;
+            // Triggered quests never cost hostmats afaik.
+            Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
+
+            if (data.title && json.url) { // Events with multiple nm quests.
+                Raids.triggeredQuest.url = `${GAME_URL.baseGame}#${json.url}`;
+                Raids.triggeredQuest.isGroup = true;
+                name = data.title;
+            }
+            showNotif("Triggered quest!", {text: name, onclick: Raids.playTriggered});
+            updateUI("nextQuestTriggered", {nextQuest: name});
+        }
+        else { // This would happen when raidLoot updates the UI but it's good to be explicit.
+            Raids.triggeredQuest = null;
+            updateUI("nextQuestTriggered", {nextQuest: false});
+        }
+    },
     playTriggered() { // called directly
         if (Raids.triggeredQuest) {
             State.game.navigateTo(Raids.triggeredQuest.isGroup ? Raids.triggeredQuest.url : Raids.createUrl(Raids.triggeredQuest.id, Raids.triggeredQuest.type));
         }
     },
-    reset: function() {
+    reset() {
         for (let id in this.list) {
             this.list[id].hosts.today = 0;
         }
@@ -271,7 +283,6 @@ window.Raids = {
     }
 };
 
-
 function evhCheckRaidSupplyData (upd) {
     for (let item of upd.detail) {
         if (IDX_ITEM_TO_RAIDS.has(item.id)) {
@@ -280,27 +291,5 @@ function evhCheckRaidSupplyData (upd) {
                 updateUI("updRaid", Raids.get(raidId));
             }
         }
-    }
-}
-
-// NM Triggers etc
-function checkNextQuest(json) {
-    if (json.appearance && json.appearance.is_quest) {
-        let data = json.appearance,
-            name = data.quest_name;
-        // Triggered quests never cost hostmats afaik.
-        Raids.triggeredQuest = {type: data.quest_type, id: data.quest_id};
-
-        if (data.title && json.url) { // Events with multiple nm quests.
-            Raids.triggeredQuest.url = `${GAME_URL.baseGame}#${json.url}`;
-            Raids.triggeredQuest.isGroup = true;
-            name = data.title;
-        }
-        showNotif("Triggered quest!", {text: name, onclick: Raids.playTriggered});
-        updateUI("nextQuestTriggered", {nextQuest: name});
-    }
-    else { // This would happen when raidLoot updates the UI but it's good to be explicit.
-        Raids.triggeredQuest = null;
-        updateUI("nextQuestTriggered", {nextQuest: false});
     }
 }

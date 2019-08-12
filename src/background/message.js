@@ -79,7 +79,7 @@ function hear (msg) {
                     case path.ismatch("rest/board/open_chest"):
                         gotQuestLoot(msg.data.json);
                         getPendantsRaid(msg.data.json);
-                        checkNextQuest(msg.data.json);
+                        Raids.checkNextQuest(msg.data.json);
                         logSupportUser(msg.data.json);
                         break;
                     case path.ismatch("rest/arcarum/stage"):
