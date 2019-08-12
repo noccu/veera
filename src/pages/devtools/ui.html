@@ -270,6 +270,47 @@
                 </div>
             </div>
             <div id="battle" class="tab">
+               <div class="panel" id="battle-boss-info">
+                    <span class="panel-header" data-event="collapse">Boss Info</span>
+                    <div class="panel-content">
+                        <div class="centered">
+                        <div class="battle-boss-container">
+                            <div class="battle-boss-name">-</div>
+                            <div class="battle-boss-ougi battle-warn hidden"></div>
+                            <div class="battle-stats-container">
+                                <div class="battle-stats">Max HP: <span data-id="battle-boss-hp-max">0</span></div>
+                                <div class="battle-stats">Current HP: <span data-id="battle-boss-hp">0</span></div>
+                                <div class="battle-stats">HP to next <span data-id="battle-boss-next-hp-style" style="color: inherit">5%</span>: <span data-id="battle-boss-trigger-hp">0</span></div>
+                                <div class="battle-stats">Own dmg ratio: <span data-id="battle-boss-dmgDone">0</span>%</div>
+                                <div class="spacer"></div>
+                                <div class="battle-stats" data-stat="avgDmg">Avg dmg: <span></span></div>
+                                <div class="battle-stats" data-stat="critRate">Crit rate: <span data-deci="true">0</span>%</div>
+                                <div class="battle-stats" data-stat="daRate">DA rate: <span data-deci="true">0</span>%</div>
+                                <div class="battle-stats" data-stat="taRate">TA rate: <span data-deci="true">0</span>%</div>
+                            </div>
+                        </div>
+                        </div>
+<!--                        <div class="sep" data-event="collapse"></div>-->
+<!--
+                        <div id="battle-guide-container">
+                            <div>Next Trigger: <span id="battle-boss-trigger-name">The Huggies</span> at <span id="battle-boss-trigger-perc">50</span>% HP on <span id="battle-boss-trigger-target">Yuguyugu</span></div>
+                            <div id="battle-boss-warn" class="battle-warn">PHALANX THAT SHIT</div>
+                            <div>Note: <span id="battle-boss-note">She's big so it's dangerous!</span></div>
+                            <div class="spacer"></div>
+                            <div>Current ougis:
+                                <ul id="battle-boss-ougi-list" class="indent">
+                                    <li><span>Screeee</span> (<span>aoe, dispels, no dmg</span>)</li>
+                                    <li><span>Vacant Stare</span> (<span>aoe, 2000 plain dmg, applies atk down, data down</span>)</li>
+                                    <li><span>Rock Throw</span> (<span>12,000 earth dmg, applies stacking def down</span>)</li>
+                                </ul>
+                            </div>
+                            <div class="spacer"></div>
+                            <div id="battle-boss-globals" class="small-log">Makes cute sounds when touched.
+                            Becomes embarassed when staring too much.</div>
+                        </div>
+-->
+                    </div>
+                </div>
                 <div class="panel" id="battle-management">
                     <span class="panel-header" data-event="collapse">Selection</span>
                     <div class="panel-content hidden">
@@ -299,7 +340,7 @@
                 </div>
                 <div class="panel centered" id="battle-characters">
                     <span class="panel-header" data-event="collapse">Characters</span>
-                    <div class="panel-content">
+                    <div class="panel-content hidden">
                         <template id="t-battle-char-container">
                             <div class="battle-char-container" data-char="0">
                                 <div class="battle-char-name">Char 1</div>

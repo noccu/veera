@@ -390,7 +390,7 @@ button {
 .battle-stats-container .battle-stats-container { /*Nested*/
     grid-area: auto / left /auto / right;
 }
-.battle-stats-container .sep {
+.battle-stats-container .sep, .battle-stats-container .spacer {
     grid-area: auto / left / auto / right;
 }
 .battle-stats {
@@ -400,12 +400,12 @@ button {
     display: block;
 }
 
-.battle-char-name {
+.battle-char-name, .battle-boss-name {
     text-align: center;
     background-color: rgba(255,255,255,0.2);
 }
 
-.panel.centered {
+.centered {
     text-align: center;
 }
 
@@ -503,4 +503,49 @@ button {
         height: 6em;
         margin-right: 0.5em;
     }
+}
+
+.battle-warn {
+    text-align: center;
+    background-color: var(--diff-color-c);
+    margin: 0.2em 0;
+}
+
+.header {
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+#battle-boss-trigger-name {
+    color: var(--highlight-color);
+}
+
+#battle-boss-name {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.indent {
+    padding-left: 1em !important;
+}
+
+#battle-boss-ougi-list {
+    margin: 0.25em 0;
+}
+
+#battle-boss-ougi-list li {
+    list-style-type: square;
+}
+
+/*
+.battle-boss-container {
+    width: 32%;
+    margin: 0.5em 0;
+    display: inline-block;
+}
+*/
+
+
+.battle-stats span {
+    color: var(--highlight-color);
 }

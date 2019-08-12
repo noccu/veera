@@ -60,8 +60,9 @@ window.BackgroundPage = {
                 UI.battle.update(msg.data);
                 break;
             case "updBattleNewRaid":
-                UI.battle.reset();
+                UI.battle.reset(msg.data);
                 UI.battle.setPartyNames(msg.data.characters.list);
+                UI.battle.setBossNames(msg.data.bosses.list);
                 break;
             case "updBattleArchive":
                 UI.battle.updArchive(msg.data);

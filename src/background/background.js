@@ -206,3 +206,13 @@ Object.defineProperty(Object.prototype, "pack", {
         return o;
     }
 });
+
+// An alternative version of above, to be assigned to .toJSON of custom-flattening objects for use with the native function.
+// Make sure toJSON is not enumerable
+function prepJson() {
+    var o = {};
+    for(var key in this) {
+        o[key] = this[key];
+    }
+    return o;
+}

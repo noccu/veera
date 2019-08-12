@@ -1,7 +1,8 @@
 window.UI.battle = {
     display: {
         overview: {},
-        chars: {}
+        chars: {},
+        bosses: {}
     },
     isInit: false,
     current: 0,
@@ -27,13 +28,13 @@ window.UI.battle = {
 
     },
     initDisplay: function () {
-        Chart.defaults.scale.ticks.callback = function (value, index, values) {
+        Chart.defaults.scale.ticks.callback = function (value) {
             return NUMBER_FORMAT.format(value);
         };
         Chart.defaults.global.tooltips.callbacks.label = function (tooltipItem, data) {
             return `${data.datasets[tooltipItem.datasetIndex].label}: ${NUMBER_FORMAT.format(tooltipItem.yLabel)}`;
         };
-        Chart.defaults.global.tooltips.callbacks.title = function (tooltipItemArr, data) {
+        Chart.defaults.global.tooltips.callbacks.title = function (tooltipItemArr) {
             /* var title = "Turn: ";
             for (let item of tooltipItemArr) {
                 title += item.xLabel;
@@ -59,7 +60,7 @@ window.UI.battle = {
         // var charaStats = document.querySelectorAll("#battle-characters span[data-stat]")
         for (let i = 0; i < 6; i++) {
             temp.content.querySelector(".battle-char-container").dataset.char = i;
-            temp.content.querySelector(".battle-char-name").textContent = `Char ${i+1}`;
+            temp.content.querySelector(".battle-char-name").textContent = `Char ${i + 1}`;
 
             store = document.importNode(temp, true).content.children[0];
             let statsList = store.getElementsByClassName("battle-stats"),
@@ -73,6 +74,29 @@ window.UI.battle = {
             list.appendChild(store);
 
             this.createCharaGraph(i);
+
+        }
+        // Bosses
+        list = document.getElementById("battle-boss-info").getElementsByClassName("battle-boss-container");
+        for (let i = 0; i < list.length; i++) {
+            let boss = list[i],
+                bossDisplay = this.display.bosses[i];
+            if (!bossDisplay) {
+                bossDisplay = this.display.bosses[i] = {stats: {}};
+            }
+
+            bossDisplay.hp = boss.querySelector("span[data-id='battle-boss-hp']");
+            bossDisplay.maxHp = boss.querySelector("span[data-id='battle-boss-hp-max']");
+            bossDisplay.triggerHp = boss.querySelector("span[data-id='battle-boss-trigger-hp']");
+            bossDisplay.dmgRatio = boss.querySelector("span[data-id='battle-boss-dmgDone']");
+            bossDisplay.warnOugi = boss.querySelector(".battle-boss-ougi");
+
+            let statsList = boss.getElementsByClassName("battle-stats");
+            for (let statEle of statsList) {
+                if (statEle.dataset.stat) {
+                    bossDisplay.stats[statEle.dataset.stat] = statEle.children[0];
+                }
+            }
         }
 
         this.isInit = true;
@@ -88,9 +112,12 @@ window.UI.battle = {
         for (let char of Object.keys(this.graph.chars)) {
             this.graph.chars[char].update();
         }
+
+        this.updateBosses(battle.bosses.list);
     },
-    reset: function() {
+    reset: function(battle) {
         if (!this.isInit) { this.initDisplay() }
+        // Graphs
         if (this.graph.overview) {
             clearGraph(this.graph.overview);
         }
@@ -113,6 +140,10 @@ window.UI.battle = {
                 stat.textContent = stat.classList.contains("text") ? "" : "0";
             }
         }
+
+        // Bosses
+        document.querySelector("span[data-id='battle-boss-hp-max']").textContent = NUMBER_FORMAT.format(battle.bosses.list[0].maxHp);
+        this.updateBosses(battle.bosses.list);
     },
     updArchive(data) {
         clearDropdown(this.display.arch);
@@ -146,7 +177,7 @@ window.UI.battle = {
         }
     },
     updateCharacters: function (turn, characters) {
-        var charData, charGraphData, disp;
+        var charData, charGraphData;
         for (let id of Object.keys(characters)) {
             charData = characters[id];
             charGraphData = this.graphData.chars[charData.char];
@@ -177,7 +208,7 @@ window.UI.battle = {
                         }
                     }
                     catch (e) {
-                        devlog("Error: ", e, "stat: ", stat, "cdata: ", charData, "disp: ", disp, "id: ", id, "chars: ", characters);
+                        devlog("Error: ", e, "stat: ", stat, "cdata: ", charData, "id: ", id, "chars: ", characters);
                     }
                 }
             }
@@ -198,6 +229,30 @@ window.UI.battle = {
                             axis.ticks.max = Math.max(axis.ticks.max || 0, charData.stats[stat]);
                         }
                     }
+                }
+            }
+        }
+    },
+    updateBosses (bosses) {
+        let boss = bosses[0]; // TODO: Change to loop later when I figure out multi-boss
+
+        this.display.bosses[boss.char].hp.textContent = NUMBER_FORMAT.format(boss.currentHp);
+        // this.display.bosses[boss.char].maxHp.textContent = boss.maxHp;
+        this.display.bosses[boss.char].triggerHp.textContent = NUMBER_FORMAT.format(boss.hpToNextPerc);
+        this.display.bosses[boss.char].dmgRatio.textContent = NUMBER_FORMAT.format(boss.ownDmgRatio);
+        if (boss.currentTurnOugi.triggered) {
+            this.display.bosses[boss.char].warnOugi.textContent = boss.currentTurnOugi.name;
+            this.display.bosses[boss.char].warnOugi.classList.remove("hidden");
+        }
+        else { this.display.bosses[boss.char].warnOugi.classList.add("hidden") }
+
+        for (let stat of Object.keys(this.display.bosses[boss.char].stats)) {
+            if (boss.stats[stat] !== undefined) { // stats can be 0 :V
+                try {
+                    this.display.bosses[boss.char].stats[stat].textContent = NUMBER_FORMAT.format(boss.stats[stat]);
+                }
+                catch (e) {
+                    devlog("Error: ", e, "stat: ", stat, "cdata: ", boss, "boss: ", bosses);
                 }
             }
         }
@@ -273,9 +328,15 @@ window.UI.battle = {
         });
         this.graphData.chars[char] = this.graph.chars[char].config.data;
     },
-    setPartyNames: function(party) {
-        var eles = document.querySelectorAll(".battle-char-container .battle-char-name");
+    setPartyNames(party) {
+        var eles = document.querySelectorAll("#battle-characters .battle-char-name");
         party.forEach((entry, idx) => eles[idx].textContent = entry.name); // just hope for consistent selector output lmao
+    },
+    setBossNames(bosses) {
+        // var eles = document.querySelectorAll("#battle-boss-info .battle-boss-name");
+        // bosses.forEach((entry, idx) => eles[idx].textContent = entry.name);
+        var ele = document.querySelector("#battle-boss-info .battle-boss-name");
+        ele.textContent = bosses[0].name;
     }
 };
 
@@ -296,7 +357,7 @@ function showArchBattle (ev) {
     BackgroundPage.query("archivedBattle", ev.target.value)
         .then(allTurns => {
             if (allTurns.length) {
-                UI.battle.reset();
+                UI.battle.reset(allTurns[0]);
                 UI.battle.setPartyNames(allTurns[0].characters.list);
                 for (let turn of allTurns) {
                     UI.battle.update(turn, true);
