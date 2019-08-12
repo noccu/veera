@@ -26,6 +26,7 @@
         "showNotif": "readonly",
         "fireEvent": "readonly",
         "openTab": "readonly",
+        "prepJson": "readonly",
         //Constants
         "SUPPLYTYPE": "readonly",
         "ITEM_KIND": "readonly",

@@ -1,5 +1,5 @@
 const UPDATED = false;
-const EVENTS = { //jshint ignore:line
+const EVENTS = {// jshint ignore:line
     connected: "veeraConnected",
     pageChanged: "pageChanged",
     suppliesUpdated: "suppliesUpdated",
@@ -13,7 +13,7 @@ const EVENTS = { //jshint ignore:line
     questOver: "questOver",
     evMissionDone: "evMissionDone"
 };
-const GAME_URL = {//jshint ignore:line
+const GAME_URL = {// jshint ignore:line
     baseGame: "http://game.granbluefantasy.jp/",
     assets: "assets_en/img/sp/assets/",
     assets_light: "assets_en/img_light/sp/assets/",
@@ -26,9 +26,9 @@ const GAME_URL = {//jshint ignore:line
 };
 
 window.addEventListener(EVENTS.connected, MainInit);
-//window.addEventListener("newBattle", );
+// window.addEventListener("newBattle", );
 
-DevTools.wait(); //Listen for devtools conn
+DevTools.wait(); // Listen for devtools conn
 
 function MainInit() {
     DevTools.query("tabId")
@@ -71,7 +71,7 @@ function MainInit() {
             window.addEventListener(EVENTS.pageChanged, ev => {
                 devlog(`Page changed to ${ev.detail}`);
                 Raids.evhPageChanged(ev.detail);
-                //Others here.
+                // Others here.
             });
 
             Time.sync();
@@ -84,7 +84,7 @@ function MainInit() {
             console.groupEnd();
         })
         .then(() => {
-            State.checkUpdate(); //Errors caught internally, chain restored.
+            State.checkUpdate(); // Errors caught internally, chain restored.
         })
         .catch(e => {
             DevTools.connection.disconnect();
@@ -92,7 +92,7 @@ function MainInit() {
         });
 }
 
-//Old function, kept for now due to ease of reading intended use.
+// Old function, kept for now due to ease of reading intended use.
 function updateUI (type, value) {
     DevTools.send(type, value);
 }
@@ -109,7 +109,7 @@ function fireEvent(name, data) {
 function showNotif(title, {text: body, img: icon, onclick} = {}) {
     if (Notification.permission == "granted") {
         let n = new Notification(title, {body, icon});
-        setTimeout(() => n.close(), 8000);//TODO: add to State.settings
+        setTimeout(() => n.close(), 8000);// TODO: add to State.settings
 
         if (onclick && typeof onclick == "function") {
             let clickHandler = function () {
@@ -121,22 +121,22 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
         }
         return n;
     }
-    else if (Notification.permission == "default"){
+    else if (Notification.permission == "default") {
         Notification.requestPermission().then(p => {
             if (p == "granted") { showNotif(title, {body, icon}) }
         });
     }
 }
 
-//Very simple, mostly here in case I need to change the way it works easily.
+// Very simple, mostly here in case I need to change the way it works easily.
 function openTab(url) {
-    //This seems to just open a tab so I guess it's fine?
-    //If problems, replace with chrome.tabs I guess.
+    // This seems to just open a tab so I guess it's fine?
+    // If problems, replace with chrome.tabs I guess.
     window.open(url);
 }
 
-//Utils
-/*function Enum(...names) { //eh it's neat but can't auto-complete and not JSON
+// Utils
+/* function Enum(...names) { //eh it's neat but can't auto-complete and not JSON
     let idx = 1;
     Object.defineProperty(this, "dict", {
         enumerable: false,
@@ -155,7 +155,7 @@ Enum.prototype.getName = function (value) {
     return this.dict[value];
 };*/
 
-function getEnumNamedValue(list, val) { //for the simple plain obj enum actually used
+function getEnumNamedValue(list, val) { // for the simple plain obj enum actually used
     return Object.entries(list).find(x => x[1] == val)[0];
 }
 
@@ -165,10 +165,10 @@ function parseDom(data, {decode = true, mime = "text/html"} = {}) {
     return DOM_PARSER.parseFromString(data, mime);
 }
 
-//Add a simple fast boolean return match macro just cause it's nicer and clearer.
-String.prototype.ismatch = function(s){ return this.indexOf(s) != -1};
+// Add a simple fast boolean return match macro just cause it's nicer and clearer.
+String.prototype.ismatch = function(s) { return this.indexOf(s) != -1 };
 
-//Adding a last item in array macro
+// Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {
     get: function () {
         return this.length == 0 ? 0 : this[this.length - 1];
@@ -198,7 +198,7 @@ Object.defineProperty(Object.prototype, "pack", {
                 if (type == "object") {
                     o[prop] = val.pack();
                 }
-                else if (type != "function"){
+                else if (type != "function") {
                     o[prop] = val;
                 }
             }
