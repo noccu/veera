@@ -9,6 +9,7 @@ const EVENTS = {// jshint ignore:line
     gotLoot: "gotLoot",
     shopPurchase: "shopPurchase",
     newBattle: "newBattle",
+    playerDeath: "playerDeath",
     battleOver: "battleOver",
     questOver: "questOver",
     evMissionDone: "evMissionDone"

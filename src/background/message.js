@@ -74,13 +74,15 @@ function hear(msg) {
                         break;
                     case path.ismatch("resultmulti/data"):// Raid loot screen
                     case path.ismatch("result/data"): // Quest loot screen
+                        Battle.checkResultScreen(msg.data);
+                        Raids.checkNextQuest(msg.data.json);
+                        logSupportUser(msg.data.json);
+                        // eslint-disable-next-line no-fallthrough
                     case path.ismatch("arcarum/open_chest"):
                     case path.ismatch("result/stage_only_data/"):
                     case path.ismatch("rest/board/open_chest"):
                         gotQuestLoot(msg.data.json);
                         getPendantsRaid(msg.data.json);
-                        Raids.checkNextQuest(msg.data.json);
-                        logSupportUser(msg.data.json);
                         break;
                     case path.ismatch("rest/arcarum/stage"):
                     case path.ismatch("rest/board/stage"):

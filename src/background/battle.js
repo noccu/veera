@@ -147,7 +147,14 @@ const battleStatsShared = {
     },
     get avgTaRate() {
         return safeDivide(this.totalTa, this.autoTurns) * 100;
+    },
+    get dps() {
+        return safeDivide(this.totalDmg / (((this.instance.endTime || Date.now()) - this.instance.startTime) / 1000)) | 0; // float -> int
+    },
+    get ownDmgRatio() {
+        return this.totalDmg / this.instance.bosses.list.reduce((acc, boss) => acc += boss.maxHp, 0) * 100;
     }
+
 };
 Object.defineProperty(battleStatsShared, "toJSON", {
     enumerable: false, // should be default, but just to be explicit
@@ -236,6 +243,7 @@ window.Battle = {
                 // Array.from(Battle.archive.values()).map(cur => { return {id: cur.id, name: cur.name} });
                 updateUI("updBattleArchive", archList);
             }
+            this.current.raidId = json.raid_id;
         }
     },
     load(id) {
@@ -250,8 +258,26 @@ window.Battle = {
         archivedBattle.turn = lastTurn;
 
         return fullArch;
+    },
+    checkResultScreen(data) {
+        let match = data.url.pathname.match(/data\/(\d+)/);
+        if (match) {
+            for (let battle of this.archive.values()) {
+                if (battle.raidId == match[1]) {
+                    this.endBattle(battle);
+                    return;
+                }
+            }
+        }
+    },
+    endBattle(battle) {
+        if (!battle.endTime) {
+            battle.endTime = Date.now();
+        }
     }
 };
+document.addEventListener(EVENTS.battleOver, ev => Battle.endBattle(ev.detail));
+document.addEventListener(EVENTS.playerDeath, ev => Battle.endBattle(ev.detail));
 
 function safeDivide(a, b) {
     return a / (b || 1);
@@ -617,7 +643,7 @@ function battleUseAbility(json, postData) {
                 }
                 break;
             case "win":
-                fireEvent(EVENTS.battleOver);
+                fireEvent(EVENTS.battleOver, Battle.current);
                 if (action.is_last_raid) {
                     fireEvent(EVENTS.questOver, {id: action.raid_id});
                 }
@@ -662,8 +688,11 @@ function battleAttack(json) {
                 unit.warn = true;
                 if (action.list) { // Some ougis do no dmg
                     battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgTaken);
-                    actions.push(actionData);
                 }
+                else {
+                    actionData.noDmgOugi = true;
+                }
+                actions.push(actionData);
                 break;
             case "special": // Player ougi
             case "special_npc": // Chara ougi
@@ -794,8 +823,13 @@ function battleAttack(json) {
             case "contribution":
                 Battle.current.currentTurn.honor += action.amount; // Honors only given for whole turn so can't add to any action
                 break;
+            case "die":
+                if (action.to == "player") {
+                    fireEvent(EVENTS.playerDeath, Battle.current);
+                }
+                break;
             case "win":
-                fireEvent(EVENTS.battleOver);
+                fireEvent(EVENTS.battleOver, Battle.current);
                 if (action.is_last_raid) {
                     fireEvent(EVENTS.questOver, {id: action.raid_id});
                 }
@@ -831,7 +865,7 @@ function battleUseSummon(json) {
                 }
                 break;
             case "win":
-                fireEvent(EVENTS.battleOver);
+                fireEvent(EVENTS.battleOver, Battle.current);
                 if (action.is_last_raid) {
                     fireEvent(EVENTS.questOver, {id: action.raid_id});
                 }
