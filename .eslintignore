@@ -1,0 +1,4 @@
+src/lib
+src/assets
+src/pages
+!src/pages/devtools

@@ -93,7 +93,7 @@ function MainInit() {
 }
 
 // Old function, kept for now due to ease of reading intended use.
-function updateUI (type, value) {
+function updateUI(type, value) {
     DevTools.send(type, value);
 }
 
@@ -112,7 +112,7 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
         setTimeout(() => n.close(), 8000);// TODO: add to State.settings
 
         if (onclick && typeof onclick == "function") {
-            let clickHandler = function () {
+            let clickHandler = function() {
                 onclick();
                 n.close();
                 n.removeEventListener("click", clickHandler);
@@ -170,7 +170,7 @@ String.prototype.ismatch = function(s) { return this.indexOf(s) != -1 };
 
 // Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {
-    get: function () {
+    get: function() {
         return this.length == 0 ? 0 : this[this.length - 1];
     }
 });
@@ -182,7 +182,7 @@ So that we can actually use prototype chaining... a main feature of the language
 */
 Object.defineProperty(Object.prototype, "pack", {
     enumerable: false,
-    value: function () {
+    value: function() {
         let o = {};
         for (let prop in this) {
             let val = this[prop];

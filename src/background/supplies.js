@@ -159,7 +159,7 @@ const ITEM_KIND = {// jshint ignore:line
         class: "ROTB",
         path: "item/event/article",
         manual: true,
-        convert (item) {
+        convert(item) {
             item.count = item.count * parseInt(item.id);
             item.type = 10;
             item.id = 90001;
@@ -201,8 +201,10 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Arcarum Items",
         class: "Arcarum",
         path: "item/arcarum",
+        // eslint-disable-next-line object-curly-newline
         specialId: {
             1002: "item_1002" // 1000 pts from event shop
+        // eslint-disable-next-line object-curly-newline
         }
     },
     67: {
@@ -226,7 +228,7 @@ const ITEM_KIND = {// jshint ignore:line
         path: "item/event/newdefeat",
         manual: true,
         specialId: {
-            rename (id) {
+            rename(id) {
                 id = id.toString().slice(-2, -1);
                 if (id === "0") {
                     return "gold";
@@ -259,7 +261,7 @@ const TREASURE_SOURCES = {
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
 
-function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, uniqueId = undefined) {
+function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, uniqueId = undefined) {
     this.type = parseInt(type);
     this.id = id = id === "" ? 0 : parseInt(id);
     this.count = parseInt(count);
@@ -322,10 +324,10 @@ function SupplyItem (type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undef
 // TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
 window.Supplies = {
     index: {},
-    has (type, id) {
+    has(type, id) {
         return this.index[type] && this.index[type][id];
     },
-    find (name, type) {
+    find(name, type) {
         let list = type ? this.getType(type) : this.getAll();
         return list.find(x => x.name.match(name));
     },
@@ -334,7 +336,7 @@ window.Supplies = {
     @arg {number} id - The id to look up.
     @returns {Object|Object[]} The item's data or array of item data.
     */
-    get: function (type, id) {
+    get: function(type, id) {
         if (Array.isArray(arguments[0])) {
             let ret = [];
             for (let entry of arguments[0]) {
@@ -364,7 +366,7 @@ window.Supplies = {
     @arg {(number=10|{type: number, id: number, data: Object}[])} type - The {@link ITEM_KIND} to add, or a list of items with set()'s arguments as properties.
     @arg {number} id - The id to add.
     */
-    set: function (data) {
+    set: function(data) {
         if (Array.isArray(data)) {
             for (let entry of data) {
                 this.set(entry);
@@ -387,7 +389,7 @@ window.Supplies = {
     @arg {SUPPLY_TYPES} type
     @returns {Object[]}
     */
-    getType: function (type) {
+    getType: function(type) {
         let ret = [];
         if (Array.isArray(type)) {
             for (let t of type) {
@@ -409,7 +411,7 @@ window.Supplies = {
         return this.getType(Object.keys(this.index));
     },
     /** Set the full treasure index, for use with game's supplies page.*/
-    setTreasure: function (json) {
+    setTreasure: function(json) {
         if (!json) { return }
 
         let upd = [];
@@ -420,7 +422,7 @@ window.Supplies = {
         this.update(upd, true);
     },
     /** Set the full consumables index, for use with game's supplies page.*/
-    setConsumables: function (json) {
+    setConsumables: function(json) {
         if (!json) { return }
 
         let data = {},
@@ -452,7 +454,7 @@ window.Supplies = {
 
         this.update(upd, true);
     },
-    setTickets (json) {
+    setTickets(json) {
         if (json) {
             let upd = [];
             for (let arr of json) {
@@ -626,7 +628,7 @@ function gotQuestLoot(json) {
     }
 }
 
-function startAcra (json) {
+function startAcra(json) {
     Profile.setArca({current: parseInt(json.passport_num)}, {current: parseInt(json.point)});
 }
 function skipArca(data) {
@@ -720,7 +722,7 @@ function rewardsPickup(json) {
     Supplies.update(upd);
 }
 
-function reduce (data) {
+function reduce(data) {
     if (data && data.articles) {
         let upd = [];
         for (let item of data.articles) {
@@ -733,7 +735,7 @@ function reduce (data) {
     }
 }
 
-function storePendingRaidsTreasure (data) {
+function storePendingRaidsTreasure(data) {
     let store = {items: []};
 
     // normal raids
@@ -763,7 +765,7 @@ function storePendingRaidsTreasure (data) {
     Supplies.pendingRaidHost = store;
 }
 
-function consumePendingRaidsTreasure (data) {
+function consumePendingRaidsTreasure(data) {
     if (Supplies.pendingRaidHost && Supplies.pendingRaidHost.id == data.postData.quest_id) {
         let consumedItems;
         if (Array.isArray(data.postData.use_item_id)) { // This is an assumption. I don't want to host Luci just to check rn.
@@ -838,7 +840,7 @@ function consumePendingJobUnlock(data) {
     }
 }
 
-function storePendingForgeCCW (data) {
+function storePendingForgeCCW(data) {
     Supplies.pendingForge = {
         newWeapId: data.weapon_new.weapon_id,
         items: []
@@ -848,7 +850,7 @@ function storePendingForgeCCW (data) {
         Supplies.pendingForge.items.push(si);
     }
 }
-function consumePendingForgeCCW (data) {
+function consumePendingForgeCCW(data) {
     if (Supplies.pendingForge && (data.new_weapon || data.get_weapon) == Supplies.pendingForge.newWeapId) {
         Supplies.update(Supplies.pendingForge.items);
         delete Supplies.pendingForge;
@@ -857,7 +859,7 @@ function consumePendingForgeCCW (data) {
 
 // Events. Temp I guess
 
-function setRotbPendants (json) {
+function setRotbPendants(json) {
     let dom = parseDom(json.data),
         pts;
     if (dom.getElementById("title").value == "Rise of the Beasts") {

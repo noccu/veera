@@ -1,4 +1,4 @@
-function logSupportUser (json) {
+function logSupportUser(json) {
     if (json.popup_data.supporter_user && json.popup_data.supporter_user.level) {
         let d = json.popup_data.supporter_user;
         updateUI("logSupport", {

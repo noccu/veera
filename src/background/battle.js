@@ -163,10 +163,10 @@ const unitsShared = {
         });
         return n;
     },
-    getAtPos: function (pos) {
+    getAtPos: function(pos) {
         return this.list[this.current[pos]];
     },
-    getById: function (id) {
+    getById: function(id) {
         return this.list[id];
     }
 };
@@ -185,7 +185,7 @@ window.Battle = {
     set current(id) {
         this._currentId = id;
     },
-    packageData: function (target) {
+    packageData: function(target) {
         if (!target) { target = this.current }
         // let data = JSON.parse(JSON.stringify(target));
 
@@ -238,7 +238,7 @@ window.Battle = {
             }
         }
     },
-    load (id) {
+    load(id) {
         // TODO: This is very inefficient but requires big changes to improve.
         let archivedBattle = this.archive.get(id),
             lastTurn = archivedBattle.turn;
@@ -296,7 +296,7 @@ function BattleTurnData(turn) {
 
 Object.defineProperties(BattleTurnData.prototype, {
     getTotalHits: {
-        value: function (char, isBoss = false) {
+        value: function(char, isBoss = false) {
             let total = 0;
             for (let action of this.actions) {
                 if (action.isBoss == isBoss && (char === undefined || action.char == char)) {
@@ -307,7 +307,7 @@ Object.defineProperties(BattleTurnData.prototype, {
         }
     },
     getTotalDmg: {
-        value: function (char, isBoss = false) {
+        value: function(char, isBoss = false) {
             let total = 0;
             for (let action of this.actions) {
                 if (action.isBoss == isBoss && (char === undefined || action.char == char)) {
@@ -318,7 +318,7 @@ Object.defineProperties(BattleTurnData.prototype, {
         }
     },
     getDmg: {
-        value: function (char, isBoss = false) {
+        value: function(char, isBoss = false) {
             let total = 0;
             for (let action of this.actions) {
                 if (action.isBoss == isBoss && (char === undefined || action.char == char)) {
@@ -329,7 +329,7 @@ Object.defineProperties(BattleTurnData.prototype, {
         }
     },
     getEchoDmg: {
-        value: function (char, isBoss = false) {
+        value: function(char, isBoss = false) {
             let total = 0;
             for (let action of this.actions) {
                 if (action.isBoss == isBoss && (char === undefined || action.char == char)) {
@@ -561,7 +561,7 @@ function battleParseDamage(input, actionData, type) {
         deverror(e, input, actionData);
     }
 }
-function battleUseAbility (json, postData) {
+function battleUseAbility(json, postData) {
     if (!json || json.scenario[0].cmd == "finished" || !Battle.current) { return } // Battle over
 
     Battle.current.turn = json.status.turn;

@@ -40,7 +40,7 @@ window.DevTools = {
     }
 };
 
-function hear (msg) {
+function hear(msg) {
     // Convert to util object. Makes it easier to deal with and is in the end likely faster since we can check much smaller strings.
     let path = "", isData;
     if (msg.action == "request") {
@@ -269,7 +269,7 @@ function hear (msg) {
     }
 }
 
-function hearQuery (data, sender, respond) {
+function hearQuery(data, sender, respond) {
     devlog("Query rcv: ", data);
     if (data.source == "ui") {
         var retValue;

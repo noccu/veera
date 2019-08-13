@@ -1,5 +1,5 @@
 window.Planner = {
-    createPlan: function ({series, wtype, element, start, end, options}) {
+    createPlan: function({series, wtype, element, start, end, options}) {
         console.groupCollapsed(`Creating plan for ${series}`);
         var plan = [];
 
@@ -133,7 +133,7 @@ window.Planner = {
             return Object.keys(PlannerData[series].options);
         }
     },
-    getSeriesOptions: function (series) {
+    getSeriesOptions: function(series) {
         return {
             types: this.listTypes(series),
             elements: this.listElements(series),

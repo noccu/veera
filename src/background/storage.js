@@ -1,5 +1,5 @@
 window.Storage = {
-    set: function (value, cb) {
+    set: function(value, cb) {
         chrome.storage.local.set(value, res => this.response(res, cb, value));
     },
     get: function(key, cb) {

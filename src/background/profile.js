@@ -35,7 +35,7 @@ window.Profile = {
         points: {current: 0, max: 0}
     },
 
-    setPendants (pendants) {
+    setPendants(pendants) {
         var renown = pendants["92001"];
         var prestige = pendants["92002"];
         this.pendants = {
@@ -55,7 +55,7 @@ window.Profile = {
         };
         updateUI("updPendants", this.pendants);
     },
-    updatePendants (updArr) { // [ { pendantType, limitType, delta }]
+    updatePendants(updArr) { // [ { pendantType, limitType, delta }]
         for (let item of updArr) {
             if (item.delta) {
                 this.pendants[item.pendantType][item.limitType].current += item.delta;
@@ -67,7 +67,7 @@ window.Profile = {
         updateUI("updPendants", this.pendants);
         this.save();
     },
-    setCurrencies (dom) {
+    setCurrencies(dom) {
         let info = dom.querySelector(".prt-info-possessed");
         Supplies.set(new SupplyItem(SUPPLYTYPE.rupie, 0, parseInt(info.children[0].textContent), "Rupie"));
         Supplies.set(new SupplyItem(19, 0, parseInt(info.children[1].textContent), "CP"));
@@ -76,7 +76,7 @@ window.Profile = {
         Supplies.save();
         updateUI("updCurrencies", this.currencies);
     },
-    parseArca (dom) {
+    parseArca(dom) {
         // TODO: check if arca gives us this in easier fashion
         let info = dom.querySelector("#arcarum-status");
         let text = info.children[0].textContent.split("/");
@@ -105,7 +105,7 @@ window.Profile = {
         updateUI("updArca", this.arcarum);
         this.save();
     },
-    setStatus (status) {
+    setStatus(status) {
         let currentAp = status.now_action_point || status.action_point;
         if (currentAp) {
             this.status.ap = {
@@ -139,7 +139,7 @@ window.Profile = {
             }
         }
     },
-    update (json) {
+    update(json) {
         // Check if own profile.
         if (json.option && json.option.greet_num && json.option.greet_num.url != "profile/greet") {
             return;
@@ -171,7 +171,7 @@ window.Profile = {
             this.setStatus(status);
         }
     },
-    reset (event) {
+    reset(event) {
         switch (event.type) {
             case EVENTS.dailyReset:
                 this.pendants.renown.daily.current = 0;
@@ -193,7 +193,7 @@ window.Profile = {
         updateUI("updPendants", this.pendants);
         updateUI("updArca", this.arcarum);
     },
-    save () {
+    save() {
         Storage.set({
             profile: {
                 // status: this.status,
@@ -203,7 +203,7 @@ window.Profile = {
         });
         devlog("Profile saved.");
     },
-    load () {
+    load() {
         return new Promise((r, x) => {
             function _load(data) {
                 if (data.profile) {
@@ -228,7 +228,7 @@ window.Profile = {
     }
 };
 
-function getPendantsRaid (json) {
+function getPendantsRaid(json) {
     // TODO: uhh might need more cases?
     if (json.mbp_info && json.mbp_info.add_result) {
         var added = json.mbp_info.add_result;
@@ -255,7 +255,7 @@ function getPendantsRaid (json) {
     }
 }
 
-function updateGuildInfo (json) {
+function updateGuildInfo(json) {
     if (State.store.guild != json.is_guild_in) {
         State.store.guild = json.is_guild_in;
         State.save();

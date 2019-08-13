@@ -4,10 +4,10 @@ It works by modifying a Date object such that UTC functions return JST time, and
 This means the actual unix timestamp is invalid for any use that doesnt take this into account.
 */
 
-Date.prototype.convertToJst = function () {
+Date.prototype.convertToJst = function() {
     this.setUTCHours(this.getUTCHours() + 9);
 };
-Date.prototype.convertFromJst = function () {
+Date.prototype.convertFromJst = function() {
     this.setUTCHours(this.getUTCHours() - 9);
 };
 
@@ -18,7 +18,7 @@ window.Time = {
     timers: {},
     crewBuffs: [],
     jdBuffs: [],
-    tick () {
+    tick() {
         Time.update(Time.currentJst, 1);
 
         let reset = false; // only reset once but continue to check other timers
@@ -88,7 +88,7 @@ window.Time = {
             updateUI("syncTime", Time.pack());
         }
     },
-    keep () {
+    keep() {
         this.currentJst = new Date();
         this.currentJst.convertToJst();
         this.setTimers();
@@ -96,17 +96,17 @@ window.Time = {
         this.tock = setInterval(this.tick, 1000);
         updateUI("syncTime", this.pack());
     },
-    update (time, deltaSeconds) {
+    update(time, deltaSeconds) {
         time.setUTCSeconds(time.getUTCSeconds() + (deltaSeconds || 1));
     },
-    sync () {
+    sync() {
         console.log("Syncing time.");
         if (Time.tock) {
             clearInterval(Time.tock);
         }
         Time.keep();
     },
-    triggerReset (lastReset, detail) {
+    triggerReset(lastReset, detail) {
         // this.lastReset = lastReset.getTime();
         // this.save();
         devlog("Reset triggered: " + detail);
@@ -116,7 +116,7 @@ window.Time = {
         showNotif("Daily reset.", {text: detail});
         fireEvent(EVENTS.dailyReset);
     },
-    setTimers () {
+    setTimers() {
         let current = this.currentJst;
 
         let daily = this.getNextReset();
@@ -250,7 +250,7 @@ window.Time = {
         return time;
     },
     // Check if resets happened while inactive
-    checkReset () {
+    checkReset() {
         console.log("Checking time since reset.");
         let lastReset = State.store.lastReset;
         if (!lastReset) { // init & save a new date
@@ -267,14 +267,14 @@ window.Time = {
             }
         }
     },
-    convert24 (time, ampm) {
+    convert24(time, ampm) {
         ampm = ampm.slice(0, 1);
         if (ampm == "p" || ampm == "m") {
             time += 12;
         }
         return time;
     },
-    format (time) {
+    format(time) {
         return time.getTime();
         // return {
         // d: time.getUTCDate() - 1,
@@ -283,7 +283,7 @@ window.Time = {
         // s: ('0' + time.getUTCSeconds()).slice(-2)
         // };
     },
-    pack () {
+    pack() {
         let times = [];
 
         let jst = {type: "jst", name: "jst", delta: 1};
@@ -310,7 +310,7 @@ window.Time = {
     }
 };
 
-function updStrikeTime (json) {
+function updStrikeTime(json) {
     let dom = parseDom(json.data);
     let schedule = dom.querySelectorAll(".prt-assault-guildinfo");
 

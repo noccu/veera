@@ -8,7 +8,7 @@
 // http://game.granbluefantasy.jp/#quest/supporter/QUEST_ID/QUEST_TYPE
 // const SORT_METHODS;
 
-function RaidEntry (id, trackingObj) {
+function RaidEntry(id, trackingObj) {
     if (id instanceof RaidData) {
         this.data = id;
     }
@@ -60,7 +60,7 @@ window.Raids = {
     lastHost: {},
     load: function() {
         return new Promise ( (r, x) => {
-            function parse (idx) {
+            function parse(idx) {
                 if (idx.raid_list) {
                     Raids.list = idx.raid_list;
                     console.info(`Raid list loaded, ${Object.keys(Raids.list).length} stored raids of ${RaidList.length} total.`);
@@ -91,10 +91,10 @@ window.Raids = {
         @arg {function} filter
     **/
     getList: function(sort, filter) {
-        function sortByElement (a, b) {
+        function sortByElement(a, b) {
             return a.element - b.element;
         }
-        function sortByDifficulty (a, b) {
+        function sortByDifficulty(a, b) {
             return a.diff - b.diff;
         }
 
@@ -116,14 +116,14 @@ window.Raids = {
         }
         return output;
     },
-    set: function (raidEntry) {
+    set: function(raidEntry) {
         return this.list[raidEntry.data.id] = {
             hosts: raidEntry.hosts,
             active: raidEntry.active
         };
     },
     // Updates the tracking object.
-    update: function ({action, id, raidEntry}) {
+    update: function({action, id, raidEntry}) {
         if (!raidEntry) {
             if (!id) {
                 deverror(`Invalid data format, can't update raid ${id}.`);
@@ -148,7 +148,7 @@ window.Raids = {
         this.save();
         updateUI("updRaid", raidEntry);
     },
-    start: function (id, hostMats) {
+    start: function(id, hostMats) {
         let raid = this.get(id),
             sufficientMats = true,
             hostMatId, usedMats;
@@ -276,14 +276,14 @@ window.Raids = {
         updateUI("updRaid", this.getList());
         this.save();
     },
-    evhPageChanged (url) {
+    evhPageChanged(url) {
         if (url.ismatch("#quest/supporter/")) {
             this.setPendingHost({url});
         }
     }
 };
 
-function evhCheckRaidSupplyData (upd) {
+function evhCheckRaidSupplyData(upd) {
     for (let item of upd.detail) {
         if (IDX_ITEM_TO_RAIDS.has(item.id)) {
             for (let raidId of IDX_ITEM_TO_RAIDS.get(item.id)) {

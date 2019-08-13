@@ -31,7 +31,7 @@ window.State = {
     },
     game: {
         tabId: null,
-        linkToTab (id) {
+        linkToTab(id) {
             return new Promise ((r, x) => {
                 chrome.tabs.get(id, t => {
                     if (/game\.granbluefantasy\.jp|gbf\.game\.mbga\.jp/.test(t.url)) {
@@ -45,12 +45,12 @@ window.State = {
                 });
             });
         },
-        navigateTo (url) {
+        navigateTo(url) {
             if (this.tabId && url) {
                 chrome.tabs.update(this.tabId, {url: url}, () => devlog("Navigated to " + url));
             }
         },
-        evhTabUpdated (id, changes) {
+        evhTabUpdated(id, changes) {
             if (id == State.game.tabId) {
                 if (changes.hasOwnProperty("url")) {
                     fireEvent(EVENTS.pageChanged, changes.url);
@@ -64,7 +64,7 @@ window.State = {
         Storage.set({state: o});
         devlog("State saved.");
     },
-    load: function () { // Called out of context
+    load: function() { // Called out of context
         return new Promise((r, x) => {
             function _load(data) {
                 if (!data.state) {
@@ -159,7 +159,7 @@ window.State = {
                 console.error("Failed to get commit info: ", e);
             });
     },
-    reset () {
+    reset() {
         if (confirm("Clear all stored data and settings?")) {
             Supplies.clear();
             Storage.clear();

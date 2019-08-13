@@ -27,14 +27,14 @@ window.UI.battle = {
         }
 
     },
-    initDisplay: function () {
-        Chart.defaults.scale.ticks.callback = function (value) {
+    initDisplay: function() {
+        Chart.defaults.scale.ticks.callback = function(value) {
             return NUMBER_FORMAT.format(value);
         };
-        Chart.defaults.global.tooltips.callbacks.label = function (tooltipItem, data) {
+        Chart.defaults.global.tooltips.callbacks.label = function(tooltipItem, data) {
             return `${data.datasets[tooltipItem.datasetIndex].label}: ${NUMBER_FORMAT.format(tooltipItem.yLabel)}`;
         };
-        Chart.defaults.global.tooltips.callbacks.title = function (tooltipItemArr) {
+        Chart.defaults.global.tooltips.callbacks.title = function(tooltipItemArr) {
             /* var title = "Turn: ";
             for (let item of tooltipItemArr) {
                 title += item.xLabel;
@@ -176,7 +176,7 @@ window.UI.battle = {
             }
         }
     },
-    updateCharacters: function (turn, characters) {
+    updateCharacters: function(turn, characters) {
         var charData, charGraphData;
         for (let id of Object.keys(characters)) {
             charData = characters[id];
@@ -233,7 +233,7 @@ window.UI.battle = {
             }
         }
     },
-    updateBosses (bosses) {
+    updateBosses(bosses) {
         let boss = bosses[0]; // TODO: Change to loop later when I figure out multi-boss
 
         this.display.bosses[boss.char].hp.textContent = NUMBER_FORMAT.format(boss.currentHp);
@@ -340,7 +340,7 @@ window.UI.battle = {
     }
 };
 
-function createBattleDataset (stat, color, bgColor, axisID) {
+function createBattleDataset(stat, color, bgColor, axisID) {
     return {
         label: stat,
         data: [],
@@ -352,7 +352,7 @@ function createBattleDataset (stat, color, bgColor, axisID) {
     };
 }
 
-function showArchBattle (ev) {
+function showArchBattle(ev) {
     // BackgroundPage.send("requestArchBattle", ev.target.value);
     BackgroundPage.query("archivedBattle", ev.target.value)
         .then(allTurns => {

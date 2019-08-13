@@ -1,4 +1,4 @@
-//Templates
+// Templates
 const PLANNER_TEMPLATES = {
     orbs: {
         low: {
@@ -108,18 +108,18 @@ const PLANNER_TEMPLATES = {
         Dark: 51
     },
     centrums: {
-            type: SUPPLYTYPE.treasure,
-            Fire: 101,
-            Water: 102,
-            Earth: 103,
-            Wind: 104,
-            Light: 105,
-            Dark: 106,
-            Silver: 107
+        type: SUPPLYTYPE.treasure,
+        Fire: 101,
+        Water: 102,
+        Earth: 103,
+        Wind: 104,
+        Light: 105,
+        Dark: 106,
+        Silver: 107
     },
 
     trialFragments: {
-//        __proto__: PlannerTemplate,
+        //        __proto__: PlannerTemplate,
         type: SUPPLYTYPE.treasure,
         Fire: 5111,
         Water: 5121,
@@ -239,25 +239,25 @@ const PLANNER_ITEMS = {
 /** Creates an item for the planner from any accepted input.
     @arg {Number|Object|PlannerItem} type
 **/
-function PlannerItem (...args) {
+function PlannerItem(...args) {
     let step = args[0], type, id, needed;
-    //Dealing with input
+    // Dealing with input
     if (args.length == 2) {
         type = args[0];
         id = args[1];
     }
-    else if (Number.isInteger(args[1])) { //normal items
+    else if (Number.isInteger(args[1])) { // normal items
         type = args[1];
         id = args[2];
         needed = args[3];
     }
-    else if (args[1] instanceof PlannerItem) { //shorthands
+    else if (args[1] instanceof PlannerItem) { // shorthands
         let item = args[1];
         type = item.type;
         id = item.id;
         needed = args[2];
     }
-    else if (args[1].type) { //templates
+    else if (args[1].type) { // templates
         let item = args[1];
         type = item.type;
         id = item;
@@ -270,7 +270,7 @@ function PlannerItem (...args) {
         return;
     }
 
-    //Actual object assigning.
+    // Actual object assigning.
     this.step = step;
     this.type = type;
     this.id = id;
@@ -279,10 +279,10 @@ function PlannerItem (...args) {
 
 window.PlannerData = {
     Bahamut: {
-        core: [ //Items needed for every craft
+        core: [ // Items needed for every craft
             new PlannerItem(1, SUPPLYTYPE.treasure, 59, 1),
 
-            //Nova
+            // Nova
             new PlannerItem(2, SUPPLYTYPE.treasure, 59, 3),
             new PlannerItem(2, SUPPLYTYPE.treasure, 1, 7),
             new PlannerItem(2, SUPPLYTYPE.treasure, 1111, 30),
@@ -292,11 +292,11 @@ window.PlannerData = {
             new PlannerItem(2, SUPPLYTYPE.treasure, 1151, 30),
             new PlannerItem(2, SUPPLYTYPE.treasure, 1161, 30),
 
-            //Coda
+            // Coda
             new PlannerItem(3, SUPPLYTYPE.treasure, 79, 5),
             new PlannerItem(3, SUPPLYTYPE.treasure, 2003, 3)
         ],
-        wtype: { //Weapon type specific items
+        wtype: {// Weapon type specific items
             Sword: [new PlannerItem(2, SUPPLYTYPE.treasure, 47, 20)],
             Dagger: [new PlannerItem(2, SUPPLYTYPE.treasure, 51, 20)],
             Spear: [new PlannerItem(2, SUPPLYTYPE.treasure, 32, 20)],
@@ -308,32 +308,30 @@ window.PlannerData = {
             Harp: [new PlannerItem(2, SUPPLYTYPE.treasure, 48, 20)],
             Katana: [new PlannerItem(2, SUPPLYTYPE.treasure, 48, 20)]
         },
-        element: {
-            Dark: null //no special items, but name needed for option parsing (well not really, but it's nice)
-        },
-        stepNames: ["Rusted", "Base", "Nova", "Coda"] //In order starting from 0, which is the true starting (not part of the craft) step
+        element: {Dark: null}, // no special items, but name needed for option parsing (well not really, but it's nice)
+        stepNames: ["Rusted", "Base", "Nova", "Coda"] // In order starting from 0, which is the true starting (not part of the craft) step
     },
 
     Class: {
-        core: [ //Items needed for every craft
-             new PlannerItem(1, SUPPLYTYPE.treasure, 54, 20),
-             new PlannerItem(1, PLANNER_ITEMS.prismChip, 50),
-             new PlannerItem(1, PLANNER_ITEMS.blueSkyCrystal, 5),
-             //Rebuild
-             new PlannerItem(2, PLANNER_ITEMS.prismChip, 120),
-             new PlannerItem(2, PLANNER_ITEMS.championMerit, 30),
-             new PlannerItem(2, SUPPLYTYPE.evolution, 20003, 2), //steel brick
-             new PlannerItem(2, PLANNER_ITEMS.blueSkyCrystal, 5),
-             //Elechange
-             new PlannerItem(3, PLANNER_ITEMS.silverCentrum, 3),
-             new PlannerItem(3, PLANNER_ITEMS.blueSkyCrystal, 15),
+        core: [ // Items needed for every craft
+            new PlannerItem(1, SUPPLYTYPE.treasure, 54, 20),
+            new PlannerItem(1, PLANNER_ITEMS.prismChip, 50),
+            new PlannerItem(1, PLANNER_ITEMS.blueSkyCrystal, 5),
+            // Rebuild
+            new PlannerItem(2, PLANNER_ITEMS.prismChip, 120),
+            new PlannerItem(2, PLANNER_ITEMS.championMerit, 30),
+            new PlannerItem(2, SUPPLYTYPE.evolution, 20003, 2), // steel brick
+            new PlannerItem(2, PLANNER_ITEMS.blueSkyCrystal, 5),
+            // Elechange
+            new PlannerItem(3, PLANNER_ITEMS.silverCentrum, 3),
+            new PlannerItem(3, PLANNER_ITEMS.blueSkyCrystal, 15),
 
-             new PlannerItem(4, SUPPLYTYPE.treasure, 20771, 3),
-             new PlannerItem(4, SUPPLYTYPE.treasure, 79, 1),
-             new PlannerItem(4, PLANNER_ITEMS.blueSkyCrystal, 20),
-             new PlannerItem(4, PLANNER_ITEMS.silverCentrum, 3)
+            new PlannerItem(4, SUPPLYTYPE.treasure, 20771, 3),
+            new PlannerItem(4, SUPPLYTYPE.treasure, 79, 1),
+            new PlannerItem(4, PLANNER_ITEMS.blueSkyCrystal, 20),
+            new PlannerItem(4, PLANNER_ITEMS.silverCentrum, 3)
         ],
-        wtype: { //Weapon type specific items
+        wtype: {// Weapon type specific items
             Avenger: [
                 new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10),
                 new PlannerItem(2, SUPPLYTYPE.treasure, 20411, 10),
@@ -447,11 +445,11 @@ window.PlannerData = {
                 new PlannerItem(4, SUPPLYTYPE.treasure, 20241, 10)
             ],
             Misericorde: [
-                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10), //creeds
-                new PlannerItem(2, SUPPLYTYPE.treasure, 20761, 10), //dists
-                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25), //creeds
-                new PlannerItem(3, SUPPLYTYPE.treasure, 20761, 30), //dists
-                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10) //esteems
+                new PlannerItem(1, SUPPLYTYPE.treasure, 20211, 10), // creeds
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20761, 10), // dists
+                new PlannerItem(2, SUPPLYTYPE.treasure, 20211, 25), // creeds
+                new PlannerItem(3, SUPPLYTYPE.treasure, 20761, 30), // dists
+                new PlannerItem(4, SUPPLYTYPE.treasure, 20231, 10) // esteems
             ],
             templates: [
                 new PlannerItem(1, PLANNER_TEMPLATES.showdowns.items, 50),
@@ -462,7 +460,7 @@ window.PlannerData = {
 
                 new PlannerItem(3, PLANNER_TEMPLATES.stones, 512),
 
-                new PlannerItem(4, PLANNER_TEMPLATES.stones, 255),
+                new PlannerItem(4, PLANNER_TEMPLATES.stones, 255)
             ]
         },
         element: {
@@ -478,7 +476,7 @@ window.PlannerData = {
                 new PlannerItem(3, PLANNER_TEMPLATES.showdowns.anima, 100),
 
                 new PlannerItem(4, PLANNER_TEMPLATES.centrums, 30),
-                new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6),
+                new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6)
             ]
         },
         options: {
@@ -509,9 +507,9 @@ window.PlannerData = {
         }
     },
 
-    Revenant:{
+    Revenant: {
         core: [
-            //Awakening
+            // Awakening
             new PlannerItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.high.Light, 50),
             new PlannerItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.scrolls.Light, 50),
             new PlannerItem(1, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Light, 50),
@@ -520,7 +518,7 @@ window.PlannerData = {
             new PlannerItem(1, SUPPLYTYPE.crystals, 0, 100),
             new PlannerItem(2, SUPPLYTYPE.treasure, 1202, 250),
 
-            //Upgrade 1
+            // Upgrade 1
             new PlannerItem(3, SUPPLYTYPE.treasure, 2, 300),
             new PlannerItem(3, SUPPLYTYPE.treasure, 5, 100),
             new PlannerItem(3, SUPPLYTYPE.treasure, 8, 100),
@@ -528,7 +526,7 @@ window.PlannerData = {
             new PlannerItem(3, PLANNER_ITEMS.blueSkyCrystal, 3),
             new PlannerItem(3, SUPPLYTYPE.crystals, 0, 100),
 
-            //2
+            // 2
             new PlannerItem(4, SUPPLYTYPE.treasure, 6, 100),
             new PlannerItem(4, SUPPLYTYPE.treasure, 24, 100),
             new PlannerItem(4, SUPPLYTYPE.treasure, 28, 100),
@@ -536,7 +534,7 @@ window.PlannerData = {
             new PlannerItem(4, PLANNER_ITEMS.blueSkyCrystal, 5),
             new PlannerItem(4, SUPPLYTYPE.crystals, 0, 200),
 
-            //3
+            // 3
             new PlannerItem(5, SUPPLYTYPE.treasure, 3, 300),
             new PlannerItem(5, SUPPLYTYPE.treasure, 22, 100),
             new PlannerItem(5, SUPPLYTYPE.treasure, 39, 80),
@@ -544,14 +542,14 @@ window.PlannerData = {
             new PlannerItem(5, PLANNER_ITEMS.blueSkyCrystal, 7),
             new PlannerItem(5, SUPPLYTYPE.crystals, 0, 300),
 
-            //4
+            // 4
             new PlannerItem(6, SUPPLYTYPE.treasure, 17, 100),
             new PlannerItem(6, SUPPLYTYPE.treasure, 29, 100),
             new PlannerItem(6, SUPPLYTYPE.treasure, 40, 80),
             new PlannerItem(6, PLANNER_ITEMS.rainbowPrism, 150),
             new PlannerItem(6, PLANNER_ITEMS.blueSkyCrystal, 10),
             new PlannerItem(6, SUPPLYTYPE.crystals, 0, 400),
-            //5
+            // 5
             new PlannerItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Wind, 20),
             new PlannerItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Fire, 20),
             new PlannerItem(7, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.omegaItem.Water, 20),
@@ -562,7 +560,7 @@ window.PlannerData = {
             new PlannerItem(7, PLANNER_ITEMS.supremeMerit, 10),
             new PlannerItem(7, PLANNER_ITEMS.blueSkyCrystal, 15),
             new PlannerItem(7, SUPPLYTYPE.crystals, 0, 500),
-            //6
+            // 6
             new PlannerItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 3),
             new PlannerItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 3),
             new PlannerItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Earth, 3),
@@ -571,10 +569,10 @@ window.PlannerData = {
             new PlannerItem(8, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 3),
             new PlannerItem(8, PLANNER_ITEMS.rainbowPrism, 250),
             new PlannerItem(8, PLANNER_ITEMS.blueSkyCrystal, 30),
-            new PlannerItem(8, SUPPLYTYPE.evolution, 20004, 1), //Gold brick 1
+            new PlannerItem(8, SUPPLYTYPE.evolution, 20004, 1), // Gold brick 1
             new PlannerItem(8, SUPPLYTYPE.crystals, 0, 600),
 
-           //8 Crafting an uncapped Silver relic
+            // 8 Crafting an uncapped Silver relic
             new PlannerItem(10, SUPPLYTYPE.treasure, 5011, 300),
             new PlannerItem(10, SUPPLYTYPE.treasure, 5021, 300),
             new PlannerItem(10, SUPPLYTYPE.treasure, 5031, 300),
@@ -582,63 +580,43 @@ window.PlannerData = {
             new PlannerItem(10, SUPPLYTYPE.treasure, 5051, 300),
             new PlannerItem(10, SUPPLYTYPE.treasure, 5061, 300),
 
-           //9 Creating a Golden Relic
-           new PlannerItem(11, SUPPLYTYPE.evolution, 20004, 1),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.centrums.Silver, 10),
-           new PlannerItem(11, SUPPLYTYPE.treasure, 203, 10),
-           new PlannerItem(11, PLANNER_ITEMS.legendaryMerit, 5),
-           new PlannerItem(11, PLANNER_ITEMS.flawedPrism, 1500),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Fire, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Water, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Earth, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Wind, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Light, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Dark, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Fire, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Water, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Earth, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Wind, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Light, 250),
-           new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Dark, 250)
+            // 9 Creating a Golden Relic
+            new PlannerItem(11, SUPPLYTYPE.evolution, 20004, 1),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.centrums.Silver, 10),
+            new PlannerItem(11, SUPPLYTYPE.treasure, 203, 10),
+            new PlannerItem(11, PLANNER_ITEMS.legendaryMerit, 5),
+            new PlannerItem(11, PLANNER_ITEMS.flawedPrism, 1500),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Fire, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Water, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Earth, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Wind, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Light, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.whorls.Dark, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Fire, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Water, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Earth, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Wind, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Light, 250),
+            new PlannerItem(11, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.orbs.low.Dark, 250)
         ],
         wtype: {
 
-            //All need 24 rusted weapons of the same type as the Eternal.
+            // All need 24 rusted weapons of the same type as the Eternal.
 
-            "Uno (spear)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20421, 30)
-                ],
-            "Sorn (bow)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20481, 30)
-                ],
-            "Sarasa (axe)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20411, 30)
-                ],
-            "Feower (dagger)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20461, 30)
-                ],
-            "Funf (staff)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20431, 30)
-                ],
-            "Six (fist)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20471, 30)
-                ],
-            "Siete (sword)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20691, 30)
-                ],
-            "Okto (katana)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20671, 30)
-                ],
-            "Nio (harp)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20491, 30)
-                ],
-            "Esser (gun)": [
-                new PlannerItem(11, SUPPLYTYPE.treasure, 20451, 30)
-                ],
+            "Uno (spear)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20421, 30)],
+            "Sorn (bow)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20481, 30)],
+            "Sarasa (axe)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20411, 30)],
+            "Feower (dagger)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20461, 30)],
+            "Funf (staff)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20431, 30)],
+            "Six (fist)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20471, 30)],
+            "Siete (sword)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20691, 30)],
+            "Okto (katana)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20671, 30)],
+            "Nio (harp)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20491, 30)],
+            "Esser (gun)": [new PlannerItem(11, SUPPLYTYPE.treasure, 20451, 30)],
             templates: [
-               new PlannerItem(9, PLANNER_TEMPLATES.relicShards, 40), //Silver fragments
-               new PlannerItem(10, PLANNER_TEMPLATES.stones, 300), //Stones
-               new PlannerItem(11, PLANNER_TEMPLATES.revenantFragments, 100) //Revenant Fragments
+                new PlannerItem(9, PLANNER_TEMPLATES.relicShards, 40), // Silver fragments
+                new PlannerItem(10, PLANNER_TEMPLATES.stones, 300), // Stones
+                new PlannerItem(11, PLANNER_TEMPLATES.revenantFragments, 100) // Revenant Fragments
             ]
         },
         element: {
@@ -652,36 +630,36 @@ window.PlannerData = {
                 new PlannerItem(2, PLANNER_TEMPLATES.orbs.low, 250),
                 new PlannerItem(2, PLANNER_TEMPLATES.whorls, 250),
 
-                //Upgrade 1
+                // Upgrade 1
                 new PlannerItem(3, PLANNER_TEMPLATES.orbs.low, 100),
                 new PlannerItem(3, PLANNER_TEMPLATES.whorls, 100),
                 new PlannerItem(3, PLANNER_TEMPLATES.tomes, 100),
                 new PlannerItem(3, PLANNER_TEMPLATES.scrolls, 150),
 
-                //Upgrade 2
+                // Upgrade 2
                 new PlannerItem(4, PLANNER_TEMPLATES.orbs.low, 150),
                 new PlannerItem(4, PLANNER_TEMPLATES.tomes, 150),
                 new PlannerItem(4, PLANNER_TEMPLATES.whorls, 150),
                 new PlannerItem(4, PLANNER_TEMPLATES.scales, 30),
                 new PlannerItem(4, PLANNER_TEMPLATES.trueAnima, 3),
 
-                //Upgrade 3
+                // Upgrade 3
                 new PlannerItem(5, PLANNER_TEMPLATES.orbs.low, 200),
                 new PlannerItem(5, PLANNER_TEMPLATES.orbs.high, 100),
                 new PlannerItem(5, PLANNER_TEMPLATES.whorls, 200),
                 new PlannerItem(5, PLANNER_TEMPLATES.anima.primal, 100),
 
-                //Upgrade 4
+                // Upgrade 4
                 new PlannerItem(6, PLANNER_TEMPLATES.orbs.low, 250),
                 new PlannerItem(6, PLANNER_TEMPLATES.scales, 50),
                 new PlannerItem(6, PLANNER_TEMPLATES.whorls, 250),
                 new PlannerItem(6, PLANNER_TEMPLATES.trueAnima, 3),
 
-                //Upgrade 5
-                new PlannerItem(7, PLANNER_TEMPLATES.omegaItem, 60),
+                // Upgrade 5
+                new PlannerItem(7, PLANNER_TEMPLATES.omegaItem, 60)
             ]
         },
-        stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6", 'Silver Relic', 'Silver Uncap','Golden Relic'],
+        stepNames: ["Revenant", "Awaken", "Elechange", "Upgrade 1", "Upgrade 2", "Upgrade 3", "Upgrade 4", "Upgrade 5", "Upgrade 6", "Silver Relic", "Silver Uncap", "Golden Relic"],
         typeNames: {
             "Uno (spear)": "Spear",
             "Sorn (bow)": "Bow",
@@ -721,9 +699,7 @@ window.PlannerData = {
             Bow: null,
             Harp: null,
             Katana: null,
-            templates: [
-                new PlannerItem(3, PLANNER_TEMPLATES.stones, 500)
-            ]
+            templates: [new PlannerItem(3, PLANNER_TEMPLATES.stones, 500)]
         },
         element: {
             Fire: null,
@@ -760,14 +736,14 @@ window.PlannerData = {
             new PlannerItem(2, PLANNER_ITEMS.supremeMerit, 100),
 
             new PlannerItem(3, PLANNER_ITEMS.goldBrick, 1),
-            new PlannerItem(3, SUPPLYTYPE.treasure, 538, 5), //tears
-            new PlannerItem(3, SUPPLYTYPE.treasure, 79, 50), //horn
-            new PlannerItem(3, SUPPLYTYPE.treasure, 534, 50), //key
-            new PlannerItem(3, SUPPLYTYPE.treasure, 138, 50), //unit
-            new PlannerItem(3, SUPPLYTYPE.treasure, 20781, 30) //anima
+            new PlannerItem(3, SUPPLYTYPE.treasure, 538, 5), // tears
+            new PlannerItem(3, SUPPLYTYPE.treasure, 79, 50), // horn
+            new PlannerItem(3, SUPPLYTYPE.treasure, 534, 50), // key
+            new PlannerItem(3, SUPPLYTYPE.treasure, 138, 50), // unit
+            new PlannerItem(3, SUPPLYTYPE.treasure, 20781, 30) // anima
         ],
         wtype: {
-            Sword: [new PlannerItem(3, SUPPLYTYPE.treasure, 543, 1)], //tidings
+            Sword: [new PlannerItem(3, SUPPLYTYPE.treasure, 543, 1)], // tidings
             Spear: [new PlannerItem(3, SUPPLYTYPE.treasure, 542, 1)],
             Axe: [new PlannerItem(3, SUPPLYTYPE.treasure, 539, 1)],
             Staff: [new PlannerItem(3, SUPPLYTYPE.treasure, 540, 1)],
@@ -790,7 +766,7 @@ window.PlannerData = {
             Dark: null
         },
         options: {
-            "Revelation Pendulum" : [new PlannerItem(false, SUPPLYTYPE.treasure, 537, 5)],
+            "Revelation Pendulum": [new PlannerItem(false, SUPPLYTYPE.treasure, 537, 5)],
             "Gospel Pendulum": [
                 new PlannerItem(false, SUPPLYTYPE.treasure, 538, 5),
                 new PlannerItem(false, SUPPLYTYPE.treasure, 535, 30)
@@ -803,7 +779,7 @@ window.PlannerData = {
             "Axe": "Fire",
             "Staff": "Water",
             "Harp": "Earth",
-            "Katana": "Dark",
+            "Katana": "Dark"
         }
     }
 };
@@ -814,7 +790,7 @@ window.PlannerData = {
     }
     else {
         for (let k of Object.keys(o)) {
-            if (o[k] instanceof Object) { hideTemplates(o[k]); }
+            if (o[k] instanceof Object) { hideTemplates(o[k]) }
         }
     }
 })(PlannerData);

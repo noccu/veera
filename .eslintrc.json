@@ -43,6 +43,7 @@
         "object-curly-spacing": "warn",
         "computed-property-spacing": "warn",
         "comma-spacing": "warn",
+        "space-before-function-paren": ["warn", "never"],
         "spaced-comment": "warn",
         "array-bracket-newline": ["warn", { "multiline": true }],
         "object-curly-newline": ["warn", { "multiline": true }],
