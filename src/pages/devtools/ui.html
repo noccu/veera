@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Veera</title>
+        <meta charset="UTF-8">
         <link href="../stylesheets/ui.css" rel="stylesheet">
         <link id="theme" href="../stylesheets/night.css" rel="stylesheet">
         <script type="text/javascript" src="message.js"></script>
@@ -20,7 +21,7 @@
         </div>
         <div id="top-display">
             <div id="profile">
-                <div id="ap-bp-display" class="display">
+                <div id="ap-bp-display" class="display" data-event="navigate" data-value="#item">
                     <div id="ap-display">AP: <span id="ap-current" class="current-value">0</span>/<span id="ap-max" class="max-value">0</span></div>
                     <div id="bp-display">BP: <span id="bp-current" class="current-value">0</span>/<span id="bp-max" class="max-value">10</span></div>
                 </div>
@@ -39,23 +40,22 @@
                     <div class="div-hor">
                         <div class="value-display">Crystals: <span id="num-crystal">0</span></div>
                         <div class="value-display">Rupies: <span id="num-rupies">0</span></div>
-                        <div class="value-display">Chips: <span id="num-chips">0</span></div>
+                        <div class="value-display" data-event="navigate" data-value="#casino">Chips: <span id="num-chips">0</span></div>
                     </div>
                     <div class="div-hor">
                         <div class="value-display">CP: <span id="num-cp">0</span></div>
                         <div class="value-display">EMP: <span id="num-emp">0</span></div>
                         <div class="value-display">JD: <span id="num-jd">0</span></div>
                     </div>
-                    <div class="spacer"></div>
-                    <div id="pendants-display">
-                        <div class="div-hor">
-                            <div class="value-display">Renown: <span><span id="display-renown-total" class="current-value">0</span>/<span id="display-renown-max" class="max-value">0</span></span></div>
-                            <div class="value-display">Prestige: <span><span id="display-prestige-total" class="current-value">0</span>/<span id="display-prestige-max" class="max-value">0</span></span></div>
-                        </div>
-                        <div class="div-hor">
-                            <div class="value-display">Arcarum tck: <span><span id="num-arc-tck" class="current-value">0</span>/<span id= "max-arc-tck" class="max-value">0</span></span></div>
-                            <div class="value-display">Arcarum pts: <span><span id="num-arc-pts" class="current-value">0</span>/<span id= "max-arc-pts" class="max-value">0</span></span></div>
-                        </div>
+                </div>
+                <div id="pendants-display" class="display">
+                    <div class="div-hor" data-event="navigate" data-value="#shop/exchange/points">
+                        <div class="value-display">Renown: <span><span id="display-renown-total" class="current-value">0</span>/<span id="display-renown-max" class="max-value">0</span></span></div>
+                        <div class="value-display">Prestige: <span><span id="display-prestige-total" class="current-value">0</span>/<span id="display-prestige-max" class="max-value">0</span></span></div>
+                    </div>
+                    <div class="div-hor" data-event="navigate" data-value="#arcarum2">
+                        <div class="value-display">Arcarum tck: <span><span id="num-arc-tck" class="current-value">0</span>/<span id= "max-arc-tck" class="max-value">0</span></span></div>
+                        <div class="value-display">Arcarum pts: <span><span id="num-arc-pts" class="current-value">0</span>/<span id= "max-arc-pts" class="max-value">0</span></span></div>
                     </div>
                 </div>
             </div>
@@ -64,13 +64,13 @@
                 <template id="t-buffTimers">
                     <span class="buffTimer" title="buffname"><img src="../../assets/images/icons/zp.png"><span class="buff-d">-</span>d <span class="buff-h">-</span>h <span class="buff-m">-</span>m</span>
                 </template>
-                <div id="buffTimers">
+                <div id="buffTimers" data-event="navigate" data-value="#shop/exchange/trajectory">
                 </div>
                 <div class="display" id="jst-time">
                     <span class="display-title">JST</span>
                     <span class="timer-display"><span id="jst-h">--</span>:<span id="jst-m">--</span><span id="jst-s" class="time-s">--</span></span>
                 </div>
-                <div class="display" id="timer-st-time">
+                <div class="display" id="timer-st-time" data-event="navigate" data-value="#quest/assist">
                     <span class="display-title">Strike Time</span>
                     <span class="timer-display"><span id="st1-h">--</span>:<span id="st1-m">--</span><span id="st1-s" class="time-s">--</span></span>
                     <span class="timer-display"><span id="st2-h">--</span>:<span id="st2-m">--</span><span id="st2-s" class="time-s">--</span></span>
@@ -381,7 +381,7 @@
                                         <div class="battle-stats" data-stat="teamHealing">Heal (team): <span>0</span></div>
                                     </div>
 
-                                    <div class="sep" data-event="collapse" data-in="panel" data-id="cStatSkillExpand"></div>
+                                    <div class="skillExpand small-log" data-event="collapse" data-in="panel" data-id="cStatSkillExpand">🠇 Skills 🠇</div>
                                     <div class="battle-stats-container hidden small-log">
                                         <div class="battle-stats" data-stat="skillDetails"><div class="text"></div></div>
                                     </div>

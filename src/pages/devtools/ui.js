@@ -52,7 +52,7 @@ window.UI = {
             nav.addEventListener("click", this.switchNav);
         }
         // Global filters
-        document.getElementById("tabs").addEventListener("click", evhGlobalClick);
+        document.addEventListener("click", evhGlobalClick);
         document.getElementById("supplies-search").addEventListener("change", evhSuppliesSearch);
         // Specific filters
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);

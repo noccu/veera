@@ -6,6 +6,10 @@ html {
     color: var(--text-color);
 }
 
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 .tab {
     display: none;
     position: relative;
@@ -65,7 +69,7 @@ html {
 .display {
     display: inline-block;
     border: 1.7px solid var(--diff-color-a);
-    padding: 0.3em;
+    padding: 0.2em;
     vertical-align: top;
     margin: 0.1em 0;
 }
@@ -96,8 +100,8 @@ html {
     display: inline-block;
 }
 
-.div-hor:not(:first-child) {
-    margin-left: 0.5em;
+.div-hor:not(:last-child) {
+    margin-right: 0.5em;
 }
 
 .value-display {
@@ -187,8 +191,8 @@ li {
     margin-bottom: 0.5em;
 }
 .sep {
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
+    margin-bottom: 0.4em;
+    padding-bottom: 0.4em;
     border-bottom: 1px solid var(--line-color);
 }
 .sep-v {
@@ -199,7 +203,7 @@ li {
 }
 
 .panel-content {
-    margin: 0.3em;
+    margin: 0.2em;
 }
 
 .panel-content > span{
@@ -437,6 +441,10 @@ button {
 [data-event] {
     cursor: pointer;
 }
+[data-event=navigation] * {
+    pointer-events: none;
+}
+
 #raid-next-quest {
     background-color: var(--diff-color-b);
     font-size: 1.5em;
@@ -548,4 +556,9 @@ button {
 
 .battle-stats span {
     color: var(--highlight-color);
+}
+.skillExpand {
+    text-align: center;
+    grid-area: auto / left / auto / right;
+    margin-top: 0.4em;
 }
