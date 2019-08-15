@@ -33,7 +33,7 @@ window.Planner = {
                     }
                 }
                 // Multi-mapped typeNames
-                if (Array.isArray(templateKey)) { // item keys can be arrows too!
+                if (Array.isArray(templateKey)) { // item keys can be arrays too!
                     for (let key of templateKey) {
                         if (item.id[key]) {
                             templateKey = key;
@@ -43,7 +43,7 @@ window.Planner = {
                 }
                 id = item.id[templateKey];
             }
-            // Multi-item teplates
+            // Multi-item templates
             let needed = item.needed;
             if (Array.isArray(id)) {
                 needed /= id.length;

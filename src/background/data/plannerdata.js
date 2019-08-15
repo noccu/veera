@@ -88,7 +88,7 @@ const PLANNER_TEMPLATES = {
         Dark: 46
     },
     anima: {
-        primal: {
+        magna: {
             type: SUPPLYTYPE.treasure,
             Fire: 11,
             Water: 12,
@@ -96,6 +96,78 @@ const PLANNER_TEMPLATES = {
             Wind: 10,
             Light: 25,
             Dark: 30
+        },
+        magnaOmega: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 19,
+            Water: 20,
+            Earth: 21,
+            Wind: 18,
+            Light: 26,
+            Dark: 31
+        },
+        ancient: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 64,
+            Water: 60,
+            Earth: 62,
+            Wind: 65,
+            Light: 66,
+            Dark: 63
+        },
+        ancientOmega: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 76,
+            Water: 73,
+            Earth: 74,
+            Wind: 77,
+            Light: 78,
+            Dark: 75
+        },
+        epic: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 85,
+            Water: 68,
+            Earth: 87,
+            Wind: 92,
+            Light: 67,
+            Dark: 72
+        },
+        epicOmega: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 86,
+            Water: 142,
+            Earth: 88,
+            Wind: 93,
+            Light: 141,
+            Dark: 143
+        },
+        primarch: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 506,
+            Water: 507,
+            Earth: 508,
+            Wind: 509,
+            Light: [506, 509],
+            Dark: [507, 508]
+        },
+        genesis: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 510,
+            Water: 512,
+            Earth: 514,
+            Wind: 516,
+            Light: 518,
+            Dark: 520
+        },
+        genesisOmega: {
+            type: SUPPLYTYPE.treasure,
+            Fire: 511,
+            Water: 513,
+            Earth: 515,
+            Wind: 517,
+            Light: 519,
+            Dark: 521
         }
     },
     omegaItem: {
@@ -201,23 +273,23 @@ const PLANNER_TEMPLATES = {
         Light: [20711, 20741],
         Dark: [20721, 20731]
     },
-    primarchAnima: {
+    astras: {
         type: SUPPLYTYPE.treasure,
-        Fire: 506,
-        Water: 507,
-        Earth: 508,
-        Wind: 509,
-        Light: [506, 509],
-        Dark: [507, 508]
+        Fire: 25001,
+        Water: 25002,
+        Earth: 25003,
+        Wind: 25004,
+        Light: 25005,
+        Dark: 25006
     },
-    genesisAnima: {
+    verumProofs: {
         type: SUPPLYTYPE.treasure,
-        Fire: 511,
-        Water: 513,
-        Earth: 515,
-        Wind: 517,
-        Light: 519,
-        Dark: 521
+        Fire: 25023,
+        Water: 25024,
+        Earth: 25025,
+        Wind: 25026,
+        Light: [25023, 25026],
+        Dark: [25024, 25025]
     }
 };
 
@@ -233,7 +305,8 @@ const PLANNER_ITEMS = {
     prismChip: new PlannerItem(SUPPLYTYPE.treasure, 1201),
     bahaHorn: new PlannerItem(SUPPLYTYPE.treasure, 59),
     silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107),
-    goldBrick: new PlannerItem(17, 20004)
+    goldBrick: new PlannerItem(17, 20004),
+    sephiraStone: new PlannerItem(SUPPLYTYPE.treasure, 25000)
 };
 
 /** Creates an item for the planner from any accepted input.
@@ -266,7 +339,7 @@ function PlannerItem(...args) {
         this.templateKey = args[3];
     }
     else {
-        deverror("Invalid planner item, check data.", type);
+        deverror("Invalid planner item, check data.", args);
         return;
     }
 
@@ -278,6 +351,330 @@ function PlannerItem(...args) {
 }
 
 window.PlannerData = {
+    Arcarum: {
+        core: [ // Items needed for every craft
+            new PlannerItem(1, PLANNER_ITEMS.sephiraStone, 2),
+            new PlannerItem(1, PLANNER_ITEMS.flawlessPrism, 100),
+
+            new PlannerItem(2, PLANNER_ITEMS.sephiraStone, 5),
+            new PlannerItem(2, PLANNER_ITEMS.rainbowPrism, 100),
+
+            new PlannerItem(3, PLANNER_ITEMS.sephiraStone, 10),
+
+            new PlannerItem(4, PLANNER_ITEMS.sephiraStone, 15),
+            new PlannerItem(4, PLANNER_ITEMS.legendaryMerit, 3),
+
+            new PlannerItem(5, PLANNER_ITEMS.sephiraStone, 30),
+            new PlannerItem(5, PLANNER_ITEMS.silverCentrum, 5),
+            new PlannerItem(5, SUPPLYTYPE.evolution, 20014, 1),
+
+            new PlannerItem(6, PLANNER_ITEMS.sephiraStone, 45),
+
+            new PlannerItem(7, SUPPLYTYPE.treasure, 79, 10), // horn
+            new PlannerItem(7, SUPPLYTYPE.treasure, 535, 80),
+
+            new PlannerItem(8, PLANNER_ITEMS.sephiraStone, 30),
+            new PlannerItem(8, SUPPLYTYPE.treasure, 25036, 1) // Evolite
+        ],
+        wtype: {// Summon specific items
+            "Justice (Maria Theresa)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25007, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25021, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25007, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25021, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25007, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25021, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25007, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25021, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25007, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25021, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25007, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25034, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25021, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25034, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 130, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25007, 20) // idean
+            ],
+            "The Hanged Man (Caim)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25008, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25021, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25008, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25021, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25008, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25021, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25008, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25021, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25008, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25021, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25008, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25033, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25021, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25033, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 129, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25008, 20) // idean
+            ],
+            "Death (Nier)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25009, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25021, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25009, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25021, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25009, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25021, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25009, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25021, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25009, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25021, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25009, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25035, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25021, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25035, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 128, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25009, 20) // idean
+            ],
+            "Temperance (Estarriola)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25010, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25020, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25010, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25020, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25010, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25020, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25010, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25020, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25010, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25020, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25010, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25035, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25020, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25035, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 126, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25010, 20) // idean
+            ],
+            "The Devil (Fraux)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25011, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25020, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25011, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25020, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25011, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25020, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25011, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25020, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25011, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25020, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25011, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25033, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25020, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25033, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 144, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25011, 20) // idean
+            ],
+            "The Tower (Lobelia)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25012, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25021, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25012, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25021, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25012, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25021, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25012, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25021, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25012, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25021, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25012, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25035, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25021, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25035, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 148, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25012, 20) // idean
+            ],
+            "The Star (Geisenborger)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25013, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25020, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25013, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25020, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25013, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25020, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25013, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25020, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25013, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25020, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25013, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25035, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25020, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25035, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 145, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25013, 20) // idean
+            ],
+            "The Moon (Haaselia)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25014, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25021, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25014, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25021, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25014, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25021, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25014, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25021, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25014, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25021, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25014, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25034, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25021, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25034, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 146, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25014, 20) // idean
+            ],
+            "The Sun (Alanaan)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25015, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25020, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25015, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25020, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25015, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25020, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25015, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25020, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25015, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25020, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25015, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25033, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25020, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25033, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 127, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25015, 20) // idean
+            ],
+            "Judgement (Katzelia)": [
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25016, 2), // idean
+                new PlannerItem(1, SUPPLYTYPE.treasure, 25020, 1), // haze
+
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25016, 3), // idean
+                new PlannerItem(2, SUPPLYTYPE.treasure, 25020, 3), // haze
+
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25016, 5), // idean
+                new PlannerItem(3, SUPPLYTYPE.treasure, 25020, 7), // haze
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25016, 7), // idean
+                new PlannerItem(4, SUPPLYTYPE.treasure, 25020, 16), // haze
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25016, 15), // idean
+                new PlannerItem(5, SUPPLYTYPE.treasure, 25020, 24), // haze
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25016, 25), // idean
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25034, 10), // fragment
+                new PlannerItem(6, SUPPLYTYPE.treasure, 25020, 32), // haze
+
+                new PlannerItem(7, SUPPLYTYPE.treasure, 25034, 20), // fragment
+                new PlannerItem(7, SUPPLYTYPE.treasure, 147, 50), // treasure
+
+                new PlannerItem(8, SUPPLYTYPE.treasure, 25016, 20) // idean
+            ],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.astras, 3),
+                new PlannerItem(1, PLANNER_TEMPLATES.verumProofs, 6),
+                new PlannerItem(1, PLANNER_TEMPLATES.anima.magnaOmega, 30),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.astras, 5),
+                new PlannerItem(2, PLANNER_TEMPLATES.verumProofs, 16),
+                new PlannerItem(2, PLANNER_TEMPLATES.quartz, 100),
+
+                new PlannerItem(3, PLANNER_TEMPLATES.astras, 10),
+                new PlannerItem(3, PLANNER_TEMPLATES.verumProofs, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.anima.ancient, 30),
+
+                new PlannerItem(4, PLANNER_TEMPLATES.astras, 15),
+                new PlannerItem(4, PLANNER_TEMPLATES.verumProofs, 50),
+                new PlannerItem(4, PLANNER_TEMPLATES.anima.epic, 30),
+
+                new PlannerItem(5, PLANNER_TEMPLATES.astras, 30),
+                new PlannerItem(5, PLANNER_TEMPLATES.verumProofs, 80),
+                new PlannerItem(5, PLANNER_TEMPLATES.anima.primarch, 20),
+
+                new PlannerItem(6, PLANNER_TEMPLATES.astras, 45),
+                new PlannerItem(6, PLANNER_TEMPLATES.verumProofs, 120),
+                new PlannerItem(6, PLANNER_TEMPLATES.anima.genesisOmega, 10),
+
+                new PlannerItem(7, PLANNER_TEMPLATES.showdowns.items, 100),
+                new PlannerItem(7, PLANNER_TEMPLATES.trialFragments, 50),
+                new PlannerItem(7, PLANNER_TEMPLATES.verumProofs, 250),
+
+                new PlannerItem(8, PLANNER_TEMPLATES.astras, 200)
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Obtain", "SR 1*", "SR 2*", "SR 3*", "SSR Upgrade", "SSR 4*", "SSR 5*", "Recruitment"],
+        typeNames: {
+            "Justice (Maria Theresa)": "Water",
+            "The Hanged Man (Caim)": "Earth",
+            "Death (Nier)": "Dark",
+            "Temperance (Estarriola)": "Wind",
+            "The Devil (Fraux)": "Fire",
+            "The Tower (Lobelia)": "Earth",
+            "The Star (Geisenborger)": "Light",
+            "The Moon (Haaselia)": "Water",
+            "The Sun (Alanaan)": "Fire",
+            "Judgement (Katzelia)": "Wind"
+        }
+    },
+
     Bahamut: {
         core: [ // Items needed for every craft
             new PlannerItem(1, SUPPLYTYPE.treasure, 59, 1),
@@ -476,7 +873,7 @@ window.PlannerData = {
                 new PlannerItem(3, PLANNER_TEMPLATES.showdowns.anima, 100),
 
                 new PlannerItem(4, PLANNER_TEMPLATES.centrums, 30),
-                new PlannerItem(4, PLANNER_TEMPLATES.primarchAnima, 6)
+                new PlannerItem(4, PLANNER_TEMPLATES.anima.primarch, 6)
             ]
         },
         options: {
@@ -647,7 +1044,7 @@ window.PlannerData = {
                 new PlannerItem(5, PLANNER_TEMPLATES.orbs.low, 200),
                 new PlannerItem(5, PLANNER_TEMPLATES.orbs.high, 100),
                 new PlannerItem(5, PLANNER_TEMPLATES.whorls, 200),
-                new PlannerItem(5, PLANNER_TEMPLATES.anima.primal, 100),
+                new PlannerItem(5, PLANNER_TEMPLATES.anima.magna, 100),
 
                 // Upgrade 4
                 new PlannerItem(6, PLANNER_TEMPLATES.orbs.low, 250),
@@ -754,17 +1151,10 @@ window.PlannerData = {
                 new PlannerItem(1, PLANNER_TEMPLATES.stones, 255),
 
                 new PlannerItem(2, PLANNER_TEMPLATES.urns, 30),
-                new PlannerItem(2, PLANNER_TEMPLATES.genesisAnima, 10)
+                new PlannerItem(2, PLANNER_TEMPLATES.anima.genesisOmega, 10)
             ]
         },
-        element: {
-            Fire: null,
-            Water: null,
-            Earth: null,
-            Wind: null,
-            Light: null,
-            Dark: null
-        },
+        element: {Locked: null},
         options: {
             "Revelation Pendulum": [new PlannerItem(false, SUPPLYTYPE.treasure, 537, 5)],
             "Gospel Pendulum": [
