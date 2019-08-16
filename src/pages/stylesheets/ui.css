@@ -441,7 +441,7 @@ button {
 [data-event] {
     cursor: pointer;
 }
-[data-event=navigation] * {
+[data-event=navigate] * {
     pointer-events: none;
 }
 
