@@ -30,7 +30,7 @@ function devlog() {
     }
 }
 
-function updatePendants (data) {
+function updatePendants(data) {
     UI.setValue([
         {id: "display-renown-total", value: data.renown.total.current},
         {id: "panel-renown-weekly", value: data.renown.weekly.current},
@@ -52,7 +52,7 @@ function updatePendants (data) {
         {id: "panel-prestige-crew-max", value: data.prestige.crew.max}
     ]);
 }
-function updateStatus (data) {
+function updateStatus(data) {
     UI.setValue([
         {id: "ap-current", value: data.ap.current},
         {id: "bp-current", value: data.bp.current},
@@ -92,7 +92,7 @@ function updateCurrencies(data) {
     ]);
 }
 
-function updateSupplies (idx) {
+function updateSupplies(idx) {
     if (idx) {
         var list = document.getElementById("supplies-list");
         var newItems;
@@ -113,7 +113,7 @@ function updateSupplies (idx) {
         }
     }
 }
-function createSupplyItem (data, idPrefix) {
+function createSupplyItem(data, idPrefix) {
     if (data.id === undefined) { // id = 0 is a thing
         console.warn("No id for item: ", data);
         return;
@@ -121,7 +121,7 @@ function createSupplyItem (data, idPrefix) {
     var t = document.getElementById("template-supply-item");
     let item = t.content.firstElementChild;
     item.id = `${idPrefix || ""}${data.type}_${data.id}`;
-    item.title = data.location ? `${data.name}\nGet from: ${data.location}`: data.name;
+    item.title = data.location ? `${data.name}\nGet from: ${data.location}` : data.name;
     item.getElementsByClassName("collection-icon")[0].src = data.path;
     item.getElementsByClassName("collection-data")[0].textContent = data.count;
 
@@ -135,7 +135,7 @@ function createSupplyItem (data, idPrefix) {
 }
 
 // Planner functions
-function createPlannerItem (item) {
+function createPlannerItem(item) {
     let li = createSupplyItem(item, "p");
     li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;
     return li;
@@ -143,7 +143,7 @@ function createPlannerItem (item) {
 function changeSeries(ev) { // Event handler, updates type and element list when series changes
     BackgroundPage.send("plannerSeriesChange", {newValue: ev.target.value});
 }
-function updateSeriesOptions (data) { // receives list of each option type.
+function updateSeriesOptions(data) { // receives list of each option type.
     UI.planner.populateSelection("type", data.types);
     UI.planner.populateSelection("element", data.elements);
     UI.planner.populateSelection("start", data.steps);
@@ -162,7 +162,7 @@ function updateSeriesOptions (data) { // receives list of each option type.
         }
     }
 }
-function updatePlan () { // Event handler
+function updatePlan() { // Event handler
     var plan = {
         series: UI.planner.dom.series.value,
         wtype: UI.planner.dom.type.value,
@@ -180,7 +180,7 @@ function updatePlan () { // Event handler
 }
 
 // Raids
-function updCurrentRaidInfo (data) {
+function updCurrentRaidInfo(data) {
     // Just drops for now.
     if (data.hasOwnProperty("loot")) {
         let list = document.getElementById("raid-current-drop-list"),
@@ -194,7 +194,7 @@ function updCurrentRaidInfo (data) {
             let disp = temp.content.firstElementChild,
                 name = disp.getElementsByTagName("span")[0];
             disp.dataset.rarity = item.rarity;
-            name.textContent = name.title = item.delta > 1 ? item.name+" x"+item.delta : item.name;
+            name.textContent = name.title = item.delta > 1 ? item.name + " x" + item.delta : item.name;
             disp.getElementsByTagName("img")[0].src = item.path;
 
             list.appendChild(document.importNode(temp.content, true));
@@ -258,7 +258,7 @@ function updateRaidTrackingDisplay(raidEle) {
     raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
     let outOfMats = false;
 
-    function updMats (list) {
+    function updMats(list) {
         for (let mat of list) {
             if (Array.isArray(mat)) {
                 updMats(mat);
@@ -288,7 +288,7 @@ function updateRaidTrackingDisplay(raidEle) {
         raidEle.classList.remove("fade");
     }
 }
-function populateRaids (raids) {
+function populateRaids(raids) {
     let list = document.getElementById("raids-list");
     UI.setList(list, raids, createRaid);
     UI.raids.list = list.children;

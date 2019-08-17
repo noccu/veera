@@ -1,4 +1,7 @@
 src/lib
 src/assets
-src/pages
+# Ignore CONTENT of dir, then unignore every step along the path first. Just the fun way .gitignore format works...
+# Idc what the reason is, in the end it does the same thing with much less straightforward syntax. I was about to submit a damned bug report. //rant
+src/pages/*
 !src/pages/devtools
+!src/pages/devtools/*.js

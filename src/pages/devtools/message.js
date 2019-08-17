@@ -92,7 +92,7 @@ window.BackgroundPage = {
     }
 };
 
-function hearQuery (data, sender, respond) {
+function hearQuery(data, sender, respond) {
     devlog("Query rcv: ", data);
     if (data.source == "bg") {
         var retValue;

@@ -9,7 +9,7 @@ window.Unf = {
             document.getElementById("unf-graph-load").addEventListener("click", this.load);
             document.getElementById("unf-graph-upd").addEventListener("click", xhrUnfAreaData);
         },
-        create: function () {
+        create: function() {
             var ctx = document.getElementById("unf-area-chart").getContext("2d");
 
             this.graph = new Chart(ctx, {
@@ -26,7 +26,7 @@ window.Unf = {
                 options: {elements: {line: {tension: 0}}}
             });
         },
-        update: function (newHonorsArr) {
+        update: function(newHonorsArr) {
             if (newHonorsArr.length != 4) {
                 console.error("UNF area update: Invalid arguments");
                 return;
@@ -57,7 +57,7 @@ window.Unf = {
         },
         startLog: function() {
             if (!Unf.areaInfo.logging) {
-                Unf.areaInfo.iv = setInterval(xhrUnfAreaData, 1000*60*21);
+                Unf.areaInfo.iv = setInterval(xhrUnfAreaData, 1000 * 60 * 21);
                 Unf.areaInfo.logging = true;
             }
         },
@@ -67,7 +67,7 @@ window.Unf = {
                 Unf.areaInfo.logging = false;
             }
         },
-        save: function () {
+        save: function() {
             var ds_data = [];
             for (let set of Unf.areaInfo.graph.config.data.datasets) {
                 ds_data.push(set.data);
@@ -82,7 +82,7 @@ window.Unf = {
                 }
             });
         },
-        load: function () {
+        load: function() {
             function _load(loadedData) {
                 if (!loadedData.unf) { return }
                 if (!Unf.areaInfo.graph) { Unf.areaInfo.create() }
@@ -97,7 +97,7 @@ window.Unf = {
         }
     },
     edition: "",
-    setEdition: function (url) {
+    setEdition: function(url) {
         let m = url.match(/\/teamraid(\d+)\//);
         if (m) {
             this.edition = m[1];
@@ -106,7 +106,7 @@ window.Unf = {
     }
 };
 
-function createUnfDataset (area, color) {
+function createUnfDataset(area, color) {
     return {
         label: area,
         data: [],

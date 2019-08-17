@@ -1,7 +1,7 @@
 const NUMBER_FORMAT = new Intl.NumberFormat(navigator.language, {maximumFractionDigits: 3});
 
 window.UI = {
-    setTheme: function (theme) {
+    setTheme: function(theme) {
         var sheet = document.getElementById("theme");
         if (!theme.fname) { console.log("No theme file given, using default."); theme.fname = "night" }
         sheet.href = `../stylesheets/${theme.fname}.css`;
@@ -9,7 +9,7 @@ window.UI = {
 
     // Input: {id, value} optionally in Array
     // Updates every id in upd with the given value.
-    setValue: function (upd, format) {
+    setValue: function(upd, format) {
         if (Array.isArray(upd)) {
             for (let entry of upd) {
                 this.setValue(entry, format);
@@ -27,7 +27,7 @@ window.UI = {
     @arg {Array} - Array of items to add to list.
     @arg {function} f - Defines transform of each entryArray item, given item.
     **/
-    setList (list, entryArray, f) {
+    setList(list, entryArray, f) {
         list.innerHTML = "";
         let frag = document.createDocumentFragment();
         for (let entry of entryArray) {
@@ -36,7 +36,7 @@ window.UI = {
         list.appendChild(frag);
     },
 
-    switchNav: function (ev) {
+    switchNav: function(ev) {
         if (!ev.target.dataset.navpage) { return }
         var oldNav = this.getElementsByClassName("active")[0];
         oldNav.classList.remove("active");
@@ -46,7 +46,7 @@ window.UI = {
         ev.target.classList.add("active");
         document.getElementById(ev.target.dataset.navpage).classList.add("active");
     },
-    initButtons: function () {
+    initButtons: function() {
         var nl = document.getElementsByClassName("navlist");
         for (let nav of nl) {
             nav.addEventListener("click", this.switchNav);
@@ -94,12 +94,12 @@ window.UI = {
                 UI.time.updateDisplay(time);
             }
         },
-        update (timer, delta) {
+        update(timer, delta) {
             if (timer.time.getTime() > 0) {
                 timer.time.setUTCSeconds(timer.time.getUTCSeconds() + delta);
             }
         },
-        updateDisplay (timer) {
+        updateDisplay(timer) {
             if (this.display[timer.name].d) {
                 let d = timer.time.getUTCDate() - 1;
                 if (d > 0) {
@@ -150,7 +150,7 @@ window.UI = {
                 this.display[timer.name].element.classList.remove("warn");
             }
         },
-        sync (times) {
+        sync(times) {
             if (this.int) { clearInterval(this.int) }
             this.times = times;
             this.init();
@@ -210,21 +210,21 @@ window.UI = {
     },
     raids: {
         list: null,
-        evhStartRaid (ev) {
+        evhStartRaid(ev) {
             if (!ev.target.dataset.event && ev.currentTarget.entryObj) {
                 let raidId = ev.currentTarget.entryObj.data.id,
                     matId = ev.target.dataset.matId; // undef is handled in the bg page function
                 BackgroundPage.send("hostRaid", {raidId, matId});
             }
         },
-        evhToggle (raid) {
+        evhToggle(raid) {
             // raid.classList.toggle("hidden");
             BackgroundPage.send("updRaid", {
                 action: "toggleActive",
                 raidEntry: raid.entryObj
             });
         },
-        update (raidEntry) {
+        update(raidEntry) {
             if (Array.isArray(raidEntry)) {
                 for (let re of raidEntry) {
                     this.update(re);
@@ -242,7 +242,7 @@ window.UI = {
 };
 
 // UI functionality
-function evhGlobalClick (e) {
+function evhGlobalClick(e) {
     if (e.target.dataset.event) { // dataset is always accesible
         switch (e.target.dataset.event) {
             case "collapse":
@@ -315,7 +315,7 @@ function evhGlobalClick (e) {
         }
     }
 }
-function evhSuppliesSearch (e) { // just treasure for now
+function evhSuppliesSearch(e) { // just treasure for now
     var list = document.getElementById("supplies-list");
 
     var r = new RegExp(e.target.value, "i"); // Faster
@@ -328,11 +328,11 @@ function evhSuppliesSearch (e) { // just treasure for now
         }
     }
 }
-function evhSuppliesFilter (e) {
+function evhSuppliesFilter(e) {
     var list = document.getElementById("supplies-list");
     // var r = new RegExp(e.target.dataset.value, "i"); //Faster
     let filters = e.detail;
-    function filter (item) {
+    function filter(item) {
         return filters.some(f => {
             switch (f.value) {
                 case "ALL":
@@ -351,9 +351,9 @@ function evhSuppliesFilter (e) {
         }
     }
 }
-function evhRaidsFilter (e) {
+function evhRaidsFilter(e) {
     let filters = e.detail;
-    function filter (raid) {
+    function filter(raid) {
         let check = {
             elementName: [false, false],
             tierName: [false, false]
@@ -408,7 +408,7 @@ function stylePlanItem(el, item) {
     if (item.count >= el.plannerData.needed) {
         el.classList.add("fade");
     }
-    else if(item.count < Math.ceil(el.plannerData.needed/10)) {
+    else if(item.count < Math.ceil(el.plannerData.needed / 10)) {
         el.classList.add("warn");
         el.classList.remove("warn");
     }
@@ -464,7 +464,7 @@ function clearGraph(graph) {
 
 // Helpers
 function clearDropdown(el) {
-    for (let i = el.options.length -1; i >= 0; i--) {
+    for (let i = el.options.length - 1; i >= 0; i--) {
         el.options.remove(i);
     }
 }
