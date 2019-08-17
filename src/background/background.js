@@ -51,7 +51,6 @@ function MainInit() {
             updateUI("init", {
                 theme: State.theme.current,
                 planner: Planner.listSeries(),
-                unfEdition: State.unfEdition,
                 raids: Raids.getList()
             });
             updateUI("updSupplies", Supplies.getAll());

@@ -245,11 +245,8 @@ function hear(msg) {
         case "saveData":
             Storage.set(msg.data);
             break;
-        case "setUnfEdition":
-            if (State.unfEdition != msg.data) {
-                State.unfEdition = msg.data;
-                State.save();
-            }
+        case "controlUnf":
+            Unf.control(msg.data);
             break;
         case "updRaid":
             Raids.update(msg.data);

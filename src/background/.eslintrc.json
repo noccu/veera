@@ -12,6 +12,7 @@
         "PlannerData": "readonly",
         "RaidList": "readonly",
         "Time": "readonly",
+        "Unf": "readonly",
         //Constructors
         "RaidData": "readonly",
         "SupplyItem": "readonly",

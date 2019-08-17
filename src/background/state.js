@@ -172,7 +172,6 @@ window.State = {
 function setVeeraDefaults() {
     State.theme.current = 0;
 }
-
 function toggleDebug() {
     State.settings.debug = !State.settings.debug;
 }

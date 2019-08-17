@@ -14,12 +14,11 @@ if (chrome.runtime) {
 function initialize(data) {
     document.getElementById("inactive").style.display = "none";
     UI.setTheme(data.theme);
-    Unf.edition = data.unfEdition;
     populateRaids(data.raids);
     UI.planner.init(data.planner);
 
     UI.initButtons();
-    Unf.areaInfo.init();
+    UI.unf.areaInfo.init();
 
     Network.listen();
 }

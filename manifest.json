@@ -29,6 +29,7 @@
                  "src/background/raids.js",
                  "src/background/data/raiddata.js",
                  "src/background/battle.js",
+                 "src/background/unf.js",
                  "src/background/tools.js"]
    },
 
