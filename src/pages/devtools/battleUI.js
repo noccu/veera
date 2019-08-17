@@ -85,6 +85,7 @@ window.UI.battle = {
                 bossDisplay = this.display.bosses[i] = {stats: {}};
             }
 
+            bossDisplay.name = boss.querySelector(".battle-boss-name");
             bossDisplay.hp = boss.querySelector("span[data-id='battle-boss-hp']");
             bossDisplay.maxHp = boss.querySelector("span[data-id='battle-boss-hp-max']");
             bossDisplay.triggerHp = boss.querySelector("span[data-id='battle-boss-trigger-hp']");
@@ -236,6 +237,7 @@ window.UI.battle = {
     updateBosses(bosses) {
         let boss = bosses[0]; // TODO: Change to loop later when I figure out multi-boss
 
+        this.setBossNames(bosses); // Some bosses can change name, so we set it here.
         this.display.bosses[boss.char].hp.textContent = NUMBER_FORMAT.format(boss.currentHp);
         // this.display.bosses[boss.char].maxHp.textContent = boss.maxHp;
         this.display.bosses[boss.char].triggerHp.textContent = NUMBER_FORMAT.format(boss.hpToNextPerc);
@@ -335,8 +337,8 @@ window.UI.battle = {
     setBossNames(bosses) {
         // var eles = document.querySelectorAll("#battle-boss-info .battle-boss-name");
         // bosses.forEach((entry, idx) => eles[idx].textContent = entry.name);
-        var ele = document.querySelector("#battle-boss-info .battle-boss-name");
-        ele.textContent = bosses[0].name;
+        // TODO: multi-boss
+        this.display.bosses[0].name.textContent = bosses[0].name;
     }
 };
 

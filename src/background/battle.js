@@ -243,6 +243,12 @@ window.Battle = {
                 // Array.from(Battle.archive.values()).map(cur => { return {id: cur.id, name: cur.name} });
                 updateUI("updBattleArchive", archList);
             }
+            else {
+                json.boss.param.forEach((entry, idx) => {
+                    this.current.bosses.getById(idx).currentHp = entry.hp;
+                });
+                updateUI("updBattleData", Battle.packageData());
+            }
             this.current.raidId = json.raid_id;
         }
     },
