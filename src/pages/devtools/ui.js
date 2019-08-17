@@ -68,11 +68,12 @@ window.UI = {
                 buffTemplate = document.getElementById("t-buffTimers"),
                 hasMaint = false;
             buffList.innerHTML = "";
+            this.display = {};
             for (let timer of this.times) {
-                timer.time = new Date(timer.time);
+                timer.time = new Date(timer.time); // Convert timestamp back to date obj.
                 if (timer.type == "buff") {
                     buffTemplate.content.firstElementChild.title = timer.name;
-                    buffTemplate.content.firstElementChild.id = timer.name;
+                    buffTemplate.content.firstElementChild.id = `timer-${timer.name}`;
                     buffTemplate.content.querySelector("img").src = timer.img;
                     buffTemplate.content.querySelector(".buff-d").id = `${timer.name}-d`;
                     buffTemplate.content.querySelector(".buff-h").id = `${timer.name}-h`;
@@ -83,7 +84,7 @@ window.UI = {
                     hasMaint = true;
                 }
                 this.display[timer.name] = {
-                    element: document.getElementById(timer.name),
+                    element: document.getElementById(`timer-${timer.name}`),
                     d: document.getElementById(`${timer.name}-d`),
                     h: document.getElementById(`${timer.name}-h`),
                     m: document.getElementById(`${timer.name}-m`),
@@ -438,30 +439,6 @@ function syncPlanner(index) {
             }
         }
     }
-}
-
-// Maintenance
-function startMaintTimer(html) {
-    document.getElementById("timer-maint").classList.remove("hidden");
-    UI.time.timers.maint = new Date(getMaintEnd(html) - UI.time.jst);
-    UI.time.initTimers();
-}
-function getMaintEnd(html) {
-    var doc = document.implementation.createHTMLDocument("");
-    doc.documentElement.innerHTML = html;
-    var info = doc.querySelector(".prt-maintenance-infomation");
-    var dateMatch = info.firstElementChild.textContent.match(/(\d+)\/(\d+)\/(\d+) (\d+)(?::\d+)+$/m);
-    var endDate = new Date(dateMatch[0]);
-    endDate.setUTCFullYear(parseInt(dateMatch[1]));
-    endDate.setUTCMonth(parseInt(dateMatch[2]));
-    endDate.setUTCDate(parseInt(dateMatch[3]));
-    endDate.setUTCHours(parseInt(dateMatch[4]));
-    return endDate;
-}
-function endMaintTimer() {
-    document.getElementById("timer-maint").classList.add("hidden");
-    delete UI.time.timers.maint;
-    UI.time.initTimers();
 }
 
 // Charts, Graphs

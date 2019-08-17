@@ -235,6 +235,11 @@ function hear(msg) {
                         break;
                 }
             }
+            else if (msg.data.hasOwnProperty("html")) {
+                if (path.ismatch("maintenance")) {
+                    startMaintTimer(data.html);
+                }
+            }
             break;
         case "plannerSeriesChange":
             DevTools.send("newPlannerSeriesOptions", Planner.getSeriesOptions(msg.data.newValue));

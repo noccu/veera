@@ -28,7 +28,7 @@ window.Time = {
                 devlog(`Timer ${timerName} has ended.`);
                 switch (timerName) {
                     case "maint":
-                        // endMaintTimer();
+                        endMaintTimer();
                         break;
                     case "st1":
                     case "st2":
@@ -321,5 +321,30 @@ function updStrikeTime(json) {
     }
 
     State.save();
+    Time.sync();
+}
+
+// Maintenance
+function startMaintTimer(html) {
+    // document.getElementById("timer-maint").classList.remove("hidden");
+    devlog("Starting maint timer");
+    Time.timers.maint = new Date(getMaintEnd(html) - Time.currentJst);
+    Time.sync();
+}
+function getMaintEnd(html) {
+    var dom = parseDom(html);
+    var info = dom.querySelector(".prt-maintenance-infomation");
+    var dateMatch = info.firstElementChild.textContent.match(/(\d+)\/(\d+)\/(\d+) (\d+)(?::\d+)+$/m);
+    var endDate = new Date(dateMatch[0]);
+    endDate.setUTCFullYear(parseInt(dateMatch[1]));
+    endDate.setUTCMonth(parseInt(dateMatch[2]));
+    endDate.setUTCDate(parseInt(dateMatch[3]));
+    endDate.setUTCHours(parseInt(dateMatch[4]));
+    return endDate;
+}
+function endMaintTimer() {
+    // document.getElementById("timer-maint").classList.add("hidden");
+    devlog("Ending maint timer");
+    delete Time.timers.maint;
     Time.sync();
 }

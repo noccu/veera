@@ -29,13 +29,8 @@ window.Network = {
                     case "text/html":
                         content = await Network.getData(entry);
                         if (content) {
-                            data.body = content;
+                            data.html = content;
                             success = true;
-                        }
-
-                        if (entry.request.url.indexOf("maintenance") != -1) { // TODO: move to bg
-                            // startMaintTimer(data.body);
-                            return;
                         }
                         break;
                 }
