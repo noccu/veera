@@ -84,7 +84,7 @@ window.BackgroundPage = {
                 updLastSupport(msg.data);
                 break;
             default:
-                window.dispatchEvent(new CustomEvent(msg.action, msg.data));
+                window.dispatchEvent(new CustomEvent(msg.action, {detail: msg.data}));
         }
     }
 };
