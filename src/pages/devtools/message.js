@@ -64,6 +64,9 @@ window.BackgroundPage = {
             case "updBattleArchive":
                 UI.battle.updArchive(msg.data);
                 break;
+            case "loadArchBattle":
+                UI.battle.loadArchivedBattle(msg.data);
+                break;
             case "updRaidLoot":
             case "nextQuestTriggered":
                 updCurrentRaidInfo(msg.data);

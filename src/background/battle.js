@@ -217,11 +217,12 @@ window.Battle = {
             }
             else {
                 // raid id changes between stages
-                // also need string for archive selection (select->option returns strings)
+                // also need string for archive selection (UI's select->option returns strings)
                 id = (json.battle && json.battle.total > 1) ? json.quest_id : json.raid_id.toString();
                 name = Raids.lastHost.name || json.boss.param[0].monster;
             }
-            let logged = this.archive.has(id);
+            let logged = this.archive.has(id),
+                currentFromArchive = logged && id != this.current.id; // Are we re-joining an older raid?
             this.current = id;
             // Unlogged raid, or new host/join of logged raid
             if (!logged || logged && json.turn < this.archive.get(id).turn) {
@@ -234,23 +235,39 @@ window.Battle = {
 
                 fireEvent(EVENTS.newBattle);
                 updateUI("updBattleNewRaid", this.packageData());
-                let archList = [];
-                for (let v of this.archive.values()) {
-                    let b = {val: v.id, name: v.name};
-                    if (v.id == id) { b.current = true }
-                    archList.push(b);
-                }
-                // Array.from(Battle.archive.values()).map(cur => { return {id: cur.id, name: cur.name} });
-                updateUI("updBattleArchive", archList);
+                this.updateArchiveList();
             }
-            else {
+            else { // Refresh, stage change, re-joining an older raid.
                 json.boss.param.forEach((entry, idx) => {
-                    this.current.bosses.getById(idx).currentHp = entry.hp;
+                    let boss = this.current.bosses.getById(idx)
+                    boss.currentHp = entry.hp;
+                    // For stage changes
+                    boss.maxHp = entry.hpmax;
+                    boss.name = entry.name.en;
                 });
-                updateUI("updBattleData", Battle.packageData());
+
+                if (currentFromArchive) {
+                    this.updateArchiveList();
+                    updateUI("loadArchBattle", this.load(id));
+                    // updateUI("updBattleData", {loadFromArchive: true, id});
+                    // this.load();
+                    // updateUI("updBattleNewRaid", this.packageData());
+                }
+                else {
+                    updateUI("updBattleData", this.packageData());
+                }
             }
             this.current.raidId = json.raid_id;
         }
+    },
+    updateArchiveList() {
+        let archList = [];
+        for (let v of this.archive.values()) {
+            let b = {val: v.id, name: v.name};
+            if (v.id == this.current.id) { b.current = true }
+            archList.push(b);
+        }
+        updateUI("updBattleArchive", archList);
     },
     load(id) {
         // TODO: This is very inefficient but requires big changes to improve.

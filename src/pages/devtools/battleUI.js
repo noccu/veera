@@ -44,7 +44,7 @@ window.UI.battle = {
         };
         // Archive
         this.display.arch = document.getElementById("battle-select");
-        this.display.arch.addEventListener("change", showArchBattle);
+        this.display.arch.addEventListener("change", evhShowArchBattle);
 
         // Overview
         var store = document.querySelectorAll("#battle-overview .battle-stats");
@@ -339,6 +339,15 @@ window.UI.battle = {
         // bosses.forEach((entry, idx) => eles[idx].textContent = entry.name);
         // TODO: multi-boss
         this.display.bosses[0].name.textContent = bosses[0].name;
+    },
+    loadArchivedBattle(allTurns) {
+        if (allTurns.length) {
+            UI.battle.reset(allTurns[0]);
+            UI.battle.setPartyNames(allTurns[0].characters.list);
+            for (let turn of allTurns) {
+                UI.battle.update(turn, true);
+            }
+        }
     }
 };
 
@@ -354,16 +363,8 @@ function createBattleDataset(stat, color, bgColor, axisID) {
     };
 }
 
-function showArchBattle(ev) {
+function evhShowArchBattle(ev) {
     // BackgroundPage.send("requestArchBattle", ev.target.value);
     BackgroundPage.query("archivedBattle", ev.target.value)
-        .then(allTurns => {
-            if (allTurns.length) {
-                UI.battle.reset(allTurns[0]);
-                UI.battle.setPartyNames(allTurns[0].characters.list);
-                for (let turn of allTurns) {
-                    UI.battle.update(turn, true);
-                }
-            }
-        });
+        .then(UI.battle.loadArchivedBattle);
 }
