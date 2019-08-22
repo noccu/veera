@@ -34,7 +34,8 @@ function BattleData(id, name, turn, chars, bosses) {
         totalCrits: 0,
         totalDa: 0,
         totalTa: 0,
-        totalDmg: 0
+        totalDmg: 0,
+        totalEnemyHp: 0
     };
     Object.defineProperty(this.stats, "instance", {
         enumerable: false,
@@ -52,20 +53,12 @@ function BattleData(id, name, turn, chars, bosses) {
 
     this.bosses = {
         __proto__: unitsShared,
-        list: [],
+        // list: [],
         current: [0, 1, 2]
     };
     // Init chars
     chars.forEach((entry, idx) => this.characters.list[idx] = new BattleUnitData(this, idx, entry.name));
-    bosses.forEach((entry, idx) => {
-        let boss = new BattleUnitData(this, idx, entry.name.en);
-        boss.currentHp = entry.hp;
-        boss.maxHp = entry.hpmax;
-        boss.isBoss = true;
-        // boss.charge = parseInt(entry.recast);
-        // boss.chargeMax = parseInt(entry.recastmax);
-        this.bosses.list.push(boss);
-    });
+    this.setBosses(bosses);
 }
 Object.defineProperties(BattleData.prototype, {
     addTurn: {
@@ -106,6 +99,30 @@ Object.defineProperties(BattleData.prototype, {
         get() {
             return this.log.length || 1;
             // return this.log.reduce(x => x + 1, 0);
+        }
+    },
+    setBosses: {
+        value: function(bosses) {
+            let newBattle = false;
+            if (!this.bosses.list || this.bosses.list[0].id != bosses[0].enemy_id) {
+                this.bosses.list = [];
+                newBattle = true;
+            }
+            bosses.forEach((entry, idx) => {
+                let boss;
+                if (newBattle) {
+                    boss = new BattleUnitData(this, idx, entry.name.en);
+                    boss.maxHp = entry.hpmax;
+                    boss.isBoss = true;
+                    boss.id = entry.enemy_id;
+                    this.stats.totalEnemyHp += boss.maxHp;
+                    this.bosses.list.push(boss);
+                }
+                else { boss = this.bosses.getById(idx) }
+                boss.currentHp = entry.hp;
+                // boss.charge = parseInt(entry.recast);
+                // boss.chargeMax = parseInt(entry.recastmax);
+            });
         }
     }
 });
@@ -152,7 +169,7 @@ const battleStatsShared = {
         return safeDivide(this.totalDmg / (((this.instance.endTime || Date.now()) - this.instance.startTime) / 1000)) | 0; // float -> int
     },
     get ownDmgRatio() {
-        return this.totalDmg / this.instance.bosses.list.reduce((acc, boss) => acc += boss.maxHp, 0) * 100;
+        return this.totalDmg / this.totalEnemyHp * 100;
     }
 
 };
@@ -238,13 +255,7 @@ window.Battle = {
                 this.updateArchiveList();
             }
             else { // Refresh, stage change, re-joining an older raid.
-                json.boss.param.forEach((entry, idx) => {
-                    let boss = this.current.bosses.getById(idx)
-                    boss.currentHp = entry.hp;
-                    // For stage changes
-                    boss.maxHp = entry.hpmax;
-                    boss.name = entry.name.en;
-                });
+                this.current.setBosses(json.boss.param);
 
                 if (currentFromArchive) {
                     this.updateArchiveList();
