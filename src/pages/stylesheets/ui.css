@@ -78,10 +78,14 @@ html {
     text-align: center;
 }
 
-.group, #places .panel-content > * {
+.group {
     display: inline-block;
     margin-right: 0.3em;
     vertical-align: top;
+    margin-bottom: 0.7em;
+}
+.group-cont {
+    margin-bottom: -0.7em;
 }
 
 .timer-display {

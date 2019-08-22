@@ -323,20 +323,22 @@
                         <div class="canvas-container">
                             <canvas id="battle-overview-graph"></canvas>
                         </div>
-                        <div class="group">
-                            <div class="battle-stats" data-stat="totalDmg">Total Damage: <span>0</span></div>
-                            <div class="battle-stats" data-stat="avgTurnDmg">Avg Damage: <span>0</span></div>
-                            <div class="battle-stats" data-stat="dps">DPS (raid start): <span>0</span></div>
-                        </div>
-                        <div class="group">
-                            <div class="battle-stats" data-stat="avgDaRate">DA rate: <span data-deci="true">0</span>%</div>
-                            <div class="battle-stats" data-stat="avgTaRate">TA rate: <span data-deci="true">0</span>%</div>
-                            <div class="battle-stats" data-stat="avgCritRate">Crit rate: <span data-deci="true">0</span>%</div>
-                        </div>
-                        <div class="group">
-                            <div class="battle-stats" data-stat="ownDmgRatio">Dmg ratio: <span>0</span>%</div>
-                            <div class="battle-stats" data-stat="avgTurnHonor">Avg Honor: <span>0</span></div>
-                            <div class="battle-stats" data-stat="totalHonor">Total Honor: <span>0</span></div>
+                        <div class="group-cont">
+                            <div class="group">
+                                <div class="battle-stats" data-stat="totalDmg">Total Damage: <span>0</span></div>
+                                <div class="battle-stats" data-stat="avgTurnDmg">Avg Damage: <span>0</span></div>
+                                <div class="battle-stats" data-stat="dps">DPS (raid start): <span>0</span></div>
+                            </div>
+                            <div class="group">
+                                <div class="battle-stats" data-stat="avgDaRate">DA rate: <span data-deci="true">0</span>%</div>
+                                <div class="battle-stats" data-stat="avgTaRate">TA rate: <span data-deci="true">0</span>%</div>
+                                <div class="battle-stats" data-stat="avgCritRate">Crit rate: <span data-deci="true">0</span>%</div>
+                            </div>
+                            <div class="group">
+                                <div class="battle-stats" data-stat="ownDmgRatio">Dmg ratio: <span>0</span>%</div>
+                                <div class="battle-stats" data-stat="avgTurnHonor">Avg Honor: <span>0</span></div>
+                                <div class="battle-stats" data-stat="totalHonor">Total Honor: <span>0</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -410,30 +412,32 @@
                 <div class="panel">
                     <span class="panel-header" data-event="collapse">Where to?</span>
                     <div class="panel-content">
-                        <div class="group">
-                            <div class="place-link" data-event="navigate" data-value="#shop">Shop</div>
-                            <div class="place-link" data-event="navigate" data-value="#shop/exchange/trajectory">Journey drops</div>
-                            <div class="place-link" data-event="navigate" data-value="#shop/exchange/list">Trade</div>
-                            <div class="place-link" data-event="navigate" data-value="#title/reward">Trophies</div>
-                        </div>
-                        <div class="group">
-                            <div class="place-link" data-event="navigate" data-value="#party/index/0/npc/0">Party</div>
-                            <div class="place-link" data-event="navigate" data-value="#casino">Casino</div>
-                            <div class="place-link" data-event="navigate" data-value="#gacha">Draw</div>
-                            <div id="guild-link" class="place-link" data-event="navigate" data-value="">Crew (external view)</div>
-                        </div>
-                        <div class="group">
-                            <div class="place-link" data-event="navigate" data-value="#quest/assist">Raids</div>
-                            <div class="place-link" data-event="navigate" data-value="#quest/assist/unclaimed">Pending</div>
-                        </div>
-                        <div class="group">
-                            <div class="place-link" data-event="navigate" data-value="#arcarum2">Arcarum</div>
-                            <div class="place-link" data-event="navigate" data-value="#trial_battle">Trial battles</div>
-                            <div class="place-link" data-event="navigate" data-value="#sidestory">Side stories</div>
-                        </div>
-                        <div class="group">
-                            <div class="place-link" data-event="navigate" data-value="#quest/island/1">Phantagrande</div>
-                            <div class="place-link" data-event="navigate" data-value="#quest/island/2">Nalhegrande</div>
+                        <div class="group-cont">
+                            <div class="group">
+                                <div class="place-link" data-event="navigate" data-value="#shop">Shop</div>
+                                <div class="place-link" data-event="navigate" data-value="#shop/exchange/trajectory">Journey drops</div>
+                                <div class="place-link" data-event="navigate" data-value="#shop/exchange/list">Trade</div>
+                                <div class="place-link" data-event="navigate" data-value="#title/reward">Trophies</div>
+                            </div>
+                            <div class="group">
+                                <div class="place-link" data-event="navigate" data-value="#party/index/0/npc/0">Party</div>
+                                <div class="place-link" data-event="navigate" data-value="#casino">Casino</div>
+                                <div class="place-link" data-event="navigate" data-value="#gacha">Draw</div>
+                                <div id="guild-link" class="place-link" data-event="navigate" data-value="">Crew (external view)</div>
+                            </div>
+                            <div class="group">
+                                <div class="place-link" data-event="navigate" data-value="#quest/assist">Raids</div>
+                                <div class="place-link" data-event="navigate" data-value="#quest/assist/unclaimed">Pending</div>
+                            </div>
+                            <div class="group">
+                                <div class="place-link" data-event="navigate" data-value="#arcarum2">Arcarum</div>
+                                <div class="place-link" data-event="navigate" data-value="#trial_battle">Trial battles</div>
+                                <div class="place-link" data-event="navigate" data-value="#sidestory">Side stories</div>
+                            </div>
+                            <div class="group">
+                                <div class="place-link" data-event="navigate" data-value="#quest/island/1">Phantagrande</div>
+                                <div class="place-link" data-event="navigate" data-value="#quest/island/2">Nalhegrande</div>
+                            </div>
                         </div>
                     </div>
                 </div>
