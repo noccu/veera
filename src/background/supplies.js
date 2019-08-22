@@ -201,11 +201,10 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Arcarum Items",
         class: "Arcarum",
         path: "item/arcarum",
-        // eslint-disable-next-line object-curly-newline
-        specialId: {
-            1002: "item_1002" // 1000 pts from event shop
-        // eslint-disable-next-line object-curly-newline
-        }
+        prefix: "item_"
+        // specialId: {
+        //     1002: "item_1002" // 1000 pts from event shop
+        // }
     },
     67: {
         name: "Gauph Keys",
@@ -292,7 +291,7 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${fname}${data.suffix || ""}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${data.prefix || ""}${fname}${data.suffix || ""}.jpg`;
         }
         // Redirect some special cases to be more user-friendly.
         if (data.convert) {
