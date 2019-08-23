@@ -261,17 +261,17 @@ function evhGlobalClick(e) {
                 // collapse all in <parent> for <id>
                 if (e.target.dataset.in && e.path) { // chrome only but so is gbf (technically)
                     let cId = e.target.dataset.id;
-                    for (let parent of e.path) {
-                        if (parent.classList && parent.classList.contains(e.target.dataset.in)) {
-                            let cList = parent.querySelectorAll(`[data-id='${cId}']`);
-                            for (let node of cList) {
-                                node.nextElementSibling.classList.toggle("hidden");
+                    for (let parent of e.path) { // Go up hierarchy
+                        if (parent.classList && parent.classList.contains(e.target.dataset.in)) { // Find <parent>/root in which all occurences are affected
+                            let cList = parent.querySelectorAll(`[data-id='${cId}']`); // Get all instances of specific collapse control (<id>) in root (<parent>)
+                            for (let node of cList) { // Affect them all
+                                collapseElement(node);
                             }
                         }
                     }
                 }
                 else {
-                    e.target.nextElementSibling.classList.toggle("hidden");
+                    collapseElement(e.target);
                 }
                 break;
             case "filter":
@@ -325,6 +325,14 @@ function evhGlobalClick(e) {
             case "playTriggeredQuest":
                 BackgroundPage.send("playTriggeredQuest");
         }
+    }
+}
+function collapseElement(target) {
+    if (target.dataset.dir == "up") {
+        target.previousElementSibling.classList.toggle("hidden");
+    }
+    else {
+        target.nextElementSibling.classList.toggle("hidden");
     }
 }
 function evhSuppliesSearch(e) { // just treasure for now

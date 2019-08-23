@@ -388,6 +388,7 @@ button {
     width: 32%;
     margin: 0.5em 0.2em;
     display: inline-block;
+    vertical-align: top;
 }
 .battle-stats-container { /*Used only for chars it seems*/
     text-align: left;
@@ -561,8 +562,10 @@ button {
 .battle-stats span {
     color: var(--highlight-color);
 }
-.skillExpand {
+.expander {
     text-align: center;
-    grid-area: auto / left / auto / right;
+}
+.battle-stats-container .expander {
     margin-top: 0.4em;
+    grid-area: auto / left / auto / right;
 }

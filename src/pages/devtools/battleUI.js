@@ -42,6 +42,10 @@ window.UI.battle = {
             return title;*/
             return `Turn: ${tooltipItemArr[0].xLabel}`;
         };
+        Chart.defaults.global.legend.labels.boxWidth = 1;
+        Chart.defaults.global.legend.labels.padding = 5;
+        Chart.defaults.global.legend.labels.fontSize = 10;
+
         // Archive
         this.display.arch = document.getElementById("battle-select");
         this.display.arch.addEventListener("change", evhShowArchBattle);

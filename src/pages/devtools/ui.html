@@ -323,6 +323,7 @@
                         <div class="canvas-container">
                             <canvas id="battle-overview-graph"></canvas>
                         </div>
+                        <div class="expander small-log" data-event="collapse" data-dir="up">🠅 Show Graph 🠅</div>
                         <div class="group-cont">
                             <div class="group">
                                 <div class="battle-stats" data-stat="totalDmg">Total Damage: <span>0</span></div>
@@ -347,7 +348,7 @@
                     <div class="panel-content hidden">
                         <template id="t-battle-char-container">
                             <div class="battle-char-container" data-char="0">
-                                <div class="battle-char-name">Char 1</div>
+                                <div class="battle-char-name" data-event="collapse" data-in="panel" data-id="cGraphChar">Char 1</div>
                                 <div class="canvas-container chara-graph">
                                     <canvas class="battle-char-graph"></canvas>
                                 </div>
@@ -383,7 +384,7 @@
                                         <div class="battle-stats" data-stat="teamHealing">Heal (team): <span>0</span></div>
                                     </div>
 
-                                    <div class="skillExpand small-log" data-event="collapse" data-in="panel" data-id="cStatSkillExpand">🠇 Skills 🠇</div>
+                                    <div class="expander small-log" data-event="collapse" data-in="panel" data-id="cStatSkillExpand">🠇 Skills 🠇</div>
                                     <div class="battle-stats-container hidden small-log">
                                         <div class="battle-stats" data-stat="skillDetails"><div class="text"></div></div>
                                     </div>
