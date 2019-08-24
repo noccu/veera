@@ -86,7 +86,8 @@ function hear(msg) {
                         break;
                     case path.ismatch("rest/arcarum/stage"):
                     case path.ismatch("rest/board/stage"):
-                        if (msg.data.json.notice_effect) {
+                    case path.ismatch("rest/arcarum/open_gatepost"):
+                        if (msg.data.json.notice_effect && msg.data.json.notice_effect.show_open_red_chest) {
                             gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
                         }
                         break;
