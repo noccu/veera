@@ -812,6 +812,8 @@ function consumePendingRaidsTreasure(data) {
 }
 
 function weaponUncapStart(data) {
+    if (data.json.hasOwnProperty("count")) { return } // Uncap with dupe weapon instead of mats.
+
     var update = {
         id: data.url.pathname.match(/materials\/(\d+)/)[1],
         items: []
