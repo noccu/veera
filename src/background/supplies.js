@@ -541,10 +541,10 @@ function gotQuestLoot(json) {
             count = entry.count || entry.num || entry.item_num || entry.amount,
             name = entry.name || entry.item_name;
 
+        let item = new SupplyItem(type, id, count, name);
         if (entry.item_image) {
             item.path = item.path.replace(/\/\d+\./, `/${entry.item_image}.`);
         }
-        let item = new SupplyItem(type, id, count, name);
         if (entry.rarity) {
             item.rarity = parseInt(entry.rarity);
         }
@@ -571,7 +571,7 @@ function gotQuestLoot(json) {
                 }
             }
             // Stage clear rewards
-            if (json.popup_data.clear_reward && json.popup_data.clear_reward.item) {
+            if (json.popup_data.clear_reward && json.popup_data.clear_reward.item.id) {
                 let item = json.popup_data.clear_reward.item;
                 let sd = Supplies.find(item.name);
                 if (sd) {
