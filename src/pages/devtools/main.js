@@ -1,4 +1,4 @@
-window.DEBUG = true; // TODO: remove/replace with proper thing
+window.DEBUG = false; // Needed for basic functions, called before inits.
 
 // Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {
@@ -23,12 +23,30 @@ function initialize(data) {
     Network.listen();
 }
 
+function syncSettings(settings) {
+    window.DEBUG = settings.debug;
+    let list = document.querySelectorAll("input[data-global-setting]");
+    for (let el of list) {
+        if (settings.hasOwnProperty(el.name)) {
+            switch (el.type) {
+                case "radio":
+                case "checkbox":
+                    el.checked = settings[el.name];
+                    break;
+                default:
+                    el.value = settings[el.name];
+            }
+        }
+    }
+}
+
 function devlog() {
     if (DEBUG) {
         console.log(...arguments);
     }
 }
 
+// Status
 function updatePendants(data) {
     UI.setValue([
         {id: "display-renown-total", value: data.renown.total.current},
@@ -91,6 +109,7 @@ function updateCurrencies(data) {
     ]);
 }
 
+// Supplies
 function updateSupplies(idx) {
     if (idx) {
         var list = document.getElementById("supplies-list");
@@ -133,7 +152,7 @@ function createSupplyItem(data, idPrefix) {
     return newEle;
 }
 
-// Planner functions
+// Planner
 function createPlannerItem(item) {
     let li = createSupplyItem(item, "p");
     li.querySelector(".collection-data").innerHTML = `<span class="planner-current">${item.count}</span> /<span class="planner-needed">${item.needed}</span>`;

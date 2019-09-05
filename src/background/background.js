@@ -48,6 +48,7 @@ function MainInit() {
             console.groupEnd();
             console.group("Setting up");
             console.log("Initializing UI.");
+            updateUI("syncSettings", State.settings);
             updateUI("init", {
                 theme: State.theme.current,
                 planner: Planner.listSeries(),

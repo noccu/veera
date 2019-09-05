@@ -272,6 +272,9 @@ function hear(msg) {
         case "playTriggeredQuest":
             Raids.playTriggered();
             break;
+        case "updGlobalSetting":
+            State.updSetting(msg.data);
+            break;
     }
 }
 

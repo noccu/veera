@@ -14,7 +14,8 @@ window.State = {
     settings: {
         debug: true,
         theme: 0,
-        raids: {sortByDiff: true}
+        raids: {sortByDiff: true},
+        notifyWeaponDrop: true
     },
 
     theme: {
@@ -59,6 +60,10 @@ window.State = {
         }
     },
 
+    updSetting({name, val}) {
+        this.settings[name] = val;
+        this.save();
+    },
     save: function() {
         let o = {store: this.store, settings: this.settings};
         Storage.set({state: o});

@@ -28,6 +28,9 @@ window.BackgroundPage = {
             case "init":
                 initialize(msg.data);
                 break;
+            case "syncSettings":
+                syncSettings(msg.data);
+                break;
             case "updStatus":
                 updateStatus(msg.data);
                 break;

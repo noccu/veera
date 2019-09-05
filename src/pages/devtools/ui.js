@@ -57,6 +57,8 @@ window.UI = {
         // Specific filters
         document.getElementById("supplies-panel").addEventListener("filter", evhSuppliesFilter);
         document.getElementById("raids-panel").addEventListener("filter", evhRaidsFilter);
+
+        document.addEventListener("change", evhGlobalSettingChange);
     },
 
     time: {
@@ -479,6 +481,23 @@ function populateDropdown(list, data, f) {
             f(el, option);
         }
         list.options.add(el);
+    }
+}
+
+function evhGlobalSettingChange(ev) {
+    if (ev.target.dataset.globalSetting) {
+        let setting = ev.target;
+        let name = setting.name,
+            val;
+        switch (setting.type) {
+            case "radio":
+            case "checkbox":
+                val = setting.checked;
+                break;
+            default:
+                val = setting.value;
+        }
+        BackgroundPage.send("updGlobalSetting", {name, val});
     }
 }
 
