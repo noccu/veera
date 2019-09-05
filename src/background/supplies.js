@@ -547,6 +547,9 @@ function gotQuestLoot(json) {
         }
         if (entry.rarity) {
             item.rarity = parseInt(entry.rarity);
+            if (State.settings.notifyWeaponDrop && item.rarity > 3 && (item.type == 1 || item.type == 37)) {
+                showNotif("SSR Weapon drop!", {text: item.name, img: item.path});
+            }
         }
         upd.push(item);
         return item;
