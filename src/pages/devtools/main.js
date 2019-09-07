@@ -318,3 +318,12 @@ function updLastSupport(data) {
     u.dataset.value = data.url;
     u.textContent = data.user;
 }
+
+function updSparkProgress(data) {
+    UI.setValue([
+        {id: "spark-prog-days", value: data.time},
+        {id: "spark-prog-crystals", value: data.needed},
+        {id: "spark-prog-avg", value: data.avg},
+        {id: "spark-prog-eta", value: data.eta}
+    ]);
+}

@@ -44,6 +44,7 @@ function MainInit() {
         .then(Supplies.load)
         .then(Raids.load)
         .then(Profile.load)
+        .then(Tools.sparkProgress.load)
         .then(() => {
             console.groupEnd();
             console.group("Setting up");

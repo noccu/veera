@@ -75,6 +75,7 @@ window.Profile = {
 
         Supplies.save();
         updateUI("updCurrencies", this.currencies);
+        Tools.sparkProgress.evhSuppliesChange(); // Update UI display when crystals update.
     },
     parseArca(dom) {
         // TODO: check if arca gives us this in easier fashion

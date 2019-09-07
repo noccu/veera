@@ -89,6 +89,9 @@ window.BackgroundPage = {
             case "logSupport":
                 updLastSupport(msg.data);
                 break;
+            case "updSparkProgress":
+                updSparkProgress(msg.data);
+                break;
             default:
                 window.dispatchEvent(new CustomEvent(msg.action, {detail: msg.data}));
         }
