@@ -35,8 +35,6 @@
         "ITEM_KIND": "readonly",
         "GAME_URL": "readonly",
         "EVENTS": "readonly",
-        "IDX_ITEM_TO_RAIDS": "readonly",
-        //Events
-        "evhCheckRaidSupplyData": "readonly"
+        "IDX_ITEM_TO_RAIDS": "readonly"
     }
 }

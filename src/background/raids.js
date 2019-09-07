@@ -256,7 +256,9 @@ window.Raids = {
                 Raids.triggeredQuest.isGroup = true;
                 name = data.title;
             }
-            showNotif("Triggered quest!", {text: name, onclick: Raids.playTriggered});
+            if (State.settings.notifyNmTrigger) {
+                showNotif("Triggered quest!", {text: name, onclick: Raids.playTriggered});
+            }
             updateUI("nextQuestTriggered", {nextQuest: name});
         }
         else { // This would happen when raidLoot updates the UI but it's good to be explicit.
@@ -276,20 +278,19 @@ window.Raids = {
         updateUI("updRaid", this.getList());
         this.save();
     },
+    evhCheckRaidSupplyData(upd) {
+        for (let item of upd.detail) {
+            if (IDX_ITEM_TO_RAIDS.has(item.id)) {
+                for (let raidId of IDX_ITEM_TO_RAIDS.get(item.id)) {
+                    // Auto fetches new supply data.
+                    updateUI("updRaid", Raids.get(raidId));
+                }
+            }
+        }
+    },
     evhPageChanged(url) {
         if (url.ismatch("#quest/supporter/")) {
             this.setPendingHost({url});
         }
     }
 };
-
-function evhCheckRaidSupplyData(upd) {
-    for (let item of upd.detail) {
-        if (IDX_ITEM_TO_RAIDS.has(item.id)) {
-            for (let raidId of IDX_ITEM_TO_RAIDS.get(item.id)) {
-                // Auto fetches new supply data.
-                updateUI("updRaid", Raids.get(raidId));
-            }
-        }
-    }
-}

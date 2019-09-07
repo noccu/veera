@@ -15,7 +15,9 @@ window.State = {
         debug: true,
         theme: 0,
         raids: {sortByDiff: true},
-        notifyWeaponDrop: true
+        notifyWeaponDrop: true,
+        notifyPlannerItem: true,
+        notifyNmTrigger: true
     },
 
     theme: {

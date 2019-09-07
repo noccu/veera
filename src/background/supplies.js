@@ -488,6 +488,7 @@ window.Supplies = {
                 else { // Add new
                     this.set(item);
                 }
+                // fireEvent(EVENTS.updatedSupplyItem, item);
             }
 
             if (item.metaType == "Currencies") {

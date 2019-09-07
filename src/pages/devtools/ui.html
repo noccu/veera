@@ -103,6 +103,7 @@
                 <li class="nav-tab" data-navpage="unf">UNF</li>
                 <li class="nav-tab" data-navpage="places">Places</li>
                 <li class="nav-tab" data-navpage="tools">Tools</li>
+                <li class="nav-tab" data-navpage="settings">Settings</li>
             </ul>
             <div id="dailies" class="tab active">
                 <div id="pendants-panel" class="panel">
@@ -197,10 +198,6 @@
                                 <li class="active" data-event="filter" data-value="ALL">All</li>
                                 <li data-event="filter" data-value="ssr">SSR only</li>
                             </ul>
-                        </div>
-                        <div class="panel-options" id="raids-current-options">
-                            <input data-global-setting="true" type="checkbox" name="notifyWeaponDrop" checked="true">
-                            <label>Notify</label>
                         </div>
                         <div>Last hosted: <span id="last-hosted-quest" data-event="repeatQuest"></span></div>
                         <div>Quest triggered: <span id="raid-next-quest" data-event="playTriggeredQuest"></span></div>
@@ -462,6 +459,16 @@
                         <div>Crystals left: <span id="spark-prog-crystals"></span></div>
                         <div>Avg crystals/day: <span id="spark-prog-avg"></span></div>
                         <div>ETA: <span id="spark-prog-eta"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div id="settings" class="tab">
+                <div class="panel">
+                    <span class="panel-header" data-event="collapse">Notifications</span>
+                    <div class="panel-content">
+                        <input data-global-setting="true" type="checkbox" name="notifyWeaponDrop" checked="true"><label>SSR weapons</label>
+                        <input data-global-setting="true" type="checkbox" name="notifyPlannerItem" checked="true"><label>Active plan item completions</label>
+                        <input data-global-setting="true" type="checkbox" name="notifyNmTrigger" checked="true"><label>NM triggers</label>
                     </div>
                 </div>
             </div>

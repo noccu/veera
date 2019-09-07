@@ -1,11 +1,12 @@
 window.Planner = {
+    activePlan: undefined,
     createPlan: function({series, wtype, element, start, end, options}) {
         console.groupCollapsed(`Creating plan for ${series}`);
         var plan = [];
 
         function addToPlan(item, templateKey) {
             function addById(id, needed) {
-                let plannedItem = plan.find(p => p.id == id);
+                let plannedItem = plan.find(p => p.type == item.type && p.id == id);
                 if (plannedItem) {
                     plannedItem.needed += needed;
                 }
@@ -108,6 +109,13 @@ window.Planner = {
         }
 
         console.groupEnd();
+        // Silence needless completion notifs. Have to do it here as items can be added multiple times, eg. for different steps.
+        plan.forEach(item => {
+            if (item.count >= item.needed) {
+                item.goalReached = true;
+            }
+        });
+        this.activePlan = plan;
         return plan;
     },
     listSeries: function() {
@@ -140,6 +148,17 @@ window.Planner = {
             steps: this.listSteps(series),
             options: this.listOptions(series)
         };
+    },
+    evhCheckItemGoalCompletion(upd) {
+        if (State.settings.notifyPlannerItem && Planner.activePlan) {
+            for (let item of upd.detail) {
+                let p = Planner.activePlan.find(pItem => pItem.type == item.type && pItem.id == item.id);
+                if (p && !p.goalReached && item.count >= p.needed) {
+                    p.goalReached = true;
+                    showNotif("Plan item goal reached!", {text: `${item.count} of ${p.needed} required ${item.name || p.name}`, img: item.path});
+                }
+            }
+        }
     }
 };
 

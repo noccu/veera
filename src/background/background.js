@@ -68,7 +68,8 @@ function MainInit() {
             });
             window.addEventListener(EVENTS.weeklyReset, ev => Profile.reset(ev));
             window.addEventListener(EVENTS.monthlyReset, ev => Profile.reset(ev));
-            window.addEventListener(EVENTS.suppliesUpdated, evhCheckRaidSupplyData);
+            window.addEventListener(EVENTS.suppliesUpdated, Raids.evhCheckRaidSupplyData);
+            window.addEventListener(EVENTS.suppliesUpdated, Planner.evhCheckItemGoalCompletion);
             window.addEventListener(EVENTS.evMissionDone, ev => showNotif("Mission complete!", {text: ev.detail.map(x => `${x.count}x ${x.name}`).join("\n")}));
             window.addEventListener(EVENTS.pageChanged, ev => {
                 devlog(`Page changed to ${ev.detail}`);
