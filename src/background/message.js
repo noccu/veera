@@ -76,7 +76,7 @@ function hear(msg) {
                     case path.ismatch("result/data"): // Quest loot screen
                         Battle.checkResultScreen(msg.data);
                         Raids.checkNextQuest(msg.data.json);
-                        logSupportUser(msg.data.json);
+                        Tools.logSupportUser(msg.data.json);
                         // eslint-disable-next-line no-fallthrough
                     case path.ismatch("arcarum/open_chest"):
                     case path.ismatch("result/stage_only_data/"):

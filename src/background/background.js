@@ -217,3 +217,7 @@ function prepJson() {
     }
     return o;
 }
+
+function safeDivide(a, b) {
+    return a / (b || 1);
+}

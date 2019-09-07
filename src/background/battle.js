@@ -313,10 +313,6 @@ window.Battle = {
 document.addEventListener(EVENTS.battleOver, ev => Battle.endBattle(ev.detail));
 document.addEventListener(EVENTS.playerDeath, ev => Battle.endBattle(ev.detail));
 
-function safeDivide(a, b) {
-    return a / (b || 1);
-}
-
 function BattleActionData(action) {
     this.action = action;
     this.char = -1;// not every action has a chara assigned! TODO: why not just point to the unit object?

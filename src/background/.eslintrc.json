@@ -13,6 +13,7 @@
         "RaidList": "readonly",
         "Time": "readonly",
         "Unf": "readonly",
+        "Tools": "readonly",
         //Constructors
         "RaidData": "readonly",
         "SupplyItem": "readonly",
@@ -28,6 +29,7 @@
         "fireEvent": "readonly",
         "openTab": "readonly",
         "prepJson": "readonly",
+        "safeDivide": "readonly",
         //Constants
         "SUPPLYTYPE": "readonly",
         "ITEM_KIND": "readonly",
