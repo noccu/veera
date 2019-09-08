@@ -204,8 +204,8 @@ function hear(msg) {
                         consumePendingForgeCCW(msg.data.postData);
                         break;
                     // There is a confirm for _all which triggers if not checking end of path, hence split.
-                    case path.ismatch("present/receive"):
                     // case path.ismatch("present/receive_all"):
+                    case path.ismatch("present/receive"):
                     case path.ismatch("present/term_receive"):
                     // case path.ismatch("present/term_receive_all"):
                         // is  normally followed by article list but that only shows treasure. There's more to pick up than that...
@@ -214,8 +214,13 @@ function hear(msg) {
                         }
                         break;
                     case path.ismatch("rest/title/par_claim"): // trophy pickup
+                    case path.ismatch("rest/title/all_claim"):
                     case path.ismatch("rest/top/par_claim/"): // event pickup
-                    case path.ismatch("rest/top/all_claim/"): // event pickup
+                    case path.ismatch("rest/top/all_claim/"):
+                    case path.ismatch("rest/top/receive_defeat_reward"): // event2 pickup (Proving Grounds)
+                    case path.ismatch("rest/top/receive_all_defeat_reward"):
+                    case path.ismatch("receive_sequence_point_reward"):
+                    case path.ismatch("receive_all_sequence_point_reward"):
                         rewardsPickup(msg.data.json);
                         break;
                     case path.ismatch("advent/top/content/newindex"):
