@@ -67,8 +67,7 @@ window.UI = {
         activeSt: 0,
         init: function() {
             let buffList = document.getElementById("buffTimers"),
-                buffTemplate = document.getElementById("t-buffTimers"),
-                hasMaint = false;
+                buffTemplate = document.getElementById("t-buffTimers");
             buffList.innerHTML = "";
             this.display = {};
             for (let timer of this.times) {
@@ -82,9 +81,6 @@ window.UI = {
                     buffTemplate.content.querySelector(".buff-m").id = `${timer.name}-m`;
                     buffList.appendChild(document.importNode(buffTemplate.content, true));
                 }
-                else if (timer.name == "maint") {
-                    hasMaint = true;
-                }
                 this.display[timer.name] = {
                     element: document.getElementById(`timer-${timer.name}`),
                     d: document.getElementById(`${timer.name}-d`),
@@ -94,12 +90,11 @@ window.UI = {
                 };
             }
             this.display.st = document.getElementById("timer-st-time");
-            this.display.maint = document.getElementById("timer-maint");
-            if (hasMaint) {
-                this.display.maint.classList.remove("hidden");
+            if (this.display.maint) {
+                this.display.maint.element.classList.remove("hidden");
             }
             else {
-                this.display.maint.classList.add("hidden");
+                document.getElementById("timer-maint").classList.add("hidden");
             }
         },
         tick() {

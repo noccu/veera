@@ -241,7 +241,7 @@ function hear(msg) {
             }
             else if (msg.data.hasOwnProperty("html")) {
                 if (path.ismatch("maintenance")) {
-                    startMaintTimer(data.html);
+                    startMaintTimer(msg.data.html);
                 }
             }
             break;

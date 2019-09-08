@@ -326,18 +326,18 @@ function updStrikeTime(json) {
 
 // Maintenance
 function startMaintTimer(html) {
-    // document.getElementById("timer-maint").classList.remove("hidden");
     devlog("Starting maint timer");
     Time.timers.maint = new Date(getMaintEnd(html) - Time.currentJst);
     Time.sync();
 }
 function getMaintEnd(html) {
-    var dom = parseDom(html);
+    var dom = parseDom(html, {decode: false});
     var info = dom.querySelector(".prt-maintenance-infomation");
     var dateMatch = info.firstElementChild.textContent.match(/(\d+)\/(\d+)\/(\d+) (\d+)(?::\d+)+$/m);
     var endDate = new Date(dateMatch[0]);
+    endDate.convertFromJst();
     endDate.setUTCFullYear(parseInt(dateMatch[1]));
-    endDate.setUTCMonth(parseInt(dateMatch[2]));
+    endDate.setUTCMonth(parseInt(dateMatch[2]) - 1); // Months are 0-indexed
     endDate.setUTCDate(parseInt(dateMatch[3]));
     endDate.setUTCHours(parseInt(dateMatch[4]));
     return endDate;
