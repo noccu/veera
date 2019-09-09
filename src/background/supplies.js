@@ -632,7 +632,10 @@ function gotQuestLoot(json) {
 }
 
 function startAcra(json) {
-    Profile.setArca({current: parseInt(json.passport_num)}, {current: parseInt(json.point)});
+    Profile.setArca({
+        tickets: parseInt(json.passport_num),
+        points: parseInt(json.point)
+    });
 }
 function skipArca(data) {
     let upd = [];
