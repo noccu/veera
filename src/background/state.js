@@ -1,7 +1,7 @@
 window.State = {
     store: {
         unfEdition: "",
-        config: {version: 2, updDelta: 1},
+        config: {version: 3, updDelta: 2},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
