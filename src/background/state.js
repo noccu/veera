@@ -17,7 +17,10 @@ window.State = {
         raids: {sortByDiff: true},
         notifyWeaponDrop: true,
         notifyPlannerItem: true,
-        notifyNmTrigger: true
+        notifyNmTrigger: true,
+
+        focusGameOnAction: true,
+        focusOnlyMinimized: false
     },
 
     theme: {
@@ -33,13 +36,15 @@ window.State = {
         }
     },
     game: {
-        tabId: null,
+        tabId: undefined,
+        windowId: undefined,
         linkToTab(id) {
             return new Promise ((r, x) => {
                 chrome.tabs.get(id, t => {
                     if (/game\.granbluefantasy\.jp|gbf\.game\.mbga\.jp/.test(t.url)) {
                         devlog(`Ufufu... onee-sama ha tab ${id} wo mite imasu ne.`);
                         this.tabId = id;
+                        this.windowId = t.windowId;
                         r();
                     }
                     else {
@@ -50,7 +55,19 @@ window.State = {
         },
         navigateTo(url) {
             if (this.tabId && url) {
-                chrome.tabs.update(this.tabId, {url: url}, () => devlog("Navigated to " + url));
+                chrome.tabs.update(this.tabId, {url: url}, () => console.log("Navigated to " + url));
+                this.focus();
+            }
+        },
+        // Bring to front
+        focus() {
+            if (State.settings.focusGameOnAction && this.windowId) {
+                chrome.windows.get(this.windowId, w => {
+                    if (State.settings.focusOnlyMinimized && w.state != "minimized") {
+                        return;
+                    }
+                    chrome.windows.update(this.windowId, {focused: true});
+                });
             }
         },
         evhTabUpdated(id, changes) {
