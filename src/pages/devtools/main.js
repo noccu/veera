@@ -265,46 +265,9 @@ function createRaid(raidEntry) {
             addMaterial(mat, matContainer);
         }
     }
-    updateRaidTrackingDisplay(newRaid.firstElementChild);
+    UI.raids.updDisplay(newRaid.firstElementChild);
 
     return newRaid;
-}
-function updateRaidTrackingDisplay(raidEle) {
-    let raidEntry = raidEle.entryObj;
-
-    let hostsLeft = raidEntry.data.dailyHosts - raidEntry.hosts.today;
-    raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
-    let outOfMats = false;
-
-    function updMats(list) {
-        for (let mat of list) {
-            if (Array.isArray(mat)) {
-                updMats(mat);
-            }
-            else {
-                raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
-                outOfMats = outOfMats || mat.supplyData.count < mat.num;
-            }
-        }
-    }
-    if (raidEntry.data.matCost) {
-        updMats(raidEntry.data.matCost);
-    }
-
-    // CSS
-    if (raidEntry.active) {
-        raidEle.classList.remove("hidden");
-    }
-    else {
-        raidEle.classList.add("hidden");
-    }
-
-    if (hostsLeft == 0 || outOfMats) {
-        raidEle.classList.add("fade");
-    }
-    else {
-        raidEle.classList.remove("fade");
-    }
 }
 function populateRaids(raids) {
     let list = document.getElementById("raids-list");

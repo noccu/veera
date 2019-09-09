@@ -45,11 +45,15 @@ function RaidEntry(id, trackingObj) {
             last: null
         };
         this.active = true;
-
     }
+    this.updHostState();
 }
-RaidEntry.prototype.canHost = function() {
-    return this.hosts.today < this.data.dailyHosts;
+
+RaidEntry.prototype.updHostState = function() {
+    this.haveHosts = this.hosts.today < this.data.dailyHosts;
+    this.haveRank = Profile.status.level ? this.data.minHostRank <= Profile.status.level : true;
+    this.haveAp = Profile.status.ap.current ? this.data.apCost <= Profile.status.ap.current : true;
+    this.canHost = this.haveAp && this.haveHosts && this.haveRank;
 };
 
 window.Raids = {
@@ -144,6 +148,7 @@ window.Raids = {
                 break;
         }
         this.set(raidEntry);
+        raidEntry.updHostState();
 
         this.save();
         updateUI("updRaid", raidEntry);
@@ -171,7 +176,7 @@ window.Raids = {
             }
         }
         let url = raid.data.urls[hostMatId || this.NO_HOST_MAT];
-        if (url && sufficientMats) {
+        if (url && sufficientMats && (raid.haveAp || !State.settings.blockHostByAP) && (raid.haveRank || !State.settings.hideRaidsByRank)) {
             State.game.navigateTo(url);
             if (hostMatId) {
                 // eslint-disable-next-line no-undef
@@ -185,7 +190,7 @@ window.Raids = {
         }
         else {
             updateUI("updRaid", raid); // update the hostmat display
-            deverror(`Can't start raid ${id}. Sufficient mats: ${sufficientMats}, url: ${url}`);
+            deverror(`Can't start raid ${raid.data.name} (${id}). Sufficient mats: ${sufficientMats}, Sufficient AP: ${raid.haveAp}, Sufficient Rank: ${raid.haveRank}, url: ${url}`);
         }
     },
     checkUsedMats(used, costs) {

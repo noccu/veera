@@ -20,7 +20,9 @@ window.State = {
         notifyNmTrigger: true,
 
         focusGameOnAction: true,
-        focusOnlyMinimized: false
+        focusOnlyMinimized: false,
+        hideRaidsByRank: true,
+        blockHostByAP: true // TODO: Add a warning
     },
 
     theme: {

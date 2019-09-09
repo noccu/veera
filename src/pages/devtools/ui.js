@@ -233,19 +233,68 @@ window.UI = {
                 raidEntry: raid.entryObj
             });
         },
-        update(raidEntry) {
-            if (Array.isArray(raidEntry)) {
-                for (let re of raidEntry) {
-                    this.update(re);
+        update(raidEntry, loop) {
+            if (raidEntry) {
+                if (Array.isArray(raidEntry)) {
+                    for (let re of raidEntry) {
+                        this.update(re, true);
+                    }
+                }
+                else {
+                    let el = document.getElementById(raidEntry.data.id);
+                    el.entryObj = raidEntry;
+                    this.updDisplay(el);
+                    if (loop) { return }
                 }
             }
             else {
-                let el = document.getElementById(raidEntry.data.id);
-                el.entryObj = raidEntry;
-                updateRaidTrackingDisplay(el);
+                this.list.forEach(raid => this.updDisplay(raid));
             }
 
             document.getElementById("raids-filter").click();
+        },
+        updDisplay(raidEle) {
+            let raidEntry = raidEle.entryObj;
+
+            let hostsLeft = raidEntry.data.dailyHosts - raidEntry.hosts.today;
+            raidEle.querySelector(".raid-hosts .current-value").textContent = hostsLeft;
+            let outOfMats = false;
+
+            function updMats(list) {
+                for (let mat of list) {
+                    if (Array.isArray(mat)) {
+                        updMats(mat);
+                    }
+                    else {
+                        raidEle.querySelector(`[data-mat-id='${mat.id}'] .current-value`).textContent = mat.supplyData.count;
+                        outOfMats = outOfMats || mat.supplyData.count < mat.num;
+                    }
+                }
+            }
+            if (raidEntry.data.matCost) {
+                updMats(raidEntry.data.matCost);
+            }
+
+            // CSS
+            if (raidEntry.active && (raidEntry.haveRank || !SETTINGS.hideRaidsByRank) ) {
+                raidEle.classList.remove("hidden");
+            }
+            else {
+                raidEle.classList.add("hidden");
+            }
+
+            if (!raidEntry.haveHosts || outOfMats) {
+                raidEle.classList.add("fade");
+            }
+            else {
+                raidEle.classList.remove("fade");
+                if (raidEntry.haveAp) {
+                    raidEle.getElementsByClassName("raid-cost")[0].classList.remove("warn");
+                }
+                else {
+                    raidEle.getElementsByClassName("raid-cost")[0].classList.add("warn");
+                }
+            }
         }
     }
 };
@@ -371,6 +420,7 @@ function evhSuppliesFilter(e) {
 function evhRaidsFilter(e) {
     let filters = e.detail;
     function filter(raid) {
+        // [do check, value of check]
         let check = {
             elementName: [false, false],
             tierName: [false, false]
@@ -395,6 +445,7 @@ function evhRaidsFilter(e) {
                 check[f.group][1] |= raid.entryObj.data[f.group] == f.value;
             }
         });
+        if (SETTINGS.hideRaidsByRank) { ret = ret && raid.entryObj.haveRank }
         if (ret) {
             for (let c in check) {
                 if (check[c][0]) {

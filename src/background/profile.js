@@ -108,6 +108,8 @@ window.Profile = {
     },
     setStatus(status) {
         let currentAp = status.now_action_point || status.action_point;
+        let lastRank = this.status.level,
+            lastAp = this.status.ap.current;
         if (currentAp) {
             this.status.ap = {
                 current: currentAp,
@@ -127,6 +129,9 @@ window.Profile = {
         }
 
         updateUI("updStatus", this.status);
+        if (this.status.ap.current != lastAp || this.status.level != lastRank) {
+            updateUI("updRaid", Raids.getList());
+        }
     },
     setCasino(json) {
         if (json.data) {
