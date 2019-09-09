@@ -1,4 +1,4 @@
-window.DEBUG = false; // Needed for basic functions, called before inits.
+window.SETTINGS = {debug: false}; // Needed for basic functions, called before inits.
 
 // Adding a last item in array macro
 Object.defineProperty(Array.prototype, "last", {
@@ -24,7 +24,7 @@ function initialize(data) {
 }
 
 function syncSettings(settings) {
-    window.DEBUG = settings.debug;
+    window.SETTINGS = settings;
     let list = document.querySelectorAll("input[data-global-setting]");
     for (let el of list) {
         if (settings.hasOwnProperty(el.name)) {
@@ -41,7 +41,7 @@ function syncSettings(settings) {
 }
 
 function devlog() {
-    if (DEBUG) {
+    if (SETTINGS.debug) {
         console.log(...arguments);
     }
 }

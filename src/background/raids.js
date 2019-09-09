@@ -87,16 +87,16 @@ window.Raids = {
         return new RaidEntry(input, this.list[input.id || input]);
     },
     /** Returns the list of raids, optionally filtered and sorted.
-        @arg {this.SOORT_METHODS} sort
+        @arg {Raids.SORT_METHODS} sort
         @arg {function} filter
     **/
     getList: function(sort, filter) {
-        function sortByElement(a, b) {
-            return a.element - b.element;
-        }
-        function sortByDifficulty(a, b) {
-            return a.diff - b.diff;
-        }
+        // function sortByElement(a, b) {
+        //     return a.element - b.element;
+        // }
+        // function sortByDifficulty(a, b) {
+        //     return a.diff - b.diff;
+        // }
 
         let output = [];
         for (let rd of RaidList) {
@@ -106,14 +106,14 @@ window.Raids = {
         if (filter) {
             output = output.filter(filter);
         }
-        switch (sort) {
-            case this.SORT_METHODS.elements:
-                output = output.sort(sortByElement);
-                break;
-            case this.SORT_METHODS.difficulty:
-                output = output.sort(sortByDifficulty);
-                break;
-        }
+        // switch (sort) {
+        //     case this.SORT_METHODS.elements:
+        //         output = output.sort(sortByElement);
+        //         break;
+        //     case this.SORT_METHODS.difficulty:
+        //         output = output.sort(sortByDifficulty);
+        //         break;
+        // }
         return output;
     },
     set: function(raidEntry) {

@@ -17,7 +17,7 @@ window.BackgroundPage = {
         this.connection.postMessage({action, data});
     },
     hear: function(msg) {
-        if (DEBUG) { console.debug("[devtools] Heard:", msg) }
+        if (SETTINGS.debug) { console.debug("[devtools] Heard:", msg) }
         switch (msg.action) {
             case "sayHi":
                 console.log("Onee-sama gokigenyou! (´ ∀ ` *)");

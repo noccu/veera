@@ -76,7 +76,6 @@ window.State = {
             function _load(data) {
                 if (!data.state) {
                     console.warn("No saved state, initializing from defaults.");
-                    setVeeraDefaults();
                     State.save();
                 }
                 else if (data.state.store && data.state.store.config) {
@@ -97,16 +96,23 @@ window.State = {
                         }
                         State.save();
                     }
+                    else {
+                        console.warn("Unable to update state, loading defaults.");
+                        State.save();
+                    }
                 }
                 else {
-                    console.warn("Invalid stored state, internal Veera update?");
-                    console.log("Loading defaults.");
-                    setVeeraDefaults();
+                    console.warn("Invalid stored state, loading defaults.");
                     State.save();
                 }
                 r();
             }
-            Storage.get("state", _load);
+            try {
+                Storage.get("state", _load);
+            }
+            catch (e) {
+                x(e);
+            }
         });
     },
     checkUpdate() {
@@ -170,15 +176,11 @@ window.State = {
         if (confirm("Clear all stored data and settings?")) {
             Supplies.clear();
             Storage.clear();
-            setVeeraDefaults();
             console.log("Cleared all stored data and settings.");
         }
     }
 };
 
-function setVeeraDefaults() {
-    State.theme.current = 0;
-}
 function toggleDebug() {
     State.settings.debug = !State.settings.debug;
 }

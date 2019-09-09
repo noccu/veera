@@ -1,7 +1,7 @@
 {
   "globals": {
     "NUMBER_FORMAT": "readonly",
-    "DEBUG": "readonly",
+    "SETTINGS": "readonly",
     
     "UI": "readonly",
     "Unf": "readonly",
