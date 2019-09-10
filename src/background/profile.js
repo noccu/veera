@@ -219,7 +219,7 @@ window.Profile = {
                     console.log("Profile loaded.");
                 }
                 else {
-                    console.warn("Could not load Profile data. Visit home page to initialize most of it.");
+                    printWarn("Could not load Profile data. Visit home page to initialize most of it.");
                 }
                 r();
             }
@@ -227,7 +227,7 @@ window.Profile = {
                 Storage.get("profile", _load);
             }
             catch (e) {
-                console.error(e);
+                deverror(e);
                 x("Failed to load Profile.");
             }
         });

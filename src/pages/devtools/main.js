@@ -133,7 +133,7 @@ function updateSupplies(idx) {
 }
 function createSupplyItem(data, idPrefix) {
     if (data.id === undefined) { // id = 0 is a thing
-        console.warn("No id for item: ", data);
+        devwarn("No id for item: ", data);
         return;
     }
     var t = document.getElementById("template-supply-item");

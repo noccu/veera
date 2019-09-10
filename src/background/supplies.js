@@ -265,7 +265,7 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
     this.id = id = id === "" ? 0 : parseInt(id);
     this.count = parseInt(count);
     if (Number.isNaN(this.type) || Number.isNaN(this.id) || Number.isNaN(this.count)) {
-        console.error("Given: ", type, id, count);
+        deverror("Given: ", type, id, count);
         throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
     let data = ITEM_KIND[type];
@@ -281,7 +281,7 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
             }
         }
         if (fname === 0) { // id 0 and not a special id
-            console.warn("Invalid item, removing from data: ", this);
+            devwarn("Invalid item, removing from data: ", this);
             delete Supplies.index[type][id];
             Supplies.save();
             return {invalid: true};
@@ -331,9 +331,9 @@ window.Supplies = {
         return list.find(x => x.name.match(name));
     },
     /** Look up information on a specific supply item or list of items.
-    @arg {(number=10|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
+    @arg {(number|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
     @arg {number} id - The id to look up.
-    @returns {Object|Object[]} The item's data or array of item data.
+    @returns {(SupplyItem|SupplyItem[])} The SupplyItem or array of SupplyItems if found, undefined otherwise.
     */
     get: function(type, id) {
         if (Array.isArray(arguments[0])) {
@@ -348,7 +348,7 @@ window.Supplies = {
         }
         else {
             if (!this.index[type]) {
-                console.warn("[Supplies] No such type: " + type);
+                devwarn("[Supplies] No such type: " + type);
                 return;
             }
 
@@ -362,8 +362,7 @@ window.Supplies = {
         }
     },
     /** Set or create information on a specific supply item or list of items.
-    @arg {(number=10|{type: number, id: number, data: Object}[])} type - The {@link ITEM_KIND} to add, or a list of items with set()'s arguments as properties.
-    @arg {number} id - The id to add.
+    @arg {(SupplyItem|SupplyItem[])} data - The {@link SupplyItem} to add, or an array of them.
     */
     set: function(data) {
         if (Array.isArray(data)) {
@@ -384,9 +383,9 @@ window.Supplies = {
             }
         }
     },
-    /** Gets the list of items belonging to a specific {@link SUPPLY_TYPES}.
-    @arg {SUPPLY_TYPES} type
-    @returns {Object[]}
+    /** Gets the list of items belonging to a specific {@link ITEM_KIND}.
+    @arg {number} type
+    @returns {SupplyItem[]}
     */
     getType: function(type) {
         let ret = [];
@@ -465,7 +464,9 @@ window.Supplies = {
         }
     },
     /** Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
-    @arg {SupplyItem[]]} updArr - Array of items to update. Uses count prop as delta.**/
+    @arg {(SupplyItem|SupplyItem[])} updArr - Array of items to update. Uses count prop as delta.
+    @arg {boolean} overwrite - Overwrites the item info instead of updating.
+    **/
     update: function(updArr, overwrite) {
         let currenciesUpdated = false;
         if (!Array.isArray(updArr)) { updArr = [updArr] }
@@ -515,7 +516,7 @@ window.Supplies = {
                 }
                 else {
                     // TODO: Load basic store or consider xhr
-                    console.warn("Supply index not found, some functionality will be dodgy until you visit game supplies page and reload Veera.");
+                    printWarn("Supply index not found, some functionality will be dodgy until you visit game supplies page and reload Veera.");
                 }
                 r();
             }
@@ -523,7 +524,7 @@ window.Supplies = {
                 Storage.get("sup_idx", _load);
             }
             catch (e) {
-                console.error(e);
+                deverror(e);
                 x("Failed to load supplies.");
             }
         });

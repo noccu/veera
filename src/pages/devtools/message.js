@@ -11,7 +11,7 @@ window.BackgroundPage = {
     },
     send: function(action, data) {
         if (!this.connection) {
-            console.error("No connection to extension established.");
+            printError("No connection to extension established.");
             return;
         }
         this.connection.postMessage({action, data});

@@ -1,28 +1,36 @@
 window.State = {
     store: {
         unfEdition: "",
-        config: {version: 3, updDelta: 2},
+        config: {version: 4, updDelta: 3},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
-        lastCommit: "Veera"
+        lastCommit: "17b3c6dd879848aac3ccc5964c84b98333ffecef" // Initial commit
     },
     URL_HOMEPAGE: "https://github.com/noccu/veera",
     URL_MANIFEST: "https://raw.githubusercontent.com/noccu/veera/master/manifest.json",
     URL_COMMITS: "https://api.github.com/repos/noccu/veera/commits?sha=master&per_page=3",
+    DEV_URL_COMMITS: "https://api.github.com/repos/noccu/veera/commits?sha=develop&per_page=3",
     UPDATE_INTERVAL: 86400000, // ms - 1 day
     settings: {
-        debug: true,
+        debug: false,
+        dbgNotifyErrors: false,
+        dbgNotifyWarnings: false,
+        checkUpdates: true,
+        useDevBranch: false,
+
         theme: 0,
         raids: {sortByDiff: true},
+
         notifyWeaponDrop: true,
         notifyPlannerItem: true,
         notifyNmTrigger: true,
 
         focusGameOnAction: true,
         focusOnlyMinimized: false,
+
         hideRaidsByRank: true,
-        blockHostByAP: true // TODO: Add a warning
+        blockHostByAP: true
     },
 
     theme: {
@@ -94,7 +102,7 @@ window.State = {
         return new Promise((r, x) => {
             function _load(data) {
                 if (!data.state) {
-                    console.warn("No saved state, initializing from defaults.");
+                    printWarn("No saved state, initializing from defaults.");
                     State.save();
                 }
                 else if (data.state.store && data.state.store.config) {
@@ -116,12 +124,12 @@ window.State = {
                         State.save();
                     }
                     else {
-                        console.warn("Unable to update state, loading defaults.");
+                        printWarn("Unable to update state, loading defaults.");
                         State.save();
                     }
                 }
                 else {
-                    console.warn("Invalid stored state, loading defaults.");
+                    printWarn("Invalid stored state, loading defaults.");
                     State.save();
                 }
                 r();
@@ -159,14 +167,14 @@ window.State = {
                     console.groupEnd();
                     this.save();
                 })
-                .catch(e => console.error("Failed update check: ", e));
+                .catch(e => printError("Failed update check: ", e));
         }
         else {
             return Promise.resolve();
         }
     },
     checkCommits() {
-        return fetch(this.URL_COMMITS, {cache: "no-store"})
+        return fetch(this.settings.useDevBranch ? this.DEV_URL_COMMITS : this.URL_COMMITS, {cache: "no-store"})
             .then(r => {
                 if (r.ok) {
                     return r.json();
@@ -174,21 +182,27 @@ window.State = {
             })
             .then(json => {
                 // We only notify once, for various reasons but we can't check what commit a user is on anyway or if they have local modifications.
-                if (this.store.lastCommit != json[0].sha) {
-                    this.store.lastCommit = json[0].sha;
-                    let list = [];
-                    for (let entry of json) {
-                        list.push("- " + entry.commit.message.slice(0, entry.commit.message.indexOf("\n")));
+                let list = [],
+                    numNew = 0;
+                for (let entry of json) {
+                    if (entry.sha == this.store.lastCommit) {
+                        break;
                     }
-                    console.log("There were new commits since last check.");
-                    showNotif("New commits:", {text: list.join("\n"), onclick: () => openTab(this.URL_HOMEPAGE)});
+                    numNew++;
+                    list.push("- " + entry.commit.message.slice(0, entry.commit.message.indexOf("\n")));
                 }
-                else {
+                if (json[2].parents[0].sha != this.store.lastCommit) {
+                    numNew = "3+";
+                }
+                this.store.lastCommit = json[0].sha;
+                console.log(`There were ${numNew} new commits since last check.`);
+                showNotif(`New commits (${numNew}):`, {text: list.join("\n"), onclick: () => openTab(this.URL_HOMEPAGE)});
+                if (numNew == 0) {
                     console.log("No new commits since last check.");
                 }
             })
             .catch(e => {
-                console.error("Failed to get commit info: ", e);
+                deverror("Failed to get commit info: ", e);
             });
     },
     reset() {
@@ -210,5 +224,17 @@ function devwarn() {
     if (State.settings.debug) { console.warn(... arguments) }
 }
 function deverror() {
-    console.error(... arguments);
+    if (State.settings.debug) { console.error(... arguments) }
+}
+function printError(... args) {
+    if (State.settings.dbgNotifyErrors) {
+        showNotif("Error", {text: args.join("\n")});
+    }
+    console.error(... args);
+}
+function printWarn(... args) {
+    if (State.settings.dbgNotifyWarnings) {
+        showNotif("Warning", {text: args.join("\n")});
+    }
+    console.warn(... args);
 }

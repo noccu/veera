@@ -79,7 +79,7 @@ window.Raids = {
                 Storage.get("raid_list", parse);
             }
             catch (e) {
-                console.error(e);
+                deverror(e);
                 x("Failed to load raid list.");
             }
         });

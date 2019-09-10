@@ -29,7 +29,7 @@ window.Tools = {
                 gained = current - startValue;
 
             if (gained < 0) {
-                devlog("Spark planner auto-reset triggered.");
+                printWarn("Spark progress auto-reset triggered.");
                 this.reset();
                 return this.calculate();
             }
@@ -53,7 +53,8 @@ window.Tools = {
                 ticketValue = Supplies.get(SUPPLYTYPE.drawTickets, 20011).count * 300 + Supplies.get(SUPPLYTYPE.drawTickets, 20010).count * 3000;
             }
             catch (e) {
-                console.warn("Couldn't find crystals or tickets. Update supplies?", e);
+                printWarn("Couldn't find crystals or tickets. Update supplies?");
+                devwarn(e);
                 crystalValue = ticketValue = 0;
             }
             return {
@@ -90,7 +91,7 @@ window.Tools = {
                     Storage.get("sparkProgress", _load);
                 }
                 catch (e) {
-                    console.error(e);
+                    deverror(e);
                     x("Failed to load spark data.");
                 }
             });

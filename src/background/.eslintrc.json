@@ -22,6 +22,8 @@
         "devlog": "readonly",
         "deverror": "readonly",
         "devwarn": "readonly",
+        "printError": "readonly",
+        "printWarn": "readonly",
         "updateUI": "readonly",
         "parseDom": "readonly",
         "getEnumNamedValue": "readonly",

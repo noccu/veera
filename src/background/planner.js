@@ -104,7 +104,7 @@ window.Planner = {
             }
         }
         catch (e) {
-            console.error("Failed to generate plan");
+            printError("Failed to generate plan");
             console.groupEnd();
         }
 

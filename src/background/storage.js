@@ -7,7 +7,7 @@ window.Storage = {
     },
     response: function(result, cb, v) {
         if (chrome.runtime.lastError) {
-            console.error("[Storage] Error:", chrome.runtime.lastError);
+            printError("[Storage] Error:", chrome.runtime.lastError);
             return;
         }
 

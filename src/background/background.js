@@ -87,11 +87,13 @@ function MainInit() {
             console.groupEnd();
         })
         .then(() => {
-            State.checkUpdate(); // Errors caught internally, chain restored.
+            if (State.settings.checkUpdates) {
+                State.checkUpdate(); // Errors caught internally, chain restored.
+            }
         })
         .catch(e => {
             DevTools.connection.disconnect();
-            console.error(e);
+            printError(e);
         });
 }
 
