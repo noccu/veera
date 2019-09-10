@@ -4,8 +4,8 @@ An entirely new and rewritten Granblue companion based on the Ancheera concept.
 
 **Current features:**
 
-- JST and countdown timers with ST notifications.
-- Track and filter supplies and raids, with quick-hosting and easy requirement checking.
+- JST and reset timers with ST notifications.
+- Track and filter supplies and raids, with quick-hosting and requirement checking.
 - Plan & follow up on weapon, summon and other crafts.
 - Real-time battle statistics for team and characters, with log.
 - Real-time-ish boss information. (turn-based because of current technical limitations)
@@ -16,6 +16,8 @@ An entirely new and rewritten Granblue companion based on the Ancheera concept.
 - Tooltips with farm locations for commonly used craft items.
 - Quick navigation to common screens.
 - Check last used support summon and go to user's profile.
+- Automatic spark progress calculation.
+- Optional notifications for various events, like weapon drops, NM triggers, etc.
 - More features & tools coming...
 
 # Disclaimer
@@ -36,6 +38,7 @@ The UI tries to be modular and adaptive. Excuse the occasional weird behaviour a
 # Installation & Usage
 
 1. Download or clone the repo into a folder.
+   * Check out the develop branch if you want the absolute latest but possibly buggy updates.
    * If using ZIP download, extract and overwrite your current folder to update.
    * Since v1.3.2 Veera will notify about updates; once for commits, every startup for releases.
 2. In your Chrome extensions page, click "Load unpacked" and point to the repo folder.
@@ -62,6 +65,9 @@ I am doing this in large part as an educational experience, please don't expect 
   * Feature requests will tend to be low priority as I focus on other things for the moment.
 * The wiki should be open for anyone to edit. Feel free to document usage, code, or whatever there.
   
+Please make all pull requests against the master branch.  
+If you want to provide feedback another way you can find me on the GBFI discord.
+
 Data is initialized from specific pages and afterwards updated whenever a change is detected.  
 File an issue if a change to something that is tracked is not detected.
 
