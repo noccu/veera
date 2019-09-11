@@ -228,8 +228,10 @@ window.Battle = {
     reset(json) { // Called on every battle entry (incl refresh)
         if (json) {
             let id, name;
+            // TODO: Just use raid_id for everything and somehow merge multi-stage battles.
             if (json.multi) {
                 id = json.twitter.battle_id;
+                if (id == "00000000") { id = json.twitter.raid_id }
                 name = json.twitter.monster;
             }
             else {
