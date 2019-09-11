@@ -815,10 +815,12 @@ function battleAttack(json) {
                     checkInvalidatedDamage(actionData);
                     actions.push(actionData);
                 }
-                else { // Boss dmg from buffs (alex)
+                else { // Boss dmg from buffs (alex, luci hl, primarchs hl?)
                     if (action.hasOwnProperty("list")) {
+                        if (!actionData.dmgParsed) {
+                            actions.push(actionData);
+                        }
                         battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgTaken);
-                        actions.push(actionData);
                     }
                 }
                 break;
