@@ -55,6 +55,8 @@ function hear(msg) {
             if (msg.data.hasOwnProperty("json")) {
                 switch (true) {
                     case path.ismatch("user/content/index"): // Homepage
+                        State.haveInit("home");
+                        // eslint-disable-next-line no-fallthrough
                     case path.ismatch("profile/content/index"): // Profile
                     case path.ismatch("user/status"):
                         Profile.update(msg.data.json);
@@ -227,6 +229,7 @@ function hear(msg) {
                         setRotbPendants(msg.data.json);
                         break;
                     case path.ismatch("guild_main/content/index"):
+                        State.haveInit("crew");
                         updStrikeTime(msg.data.json);
                         break;
                     case path.ismatch("rest/guild/main/guild_info"):

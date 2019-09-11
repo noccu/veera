@@ -14,12 +14,13 @@ window.Tools = {
     },
     sparkProgress: {
         init() {
-            window.addEventListener(EVENTS.suppliesUpdated, this.evhSuppliesChange);
-            if (!this.startDate) { this.reset() }
+            window.addEventListener(EVENTS.suppliesUpdated, this.evhSuppliesChange.bind(this));
             this.evhSuppliesChange(); // update ui
         },
         evhSuppliesChange() {
-            updateUI("updSparkProgress", Tools.sparkProgress.calculate());
+            if (this.startDate || this.reset()) {
+                updateUI("updSparkProgress", Tools.sparkProgress.calculate());
+            }
         },
         calculate() {
             // calc in days to help float/rounding margins
@@ -47,16 +48,18 @@ window.Tools = {
             };
         },
         getValues() {
-            let crystalValue, ticketValue;
-            try {
-                crystalValue = Supplies.get(SUPPLYTYPE.crystals, 0).count;
-                ticketValue = Supplies.get(SUPPLYTYPE.drawTickets, 20011).count * 300 + Supplies.get(SUPPLYTYPE.drawTickets, 20010).count * 3000;
-            }
-            catch (e) {
-                printWarn("Couldn't find crystals or tickets. Update supplies?");
-                devwarn(e);
-                crystalValue = ticketValue = 0;
-            }
+            let crystalValue = 0, ticketValue = 0,
+                crystals, tickets;
+
+            // Safer step by step calc for newer players or any cases where no items exist yet.
+            crystals = Supplies.get(SUPPLYTYPE.crystals, 0);
+            if (crystals) { crystalValue = crystals.count }
+            tickets = Supplies.get(SUPPLYTYPE.drawTickets, 20011);
+            if (tickets) { ticketValue = tickets.count * 300 }
+
+            tickets = Supplies.get(SUPPLYTYPE.drawTickets, 20010);
+            if (tickets) { ticketValue += tickets.count * 3000 }
+
             return {
                 crystalValue,
                 ticketValue
@@ -97,11 +100,18 @@ window.Tools = {
             });
         },
         reset() {
-            let {crystalValue, ticketValue} = this.getValues();
-            this.startCrystalValue = crystalValue;
-            this.startTicketValue = ticketValue;
-            this.startDate = new Date();
-            this.save();
+            if (State.store.isInit.home && State.store.isInit.tickets) {
+                let {crystalValue, ticketValue} = this.getValues();
+                this.startCrystalValue = crystalValue;
+                this.startTicketValue = ticketValue;
+                this.startDate = new Date();
+                this.save();
+                return true;
+            }
+            else {
+                printWarn("[Spark progress] Crystals or tickets are not initialized.", "Visit supplies -> tickets and/or the homepage.");
+                return false;
+            }
         }
     }
 };

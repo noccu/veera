@@ -1,11 +1,18 @@
 window.State = {
     store: {
-        unfEdition: "",
         config: {version: 4, updDelta: 3},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
-        lastCommit: "17b3c6dd879848aac3ccc5964c84b98333ffecef" // Initial commit
+        lastCommit: "17b3c6dd879848aac3ccc5964c84b98333ffecef", // Initial commit
+        unfEdition: "",
+        isInit: {
+            treasure: false,
+            tickets: false,
+            consumables: false,
+            home: false,
+            crew: false
+        }
     },
     URL_HOMEPAGE: "https://github.com/noccu/veera",
     URL_MANIFEST: "https://raw.githubusercontent.com/noccu/veera/master/manifest.json",
@@ -204,6 +211,12 @@ window.State = {
             .catch(e => {
                 deverror("Failed to get commit info: ", e);
             });
+    },
+    haveInit(state) {
+        if (!this.store.isInit[state]) {
+            this.store.isInit[state] = true;
+            this.save();
+        }
     },
     reset() {
         if (confirm("Clear all stored data and settings?")) {

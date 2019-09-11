@@ -1,4 +1,3 @@
-const UPDATED = false;
 const EVENTS = {// jshint ignore:line
     connected: "veeraConnected",
     pageChanged: "pageChanged",

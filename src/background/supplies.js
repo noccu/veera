@@ -417,6 +417,7 @@ window.Supplies = {
             upd.push( new SupplyItem(SUPPLYTYPE.treasure, item.item_id, parseInt(item.number), item.name));
         }
 
+        State.haveInit("treasure");
         this.update(upd, true);
     },
     /** Set the full consumables index, for use with game's supplies page.*/
@@ -450,6 +451,7 @@ window.Supplies = {
             parse(data[type], type);
         }
 
+        State.haveInit("consumables");
         this.update(upd, true);
     },
     setTickets(json) {
@@ -460,6 +462,7 @@ window.Supplies = {
                     upd.push( new SupplyItem(SUPPLYTYPE.drawTickets, item.item_id, item.number, item.name) );
                 }
             }
+            State.haveInit("tickets");
             this.update(upd, true);
         }
     },
