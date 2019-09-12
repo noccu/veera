@@ -190,7 +190,7 @@ window.Time = {
         this.jdBuffs = [];
         for (let idx in json) {
             buff = json[idx];
-            match = buff.remain_time.match(/(\d+) hr (\d+) min/);
+            match = buff.remain_time.match(/(\d+) hr? (\d+) min/);
             if (match) {
                 h = match[1];
                 m = match[2];
