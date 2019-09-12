@@ -270,11 +270,15 @@ function updateGuildInfo(json) {
 }
 
 function useRecoveryItem(json) {
-    if (json.recovery_str == "AP") {
-        Profile.status.ap.current = json.after;
+    // "/item/use_normal_item" (supplies page) returns json data without the "result" subkey.
+    // "/quest/user_item" (popups) have the subkey.
+    // On supplies the game automatically queries user status (/user/status) afterwards so we just let that set it instead.
+    if (json.result.recovery_str == "AP") {
+        Profile.status.ap.current = json.result.after;
     }
-    else if (json.recovery_str == "BP") { // Assuming
-        Profile.status.bp.current = json.after;
+    // It literally uses BP everywhere except here...
+    else if (json.result.recovery_str == "EP") {
+        Profile.status.bp.current = json.result.after;
     }
     updateUI("updStatus", Profile.status);
 }
