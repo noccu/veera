@@ -93,6 +93,9 @@ function hear(msg) {
                             gotQuestLoot(msg.data.json.notice_effect.show_open_red_chest);
                         }
                         break;
+                    case /sequenceraid\d+\/reward\/content\/index/.test(path):
+                        gotQuestLoot(msg.data.json);
+                        break;
                     case path.ismatch("rest/arcarum/start_stage"):
                         startAcra(msg.data.json);
                         break;

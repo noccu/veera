@@ -568,7 +568,6 @@ function gotQuestLoot(json) {
         // Event rewards
         if (json.popup_data) {
             if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
-                // Non-box, side-scrolling
                 loot = json.popup_data.daily_mission.item_list;
                 if (loot.length) {
                     for (let item of loot) {
@@ -627,6 +626,18 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${loot.length} items from arcarum chest.`);
             }
         }
+        // Special event loot (PG so far)
+        else if (json.data) {
+            let dom = parseDom(json.data);
+            loot = dom.getElementById("json-reward-list");
+            if (loot) { loot = JSON.parse(loot.textContent) }
+            if (loot.length) {
+                for (let item of loot) {
+                    addUpdItem(item);
+                }
+                devlog(`[Loot] Got ${loot.length} items from sortie completion.`);
+            }
+        }
         if (upd.length > 0) {
             fireEvent(EVENTS.gotLoot, upd);
             Supplies.update(upd);
@@ -650,6 +661,7 @@ function skipArca(data) {
     if (data.point_info && data.point_info.reward_point) {
         Profile.updArca(0, data.point_info.reward_point);
     }
+    fireEvent(EVENTS.gotLoot, upd);
     Supplies.update(upd);
 }
 
