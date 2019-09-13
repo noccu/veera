@@ -198,13 +198,15 @@ window.State = {
                     numNew++;
                     list.push("- " + entry.commit.message.slice(0, entry.commit.message.indexOf("\n")));
                 }
-                if (json[2].parents[0].sha != this.store.lastCommit) {
-                    numNew = "3+";
+                if (numNew > 0) {
+                    if (numNew == 3 && json[2].parents[0].sha != this.store.lastCommit) {
+                        numNew = "3+";
+                    }
+                    this.store.lastCommit = json[0].sha;
+                    console.log(`There were ${numNew} new commits since last check.`);
+                    showNotif(`New commits (${numNew}):`, {text: list.join("\n"), onclick: () => openTab(this.URL_HOMEPAGE)});
                 }
-                this.store.lastCommit = json[0].sha;
-                console.log(`There were ${numNew} new commits since last check.`);
-                showNotif(`New commits (${numNew}):`, {text: list.join("\n"), onclick: () => openTab(this.URL_HOMEPAGE)});
-                if (numNew == 0) {
+                else {
                     console.log("No new commits since last check.");
                 }
             })
