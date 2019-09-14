@@ -443,6 +443,19 @@ button {
     line-height: 1.2;
 }
 
+.raid-current-drop[data-chest-type='2'] {
+    background-color: var(--chest-color-silver);
+}
+.raid-current-drop[data-chest-type='3'] {
+    background-color: var(--chest-color-gold);
+}
+.raid-current-drop[data-chest-type='4'] {
+    background-color: var(--chest-color-red);
+}
+.raid-current-drop[data-chest-type='11'] {
+    background-color: var(--chest-color-blue);
+}
+
 [data-event] {
     cursor: pointer;
 }

@@ -133,7 +133,7 @@ function updateSupplies(idx) {
 }
 function createSupplyItem(data, idPrefix) {
     if (data.id === undefined) { // id = 0 is a thing
-        devwarn("No id for item: ", data);
+        console.warn("No id for item: ", data);
         return;
     }
     var t = document.getElementById("template-supply-item");
@@ -212,6 +212,7 @@ function updCurrentRaidInfo(data) {
             let disp = temp.content.firstElementChild,
                 name = disp.getElementsByTagName("span")[0];
             disp.dataset.rarity = item.rarity;
+            disp.dataset.chestType = item.chestType || "";
             name.textContent = name.title = item.delta > 1 ? item.name + " x" + item.delta : item.name;
             disp.getElementsByTagName("img")[0].src = item.path;
 

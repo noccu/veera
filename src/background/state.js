@@ -1,6 +1,6 @@
 window.State = {
     store: {
-        config: {version: 4, updDelta: 3},
+        config: {version: 5, updDelta: 4},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
@@ -28,6 +28,8 @@ window.State = {
 
         theme: 0,
         raids: {sortByDiff: true},
+
+        colorCodeDrops: true,
 
         notifyWeaponDrop: true,
         notifyPlannerItem: true,

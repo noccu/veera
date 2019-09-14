@@ -540,7 +540,7 @@ window.Supplies = {
 function gotQuestLoot(json) {
     let upd = [],
         loot;
-    function addUpdItem(entry) {
+    function addUpdItem(entry, chestType) {
         let type = entry.item_kind || entry.kind,
             id = entry.id || entry.item_id,
             count = entry.count || entry.num || entry.item_num || entry.amount,
@@ -556,6 +556,10 @@ function gotQuestLoot(json) {
                 showNotif("SSR Weapon drop!", {text: item.name, img: item.path});
             }
         }
+        if (State.settings.colorCodeDrops && chestType) {
+            item.chestType = chestType;
+        }
+
         upd.push(item);
         return item;
     }
@@ -588,7 +592,7 @@ function gotQuestLoot(json) {
         }
         // Drops
         if (json.rewards) {
-            // Non-box, side-scrolling
+            // Non-chest, side-scrolling
             loot = json.rewards.article_list;
             if (loot.length == undefined) { // It's an array when empty apparently...
                 let content = Object.keys(loot);
@@ -599,19 +603,19 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${content.length} items from side-scroll.`);
             }
 
-            // Box drops
+            // Chest drops
             loot = json.rewards.reward_list;
             if (loot.length == undefined) { // An object when not
                 let numItems = 0;
-                for (let key of Object.keys(loot)) {
-                    let boxType = loot[key];
+                for (let chestType of Object.keys(loot)) {
+                    let chest = loot[chestType];
                     // BOXTYPES? 1: bronze, 2: silver, 3: gold, 4: red, 11: blue. rarity >= 4: flip
-                    for (let entry of Object.keys(boxType)) {
-                        addUpdItem(boxType[entry]);
+                    for (let item of Object.keys(chest)) {
+                        addUpdItem(chest[item], chestType);
                         numItems++;
                     }
                 }
-                devlog(`[Loot] Got ${numItems} items from boxes.`);
+                devlog(`[Loot] Got ${numItems} items from chests.`);
             }
         }
         // Arcarum chests
