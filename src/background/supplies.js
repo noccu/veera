@@ -617,6 +617,25 @@ function gotQuestLoot(json) {
                 }
                 devlog(`[Loot] Got ${numItems} items from chests.`);
             }
+
+            // Free rupies
+            loot = json.rewards.lupi;
+            if (loot) {
+                upd.push(new SupplyItem(SUPPLYTYPE.rupie, 0, loot));
+            }
+            // Auto-actions
+            loot = json.rewards.sold_price;
+            if (loot) {
+                upd.push(new SupplyItem(SUPPLYTYPE.rupie, 0, loot));
+            }
+            loot = json.rewards.recycling_item_weapon_get_number;
+            if (loot) {
+                upd.push(new SupplyItem(SUPPLYTYPE.vessels, 1, loot));
+            }
+            loot = json.rewards.recycling_item_summon_get_number; // ???
+            if (loot) {
+                upd.push(new SupplyItem(SUPPLYTYPE.vessels, 2, loot));
+            }
         }
         // Arcarum chests
         else if (json.result) {
