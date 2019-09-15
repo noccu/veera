@@ -113,7 +113,9 @@ function fireEvent(name, data) {
 function showNotif(title, {text: body, img: icon, onclick} = {}) {
     if (Notification.permission == "granted") {
         let n = new Notification(title, {body, icon});
-        setTimeout(() => n.close(), 8000);// TODO: add to State.settings
+        // This simple function causes problems with multiple simultaneous notifs so let's just disable it. (the more advanced ones have ??? behavior)
+        // Closing and otherwise managing notifs seems p broken.
+        // setTimeout(() => n.close(), 8000);// TODO: add to State.settings
 
         if (onclick && typeof onclick == "function") {
             let clickHandler = function() {
@@ -125,9 +127,9 @@ function showNotif(title, {text: body, img: icon, onclick} = {}) {
         }
         return n;
     }
-    else if (Notification.permission == "default") {
+    else if (Notification.permission != "denied") {
         Notification.requestPermission().then(p => {
-            if (p == "granted") { showNotif(title, {body, icon}) }
+            if (p == "granted") { showNotif(title, {body, icon, onclick}) }
         });
     }
 }
