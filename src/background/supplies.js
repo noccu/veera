@@ -642,6 +642,7 @@ function gotQuestLoot(json) {
             loot = json.result.contents;
             if (loot) { // Is actually an array or undef/missing.
                 for (let item of loot) {
+                    if (json.result.chest_type == "6") { return } // Effects like buff, debuff clear, ...
                     let si = addUpdItem(item);
                     si.chestType = json.result.chest_type;
                     si.chestColor = json.result.chest_color;
