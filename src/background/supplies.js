@@ -333,13 +333,14 @@ window.Supplies = {
     /** Look up information on a specific supply item or list of items.
     @arg {(number|{type: number, id: number}[])} type - The {@link ITEM_KIND} to look up, or a list of items with type and id set.
     @arg {number} id - The id to look up.
+    @arg {boolean} raw - Return raw data (name, count) or SupplyItem.
     @returns {(SupplyItem|SupplyItem[])} The SupplyItem or array of SupplyItems if found, undefined otherwise.
     */
-    get: function(type, id) {
+    get: function(type, id, raw) {
         if (Array.isArray(arguments[0])) {
             let ret = [];
             for (let entry of arguments[0]) {
-                let item = this.get(entry.type, entry.id);
+                let item = this.get(entry.type, entry.id, raw);
                 if (item) {
                     ret.push(item);
                 }
@@ -354,7 +355,7 @@ window.Supplies = {
 
             let item = this.index[type][id];
             if (item) {
-                item = new SupplyItem(type, id, item.count, item.name);
+                item = raw ? item : new SupplyItem(type, id, item.count, item.name);
                 if (!item.invalid) { // is instanceof faster? somehow doubt it
                     return item;
                 }
@@ -559,6 +560,15 @@ function gotQuestLoot(json) {
         if (State.settings.colorCodeDrops && chestType) {
             item.chestType = chestType;
         }
+        // For use in loot display. TODO: Optimize
+        let data = Supplies.get(item.type, item.id, true);
+        if (data) {
+            item.totalNum = data.count + item.count;
+        }
+        else {
+            item.totalNum = item.count;
+            item.isNew = true;
+        }
 
         upd.push(item);
         return item;
@@ -621,20 +631,20 @@ function gotQuestLoot(json) {
             // Free rupies
             loot = json.rewards.lupi;
             if (loot) {
-                upd.push(new SupplyItem(SUPPLYTYPE.rupie, 0, loot));
+                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, loot});
             }
             // Auto-actions
             loot = json.rewards.sold_price;
             if (loot) {
-                upd.push(new SupplyItem(SUPPLYTYPE.rupie, 0, loot));
+                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, loot});
             }
             loot = json.rewards.recycling_item_weapon_get_number;
             if (loot) {
-                upd.push(new SupplyItem(SUPPLYTYPE.vessels, 1, loot));
+                addUpdItem({kind: SUPPLYTYPE.vessels, id: 1, loot});
             }
             loot = json.rewards.recycling_item_summon_get_number; // ???
             if (loot) {
-                upd.push(new SupplyItem(SUPPLYTYPE.vessels, 2, loot));
+                addUpdItem({kind: SUPPLYTYPE.vessels, id: 2, loot});
             }
         }
         // Arcarum chests

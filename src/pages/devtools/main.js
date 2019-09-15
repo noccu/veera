@@ -210,10 +210,12 @@ function updCurrentRaidInfo(data) {
             if (ssr_only && item.rarity < 4) { continue }
 
             let disp = temp.content.firstElementChild,
-                name = disp.getElementsByTagName("span")[0];
+                name = disp.getElementsByTagName("span")[0],
+                img = disp.getElementsByTagName("img")[0];
             disp.dataset.rarity = item.rarity;
             disp.dataset.chestType = item.chestType || "";
             name.textContent = name.title = item.delta > 1 ? item.name + " x" + item.delta : item.name;
+            img.title = `Now have: ${NUMBER_FORMAT.format(item.totalNum)}${item.isNew ? " new" : ""}`;
             disp.getElementsByTagName("img")[0].src = item.path;
 
             list.appendChild(document.importNode(temp.content, true));
