@@ -1,6 +1,6 @@
 window.State = {
     store: {
-        config: {version: 5, updDelta: 4},
+        config: {version: 6, updDelta: 5},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
@@ -39,7 +39,8 @@ window.State = {
         focusOnlyMinimized: false,
 
         hideRaidsByRank: true,
-        blockHostByAP: true
+        blockHostByAP: true,
+        blockHostByDailyNum: false
     },
 
     theme: {

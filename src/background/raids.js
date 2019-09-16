@@ -174,7 +174,10 @@ window.Raids = {
             sufficientMats = usedMats.ids.length == hostMats.length;
         }
         let url = raid.data.urls[hostMatId || this.NO_HOST_MAT];
-        if (url && sufficientMats && (raid.haveAp || !State.settings.blockHostByAP) && (raid.haveRank || !State.settings.hideRaidsByRank)) {
+        if (url && sufficientMats
+            && (raid.haveAp || !State.settings.blockHostByAP)
+            && (raid.haveRank || !State.settings.hideRaidsByRank)
+            && (raid.haveHosts || !State.settings.blockHostByDailyNum)) {
             this.pendingHost.internalStart = true;
             this.pendingHost.mats = hostMats;
             State.game.navigateTo(url);
@@ -190,7 +193,7 @@ window.Raids = {
         }
         else {
             updateUI("updRaid", raid); // update the hostmat display
-            deverror(`Can't start raid ${raid.data.name} (${id}). Sufficient mats: ${sufficientMats}, Sufficient AP: ${raid.haveAp}, Sufficient Rank: ${raid.haveRank}, url: ${url}`);
+            printError(`Can't start raid ${raid.data.name} (${id}). Sufficient mats: ${sufficientMats}, Sufficient AP: ${raid.haveAp}, Sufficient Rank: ${raid.haveRank}, Sufficient hosts: ${raid.haveHosts}, url: ${url}`);
         }
     },
     checkUsedMats(used, costs) {
