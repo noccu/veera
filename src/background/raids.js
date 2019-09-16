@@ -134,7 +134,10 @@ window.Raids = {
                 return;
             }
             raidEntry = this.get(id);
-            if (!raidEntry.data) { return }
+            if (!raidEntry.data) {
+                this.pendingHost.internalStart = false;
+                return;
+            }
         }
 
         switch (action) {
@@ -167,16 +170,13 @@ window.Raids = {
             }
             hostMats.forEach((val, idx) => hostMats[idx] = parseInt(val)); // Strings from html dataset, generally.
             usedMats = this.checkUsedMats(hostMats, raid.data.matCost);
-            if (usedMats) {
-                hostMatId = usedMats.ids[0]; // Only used for visual cue in game.
-                sufficientMats = usedMats.ids.length == hostMats.length;
-            }
-            else {
-                throw "[raid start] can't find hostmats";
-            }
+            hostMatId = usedMats.ids[0]; // Only used for visual cue in game.
+            sufficientMats = usedMats.ids.length == hostMats.length;
         }
         let url = raid.data.urls[hostMatId || this.NO_HOST_MAT];
         if (url && sufficientMats && (raid.haveAp || !State.settings.blockHostByAP) && (raid.haveRank || !State.settings.hideRaidsByRank)) {
+            this.pendingHost.internalStart = true;
+            this.pendingHost.mats = hostMats;
             State.game.navigateTo(url);
             if (hostMatId) {
                 // eslint-disable-next-line no-undef
@@ -238,6 +238,8 @@ window.Raids = {
             this.lastHost.url = this.pendingHost.url;
             this.lastHost.name = this.pendingHost.name;
             this.lastHost.id = this.pendingHost.id;
+            this.lastHost.internalStart = this.pendingHost.internalStart;
+            this.lastHost.mats = this.pendingHost.mats;
             Profile.status.ap.current -= this.pendingHost.ap;
             updateUI("setLastHosted", this.lastHost.name);
             updateUI("updStatus", Profile.status);
@@ -245,7 +247,12 @@ window.Raids = {
     },
     repeatLast() {
         if (this.lastHost.url) {
-            State.game.navigateTo(this.lastHost.url);
+            if (this.lastHost.internalStart) {
+                this.start(this.lastHost.id, this.lastHost.mats);
+            }
+            else {
+                State.game.navigateTo(this.lastHost.url);
+            }
         }
     },
     // NM Triggers etc
