@@ -674,7 +674,6 @@ window.PlannerData = {
             "Judgement (Katzelia)": "Wind"
         }
     },
-
     Bahamut: {
         core: [ // Items needed for every craft
             new PlannerItem(1, SUPPLYTYPE.treasure, 59, 1),
@@ -708,7 +707,6 @@ window.PlannerData = {
         element: {Dark: null}, // no special items, but name needed for option parsing (well not really, but it's nice)
         stepNames: ["Rusted", "Base", "Nova", "Coda"] // In order starting from 0, which is the true starting (not part of the craft) step
     },
-
     Class: {
         core: [ // Items needed for every craft
             new PlannerItem(1, SUPPLYTYPE.treasure, 54, 20),
@@ -903,7 +901,6 @@ window.PlannerData = {
             "Misericorde": ["Wind", "Dagger"]
         }
     },
-
     Revenant: {
         core: [
             // Awakening
@@ -1070,7 +1067,6 @@ window.PlannerData = {
             "Esser (gun)": "Gun"
         }
     },
-
     "Atma/Ultima": {
         core: [
             new PlannerItem(1, PLANNER_ITEMS.flawedPrism, 250),
@@ -1122,7 +1118,6 @@ window.PlannerData = {
         },
         stepNames: ["Rusted", "Relic", "Atma", "Ultima"]
     },
-
     Opus: {
         core: [
             new PlannerItem(1, SUPPLYTYPE.treasure, 537, 5),
@@ -1170,6 +1165,62 @@ window.PlannerData = {
             "Staff": "Water",
             "Harp": "Earth",
             "Katana": "Dark"
+        }
+    },
+    Hollowsky: {
+        core: [
+            new PlannerItem(1, SUPPLYTYPE.treasure, 534, 30),
+
+            new PlannerItem(2, SUPPLYTYPE.treasure, 534, 30),
+            new PlannerItem(2, PLANNER_ITEMS.legendaryMerit, 5),
+            new PlannerItem(2, PLANNER_ITEMS.blueSkyCrystal, 30)
+        ],
+        wtype: {
+            Sword: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Dagger, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Dagger, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones.type, PLANNER_TEMPLATES.stones.Dagger, 200)
+            ],
+            Spear: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Katana, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Katana, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones.type, PLANNER_TEMPLATES.stones.Katana, 200)
+            ],
+            Axe: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Fist, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Fist, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones.type, PLANNER_TEMPLATES.stones.Fist, 200)
+            ],
+            Staff: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Harp, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Harp, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones.type, PLANNER_TEMPLATES.stones.Harp, 200)
+            ],
+            Bow: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Gun, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards.type, PLANNER_TEMPLATES.relicShards.Gun, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones.type, PLANNER_TEMPLATES.stones.Gun, 200)
+            ],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.relicShards, 10),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.relicShards, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.stones, 200)
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Trade", "4*"],
+        typeNames: {
+            "Sword": "Dark",
+            "Spear": "Fire",
+            "Axe": "Earth",
+            "Staff": "Water",
+            "Bow": "Light"
         }
     }
 };
