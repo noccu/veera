@@ -127,7 +127,8 @@ window.Raids = {
         };
     },
     // Updates the tracking object.
-    update: function({action, id, raidEntry}) {
+    update: function({action, id, matId, raidEntry}) {
+        // pendingHost is used here as setLastHost is called afterwards, and copies from it.
         if (!raidEntry) {
             if (!id) {
                 deverror(`Invalid data format, can't update raid ${id}.`);
@@ -135,9 +136,10 @@ window.Raids = {
             }
             raidEntry = this.get(id);
             if (!raidEntry.data) {
-                this.pendingHost.internalStart = false;
+                this.pendingHost.haveData = false;
                 return;
             }
+            else { this.pendingHost.haveData = true }
         }
 
         switch (action) {
@@ -148,6 +150,9 @@ window.Raids = {
                 raidEntry.hosts.today++;
                 raidEntry.hosts.total++;
                 raidEntry.hosts.last = Date.now();
+                if (!this.pendingHost.internalStart) { // prefer our own data
+                    this.pendingHost.mats = matId; // let's hope it indeed turns into an array when needed.
+                }
                 break;
         }
         this.set(raidEntry);
@@ -242,15 +247,20 @@ window.Raids = {
             this.lastHost.name = this.pendingHost.name;
             this.lastHost.id = this.pendingHost.id;
             this.lastHost.internalStart = this.pendingHost.internalStart;
+            this.lastHost.haveData = this.pendingHost.haveData;
             this.lastHost.mats = this.pendingHost.mats;
             Profile.status.ap.current -= this.pendingHost.ap;
+
+            // Last function called on host, reset some data.
+            this.pendingHost.internalStart = false;
+
             updateUI("setLastHosted", this.lastHost.name);
             updateUI("updStatus", Profile.status);
         }
     },
     repeatLast() {
         if (this.lastHost.url) {
-            if (this.lastHost.internalStart) {
+            if (this.lastHost.haveData) {
                 this.start(this.lastHost.id, this.lastHost.mats);
             }
             else {

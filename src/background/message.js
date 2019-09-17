@@ -145,7 +145,8 @@ function hear(msg) {
                             consumePendingRaidsTreasure(msg.data);
                             Raids.update({
                                 action: "hosted",
-                                id: msg.data.postData.quest_id
+                                id: msg.data.postData.quest_id,
+                                matId: msg.data.postData.use_item_id
                             });
                             Raids.setLastHost();
                         }
