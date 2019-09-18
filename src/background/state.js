@@ -1,6 +1,6 @@
 window.State = {
     store: {
-        config: {version: 6, updDelta: 5},
+        config: {version: 2, updDelta: 1},
         strikeTime: {},
         lastReset: 0,
         lastUpdate: 0,
@@ -112,18 +112,12 @@ window.State = {
         return new Promise((r, x) => {
             function _load(data) {
                 if (!data.state) {
-                    printWarn("No saved state, initializing from defaults.");
+                    printWarn("No saved state, using defaults.");
                     State.save();
                 }
                 else if (data.state.store && data.state.store.config) {
-                    if (data.state.store.config.version == State.store.config.version) {
-                        for (let key in data.state) {
-                            State[key] = data.state[key];
-                        }
-                        console.info("State loaded.");
-                    }
-                    else if (State.store.config.version - data.state.store.config.version <= State.store.config.updDelta) {
-                        console.log("Attempting state update from older version.");
+                    if (State.store.config.version - data.state.store.config.version <= State.store.config.updDelta) {
+                        // Load
                         for (let obj of ["store", "settings"]) {
                             for (let key in data.state[obj]) {
                                 if (State[obj].hasOwnProperty(key) && key != "config") {
@@ -131,15 +125,19 @@ window.State = {
                                 }
                             }
                         }
-                        State.save();
+                        console.info("State loaded.");
+                        if (State.store.config.version > data.state.store.config.version) {
+                            devlog("Updated from older version.");
+                            State.save();
+                        }
                     }
                     else {
-                        printWarn("Unable to update state, loading defaults.");
+                        printWarn("Unable to update state, using defaults.");
                         State.save();
                     }
                 }
                 else {
-                    printWarn("Invalid stored state, loading defaults.");
+                    printWarn("Invalid stored state, using defaults.");
                     State.save();
                 }
                 r();
