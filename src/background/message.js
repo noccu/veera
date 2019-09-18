@@ -9,15 +9,11 @@ window.DevTools = {
     connected(port) {
         console.log("Onee-sama!", port);
         DevTools.connection = port;
-        port.onMessage.addListener(DevTools.listen);
+        port.onMessage.addListener(hear);
         port.onDisconnect.addListener(DevTools.deafen);
         window.dispatchEvent(new Event(EVENTS.connected));
     },
-    listen(data) {
-        hear(data);
-    },
     deafen() {
-        devlog("Disconnected.");
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
@@ -27,6 +23,8 @@ window.DevTools = {
             DevTools.connection.disconnect();
             DevTools.connection = null;
         }
+        devlog("Disconnected.");
+        window.dispatchEvent(new Event(EVENTS.disconnected));
     },
     send(action, data) {
         if (!this.connection) {

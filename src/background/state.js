@@ -37,6 +37,7 @@ window.State = {
 
         focusGameOnAction: true,
         focusOnlyMinimized: false,
+        keepTimersActive: false,
 
         hideRaidsByRank: true,
         blockHostByAP: true,

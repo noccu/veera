@@ -100,11 +100,16 @@ window.Time = {
         time.setUTCSeconds(time.getUTCSeconds() + (deltaSeconds || 1));
     },
     sync() {
-        console.log("Syncing time.");
+        devlog("Syncing time.");
         if (Time.tock) {
             clearInterval(Time.tock);
         }
         Time.keep();
+    },
+    stop() {
+        devlog("Stopping time.");
+        clearInterval(Time.tock);
+        clearTimeout(Time._stEnd); // Not really required but whatever. No need to keep running useless timers either.
     },
     triggerReset(lastReset, detail) {
         // this.lastReset = lastReset.getTime();

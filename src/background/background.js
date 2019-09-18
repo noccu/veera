@@ -1,5 +1,6 @@
 const EVENTS = {// jshint ignore:line
-    connected: "veeraConnected",
+    connected: "connected",
+    disconnected: "disconnected",
     pageChanged: "pageChanged",
     suppliesUpdated: "suppliesUpdated",
     dailyReset: "dailyReset",
@@ -78,6 +79,9 @@ function MainInit() {
 
             Time.sync();
             Time.checkReset();
+            window.addEventListener(EVENTS.disconnected, () => {
+                if (!State.settings.keepTimersActive) { Time.stop() }
+            });
 
             if (State.store.guild) {
                 updateUI("updGuild", `#guild/detail/${State.store.guild}`);
