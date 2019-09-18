@@ -290,6 +290,67 @@ const PLANNER_TEMPLATES = {
         Wind: 25026,
         Light: [25023, 25026],
         Dark: [25024, 25025]
+    },
+    elementalHalos: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 5211,
+        Water: 5221,
+        Earth: 5231,
+        Wind: 5241,
+        Light: [5211, 5241],
+        Dark: [5221, 5231]
+    },
+    treasureDrops: {
+        low: {
+            // Fine sand
+            type: SUPPLYTYPE.treasure,
+            Fire: 4,
+            Water: 6,
+            Earth: 8,
+            Wind: 2
+            // Light: [5211, 5241],
+            // Dark: [5221, 5231]
+        },
+        lowOmega: {
+            // Untamed
+            type: SUPPLYTYPE.treasure,
+            Fire: 5,
+            Water: 7,
+            Earth: 9,
+            Wind: 3
+            // Light: [5211, 5241],
+            // Dark: [5221, 5231]
+        },
+        high: {
+            // Blistering ore
+            type: SUPPLYTYPE.treasure,
+            Fire: 15,
+            Water: 16,
+            Earth: 17,
+            Wind: 14
+            // Light: [5211, 5241],
+            // Dark: [5221, 5231]
+        },
+        ingredient: {
+            // Wheat stalk
+            type: SUPPLYTYPE.treasure,
+            Fire: 33,
+            Water: 23,
+            Earth: 52,
+            Wind: 38
+            // Light: [5211, 5241],
+            // Dark: [5221, 5231]
+        },
+        ingredientOmega: {
+            // Wheat stalk
+            type: SUPPLYTYPE.treasure,
+            Fire: 120,
+            Water: 99,
+            Earth: 124,
+            Wind: 91
+            // Light: [5211, 5241],
+            // Dark: [5221, 5231]
+        }
     }
 };
 
@@ -304,9 +365,12 @@ const PLANNER_ITEMS = {
     flawedPrism: new PlannerItem(SUPPLYTYPE.treasure, 1202),
     prismChip: new PlannerItem(SUPPLYTYPE.treasure, 1201),
     bahaHorn: new PlannerItem(SUPPLYTYPE.treasure, 59),
+    primevalHorn: new PlannerItem(SUPPLYTYPE.treasure, 79),
     silverCentrum: new PlannerItem(SUPPLYTYPE.treasure, 107),
     goldBrick: new PlannerItem(17, 20004),
-    sephiraStone: new PlannerItem(SUPPLYTYPE.treasure, 25000)
+    sephiraStone: new PlannerItem(SUPPLYTYPE.treasure, 25000),
+    damaCrystal: new PlannerItem(SUPPLYTYPE.treasure, 203),
+    genesisFrag: new PlannerItem(SUPPLYTYPE.treasure, 535)
 };
 
 /** Creates an item for the planner from any accepted input.
@@ -1221,6 +1285,168 @@ window.PlannerData = {
             "Axe": "Earth",
             "Staff": "Water",
             "Bow": "Light"
+        }
+    },
+    "Seraphic (main)": {
+        core: [
+            new PlannerItem(3, PLANNER_ITEMS.championMerit, 3),
+
+            new PlannerItem(4, PLANNER_ITEMS.supremeMerit, 3),
+
+            new PlannerItem(5, PLANNER_ITEMS.legendaryMerit, 2),
+            new PlannerItem(5, PLANNER_ITEMS.bahaHorn, 2),
+
+            new PlannerItem(6, PLANNER_ITEMS.primevalHorn, 3),
+            new PlannerItem(6, PLANNER_ITEMS.damaCrystal, 5),
+            new PlannerItem(6, PLANNER_ITEMS.genesisFrag, 40),
+            new PlannerItem(6, SUPPLYTYPE.treasure, 531, 5), // qilin
+            new PlannerItem(6, SUPPLYTYPE.treasure, 529, 5) // huang
+        ],
+        wtype: {
+            "Raphael": [],
+            "Michael": [],
+            "Gabriel": [],
+            "Uriel": [],
+            templates: [
+                // Light and dark are different
+                new PlannerItem(1, PLANNER_TEMPLATES.orbs.low, 5),
+                new PlannerItem(1, PLANNER_TEMPLATES.tomes, 5),
+                new PlannerItem(1, PLANNER_TEMPLATES.treasureDrops.low, 5),
+                new PlannerItem(1, PLANNER_TEMPLATES.treasureDrops.lowOmega, 3),
+                new PlannerItem(1, PLANNER_TEMPLATES.whorls, 10),
+                new PlannerItem(1, PLANNER_TEMPLATES.scales, 1),
+
+                // uncap 1
+                new PlannerItem(2, PLANNER_TEMPLATES.treasureDrops.low, 20),
+                new PlannerItem(2, PLANNER_TEMPLATES.orbs.low, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.tomes, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.whorls, 30),
+                new PlannerItem(2, PLANNER_TEMPLATES.scales, 5),
+                new PlannerItem(2, PLANNER_TEMPLATES.orbs.high, 3),
+                new PlannerItem(2, PLANNER_TEMPLATES.elementalHalos, 1),
+
+                // uncap 2
+                new PlannerItem(3, PLANNER_TEMPLATES.treasureDrops.lowOmega, 20),
+                new PlannerItem(3, PLANNER_TEMPLATES.orbs.high, 15),
+                new PlannerItem(3, PLANNER_TEMPLATES.scrolls, 20),
+                new PlannerItem(3, PLANNER_TEMPLATES.whorls, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.anima.magna, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.trialFragments, 3),
+                new PlannerItem(3, PLANNER_TEMPLATES.elementalHalos, 1),
+
+                // uncap 3
+                new PlannerItem(4, PLANNER_TEMPLATES.treasureDrops.high, 50),
+                new PlannerItem(4, PLANNER_TEMPLATES.treasureDrops.ingredient, 80),
+                new PlannerItem(4, PLANNER_TEMPLATES.showdowns.anima, 20),
+                new PlannerItem(4, PLANNER_TEMPLATES.omegaItem, 10),
+                new PlannerItem(4, PLANNER_TEMPLATES.anima.magnaOmega, 20),
+                new PlannerItem(4, PLANNER_TEMPLATES.trialFragments, 7),
+                new PlannerItem(4, PLANNER_TEMPLATES.elementalHalos, 1),
+
+                // SSR
+                new PlannerItem(5, PLANNER_TEMPLATES.showdowns.omegaAnima, 20),
+                new PlannerItem(5, PLANNER_TEMPLATES.anima.ancientOmega, 2),
+                new PlannerItem(5, PLANNER_TEMPLATES.anima.epic, 10),
+                new PlannerItem(5, PLANNER_TEMPLATES.centrums, 20),
+                new PlannerItem(5, PLANNER_TEMPLATES.anima.primarch, 10),
+                new PlannerItem(5, PLANNER_TEMPLATES.trialFragments, 16),
+                new PlannerItem(5, PLANNER_TEMPLATES.elementalHalos, 1),
+                new PlannerItem(5, PLANNER_TEMPLATES.treasureDrops.ingredientOmega, 30),
+
+                // 4*
+                new PlannerItem(6, PLANNER_TEMPLATES.quartz, 500),
+                new PlannerItem(6, PLANNER_TEMPLATES.stones, 255),
+                new PlannerItem(6, PLANNER_TEMPLATES.urns, 30),
+                new PlannerItem(6, PLANNER_TEMPLATES.elementalHalos, 16)
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Obtain", "SR 1*", "SR 2*", "SR 3*", "SSR", "SSR 4*"],
+        typeNames: {
+            "Michael": ["Fire", "Sword"],
+            "Gabriel": ["Water", "Staff"],
+            "Uriel": ["Earth", "Fist"],
+            "Raphael": ["Wind", "Bow"]
+        }
+    },
+    "Seraphic (light/dark)": {
+        core: [
+            new PlannerItem(1, PLANNER_ITEMS.championMerit, 5),
+
+            new PlannerItem(2, PLANNER_ITEMS.supremeMerit, 5),
+
+            new PlannerItem(3, PLANNER_ITEMS.rainbowPrism, 30),
+
+            new PlannerItem(4, PLANNER_ITEMS.legendaryMerit, 2),
+
+            new PlannerItem(5, SUPPLYTYPE.treasure, 150, 5),
+            new PlannerItem(5, PLANNER_ITEMS.bahaHorn, 3),
+
+            new PlannerItem(6, PLANNER_ITEMS.primevalHorn, 3),
+            new PlannerItem(6, PLANNER_ITEMS.damaCrystal, 5),
+            new PlannerItem(6, PLANNER_ITEMS.genesisFrag, 40),
+            new PlannerItem(6, SUPPLYTYPE.treasure, 531, 5), // qilin
+            new PlannerItem(6, SUPPLYTYPE.treasure, 529, 5) // huang
+        ],
+        wtype: {
+            "Teachers": [
+                new PlannerItem(3, SUPPLYTYPE.treasure, 56, 2), // dawn
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Wind, 1),
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Fire, 1),
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Light, 1),
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Wind, 1),
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Fire, 1),
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Light, 1),
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Light, 1),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wind, 1),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 1)
+            ],
+            "Belial": [
+                new PlannerItem(3, SUPPLYTYPE.treasure, 57, 2), // dusk
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Water, 1),
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Earth, 1),
+                new PlannerItem(3, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.ancientOmega.Dark, 1),
+
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Water, 1),
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Earth, 1),
+                new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Dark, 1),
+
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 1),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 1),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Earth, 1)
+            ],
+            templates: [
+                // Light and dark are different
+                new PlannerItem(1, PLANNER_TEMPLATES.scrolls, 30),
+                new PlannerItem(1, PLANNER_TEMPLATES.anima.magna, 30),
+                new PlannerItem(1, PLANNER_TEMPLATES.orbs.high, 20),
+                new PlannerItem(1, PLANNER_TEMPLATES.whorls, 30),
+
+                // uncap 1
+                new PlannerItem(2, PLANNER_TEMPLATES.anima.magnaOmega, 30),
+                new PlannerItem(2, PLANNER_TEMPLATES.omegaItem, 20),
+                new PlannerItem(2, PLANNER_TEMPLATES.trialFragments, 10),
+
+                // uncap 3
+                new PlannerItem(4, PLANNER_TEMPLATES.anima.primarch, 10),
+
+                // SSR
+                new PlannerItem(5, PLANNER_TEMPLATES.centrums, 40),
+
+                // 4*
+                new PlannerItem(6, PLANNER_TEMPLATES.quartz, 500),
+                new PlannerItem(6, PLANNER_TEMPLATES.stones, 255),
+                new PlannerItem(6, PLANNER_TEMPLATES.urns, 30),
+                new PlannerItem(6, PLANNER_TEMPLATES.elementalHalos, 16)
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Obtain", "SR 1*", "SR 2*", "SR 3*", "SSR", "SSR 4*"],
+        typeNames: {
+            "Teachers": ["Light", "Harp"],
+            "Belial": ["Dark", "Axe"]
         }
     }
 };
