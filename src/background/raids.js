@@ -46,14 +46,14 @@ function RaidEntry(id, trackingObj) {
         };
         this.active = true;
     }
-    this.updHostState();
+    RaidEntry.updHostState(this);
 }
 
-RaidEntry.prototype.updHostState = function() {
-    this.haveHosts = this.hosts.today < this.data.dailyHosts;
-    this.haveRank = Profile.status.level ? this.data.minHostRank <= Profile.status.level : true;
-    this.haveAp = Profile.status.ap.current ? this.data.apCost <= Profile.status.ap.current : true;
-    this.canHost = this.haveAp && this.haveHosts && this.haveRank;
+RaidEntry.updHostState = function(obj) {
+    obj.haveHosts = obj.hosts.today < obj.data.dailyHosts;
+    obj.haveRank = Profile.status.level ? obj.data.minHostRank <= Profile.status.level : true;
+    obj.haveAp = Profile.status.ap.current ? obj.data.apCost <= Profile.status.ap.current : true;
+    obj.canHost = obj.haveAp && obj.haveHosts && obj.haveRank;
 };
 
 window.Raids = {
@@ -129,6 +129,7 @@ window.Raids = {
     // Updates the tracking object.
     update: function({action, id, matId, raidEntry}) {
         // pendingHost is used here as setLastHost is called afterwards, and copies from it.
+        // raidEntry is just a way to skip the lookup when we already have the data, but it loses class when transfered from UI. Maybe it's more potential harm than good long term...
         if (!raidEntry) {
             if (!id) {
                 deverror(`Invalid data format, can't update raid ${id}.`);
@@ -156,7 +157,7 @@ window.Raids = {
                 break;
         }
         this.set(raidEntry);
-        raidEntry.updHostState();
+        RaidEntry.updHostState(raidEntry);
 
         this.save();
         updateUI("updRaid", raidEntry);
