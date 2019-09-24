@@ -214,7 +214,7 @@ function updCurrentRaidInfo(data) {
                 img = disp.getElementsByTagName("img")[0];
             disp.dataset.rarity = item.rarity;
             disp.dataset.chestType = item.chestType || "";
-            name.textContent = name.title = item.delta > 1 ? item.name + " x" + item.delta : item.name;
+            name.textContent = name.title = item.count > 1 ? item.name + " x" + item.count : item.name;
             img.title = `Now have: ${NUMBER_FORMAT.format(item.totalNum)}${item.isNew ? " new" : ""}`;
             disp.getElementsByTagName("img")[0].src = item.path;
 

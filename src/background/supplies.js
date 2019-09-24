@@ -78,7 +78,8 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Token",
         class: "Tickets",
         path: "item/ticket",
-        manual: true
+        manual: true,
+        size: "m/"
     },
     23: {
         name: "Pick Ticket",
@@ -349,7 +350,7 @@ window.Supplies = {
         }
         else {
             if (!this.index[type]) {
-                devwarn("[Supplies] No such type: " + type);
+                devwarn("[Supplies] Type not in index: " + type);
                 return;
             }
 
@@ -486,8 +487,8 @@ window.Supplies = {
                 this.set(item);
             }
             else {
-                if (this.index[item.type] && this.index[item.type][item.id]) { // Update
-                    item.delta = item.count; // Save change
+                item.delta = item.count; // Save change
+                if (this.has(item.type, item.id)) { // Update
                     item.count = this.index[item.type][item.id].count += item.delta;
                 }
                 else { // Add new
@@ -548,8 +549,8 @@ function gotQuestLoot(json) {
             name = entry.name || entry.item_name;
 
         let item = new SupplyItem(type, id, count, name);
-        if (entry.item_image) {
-            item.path = item.path.replace(/\/\d+\./, `/${entry.item_image}.`);
+        if (entry.item_image || entry.thumbnail_img) {
+            item.path = item.path.replace(/\/\d+\./, `/${entry.item_image || entry.thumbnail_img}.`);
         }
         if (entry.rarity) {
             item.rarity = parseInt(entry.rarity);
@@ -631,20 +632,20 @@ function gotQuestLoot(json) {
             // Free rupies
             loot = json.rewards.lupi;
             if (loot) {
-                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, loot});
+                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, count: loot});
             }
             // Auto-actions
             loot = json.rewards.sold_price;
             if (loot) {
-                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, loot});
+                addUpdItem({kind: SUPPLYTYPE.rupie, id: 0, count: loot});
             }
             loot = json.rewards.recycling_item_weapon_get_number;
             if (loot) {
-                addUpdItem({kind: SUPPLYTYPE.vessels, id: 1, loot});
+                addUpdItem({kind: SUPPLYTYPE.vessels, id: 1, count: loot});
             }
             loot = json.rewards.recycling_item_summon_get_number; // ???
             if (loot) {
-                addUpdItem({kind: SUPPLYTYPE.vessels, id: 2, loot});
+                addUpdItem({kind: SUPPLYTYPE.vessels, id: 2, count: loot});
             }
         }
         // Arcarum chests
@@ -672,11 +673,11 @@ function gotQuestLoot(json) {
                 devlog(`[Loot] Got ${loot.length} items from sortie completion.`);
             }
         }
+        updateUI("updRaidLoot", {loot: upd}); // Update loot first as it also shows untracked items.
         if (upd.length > 0) {
             fireEvent(EVENTS.gotLoot, upd);
             Supplies.update(upd);
         }
-        DevTools.send("updRaidLoot", {loot: upd});
     }
 }
 

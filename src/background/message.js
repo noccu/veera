@@ -51,6 +51,7 @@ function hear(msg) {
         case "request":
             // JSON
             if (msg.data.hasOwnProperty("json")) {
+                // Explicit actions
                 switch (true) {
                     case path.ismatch("user/content/index"): // Homepage
                         State.haveInit("home");
@@ -113,9 +114,6 @@ function hear(msg) {
                     case path.ismatch("evolution_weapon/item_evolution"):
                     case path.ismatch("evolution_npc/item_evolution"):
                         uncapEnd(msg.data.json);
-                        break;
-                    case /teamraid\d+\//.test(path):
-                        DevTools.send("updUnfEdition", msg.data.url.href);
                         break;
                     case path.ismatch("/bookmaker/content/top"): // bookmaker is only in unf r-right?
                         DevTools.send("updUnfAreas", msg.data.json);
@@ -219,8 +217,8 @@ function hear(msg) {
                         break;
                     case path.ismatch("rest/title/par_claim"): // trophy pickup
                     case path.ismatch("rest/title/all_claim"):
-                    case path.ismatch("rest/top/par_claim/"): // event pickup
-                    case path.ismatch("rest/top/all_claim/"):
+                    case path.ismatch("rest/top/par_claim"): // event pickup
+                    case path.ismatch("rest/top/all_claim"):
                     case path.ismatch("rest/top/receive_defeat_reward"): // event2 pickup (Proving Grounds)
                     case path.ismatch("rest/top/receive_all_defeat_reward"):
                     case path.ismatch("receive_sequence_point_reward"):
@@ -247,6 +245,10 @@ function hear(msg) {
                     case path.ismatch("shop_exchange/activate_personal_support"):
                         Time.addJdBuff(msg.data);
                         break;
+                }
+                // General actions
+                if (/teamraid\d+\//.test(path)) {
+                    Unf.setUnfEdition(msg.data.url.href);
                 }
             }
             else if (msg.data.hasOwnProperty("html")) {
