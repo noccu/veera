@@ -712,10 +712,16 @@ function purchaseItem(data) {
         upd.push(item);
         fireEvent(EVENTS.shopPurchase, item);
 
+        // The items we trade in
         let nReq = json.article.use_coin_number; // Casino
         if (nReq) {
             item = new SupplyItem(31, 0, - (parseInt(nReq) * nBought));
             upd.push(item);
+        }
+        else if (json.article.has_point) { // Arca
+            // nReq = parseInt(json.article.point);
+            // Profile.updArca(0, -nReq * nBought);
+            Profile.setArca({points: parseInt(json.article.has_point)});
         }
         else { // Normal shops
             // The items we trade in. Max 4, 1-indexed

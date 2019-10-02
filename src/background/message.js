@@ -167,6 +167,7 @@ function hear(msg) {
                     case path.ismatch("casino/exchange"):
                     case path.ismatch("shop_exchange/purchase"):
                     case path.ismatch("rest/sidestory/purchase"):
+                    case path.ismatch("rest/arcarum/purchase"):
                         purchaseItem(msg.data);
                         // Some items go to crate, and the game checks supplies after purchase, so items won't always be updated.
                         break;
