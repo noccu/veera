@@ -761,34 +761,36 @@ function cratePickup(data) { // single item pick up TODO: check multi
     Supplies.update(upd);
 }
 function rewardsPickup(json) {
-    let upd = [],
-        si, id, name,
-        loot = json.reward || json.common.reward;
-    for (let key in loot) { // Sometimes obj, sometimes array... this works on both.
-        let item = loot[key];
-        name = item.item || item.item_name;
-        let check = key.lastIndexOf("_");
-        if (check != -1) {
-            id = key.slice(check + 1);
-        }
-        else {
-            id = item.item_id;
-            if (!id) {
-                let data = Supplies.find(name, item.item_kind);
-                if (data) {
-                    id = data.id;
-                }
-                else {
-                    devlog("Picked up an unrecognized item.");
-                    continue;
+    if (json.result) {
+        let upd = [],
+            si, id, name,
+            loot = json.reward || json.common.reward;
+        for (let key in loot) { // Sometimes obj, sometimes array... this works on both.
+            let item = loot[key];
+            name = item.item || item.item_name;
+            let check = key.lastIndexOf("_");
+            if (check != -1) {
+                id = key.slice(check + 1);
+            }
+            else {
+                id = item.item_id;
+                if (!id) {
+                    let data = Supplies.find(name, item.item_kind);
+                    if (data) {
+                        id = data.id;
+                    }
+                    else {
+                        devlog("Picked up an unrecognized item.");
+                        continue;
+                    }
                 }
             }
+            si = new SupplyItem(item.item_kind, id, item.number, name);
+            upd.push(si);
         }
-        si = new SupplyItem(item.item_kind, id, item.number, name);
-        upd.push(si);
-    }
 
-    Supplies.update(upd);
+        Supplies.update(upd);
+    }
 }
 
 function reduce(data) {
