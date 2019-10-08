@@ -582,15 +582,18 @@ function gotQuestLoot(json) {
         }
         // Event rewards
         if (json.popup_data) {
-            if (json.popup_data.daily_mission && json.popup_data.daily_mission.is_complete) {
+            if (json.popup_data.daily_mission && (json.popup_data.daily_mission.num == json.popup_data.daily_mission.max_num)) {
                 loot = json.popup_data.daily_mission.item_list;
                 if (loot.length) {
                     for (let item of loot) {
                         addUpdItem(item);
                     }
                     devlog(`[Loot] Got ${loot.length} items from event mission reward.`);
-                    fireEvent(EVENTS.evMissionDone, upd);
                 }
+                fireEvent(EVENTS.evMissionDone, {
+                    reward: upd,
+                    partial: !json.popup_data.daily_mission.is_complete
+                }); // Checked first, upd is still empty.
             }
             // Stage clear rewards
             if (json.popup_data.clear_reward && json.popup_data.clear_reward.item.id) {
