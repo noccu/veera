@@ -546,7 +546,8 @@ function gotQuestLoot(json) {
         let type = entry.item_kind || entry.kind,
             id = entry.id || entry.item_id,
             count = entry.count || entry.num || entry.item_num || entry.amount,
-            name = entry.name || entry.item_name;
+            name = entry.name || entry.item_name,
+            bonus = entry.quality || entry.bonus_value;
 
         let item = new SupplyItem(type, id, count, name);
         if (entry.item_image || entry.thumbnail_img) {
@@ -557,6 +558,9 @@ function gotQuestLoot(json) {
             if (State.settings.notifyWeaponDrop && item.rarity > 3 && (item.type == 1 || item.type == 37)) {
                 showNotif("SSR Weapon drop!", {text: item.name, img: item.path});
             }
+        }
+        if (bonus) {
+            item.quality = bonus;
         }
         if (State.settings.colorCodeDrops && chestType) {
             item.chestType = chestType;
