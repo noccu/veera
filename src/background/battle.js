@@ -705,7 +705,10 @@ function battleAttack(json) {
         }
     }
 
-    Battle.current.bosses.list.forEach(boss => boss.warn = false);
+    // reset per-turn unit values
+    Battle.current.bosses.list.forEach(boss => {
+        boss.currentTurnOugi.triggered = false;
+    });
     var unit;
     for (let action of json.scenario) {
         switch (action.cmd) {
@@ -717,7 +720,6 @@ function battleAttack(json) {
                 unit = Battle.current.bosses.getAtPos(action.pos);
                 actionData.char = unit.char;
                 unit.activeTurns++;
-                unit.warn = true;
                 if (action.list) { // Some ougis do no dmg
                     battleParseDamage(action.list, actionData, BATTLE_ACTION_TYPES.dmgTaken);
                 }
@@ -873,7 +875,7 @@ function battleAttack(json) {
 
     if (actions.length > 0) {
         for (let action of actions) {
-            Battle.current.currentTurn.actions.push(action);
+            Battle.current.currentTurn.actions.push(action); // skills etc happen same turn so we can't just assign.
             updateBattleStats(action);
         }
         devlog("Battle info updated", actions);
@@ -931,7 +933,6 @@ function updateBattleStats(actionData) {
         unitStats.ougiDmg += actionData.ougiDmg;
         unitStats.crits += actionData.crits;
 
-        unitStats.instance.currentTurnOugi.triggered = false;
         if (actionData.action == BATTLE_ACTIONS.ougi || actionData.action == BATTLE_ACTIONS.bossOugi) {
             unitStats.ougis++;
             unitStats.instance.currentTurnOugi.triggered = true;
