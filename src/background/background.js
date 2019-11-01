@@ -1,4 +1,5 @@
 const EVENTS = {// jshint ignore:line
+    set: false,
     connected: "connected",
     disconnected: "disconnected",
     pageChanged: "pageChanged",
@@ -27,7 +28,6 @@ const GAME_URL = {// jshint ignore:line
 };
 
 window.addEventListener(EVENTS.connected, MainInit);
-// window.addEventListener("newBattle", );
 
 DevTools.wait(); // Listen for devtools conn
 
@@ -62,26 +62,20 @@ function MainInit() {
             updateUI("updArca", Profile.arcarum);
 
             console.log("Setting up listeners.");
-            window.addEventListener(EVENTS.dailyReset, ev => {
-                Raids.reset();
-                Profile.reset(ev);
-            });
-            window.addEventListener(EVENTS.weeklyReset, ev => Profile.reset(ev));
-            window.addEventListener(EVENTS.monthlyReset, ev => Profile.reset(ev));
-            window.addEventListener(EVENTS.suppliesUpdated, Raids.evhCheckRaidSupplyData);
-            window.addEventListener(EVENTS.suppliesUpdated, Planner.evhCheckItemGoalCompletion);
-            window.addEventListener(EVENTS.evMissionDone, ev => showNotif(`Mission ${ev.detail.partial ? "partially " : ""}complete!`, {text: ev.detail.reward.map(x => `${x.count}x ${x.name}`).join("\n")}));
-            window.addEventListener(EVENTS.pageChanged, ev => {
-                devlog(`Page changed to ${ev.detail}`);
-                Raids.evhPageChanged(ev.detail);
-                // Others here.
-            });
+            if (!EVENTS.set) {
+                window.addEventListener(EVENTS.dailyReset, evhDailyReset);
+                window.addEventListener(EVENTS.weeklyReset, Profile.reset);
+                window.addEventListener(EVENTS.monthlyReset, Profile.reset);
+                window.addEventListener(EVENTS.suppliesUpdated, Raids.evhCheckRaidSupplyData);
+                window.addEventListener(EVENTS.suppliesUpdated, Planner.evhCheckItemGoalCompletion);
+                window.addEventListener(EVENTS.evMissionDone, evhMissionComplete);
+                window.addEventListener(EVENTS.pageChanged, evhPageChange);
+                window.addEventListener(EVENTS.disconnected, evhDisconnect);
+                EVENTS.set = true;
+            }
 
             Time.sync();
             Time.checkReset();
-            window.addEventListener(EVENTS.disconnected, () => {
-                if (!State.settings.keepTimersActive) { Time.stop() }
-            });
 
             if (State.store.guild) {
                 updateUI("updGuild", `#guild/detail/${State.store.guild}`);
@@ -99,6 +93,37 @@ function MainInit() {
             printError(e);
         });
 }
+
+function evhMissionComplete(ev) {
+    showNotif(`Mission ${ev.detail.partial ? "partially " : ""}complete!`, {text: ev.detail.reward.map(x => `${x.count}x ${x.name}`).join("\n")});
+}
+function evhPageChange(ev) {
+    devlog(`Page changed to ${ev.detail}`);
+    Raids.evhPageChanged(ev.detail);
+}
+function evhDailyReset(ev) {
+    Raids.reset();
+    Profile.reset(ev);
+}
+function evhDisconnect() {
+    if (!State.settings.keepTimersActive) { Time.stop() }
+    chrome.tabs.onUpdated.removeListener(State.game.evhTabUpdated);
+    // unloadListeners();
+}
+
+/* function unloadListeners() {
+    if (!State.settings.keepTimersActive) {
+        window.removeEventListener(EVENTS.dailyReset, evhDailyReset);
+        window.removeEventListener(EVENTS.weeklyReset, Profile.reset);
+        window.removeEventListener(EVENTS.monthlyReset, Profile.reset);
+    }
+    window.removeEventListener(EVENTS.suppliesUpdated, Raids.evhCheckRaidSupplyData);
+    window.removeEventListener(EVENTS.suppliesUpdated, Planner.evhCheckItemGoalCompletion);
+    window.removeEventListener(EVENTS.evMissionDone, evhMissionComplete);
+    window.removeEventListener(EVENTS.pageChanged, evhPageChange);
+    window.removeEventListener(EVENTS.disconnected, evhDisconnect);
+    EVENTS.set = false;
+} */
 
 // Old function, kept for now due to ease of reading intended use.
 function updateUI(type, value) {
