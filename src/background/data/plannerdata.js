@@ -1385,8 +1385,6 @@ window.PlannerData = {
             new PlannerItem(6, PLANNER_ITEMS.primevalHorn, 3),
             new PlannerItem(6, PLANNER_ITEMS.damaCrystal, 5),
             new PlannerItem(6, PLANNER_ITEMS.genesisFrag, 40),
-            new PlannerItem(6, SUPPLYTYPE.treasure, 531, 5), // qilin
-            new PlannerItem(6, SUPPLYTYPE.treasure, 529, 5) // huang
         ],
         wtype: {
             "Teachers": [
@@ -1399,9 +1397,11 @@ window.PlannerData = {
                 new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Fire, 1),
                 new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Light, 1),
 
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Light, 1),
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wind, 1),
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 1)
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Light, 30),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Wind, 20),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Fire, 20),
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 529, 5) // huang
             ],
             "Belial": [
                 new PlannerItem(3, SUPPLYTYPE.treasure, 57, 2), // dusk
@@ -1413,9 +1413,11 @@ window.PlannerData = {
                 new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Earth, 1),
                 new PlannerItem(4, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.anima.epicOmega.Dark, 1),
 
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 1),
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 1),
-                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Earth, 1)
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Dark, 30),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Water, 20),
+                new PlannerItem(5, SUPPLYTYPE.treasure, PLANNER_TEMPLATES.trueAnima.Earth, 20),
+
+                new PlannerItem(6, SUPPLYTYPE.treasure, 531, 5) // qilin
             ],
             templates: [
                 // Light and dark are different
