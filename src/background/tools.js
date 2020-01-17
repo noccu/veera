@@ -113,5 +113,60 @@ window.Tools = {
                 return false;
             }
         }
+    },
+    roomNameGen: {
+        rooms: [
+            {name: "BahaHL -> Akasha", room: "つよばは→アーカーシャ"},
+            {name: "Astaroth", room: "アスタ"},
+            {name: "Chaos Beast (Darkblades)", room: "EX6-1"},
+            {name: "Levi Malice", room: "リヴァイアサンマリス"},
+            {name: "Slime", room: "スラ爆"},
+            {name: "Creeds", room: "信念集め"},
+            {name: "Dailies", room: "デイリー"},
+            {name: "-----", room: ""}
+        ],
+        optsList: [
+            {name: "Bring TH", opt: "トレハン募集"},
+            {name: "No Dancer", opt: "ダンサー禁止"},
+            {name: "No Chrysaor", opt: "クリュ禁止"},
+            {name: "Don't Leech", opt: "ワンパン禁止"},
+            {name: "Weak Host", opt: "主弱"},
+            {name: "MVP Free (Racing OK)", opt: "M自由"},
+            {name: "Have Para extend", opt: "麻痺延長"},
+            {name: "Have Break extend", opt: "ブレキ"},
+            {name: "Thor at 70%", opt: "主70ト"},
+            {name: "Thor at 30%", opt: "主30ト"},
+            {name: "Thor at 10%", opt: "主10ト"},
+            {name: "Hosting AFK", opt: "自発放置"},
+            {name: "Practice run", opt: "練習"},
+            {name: "Earth for labor 7", opt: "土７"},
+            {name: "Dark for labor 7", opt: "闇７"}
+        ],
+        details: {
+            Water: "水",
+            Fire: "火",
+            Wind: "風",
+            Earth: "土",
+            Dark: "闇",
+            Light: "光"
+        },
+        // UI sends back raid and opts as array indexes
+        generateName(data) {
+            let {raid, reps, minRank, maxRank, opts, hostDetail, reqDetail} = data;
+
+            if (opts.length) { opts = opts.reduce((a, v) => a + ` ${this.optsList[v].opt}`, "") }
+            if (hostDetail.length) { hostDetail = hostDetail.reduce((a, v) => a + `${this.details[v]}`, "主") }
+            if (reqDetail.length) { reqDetail = reqDetail.reduce((a, v) => a + `${this.details[v]}`, "@") }
+
+            return `${this.rooms[raid].room}${reps && reps != "0" ? ` ${reps}連` : ""}${minRank && minRank != "0" ? ` ${minRank}↑` : ""}${maxRank && maxRank != "0" ? ` ${maxRank}↓` : ""} ${hostDetail}${reqDetail} ${opts}`;
+        },
+        init() {
+            RaidList.forEach(v => {
+                if (v.jName) {
+                    this.rooms.push({name: v.name, room: v.jName});
+                }
+            });
+            return {rooms: this.rooms, opts: this.optsList, details: this.details};
+        }
     }
 };

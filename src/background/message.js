@@ -314,6 +314,10 @@ function hearQuery(data, sender, respond) {
         switch (data.query) {
             case "archivedBattle":
                 retValue = Battle.load(data.val);
+                break;
+            case "genRoom":
+                data = data.val;
+                retValue = Tools.roomNameGen.generateName(data);
         }
 
         devlog("Responding with: ", retValue);

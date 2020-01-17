@@ -53,7 +53,8 @@ function MainInit() {
             updateUI("init", {
                 theme: State.theme.current,
                 planner: Planner.listSeries(),
-                raids: Raids.getList()
+                raids: Raids.getList(),
+                roomNameGen: Tools.roomNameGen.init()
             });
             updateUI("updSupplies", Supplies.getAll());
             // updateUI("updStatus", Profile.status);

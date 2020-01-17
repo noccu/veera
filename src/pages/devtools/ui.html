@@ -465,6 +465,21 @@
                         <button id="spark-prog-reset" data-event="resetSpark">Reset</button>
                     </div>
                 </div>
+                <div id="room-name-gen" class="panel">
+                    <span class="panel-header" data-event="collapse">Room name generator</span>
+                    <div class="panel-content">
+                        <div id="room-gen-name"></div>
+
+                        <div>Raid: <select id="room-gen-raid"></select></div>
+                        <div>Repeat: <input type="number" min="0" max="30" id="room-gen-reps"></input></div>
+                        <div>Rank min: <input type="number" min="0" id="room-gen-min"></input>, max: <input type="number" min="0" id="room-gen-max"></input></div>
+                        <div>Options:
+                            <div id="room-gen-opts"></div>
+                        </div>
+                        <div>Host is: </div> <div id="room-gen-host-detail"></div>
+                        <div>Require: </div> <div id="room-gen-req-detail"></div>
+                    </div>
+                </div>
             </div>
             <div id="settings" class="tab">
                 <!-- TODO: Improve layout -->

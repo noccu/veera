@@ -598,3 +598,12 @@ button {
 #spark-prog-reset {
     width: 100%;
 }
+
+#room-gen-name {
+    text-align: center;
+    font-size: 1.5em;
+}
+#room-gen-opts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}

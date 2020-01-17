@@ -16,6 +16,7 @@
     "clearGraph": "readonly",
     "clearDropdown": "readonly",
     "populateDropdown": "readonly",
+    "updRoomGenName": "readonly",
 
     "Chart": "readonly"
   }

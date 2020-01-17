@@ -16,6 +16,7 @@ function initialize(data) {
     UI.setTheme(data.theme);
     populateRaids(data.raids);
     UI.planner.init(data.planner);
+    UI.roomNameGen.init(data.roomNameGen);
 
     UI.initButtons();
     UI.unf.areaInfo.init();
@@ -278,6 +279,7 @@ function populateRaids(raids) {
     UI.raids.list = list.children;
 }
 
+// Tools
 function updLastSupport(data) {
     UI.setValue({id: "last-sup-sum", value: data.summon});
     let u = document.getElementById("last-sup-usr");
@@ -292,4 +294,34 @@ function updSparkProgress(data) {
         {id: "spark-prog-avg", value: data.avg},
         {id: "spark-prog-eta", value: data.eta}
     ]);
+}
+
+function updRoomGenName() {
+    let plan = {
+        raid: UI.roomNameGen.dom.raid.selectedIndex,
+        reps: UI.roomNameGen.dom.reps.value,
+        minRank: UI.roomNameGen.dom.min.value,
+        maxRank: UI.roomNameGen.dom.max.value,
+        opts: [],
+        hostDetail: [],
+        reqDetail: []
+    };
+    for (let option of UI.roomNameGen.dom.opts.children) {
+        if (option.firstElementChild.checked) {
+            plan.opts.push(option.firstElementChild.value);
+        }
+    }
+    for (let element of UI.roomNameGen.dom.hostDetail.children) {
+        if (element.firstElementChild.checked) {
+            plan.hostDetail.push(element.firstElementChild.value);
+        }
+    }
+    for (let element of UI.roomNameGen.dom.reqDetail.children) {
+        if (element.firstElementChild.checked) {
+            plan.reqDetail.push(element.firstElementChild.value);
+        }
+    }
+
+    BackgroundPage.query("genRoom", plan)
+        .then(roomName => UI.roomNameGen.dom.roomName.textContent = roomName);
 }

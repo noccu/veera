@@ -305,6 +305,42 @@ window.UI = {
                 navigator.clipboard.writeText(code);
             }
         }
+    },
+    roomNameGen: {
+        dom: {},
+        init(data) {
+            this.dom.roomName = document.getElementById("room-gen-name");
+            this.dom.raid = document.getElementById("room-gen-raid");
+            this.dom.reps = document.getElementById("room-gen-reps");
+            this.dom.min = document.getElementById("room-gen-min");
+            this.dom.max = document.getElementById("room-gen-max");
+            this.dom.opts = document.getElementById("room-gen-opts");
+            this.dom.hostDetail = document.getElementById("room-gen-host-detail");
+            this.dom.reqDetail = document.getElementById("room-gen-req-detail");
+
+            document.getElementById("room-name-gen").addEventListener("change", updRoomGenName);
+
+            populateDropdown(this.dom.raid, data.rooms, (el, d) => el.textContent = d.name);
+            let i = 0;
+            for (let option of data.opts) {
+                UI.roomNameGen.dom.opts.appendChild(this.createInputItem(option.name, i++));
+            }
+            Object.keys(data.details).forEach(k => {
+                this.dom.hostDetail.appendChild(this.createInputItem(k, k));
+                this.dom.reqDetail.appendChild(this.createInputItem(k, k));
+            });
+        },
+        createInputItem(name, value) {
+            let cont = document.createElement("span"),
+                el = document.createElement("input"),
+                label = document.createElement("label");
+            el.type = "checkbox";
+            el.value = value;
+            el.name = label.for = label.textContent = name;
+            cont.appendChild(el);
+            cont.appendChild(label);
+            return cont;
+        }
     }
 };
 
