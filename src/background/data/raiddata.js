@@ -148,6 +148,7 @@ window.RaidList = [
 
     new RaidData("Bahamut", 300291, RAID_TIER.Nightmare, 80, 3, 80, [58], [1], ELEMENTS.dark, "2030002000_hell.png"),
     new RaidData("Grand Order", 301051, RAID_TIER.Nightmare, 80, 2, 80, [82], [1], ELEMENTS.light, "2040065000_hell.png"),
+    new RaidData("Grand Order (HL)", 305161, RAID_TIER.Nightmare, 150, 1, 90, [83], [1], ELEMENTS.noEle, "2040065000_high.png"),
     new RaidData("Huanglong", 301671, RAID_TIER.Nightmare, 80, 1, 80, [6005], [1], ELEMENTS.light, "2040157000_hell.png"),
     new RaidData("Qilin", 301681, RAID_TIER.Nightmare, 80, 1, 80, [6005], [1], ELEMENTS.dark, "2040158000_hell.png"),
     new RaidData("Bahamut (HL)", 301061, RAID_TIER.Nightmare, 101, 1, 90, [59], [1], ELEMENTS.dark, "2040128000_hell.png"),
