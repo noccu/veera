@@ -282,3 +282,12 @@ function useRecoveryItem(json) {
     }
     updateUI("updStatus", Profile.status);
 }
+
+function twitterRecovery(json) {
+    // {"result":2,"reward_status":true}
+   if (json.reward_status) {
+        Profile.status.ap.current += Profile.status.ap.max;
+        Profile.status.bp.current += Profile.status.bp.max;
+        updateUI("updStatus", Profile.status);
+    }
+}

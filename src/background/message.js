@@ -246,6 +246,9 @@ function hear(msg) {
                     case path.ismatch("shop_exchange/activate_personal_support"):
                         Time.addJdBuff(msg.data);
                         break;
+                    case path.ismatch("twitter/tweet"):
+                        twitterRecovery(msg.data.json);
+                        break;
                 }
                 // General actions
                 if (/teamraid\d+\//.test(path)) {
