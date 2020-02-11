@@ -270,15 +270,21 @@ function updateGuildInfo(json) {
 }
 
 function useRecoveryItem(json) {
-    // "/item/use_normal_item" (supplies page) returns json data without the "result" subkey.
+    // "/item/use_normal_item" (homepage & supplies page) returns json data without the "result" subkey.
     // "/quest/user_item" (popups) have the subkey.
-    // On supplies the game automatically queries user status (/user/status) afterwards so we just let that set it instead.
-    if (json.result.recovery_str == "AP") {
-        Profile.status.ap.current = json.result.after;
+    // On supplies the game automatically queries user status (/user/status) but in homepage does not
+    // Proactively update the status instead of depending on side effects of (/user/status)
+
+    let recoveryObj = (json.result) ? json.result : json;
+
+    // {"recovery":"1","before":15,"after":90,"recovery_str":"AP","use_flag":true}
+    // {"recovery":"2","before":6,"after":7,"recovery_str":"EP","use_flag":true}
+    if (recoveryObj.recovery_str == "AP") {
+        Profile.status.ap.current = recoveryObj.after;
     }
     // It literally uses BP everywhere except here...
-    else if (json.result.recovery_str == "EP") {
-        Profile.status.bp.current = json.result.after;
+    else if (recoveryObj.recovery_str == "EP") {
+        Profile.status.bp.current = recoveryObj.after;
     }
     updateUI("updStatus", Profile.status);
 }

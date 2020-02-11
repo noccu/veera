@@ -158,6 +158,7 @@ function hear(msg) {
                         Profile.update(msg.data.json);
                         break;
                     case path.ismatch("quest/user_item"):
+                    case path.ismatch("item/use_normal_item"):
                         useRecoveryItem(msg.data.json);
                         break;
                     case path.ismatch("rest/raid/start"):
