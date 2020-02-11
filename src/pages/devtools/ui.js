@@ -235,7 +235,7 @@ window.UI = {
         },
         update(raidEntry, loop) {
             if (raidEntry) {
-                if (Array.isArray(raidEntry)) {
+                if (!loop && Array.isArray(raidEntry)) {
                     for (let re of raidEntry) {
                         this.update(re, true);
                     }
