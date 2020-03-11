@@ -163,5 +163,8 @@ window.RaidList = [
     new RaidData("Ultimate Bahamut (HL)", 303141, RAID_TIER.Ultimate, 130, 1, 100, [136], [1], ELEMENTS.noEle, "2040223000_high.png"),
 
     new RaidData("Dark Rapture", 303271, RAID_TIER.Nightmare, 120, 1, 80, [[506, 507, 508, 509]], [[1, 1, 1, 1]], ELEMENTS.noEle, "2040056000.png"),
-    new RaidData("Dark Rapture (Hard)", 303281, RAID_TIER.Rapture, 170, 1, 100, [537], [1], ELEMENTS.noEle, "2040056000_high.png")
+    new RaidData("Dark Rapture (Hard)", 303281, RAID_TIER.Rapture, 170, 1, 100, [537], [1], ELEMENTS.noEle, "2040056000_high.png"),
+
+    new RaidData("Lindwurm (HL)", 305171, RAID_TIER.Nightmare, 120, 2, 90, [535], [3], ELEMENTS.noEle, "2040353000_high.png")
+
 ];
