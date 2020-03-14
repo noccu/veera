@@ -45,7 +45,10 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Draw Ticket",
         class: "Ticket",
         path: "item/ticket",
-        size: ""
+        size: "",
+        transform(item) {
+            if (item.subType == 2) item.path = "item/campaign";
+        }
     },
     9: {
         name: "Crystal",
@@ -203,9 +206,6 @@ const ITEM_KIND = {// jshint ignore:line
         class: "Arcarum",
         path: "item/arcarum",
         prefix: "item_"
-        // specialId: {
-        //     1002: "item_1002" // 1000 pts from event shop
-        // }
     },
     67: {
         name: "Gauph Keys",
@@ -227,20 +227,17 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Badges",
         path: "item/event/newdefeat",
         manual: true,
-        specialId: {
-            rename(id) {
-                id = id.toString().slice(-2, -1);
-                if (id === "0") {
-                    return "gold";
-                }
-                else if (id == "1") {
-                    return "silver";
-                }
-                else {
-                    return false;
-                }
-            },
-            304401: "gold"
+        transform(item) {
+            let id = item.id.toString().slice(-2, -1);
+            if (id === "0") {
+                return "gold";
+            }
+            else if (id == "1") {
+                return "silver";
+            }
+            else {
+                return false;
+            }
         },
         size: "m/"
     }
@@ -261,43 +258,50 @@ const TREASURE_SOURCES = {
     40: {id: -1, name: "Miscongeniality (32/41) or New Leaf (30/44/65) or The Dungeon Diet (30/44/65)"}
 };
 
-function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, uniqueId = undefined) {
+function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefined, extra = {}) {
     this.type = parseInt(type);
+    if (extra.subType) { this.subType = extra.subType }
     this.id = id = id === "" ? 0 : parseInt(id);
+    if (extra.regularId) {
+        this.uniqueId = id;
+        this.id = id = parseInt(extra.regularId);
+    }
     this.count = parseInt(count);
     if (Number.isNaN(this.type) || Number.isNaN(this.id) || Number.isNaN(this.count)) {
         deverror("Given: ", type, id, count);
         throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
+
     let data = ITEM_KIND[type];
     if (data) {
         this.typeName = data.name;
         let fname = id;
-        if (data.specialId) {
-            if (data.specialId.rename) { // try dynamic rename
-                fname = data.specialId.rename(id) || id;
-            }
-            if (fname == id && data.specialId[id]) { // fall back to static or leave unchanged
-                fname = data.specialId[id];
-            }
+
+        // Change path data. Transform is for complexer changes, while specialId is a simple LUT. Both should return a filename. LUT is historic but nice and clean so I'm leaving it for now.
+        if (data.transform) {
+            fname = data.transform(this, extra) || id;
         }
-        if (fname === 0) { // id 0 and not a special id
+        else if (data.specialId) {
+            fname = data.specialId[id] || fname;
+        }
+
+        if (fname === 0) {
             devwarn("Invalid item, removing from data: ", this);
             delete Supplies.index[type][id];
             Supplies.save();
             return {invalid: true};
         }
-        else if (!fname) { // don't want any undefined.jpg in their server logs lmao
+        else if (!fname) {
             devwarn("[SupplyItem] Invalid path, nuking: ", fname, this);
             this.path = "";
         }
         else {
-            this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${data.prefix || ""}${fname}${data.suffix || ""}.jpg`;
+            this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${this.path || data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${data.prefix || ""}${fname}${data.suffix || ""}.jpg`;
         }
-        // Redirect some special cases to be more user-friendly.
+        // Redirect some special cases. This is for user display/organization and thus happens after the path/server data assignment.
         if (data.convert) {
             devlog("Converting item: ", this);
-            data.convert(this);
+            data.convert(this, extra);
             devlog("Converted item: ", this);
         }
     }
@@ -307,7 +311,6 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
 
     // name can already be set when converted
     this.name = this.name || name || (Supplies.has(type, id) ? Supplies.index[type][id].name : "Unknown");
-    if (uniqueId) { this.uniqueId = uniqueId }
 
     for (let t in SUPPLYTYPE) {
         if (Array.isArray(SUPPLYTYPE[t]) && SUPPLYTYPE[t].includes(this.type)) {
@@ -356,7 +359,7 @@ window.Supplies = {
 
             let item = this.index[type][id];
             if (item) {
-                item = raw ? item : new SupplyItem(type, id, item.count, item.name);
+                item = raw ? item : new SupplyItem(type, id, item.count, item.name, {subType: item.subType});
                 if (!item.invalid) { // is instanceof faster? somehow doubt it
                     return item;
                 }
@@ -382,6 +385,7 @@ window.Supplies = {
                     name: data.name,
                     count: data.count
                 };
+                if (data.subType) { this.index[data.type][data.id].subType = data.subType }
             }
         }
     },
@@ -461,7 +465,7 @@ window.Supplies = {
             let upd = [];
             for (let arr of json) {
                 for (let item of arr) {
-                    upd.push( new SupplyItem(SUPPLYTYPE.drawTickets, item.item_id, item.number, item.name) );
+                    upd.push( new SupplyItem(SUPPLYTYPE.drawTickets, item.item_id, item.number, item.name, {subType: item.type}) );
                 }
             }
             State.haveInit("tickets");
@@ -751,8 +755,7 @@ function purchaseItem(data) {
 function cratePickup(data) { // single item pick up TODO: check multi
     let upd = [];
     function parse(entry) {
-        let si = new SupplyItem(entry.item_kind_id, entry.regular_id || entry.item_id, entry.number, entry.item_name);
-        if (entry.regular_id) { si.uniqueId = entry.item_id }
+        let si = new SupplyItem(entry.item_kind_id, entry.item_id, entry.number, entry.item_name, {regularId: entry.regular_id});
         upd.push(si);
     }
 
