@@ -131,6 +131,7 @@ function hear(msg) {
                         battleUseSummon(msg.data.json);
                         break;
                     case path.ismatch("quest/treasure_raid"):
+                    case path.ismatch("top/multi_quest_list"):
                     case /treasureraid\d+\/top\/content\/newindex/.test(path):
                         storePendingRaidsTreasure(msg.data.json);
                         break;

@@ -41,7 +41,8 @@ window.State = {
 
         hideRaidsByRank: true,
         blockHostByAP: true,
-        blockHostByDailyNum: false
+        blockHostByDailyNum: false,
+        blockHostByMats: true
     },
 
     theme: {

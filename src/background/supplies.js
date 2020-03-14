@@ -327,6 +327,7 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
 // TODO: For weapon planner we need items we may not have yet. So gotta init a basic array from a datastore.
 window.Supplies = {
     index: {},
+    pendingRaidHost: {},
     has(type, id) {
         return this.index[type] && this.index[type][id];
     },
@@ -817,14 +818,15 @@ function reduce(data) {
 }
 
 function storePendingRaidsTreasure(data) {
-    let store = {items: []};
+    let store = {};
 
     // normal raids
-    if (data.quest_id) {
+    let id = data.quest_id;
+    if (id) {
+        store[id] = {items: []};
+        if (data.action_point) { store[id].ap = - parseInt(data.action_point) }
         for (let i = 0; i < data.treasure_id.length; i++) {
-            store.id = data.quest_id;
-            if (data.action_point) { store.ap = - parseInt(data.action_point) }
-            store.items.push( new SupplyItem(data.treasure_kind[i], data.treasure_id[i], - parseInt(data.consume[i]), data.treasure_name) );
+            store[id].items.push( new SupplyItem(data.treasure_kind[i], data.treasure_id[i], - parseInt(data.consume[i]), data.treasure_name) );
         }
     }
     // event raids
@@ -835,11 +837,24 @@ function storePendingRaidsTreasure(data) {
         for (let entry of list) {
             entry = parseDom(entry.innerHTML, {decode: false});
             let itemNum = entry.querySelector(".consume .txt-article-num"),
-                questData = entry.querySelector("[data-treasure-id]");
-            if (itemNum && questData && questData.dataset.treasureId) {
-                store.id = questData.dataset.questId;
-                store.items.push( new SupplyItem(SUPPLYTYPE.treasure, questData.dataset.treasureId, - parseInt(itemNum.textContent)) );
+                questData = entry.querySelector("[data-quest-id]");
+            if (questData) {
+                store[questData.dataset.questId] = {
+                    name: questData.dataset.chapterName,
+                    ap: - parseInt(questData.dataset.ap),
+                    items: questData.dataset.treasureId ? [new SupplyItem(SUPPLYTYPE.treasure, questData.dataset.treasureId, - parseInt(itemNum.textContent))] : []
+                };
             }
+        }
+    }
+    // ROTB
+    else if (data.multi_quest_list) {
+        for (let quest of data.multi_quest_list) {
+            store[quest.quest_id] = {
+                name: quest.quest_name,
+                ap: parseInt(quest.action_point),
+                items: quest.use_item_id ? [new SupplyItem(quest.use_item_kind, quest.use_item_id, - parseInt(quest.use_item_num))] : []
+            };
         }
     }
 
@@ -847,16 +862,20 @@ function storePendingRaidsTreasure(data) {
 }
 
 function consumePendingRaidsTreasure(data) {
-    if (Supplies.pendingRaidHost && Supplies.pendingRaidHost.id == data.postData.quest_id) {
-        let consumedItems;
-        if (Array.isArray(data.postData.use_item_id)) { // This is an assumption. I don't want to host Luci just to check rn.
-            consumedItems = Supplies.pendingRaidHost.items.filter(item => data.postData.use_item_id.includes(item.id));
+    if (Supplies.pendingRaidHost) {
+        let pendingData = Supplies.pendingRaidHost[data.postData.quest_id];
+        if (pendingData) {
+            let consumedItems;
+            if (Array.isArray(data.postData.use_item_id)) { // This is an assumption. I don't want to host Luci just to check rn.
+                consumedItems = pendingData.items.filter(item => data.postData.use_item_id.includes(item.id));
+            }
+            else {
+                consumedItems = pendingData.items.filter(item => item.id == data.postData.use_item_id);
+            }
+            Supplies.update(consumedItems, false, true);
+            // update changes the items. Usually they are overwritten, but in quest-repeat settings they linger so we reset to avoid subsequent calls to update() with wrong values. This is stupid.
+            consumedItems.forEach(item => item.count = item.delta);
         }
-        else {
-            consumedItems = Supplies.pendingRaidHost.items.filter(item => item.id == data.postData.use_item_id);
-        }
-        Supplies.update(consumedItems);
-        delete Supplies.pendingRaidHost;
     }
 }
 

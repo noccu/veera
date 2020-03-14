@@ -126,7 +126,7 @@ window.Raids = {
             active: raidEntry.active
         };
     },
-    // Updates the tracking object.
+    // Updates the tracking object for tracked raids. No effect for others.
     update: function({action, id, matId, raidEntry}) {
         // pendingHost is used here as setLastHost is called afterwards, and copies from it.
         // raidEntry is just a way to skip the lookup when we already have the data, but it loses class when transfered from UI. Maybe it's more potential harm than good long term...
@@ -136,11 +136,7 @@ window.Raids = {
                 return;
             }
             raidEntry = this.get(id);
-            if (!raidEntry.data) {
-                this.pendingHost.haveData = false;
-                return;
-            }
-            else { this.pendingHost.haveData = true }
+            if (!raidEntry.data) { return }
         }
 
         switch (action) {
@@ -151,17 +147,14 @@ window.Raids = {
                 raidEntry.hosts.today++;
                 raidEntry.hosts.total++;
                 raidEntry.hosts.last = Date.now();
-                if (!this.pendingHost.internalStart) { // prefer our own data
-                    this.pendingHost.mats = matId; // let's hope it indeed turns into an array when needed.
-                }
                 break;
         }
-        this.set(raidEntry);
         RaidEntry.updHostState(raidEntry);
-
+        this.set(raidEntry);
         this.save();
         updateUI("updRaid", raidEntry);
     },
+    // Implements all checks and data setup for starting a tracked raid. (AP, mats, etc)
     start: function(id, hostMats) {
         let raid = this.get(id),
             sufficientMats = true,
@@ -180,12 +173,13 @@ window.Raids = {
             sufficientMats = usedMats.ids.length == hostMats.length;
         }
         let url = raid.data.urls[hostMatId || this.NO_HOST_MAT];
-        if (url && sufficientMats
-            && (raid.haveAp || !State.settings.blockHostByAP)
-            && (raid.haveRank || !State.settings.hideRaidsByRank)
-            && (raid.haveHosts || !State.settings.blockHostByDailyNum)) {
+        if (url
+        && (sufficientMats || !State.settings.blockHostByMats)
+        && (raid.haveAp || !State.settings.blockHostByAP)
+        && (raid.haveRank || !State.settings.hideRaidsByRank)
+        && (raid.haveHosts || !State.settings.blockHostByDailyNum)) {
             this.pendingHost.internalStart = true;
-            this.pendingHost.mats = hostMats;
+            this.pendingHost.mats = hostMatId ? usedMats.items : [];
             State.game.navigateTo(url);
             if (hostMatId) {
                 // eslint-disable-next-line no-undef
@@ -203,7 +197,7 @@ window.Raids = {
         }
     },
     checkUsedMats(used, costs) {
-        let data = {ids: [], types: [], nums: []};
+        let data = {ids: [], types: [], nums: [], items: []};
         // Go through cost array once instead of looping through it for every used mat.
         for (let mat of costs) {
             if (Array.isArray(mat)) {
@@ -213,6 +207,9 @@ window.Raids = {
                 data.ids.push(mat.id);
                 data.types.push(mat.supplyData.type);
                 data.nums.push(mat.num);
+                // Create update-style objects. Raid objects are not re-used in this context.
+                mat.supplyData.count = - mat.num;
+                data.items.push(mat.supplyData);
             }
         }
         return data;
@@ -220,11 +217,13 @@ window.Raids = {
     createUrl(id, type, hostmat) {
         return `${GAME_URL.baseGame}${GAME_URL.questStart}${id}/${type}${hostmat ? "/0/" + hostmat : ""}`;
     },
+    // Called on page change to a quest, and on starting a quest.
     setPendingHost(data) {
         devlog("pending", data);
-        // They are set separately anyway.
+        // This is used by Veera's own code on page change to detect setup requirements.
         if (data.url) {
-            let id = data.url.match(/supporter\/(?:.+_treasure\/)?(\d+)/)[1];
+            let match = data.url.match(/supporter\/(?:.+_treasure\/)?(\d+)/);
+            let id = match[1];
             // Don't update triggers.
             if (this.triggeredQuest && (id == this.triggeredQuest.id || this.triggeredQuest.isGroup)) {
                 this.pendingHost.skip = true;
@@ -235,12 +234,14 @@ window.Raids = {
                 this.pendingHost.id = id;
             }
         }
+        // This is used after starting a raid, but before initializing it. This is the only data is provides aside from ID in the URL.
         // Luckily updates after url.
         else if (data.json && !this.pendingHost.skip) {
             this.pendingHost.name = data.json.chapter_name;
             this.pendingHost.ap = parseInt(data.json.action_point); // Triggers never use AP afaik so we can leave this. Same in setLastHost below.
         }
     },
+    // Called on initialization of quest.
     setLastHost() {
         if (!this.pendingHost.skip) {
             devlog(`Updating last hosted quest to: ${this.pendingHost.name}.`);
@@ -248,9 +249,8 @@ window.Raids = {
             this.lastHost.name = this.pendingHost.name;
             this.lastHost.id = this.pendingHost.id;
             this.lastHost.internalStart = this.pendingHost.internalStart;
-            this.lastHost.haveData = this.pendingHost.haveData;
-            this.lastHost.mats = this.pendingHost.mats;
-            Profile.status.ap.current -= this.pendingHost.ap;
+            this.lastHost.mats = Supplies.pendingRaidHost.hasOwnProperty(this.pendingHost.id) ? Supplies.pendingRaidHost[this.pendingHost.id].items : [];
+            Profile.status.ap.current -= this.lastHost.ap = this.pendingHost.ap;
 
             // Last function called on host, reset some data.
             this.pendingHost.internalStart = false;
@@ -261,11 +261,25 @@ window.Raids = {
     },
     repeatLast() {
         if (this.lastHost.url) {
-            if (this.lastHost.haveData) {
-                this.start(this.lastHost.id, this.lastHost.mats);
+            if (this.lastHost.internalStart) {
+                this.start(this.lastHost.id, this.lastHost.mats.map(x => x.id)); // lasthost stores SupplyItems but start expects string or string[] from the UI.
             }
             else {
-                State.game.navigateTo(this.lastHost.url);
+                if (!State.settings.blockHostByAP || Profile.status.ap.current > this.lastHost.ap) {
+                    if (!State.settings.blockHostByMats || !this.lastHost || this.lastHost.mats.every(item => {
+                        // We could use item.count as it updates on every host, but this will miss edge cases where the required item is lowered between repeats, so we fetch "new" data.
+                        // eg. hosting Nezha with whorls, using up too many whorls in a craft, and then trying to repeat the host.
+                        // last.mats stores an update-style object, hence count = delta
+                        let sd = Supplies.get(item.type, item.id, true);
+                        if (sd) { return sd.count + item.count >= 0 }
+                        else return false;
+                    } )) {
+                        State.game.navigateTo(this.lastHost.url);
+                        // Supplies.pendingRaidHost = {[Supplies.lastRaidHost.id]: {items: Supplies.lastRaidHost.items}};
+                    }
+                    else { printError("Can't repeat quest due to lack of materials.") }
+                }
+                else { printError("Can't repeat quest due to lack of AP.") }
             }
         }
     },
