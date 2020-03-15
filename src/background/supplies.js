@@ -123,6 +123,12 @@ const ITEM_KIND = {// jshint ignore:line
         class: "RawStone",
         path: "item/normal"
     },
+    33: {
+        name: "Coop Items",
+        class: "Coop",
+        path: "item/coopraid",
+        manual: true
+    },
     34: {
         name: "Event Pick Ticket",
         class: "Eventexchangeticket",
@@ -473,7 +479,7 @@ window.Supplies = {
             this.update(upd, true);
         }
     },
-    /** Updates supply item data, adding if new. Used for incremental updates, use set() otherwise.
+    /** Updates supply item data, adding if new. Used for incremental updates. For absolute updates, use the overwrite param. This is preferred over set() in most cases because it applies extra logic and updates the UI.
     @arg {(SupplyItem|SupplyItem[])} updArr - Array of items to update. Uses count prop as delta.
     @arg {boolean} overwrite - Overwrites the item info instead of updating.
     **/
