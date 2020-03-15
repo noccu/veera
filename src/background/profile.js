@@ -1,4 +1,8 @@
 window.Profile = {
+    supplyItems: {
+        renown: new SupplyItem(SUPPLYTYPE.treasure, 92001, 0, "Renown Pendant"),
+        prestige: new SupplyItem(SUPPLYTYPE.treasure, 92002, 0, "Prestige Pendant")
+    },
     status: {
         ap: {current: 0, max: 0},
         bp: {current: 0, max: 0},
@@ -38,30 +42,37 @@ window.Profile = {
     setPendants(pendants) {
         var renown = pendants["92001"];
         var prestige = pendants["92002"];
-        this.pendants = {
-            renown: {
-                total: {current: parseInt(renown.article.number), max: parseInt(renown.article.limit)},
-                weekly: {current: parseInt(renown.limit_info["10100"].data.weekly.get_number), max: parseInt(renown.limit_info["10100"].data.weekly.get_limit)},
-                daily: {current: parseInt(renown.limit_info["10100"].data.daily.get_number), max: parseInt(renown.limit_info["10100"].data.daily.get_limit)},
-                sr: {current: parseInt(renown.limit_info["20200"].data.weekly.get_number), max: parseInt(renown.limit_info["20200"].data.weekly.get_limit)},
-                r: {current: parseInt(renown.limit_info["20100"].data.weekly.get_number), max: parseInt(renown.limit_info["20100"].data.weekly.get_limit)}
-            },
+        Profile.updatePendants([
+            {pendantType: "renown", limitType: "daily", total: parseInt(renown.limit_info["10100"].data.daily.get_number), max: parseInt(renown.limit_info["10100"].data.daily.get_limit)},
+            {pendantType: "renown", limitType: "weekly", total: parseInt(renown.limit_info["10100"].data.weekly.get_number), max: parseInt(renown.limit_info["10100"].data.weekly.get_limit)},
+            {pendantType: "renown", limitType: "sr", total: parseInt(renown.limit_info["20200"].data.weekly.get_number), max: parseInt(renown.limit_info["20200"].data.weekly.get_limit)},
+            {pendantType: "renown", limitType: "r", total: parseInt(renown.limit_info["20100"].data.weekly.get_number), max: parseInt(renown.limit_info["20100"].data.weekly.get_limit)},
+            {pendantType: "renown", limitType: "total", total: parseInt(renown.article.number), max: parseInt(renown.article.limit)},
 
-            prestige: {
-                total: {current: parseInt(prestige.article.number), max: parseInt(prestige.article.limit)},
-                weekly: {current: parseInt(prestige.limit_info["10100"].data.weekly.get_number), max: parseInt(prestige.limit_info["10100"].data.weekly.get_limit)},
-                crew: {current: parseInt(prestige.limit_info["20300"].data.weekly.get_number), max: parseInt(prestige.limit_info["20300"].data.weekly.get_limit)}
-            }
-        };
-        updateUI("updPendants", this.pendants);
+            {pendantType: "prestige", limitType: "weekly", total: parseInt(prestige.limit_info["10100"].data.weekly.get_number), max: parseInt(prestige.limit_info["10100"].data.weekly.get_limit)},
+            {pendantType: "prestige", limitType: "crew", total: parseInt(prestige.limit_info["20300"].data.weekly.get_number), max: parseInt(prestige.limit_info["20300"].data.weekly.get_limit)},
+            {pendantType: "prestige", limitType: "total", total: parseInt(prestige.article.number), max: parseInt(prestige.article.limit)}
+        ]);
     },
-    updatePendants(updArr) { // [ { pendantType, limitType, delta }]
+    updatePendants(updArr) { // [ { pendantType, limitType, delta/total, max }]
         for (let item of updArr) {
             if (item.delta) {
                 this.pendants[item.pendantType][item.limitType].current += item.delta;
+                // Deltas aren't used so far for total counts.
+                // if (item.limitType == "total") {
+                //     Profile.supplyItems[item.pendantType].count = item.delta;
+                //     Supplies.update(Profile.supplyItems[item.pendantType]);
+                // }
             }
             else if (item.total) {
                 this.pendants[item.pendantType][item.limitType].current = item.total;
+                if (item.max) {
+                    this.pendants[item.pendantType][item.limitType].max = item.max;
+                }
+                if (item.limitType == "total") {
+                    Profile.supplyItems[item.pendantType].count = item.total;
+                    Supplies.update(Profile.supplyItems[item.pendantType], true);
+                }
             }
         }
         updateUI("updPendants", this.pendants);
@@ -292,10 +303,10 @@ function useRecoveryItem(json) {
 
 function twitterRecovery(json) {
     // {"result":2,"reward_status":true}
-   if (json.reward_status) {
+    if (json.reward_status) {
         Profile.status.ap.current += Profile.status.ap.max;
         Profile.status.bp.current += Profile.status.bp.max;
         updateUI("updStatus", Profile.status);
         updateUI("updRaid", Raids.getList());
-   }
+    }
 }
