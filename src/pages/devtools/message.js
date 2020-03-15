@@ -92,6 +92,9 @@ window.BackgroundPage = {
             case "updSparkProgress":
                 updSparkProgress(msg.data);
                 break;
+            case "updRaidCode":
+                UI.raids.updCode(msg.data);
+                break;
             default:
                 window.dispatchEvent(new CustomEvent(msg.action, {detail: msg.data}));
         }

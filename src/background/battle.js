@@ -271,6 +271,10 @@ window.Battle = {
                 }
             }
             this.current.raidId = json.raid_id;
+            if (json.multi) {
+                this.current.raidCode = id;
+                updateUI("updRaidCode", id);
+            }
         }
     },
     updateArchiveList() {

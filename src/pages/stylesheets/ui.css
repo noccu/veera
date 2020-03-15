@@ -154,10 +154,10 @@ li {
 .hidden {
     display: none !important;
 }
-
 .highlight {
     background-color: var(--highlight-color);
 }
+
 .tab-view-list {
     margin: 0;
     padding: 0;
@@ -418,22 +418,34 @@ button {
     text-align: center;
 }
 
-
+#raid-info-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    grid-row-gap: 1px;
+}
+#raid-code {
+    font-size: 1.5em;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.2em;
+    line-height: 1;
+    /* cursor: pointer; */
+}
+#raid-code:hover {
+    background-color: var(--highlight-color);
+}
 #raid-current-drop-list {
     padding: 0.5em;
 }
-
 .raid-current-drop {
     display: inline-block;
     text-align: center;
     margin: 0.15em 0.15em;
     vertical-align: top;
 }
-
 .raid-current-drop img {
     max-width: var(--icon-size-raid-info);
 }
-
 .raid-current-drop span {
     display: block;
     max-width: var(--icon-size-raid-info);
@@ -442,7 +454,6 @@ button {
     text-overflow: ellipsis;
     line-height: 1.2;
 }
-
 .raid-current-drop[data-chest-type='2'] {
     background-color: var(--chest-color-silver);
 }

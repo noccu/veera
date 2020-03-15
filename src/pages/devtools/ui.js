@@ -295,6 +295,15 @@ window.UI = {
                     raidEle.getElementsByClassName("raid-cost")[0].classList.add("warn");
                 }
             }
+        },
+        updCode(code) {
+            UI.setValue({id: "raid-code", value: code});
+        },
+        copyCode() {
+            let code = document.getElementById("raid-code").textContent;
+            if (code) {
+                navigator.clipboard.writeText(code);
+            }
         }
     }
 };
@@ -370,6 +379,10 @@ function evhGlobalClick(e) {
                 break;
             case "playTriggeredQuest":
                 BackgroundPage.send("playTriggeredQuest");
+                break;
+            case "copyRaidCode":
+                // We do this here because the document needs focus. Implementing clipboard actions in bg page does not work. At least not in a straightforward manner because lolwebextensions.
+                UI.raids.copyCode();
         }
     }
 }
