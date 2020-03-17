@@ -278,6 +278,9 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
         throw new TypeError("[SupplyItem] Type, id, or count does not resolve to number.");
     }
 
+    // Just wrap data into class, don't bother with extra calcs.
+    if (extra.basicData) { return this }
+
     let data = ITEM_KIND[type];
     if (data) {
         this.typeName = data.name;
@@ -500,9 +503,10 @@ window.Supplies = {
             else {
                 item.delta = item.count; // Save change
                 if (this.has(item.type, item.id)) { // Update
-                    item.count = this.index[item.type][item.id].count += item.delta;
+                    item.count = Math.max(0, this.index[item.type][item.id].count += item.delta);
                 }
                 else { // Add new
+                    item.count = Math.max(0, item.count);
                     this.set(item);
                 }
                 // fireEvent(EVENTS.updatedSupplyItem, item);
