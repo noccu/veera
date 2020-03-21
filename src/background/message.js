@@ -228,6 +228,11 @@ function hear(msg) {
                     case path.ismatch("receive_all_sequence_point_reward"):
                         rewardsPickup(msg.data.json);
                         break;
+                    // Non-regexp specific cases because of false positive URLs.
+                    case path.ismatch("gacha/result"):// event gacha
+                    case path.ismatch("gacha/normal/result"):// rupie rolls
+                        rewardsPickup(msg.data.json, true);
+                        break;
                     case path.ismatch("advent/top/content/newindex"):
                         setRotbPendants(msg.data.json);
                         break;

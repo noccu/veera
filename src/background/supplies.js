@@ -1,5 +1,5 @@
 // commonly used type shorthand. TODO: merge with ITEM_KIND somehow usefully.
-const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1, 2, 22, 37, 38, 39, 50, 82]}; // jshint ignore:line
+const SUPPLYTYPE = {treasure: 10, recovery: 4, evolution: 17, skill: 67, augment: 73, vessels: 75, crystals: 9, rupie: 7, drawTickets: 8, Untracked: [1, 2, 21, 22, 37, 38, 39, 50, 82]}; // jshint ignore:line
 SUPPLYTYPE.Consumables = [SUPPLYTYPE.recovery, SUPPLYTYPE.evolution, SUPPLYTYPE.augment, SUPPLYTYPE.skill, SUPPLYTYPE.vessels]; // types that make up "consumables" I think skill = 10000 sometimes?
 SUPPLYTYPE.Currencies = [SUPPLYTYPE.crystals, SUPPLYTYPE.rupie, 19, 31];
 
@@ -39,7 +39,14 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Rupie",
         class: "Money",
         path: "item/normal",
-        specialId: {0: "lupi"}
+        specialId: {0: "lupi"},
+        convert(item, data) {
+            if (data.fromGacha && item.count == 0) {
+                item.name = this.name;
+                item.count = 100; // default min value. TODO: check rupie, crystal, cp, honors for other amounts.
+                return true;
+            }
+        }
     },
     8: {
         name: "Draw Ticket",
@@ -54,7 +61,14 @@ const ITEM_KIND = {// jshint ignore:line
         name: "Crystal",
         class: "Stone",
         path: "item/normal",
-        specialId: {0: "gem"}
+        specialId: {0: "gem"},
+        convert(item, data) {
+            if (data.fromGacha && item.count == 0) {
+                item.name = "Crystals";
+                item.count = 10; // default min value
+                return true;
+            }
+        }
     },
     10: {
         name: "Treasure",
@@ -75,7 +89,28 @@ const ITEM_KIND = {// jshint ignore:line
         name: "CP",
         class: "JobPoint",
         path: "item/normal",
-        specialId: {0: "jp"}
+        specialId: {0: "jp"},
+        convert(item, data) {
+            if (data.fromGacha && item.count == 0) {
+                item.name = this.name;
+                item.count = 10; // default min value
+                return true;
+            }
+        }
+    },
+    21: {
+        name: "Event Honors",
+        class: "Honors",
+        path: "item/normal",
+        manual: true,
+        specialId: {1: "service"},
+        convert(item, data) {
+            if (data.fromGacha && item.count == 0) {
+                item.name = "Honors";
+                item.count = 1000; // default min value
+                return true;
+            }
+        }
     },
     22: {
         name: "Token",
@@ -174,6 +209,7 @@ const ITEM_KIND = {// jshint ignore:line
             item.type = 10;
             item.id = 90001;
             item.name = "Four Symbols Pendant";
+            return true;
         }
     },
     50: {
@@ -307,17 +343,21 @@ function SupplyItem(type = SUPPLYTYPE.treasure, id = 0, count = 0, name = undefi
         else {
             this.path = `${GAME_URL.baseGame}${GAME_URL.assets}${this.path || data.path}/${data.hasOwnProperty("size") ? data.size : GAME_URL.size.small}${data.prefix || ""}${fname}${data.suffix || ""}.jpg`;
         }
-        // Redirect some special cases. This is for user display/organization and thus happens after the path/server data assignment.
+        // Redirect some special cases. This is for Veera use and thus happens after the path/server data assignment.
         if (data.convert) {
-            devlog("Converting item: ", this);
-            data.convert(this, extra);
-            devlog("Converted item: ", this);
+            let orig;
+            if (State.settings.debug) { orig = Object.assign({}, this) }
+            let changed = data.convert(this, extra);
+            if (changed) {
+                devlog("Item conversion: ", orig, "=>", this); // Only shows on debug anyway
+            }
         }
     }
     else {
         this.typeName = "Unknown";
     }
 
+    // Everything below here requires converted data. Don't move it before the convert check.
     // name can already be set when converted
     this.name = this.name || name || (Supplies.has(type, id) ? Supplies.index[type][id].name : "Unknown");
 
@@ -781,22 +821,22 @@ function cratePickup(data) { // single item pick up TODO: check multi
 
     Supplies.update(upd);
 }
-function rewardsPickup(json) {
-    if (json.result) {
+function rewardsPickup(json, isGacha) {
+    if (json.result && !Supplies.gachaLock) {
         let upd = [],
-            si, id, name,
-            loot = json.reward || json.common.reward;
+            si, id, name, kind, num,
+            loot = isGacha ? json.result : json.reward || json.common.reward;
         for (let key in loot) { // Sometimes obj, sometimes array... this works on both.
             let item = loot[key];
-            name = item.item || item.item_name;
-            let check = key.lastIndexOf("_");
-            if (check != -1) {
-                id = key.slice(check + 1);
-            }
-            else {
-                id = item.item_id;
+            name = item.item || item.item_name || item.reward_name;
+            kind = item.item_kind || item.reward_type_val;
+            num = item.number;
+
+            let check = key.lastIndexOf("_"); // I don't remember why this is first. TODO: check and comment.
+            if (check == -1) {
+                id = item.item_id || item.reward_id;
                 if (!id) {
-                    let data = Supplies.find(name, item.item_kind);
+                    let data = Supplies.find(name, kind);
                     if (data) {
                         id = data.id;
                     }
@@ -806,10 +846,19 @@ function rewardsPickup(json) {
                     }
                 }
             }
-            si = new SupplyItem(item.item_kind, id, item.number, name);
+            else {
+                id = key.slice(check + 1);
+            }
+            si = new SupplyItem(kind, id, num, name, {fromGacha: isGacha});
             upd.push(si);
         }
 
+        // Gacha often resends the same repsonse twice for some reason... And there's no way to tell the difference. Random key is not random (nor a key?). So... 4s timeout on gacha pickups...
+        // Doesn't work when you get the SSR though. TODO: hash the update or something?
+        if (isGacha) {
+            Supplies.gachaLock = true;
+            setTimeout(() => Supplies.gachaLock = false, 4000);
+        }
         Supplies.update(upd);
     }
 }

@@ -116,7 +116,7 @@ function updateSupplies(idx) {
         var newItems;
 
         for (let item of idx) {
-            let entry = document.getElementById(`${item.type}_${item.id}`);
+            let entry = document.getElementById(`${item.type}_${item.id}`) || newItems && newItems.content.getElementById(`${item.type}_${item.id}`);
             if (entry) { // update
                 entry.title = item.name;
                 entry.getElementsByClassName("collection-data")[0].textContent = item.count;
