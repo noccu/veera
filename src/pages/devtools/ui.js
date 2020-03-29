@@ -383,6 +383,10 @@ function evhGlobalClick(e) {
             case "copyRaidCode":
                 // We do this here because the document needs focus. Implementing clipboard actions in bg page does not work. At least not in a straightforward manner because lolwebextensions.
                 UI.raids.copyCode();
+                break;
+            case "resetSpark":
+                BackgroundPage.send("resetSpark");
+                break;
         }
     }
 }

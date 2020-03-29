@@ -300,6 +300,10 @@ function hear(msg) {
         case "updGlobalSetting":
             State.updSetting(msg.data);
             break;
+        case "resetSpark":
+            Tools.sparkProgress.reset();
+            Tools.sparkProgress.evhSuppliesChange();
+            break;
     }
 }
 

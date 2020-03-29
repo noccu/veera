@@ -381,6 +381,7 @@ button {
     border: none;
 /*    border: 2px solid var(--diff-color-a);*/
     padding: 0.3em;
+    line-height: 1;
 }
 
 /* Battle */
@@ -592,4 +593,8 @@ button {
 .battle-stats-container .expander {
     margin-top: 0.4em;
     grid-area: auto / left / auto / right;
+}
+
+#spark-prog-reset {
+    width: 100%;
 }
