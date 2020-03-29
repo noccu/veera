@@ -3,7 +3,7 @@
 
    "name": "Veera",
    "description": "The GBF Companion that keeps a close watch.",
-   "version": "1.4.0",
+   "version": "1.4.1",
 
    "icons": {
       "128": "src/assets/images/veera128.png",
