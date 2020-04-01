@@ -4,13 +4,13 @@ window.DevTools = {
     wait() {
         console.log("Onee-sama?");
         chrome.runtime.onConnect.addListener(this.connected);
-        chrome.runtime.onMessage.addListener(hearQuery);
     },
     connected(port) {
         console.log("Onee-sama!", port);
         DevTools.connection = port;
         port.onMessage.addListener(hear);
         port.onDisconnect.addListener(DevTools.deafen);
+        chrome.runtime.onMessage.addListener(hearQuery);
         window.dispatchEvent(new Event(EVENTS.connected));
     },
     deafen() {
