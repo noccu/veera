@@ -203,7 +203,7 @@ window.Raids = {
             if (Array.isArray(mat)) {
                 data = this.checkUsedMats(used, mat);
             }
-            else if (used.includes(mat.id) && mat.num <= mat.supplyData.count) {
+            else if (used.includes(mat.id) && (!State.settings.blockHostByMats || mat.num <= mat.supplyData.count)) {
                 data.ids.push(mat.id);
                 data.types.push(mat.supplyData.type);
                 data.nums.push(mat.num);
