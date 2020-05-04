@@ -28,6 +28,8 @@ window.Tools = {
             let startValue = this.startCrystalValue + this.startTicketValue,
                 current = crystalValue + ticketValue,
                 gained = current - startValue;
+            let sparkValue = 90000;
+            let sparkReady = Math.trunc(current / sparkValue);
 
             if (gained < 0) {
                 printWarn("Spark progress auto-reset triggered.");
@@ -37,10 +39,11 @@ window.Tools = {
 
             let daysElapsed = (Date.now() - this.startDate.getTime()) / 86400000;
             let avgCrystals = safeDivide(gained, Math.max(daysElapsed, 1));
-            let needed = 90000 - current;
+            let needed = sparkValue * (sparkReady + 1) - current;
             let eta = new Date(Date.now() + Math.floor(safeDivide(needed, avgCrystals)) * 86400000).toLocaleDateString(navigator.languages, {dateStyle: "long"});
 
             return {
+                ready: sparkReady,
                 time: daysElapsed | 0,
                 avg: avgCrystals | 0,
                 needed,

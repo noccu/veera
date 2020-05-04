@@ -287,6 +287,7 @@ function updLastSupport(data) {
 
 function updSparkProgress(data) {
     UI.setValue([
+        {id: "spark-ready", value: data.ready},
         {id: "spark-prog-days", value: data.time},
         {id: "spark-prog-crystals", value: data.needed},
         {id: "spark-prog-avg", value: data.avg},
