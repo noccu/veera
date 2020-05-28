@@ -1504,6 +1504,46 @@ window.PlannerData = {
             "Katana": ["Light", "Katana"]
         }
     },
+    Astral: {
+        core: [
+            new PlannerItem(2, PLANNER_ITEMS.silverCentrum, 5),
+            new PlannerItem(2, PLANNER_ITEMS.legendaryMerit, 10),
+
+            new PlannerItem(3, SUPPLYTYPE.treasure, 546, 30), // verdant azurite
+            new PlannerItem(3, SUPPLYTYPE.treasure, 555, 10), // abyssal wing
+            new PlannerItem(3, SUPPLYTYPE.treasure, 547, 30), // lindwurn scale
+            new PlannerItem(3, PLANNER_ITEMS.damaCrystal, 5)
+        ],
+        wtype: {
+            Sword: [],
+            Spear: [],
+            Axe: [],
+            Staff: [],
+            Fist: [],
+            Harp: [],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.urns, 100),
+                new PlannerItem(1, PLANNER_TEMPLATES.sixDragons, 15),
+                new PlannerItem(1, PLANNER_TEMPLATES.verumProofs, 500),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.anima.genesisOmega, 10),
+                new PlannerItem(2, PLANNER_TEMPLATES.urns, 30),
+
+                new PlannerItem(3, PLANNER_TEMPLATES.astras, 30),
+                new PlannerItem(3, PLANNER_TEMPLATES.sixDragons, 30)
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Trade", "4*", "5*"],
+        typeNames: {
+            "Sword": ["Water", "Sword"],
+            "Spear": ["Light", "Spear"],
+            "Axe": ["Fire", "Axe"],
+            "Staff": ["Earth", "Staff"],
+            "Fist": ["Dark", "Fist"],
+            "Harp": ["Wind", "Harp"]
+        }
+    },
 };
 
 (function hideTemplates(o) {
