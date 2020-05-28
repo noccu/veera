@@ -351,7 +351,16 @@ const PLANNER_TEMPLATES = {
             // Light: [5211, 5241],
             // Dark: [5221, 5231]
         }
-    }
+    },
+    sixDragons: {
+        type: SUPPLYTYPE.treasure,
+        Fire: 549,
+        Water: 550,
+        Earth: 551,
+        Wind: 552,
+        Light: 553,
+        Dark: 554
+    },
 };
 
 const PLANNER_ITEMS = {
@@ -1450,7 +1459,51 @@ window.PlannerData = {
             "Teachers": ["Light", "Harp"],
             "Belial": ["Dark", "Axe"]
         }
-    }
+    },
+    Draconic: {
+        core: [
+            new PlannerItem(1, SUPPLYTYPE.treasure, 547, 30), // lindwurn scale
+
+            new PlannerItem(2, SUPPLYTYPE.treasure, 547, 30), // lindwurn scale
+            new PlannerItem(2, PLANNER_ITEMS.silverCentrum, 5),
+            new PlannerItem(2, PLANNER_ITEMS.championMerit, 100),
+            new PlannerItem(2, PLANNER_ITEMS.supremeMerit, 50),
+        
+            new PlannerItem(3, SUPPLYTYPE.treasure, 533, 10), // malice frag
+            new PlannerItem(3, PLANNER_ITEMS.damaCrystal, 5),
+            new PlannerItem(3, PLANNER_ITEMS.legendaryMerit, 10),
+
+        ],
+        wtype: {
+            Axe: [],
+            Staff: [],
+            Gun: [],
+            Bow: [],
+            Harp: [],
+            Katana: [],
+            templates: [
+                new PlannerItem(1, PLANNER_TEMPLATES.quartz, 666),
+                new PlannerItem(1, PLANNER_TEMPLATES.stones, 500),
+
+                new PlannerItem(2, PLANNER_TEMPLATES.centrums, 30),
+
+                new PlannerItem(3, PLANNER_TEMPLATES.stones, 200),
+                new PlannerItem(3, PLANNER_TEMPLATES.sixDragons, 15),
+                new PlannerItem(3, PLANNER_TEMPLATES.scales, 350),
+
+            ]
+        },
+        element: {Locked: null},
+        stepNames: ["None", "Trade", "4*", "5*"],
+        typeNames: {
+            "Axe": ["Water", "Axe"],
+            "Staff": ["Wind", "Staff"],
+            "Gun": ["Dark", "Gun"],
+            "Bow": ["Earth", "Bow"],
+            "Harp": ["Fire", "Harp"],
+            "Katana": ["Light", "Katana"]
+        }
+    },
 };
 
 (function hideTemplates(o) {
